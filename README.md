@@ -2,7 +2,7 @@
 
 A student-led, research-first study of event-instance granularity and temporal information in cyber threat intelligence (CTI) representations.
 
-**Status:** Literature, dataset, and annotation-feasibility audit. Implementation has not started. No novel contribution is claimed as established.
+**Status:** Research feasibility and annotation pilot setup. Toy projection/validation prototypes exist; no human annotations or empirical results yet. No novel contribution is claimed as established.
 
 ## Provisional primary research question
 
@@ -37,15 +37,15 @@ This secondary model question is not part of the primary experiment until data a
 ```text
 docs/       research charter, audit, architecture, methodology, decisions, roadmap
 research/   related-work matrix, evidence ledger, annotation protocol
-src/        implementation (not started)
-tests/      tests (not started)
+src/        pure-Python toy projection and annotation-validation utilities
+tests/      synthetic unit tests (execution status pending verification)
 data/       local data only; raw and processed files are git-ignored
 notebooks/  exploratory analysis only
 ```
 
 ## Current phase
 
-Validate the research question, legal data access, annotation feasibility, and fair baseline comparison before coding. The current audit is in `docs/RESEARCH_GAP_AUDIT_2026-11-01.md`; see also `docs/PROJECT_STATUS.md` and `docs/ROADMAP.md`.
+Validate the research question, legal data access, annotation feasibility, and fair baseline comparison before building a full pipeline or model. The current audit is in `docs/RESEARCH_GAP_AUDIT_2026-11-01.md`; see also `docs/PROJECT_STATUS.md`, `docs/ROADMAP.md`, `research/PILOT_REPORT_01_STARTER.md`, and `research/templates/README.md`.
 
 ## Citation and author name
 
@@ -60,3 +60,20 @@ For BibTeX, use the full-name-preserving entry in `CITATION.bib`.
 ## License
 
 The repository's original software and documentation are under the MIT License. This does not grant rights to third-party CTI reports, datasets, papers, trademarks, or model weights referenced by the project.
+
+
+## Small prototype
+
+The current code is deliberately limited to synthetic and annotation-quality checks:
+- `src/projection_metrics.py`: project event-instance relation edges to ATT&CK technique pairs and calculate candidate collision/coverage/cycle summaries.
+- `src/annotation_validation.py`: validate CSV annotation offsets, event references and relation evidence.
+- `tests/`: synthetic tests; do not interpret them as results on CTI reports.
+
+Run from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+python examples/toy_projection_demo.py
+```
+
+The first human dry-run candidate and instructions are in `research/PILOT_REPORT_01_STARTER.md`. No AI-generated labels are committed as gold annotations.
