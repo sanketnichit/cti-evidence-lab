@@ -1,7 +1,7 @@
 # Project Status — 2026-11-01
 
 **Current phase:** Research question refinement and dataset feasibility.  
-**Implementation status:** Not started.  
+**Implementation status:** Toy projection and annotation-validation prototypes added; real-data ingestion and modelling not started.  
 **Novelty status:** Not established.  
 **Current decision:** NARROW.
 
@@ -30,7 +30,7 @@ This is a hypothesis to test—not a validated gap, novel method, implemented sy
 
 ## New working artifact
 
-- Drafted `research/ANNOTATION_PROTOCOL_v0.1.md` to separate text mentions, event instances, ATT&CK concepts, temporal relations, and non-temporal dependencies. It defines evidence-span requirements, uncertainty labels, a 5–8 report feasibility pilot, and stop criteria. This is a draft for human review, not a validated annotation standard.
+- Drafted `research/ANNOTATION_PROTOCOL_v0.2.md` to separate text mentions, event instances, ATT&CK concepts, temporal relations, and non-temporal dependencies. It defines evidence-span requirements, uncertainty labels, a 5–8 report feasibility pilot, and stop criteria. This is a draft for human review, not a validated annotation standard.
 - Confirmed the repository citation metadata already encodes the author's name correctly: given name `Sanket`, family name `Nichit`. The generated abbreviated citation `Nichit, S.` is the normal family-name-first bibliographic rendering; the README also gives the full-name form `Sanket Nichit`. No author-field correction is required.
 
 ## Blocking gates
@@ -85,3 +85,24 @@ This is not a proven gap. The 2026 STIX preprint is a direct adjacent work for p
 - This confirms the per-report files are suitable for a human screening/annotation workflow, but do not provide temporal event relations. Repeated technique-link mentions are not automatically distinct executions.
 - Candidate screening seed: `intel471_2020-03-26_analysis-of-an-attempted-attack`. It remains a candidate only; human annotators must decide whether any mentions refer to distinct event instances and whether explicit temporal evidence exists.
 - The AnnoCTR GitHub repository was reported as archived on 19 February 2026; this does not itself invalidate the corpus, but maintenance should not be expected.
+
+
+## Pilot and prototype setup — 1 November 2026
+
+### Source screening
+- Screened five AnnoCTR Intel471 reports at file level. Repeated ATT&CK-linked mentions occur in several, but the repeated records are not event-instance labels. Their TimeML files contain TIMEX3 expressions but no EVENT, MAKEINSTANCE or TLINK elements.
+- Added `research/ANNOCTR_SCREENING_LOG.md` and `research/PILOT_REPORT_01_STARTER.md`. Report 01 is shortlisted for a first human protocol dry run only; provenance and the source donor details must be verified before treating it as formal pilot data.
+- The five screened reports are all Intel471. This is a selection limitation. Do not claim multi-vendor screening or general prevalence.
+
+### Annotation and implementation artifacts
+- Annotation protocol v0.2 now allows multiple separately evidenced ATT&CK mappings per event instance and separates specific report-local events from generic behaviour statements.
+- Four blank CSV templates are available under `research/templates/`, with row granularity and label instructions in `research/templates/README.md`.
+- Added `src/projection_metrics.py`, a pure-Python synthetic projection prototype; `tests/test_projection_metrics.py`; and `examples/toy_projection_demo.py`.
+- Added `src/annotation_validation.py` and `tests/test_annotation_validation.py` for source-span, ID and evidence structure checks.
+- Added a GitHub Actions workflow for the standard-library tests. The available commit-status query returned no status entries, so test execution is **not yet independently confirmed**. No test pass is claimed.
+- These utilities are scaffolding only. They have not been run on human-annotated CTI data and do not establish a research finding.
+
+### Immediate human task
+Read Report 01 in full and complete the first human event-mention and event-instance decisions. Do not ask an AI to generate the gold labels. Use the starter guide and record annotation time and unresolved decisions. A second human reviewer is strongly preferred.
+
+**Current status:** implementation of toy metric/validation helpers has begun; production pipeline/model not started; human annotations zero; experimental results zero; novelty not established; decision NARROW.
