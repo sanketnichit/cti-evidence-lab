@@ -81,6 +81,28 @@ class ProjectionMetricsTests(unittest.TestCase):
             [["T_A", "T_B"]],
         )
 
+    def test_symmetric_relation_canonicalizes_technique_pair(self):
+        result = project_report(
+            {"a": {"T_A"}, "b": {"T_B"}},
+            [
+                TemporalEdge("r1", "a", "b", "OVERLAP"),
+                TemporalEdge("r2", "b", "a", "OVERLAP"),
+            ],
+        )
+        self.assertEqual(result["counts"]["projected_technique_pairs"], 1)
+        self.assertEqual(result["counts"]["collision_technique_pairs"], 1)
+        self.assertEqual(
+            result["projection"]["technique_pairs"],
+            [["T_A", "T_B"]],
+        )
+
+    def test_no_temporal_claim_is_rejected_as_an_edge(self):
+        with self.assertRaises(ValueError):
+            project_report(
+                {"a": {"T_A"}, "b": {"T_B"}},
+                [TemporalEdge("r1", "a", "b", "NO_TEMPORAL_CLAIM")],
+            )
+
     def test_overlap_does_not_create_strict_before_cycle(self):
         result = project_report(
             {"a": {"T_A"}, "b": {"T_B"}},
