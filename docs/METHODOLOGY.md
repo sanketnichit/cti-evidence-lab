@@ -1,97 +1,105 @@
-# Experimental Methodology (Draft)
+# Experimental Methodology — Feasibility Draft
 
-No annotation schema, baseline, or model is frozen yet. The project begins with a feasibility pilot, not full-scale model training.
+No annotation schema, baseline, or model is frozen. The first objective is to establish whether the representation-loss question can be tested on legally usable CTI reports. This is a pilot design, not an approved full experiment.
 
-## 1. Primary study design
+## 1. Provisional primary study
 
-Compare two representations of the same manually annotated CTI report:
-- technique-level representation, where event occurrences sharing an ATT&CK concept are aggregated within a report;
-- event-instance representation, where each distinct action occurrence remains a separate node and multiple text mentions may corefer to it.
+For a report with human-annotated event instances, compare:
 
-The first outcome is a measurement of representation loss. A model comparison is secondary and only proceeds if the pilot is feasible.
+- **Technique-set representation:** the set of ATT&CK concepts assigned to the report, where distinct instances with the same concept collapse to one concept.
+- **Technique-pair representation:** a report-level graph whose nodes are ATT&CK concepts and whose edges are typed relations between technique pairs, similar in granularity to ChronoCTI.
+- **Event-instance representation:** separate report-local nodes for distinct action occurrences, with one or more textual mentions linked to each instance and evidence-supported temporal relations between instances.
 
-## 2. Annotation units
+The primary outcome is representational loss or ambiguity induced by projection—not model performance.
 
-1. Report and report version.
-2. Event mention (text span with offsets).
-3. Event instance (underlying occurrence; one or more mentions may refer to it).
-4. ATT&CK concept link.
-5. Event-instance pair with temporal relation and relation-specific evidence.
+## 2. Keep annotation units separate
 
-Do not confuse repeated mentions, repeated occurrences, or repeated technique IDs.
+1. **Report:** a source CTI document or version.
+2. **Event mention:** a span of text describing an action.
+3. **Event instance:** one action occurrence described by the report. Multiple mentions may refer to the same occurrence.
+4. **ATT&CK concept:** a taxonomy technique/sub-technique ID assigned to an event instance where evidence supports it.
+5. **Temporal relation:** relation between two event instances, not merely two technique IDs.
+6. **Relation evidence:** source span(s) supporting the relation between the two event instances.
 
-## 3. Pilot
+Repeated mentions are not automatically repeated occurrences. Shared ATT&CK IDs do not imply coreference.
 
-- Inspect ChronoCTI's Figshare version 3 files and metadata.
-- Inspect candidate AnnoCTR and SMAH-CTI schemas and data rights.
-- Select 5–8 candidate reports with multiple action descriptions and repeated technique mentions.
-- Independently annotate event mentions, event-instance identity, ATT&CK links, temporal relations, and relation evidence.
-- Double-annotate an overlapping subset with a second annotator if available; adjudicate disagreements.
-- Record annotation time, unresolved cases, relation distribution, and inter-annotator agreement.
+## 3. Temporal semantics
 
-Do not scale until the pilot establishes that the target phenomena occur often enough and can be annotated consistently.
+Keep these distinctions explicit:
+- `BEFORE` / `AFTER`: explicit or strongly text-supported temporal precedence.
+- `OVERLAP` / `SIMULTANEOUS`: only where the chosen relation scheme and evidence justify it.
+- `CAUSAL_DEPENDENCY`: causal/enabling dependency, not automatically temporal ordering.
+- `NARRATIVE_ORDER_ONLY`: order in the report's exposition, not confirmed execution chronology.
+- `NO_TEMPORAL_CLAIM`: report does not state a temporal relation.
+- `UNRESOLVED`: human annotator cannot decide from the available evidence.
+- `ABSTAIN`: model decision not to predict.
 
-## 4. Baselines to investigate
+MITRE Attack Flow arrows encode dependency, not the same semantics as a BEFORE relation. Attack Flow may inform action-object design but its dependency edges must not be directly relabelled as temporal gold labels.
 
-1. **Technique aggregation baseline:** collapse event instances by ATT&CK ID within a report and derive the technique-pair graph.
-2. **Temporal cue baseline:** deterministic temporal markers and local syntactic patterns.
-3. **ChronoCTI baseline:** reproduce the published technique-pair system if data, dependencies, and model artifacts are accessible and licensed.
-4. **Text-only event-pair model:** classify candidate event-instance pairs from report context.
-5. **Evidence-linked variant:** same candidate pairs with relation-specific evidence supervision or evidence verification.
+## 4. Pilot procedure
 
-Do not compare results across incompatible corpora or relation schemas as though they were head-to-head results.
+- Inspect ChronoCTI Figshare version 3 metadata, file manifest, schemas, version and licence before depending on it.
+- Inspect candidate AnnoCTR and SMAH-CTI formats and source text provenance/rights.
+- Identify 5–8 candidate reports containing detailed descriptions and potential repeated technique occurrences. This small sample checks feasibility only; do not use it to estimate corpus-wide prevalence.
+- Annotate event mentions, event-instance identity, ATT&CK concepts, temporal relations and relation-specific evidence.
+- Double-annotate an overlapping subset with a second human annotator where possible; adjudicate disagreements.
+- Record annotation time, ambiguous/unresolved cases, repeated-instance counts, relation-label distribution and agreement.
+- Revise the guide before any larger annotation effort.
 
-## 5. Primary outcomes
+Do not use an LLM-generated annotation as ground truth. AI may help locate candidate passages or explain a schema, but human annotators must verify and create the evaluation labels.
 
-Representation:
-- number of distinct event instances and event mentions per technique per report;
-- fraction of reports containing repeated distinct occurrences of a technique;
-- temporal edges that become ambiguous, merged, or lost after technique-level aggregation;
-- edge and ordering agreement between event-instance ground truth and aggregated graph.
+## 5. Candidate representation-loss outcomes
 
-Relation quality (if model evaluation is feasible):
-- per-class precision, recall, F1 and macro-F1;
-- edge-level precision/recall/F1 with an explicit matching rule;
-- report-level graph fidelity and contradiction analysis.
+These remain candidate metrics and require formal definitions before use:
 
-Evidence quality:
-- relation evidence span exact/overlap precision, recall, and F1;
-- unsupported positive-edge rate;
-- human judgement of whether the evidence supports the relation between both event instances.
+- **Repeated-instance prevalence:** number/fraction of reports with at least two distinct event instances mapped to one ATT&CK concept.
+- **Instance-collision count:** number of distinct event nodes merged by a within-report ATT&CK projection.
+- **Same-technique relation loss:** event-pair temporal relations whose endpoints map to the same technique and therefore cannot be represented as an ordinary edge between distinct technique nodes.
+- **Relation conflation:** distinct event-pair relations that collapse to one technique pair, obscuring which event occurrences they connect.
+- **Ordering distortion:** whether projected strict-BEFORE relations induce cycles or contradictions at the technique level.
 
-Selective prediction is optional secondary analysis:
-- coverage-risk or precision-coverage curves;
-- precision at predeclared coverage points;
-- report coverage alongside errors, so abstention cannot hide poor recall.
+Do not mix strict temporal order with overlap, concurrency or causal dependency when testing DAG properties. Node counts from graphs with different node universes cannot be compared directly without a clearly defined mapping, denominator and interpretation.
 
-## 6. Data splitting and leakage control
+## 6. Baselines to investigate after pilot
 
-- Split by report, not by sentence or event pair.
-- Group syndicated, duplicated, translated, and near-duplicate reports before splitting.
-- Do not use held-out reports for prompt tuning, threshold selection, or model selection.
-- Preserve source document version, dataset version, and ATT&CK release.
-- If using an existing report-level test partition, do not silently alter it.
+1. **Technique-set aggregation:** deduplicate event instances by ATT&CK concept within a report.
+2. **Technique-pair projection:** derive the report-level technique-pair representation from the same human event-instance annotations.
+3. **ChronoCTI:** reproduce or re-evaluate the published technique-pair system only if Figshare assets, schema, dependencies and rights permit a fair comparison.
+4. **Temporal cue baseline:** only if the secondary relation-extraction task is included.
+5. **Event-pair learned/evidence-linked model:** defer until enough reliable human-labelled examples exist.
 
-## 7. Statistical analysis
+Do not compare scores across incompatible corpora or relation schemas as if they were a controlled head-to-head evaluation.
 
-- Use report-level bootstrap or another justified clustered confidence interval method.
-- Report class support and uncertainty, especially for rare relations.
-- Avoid significance claims from pair-level independent tests when many pairs come from the same report.
-- Predefine primary metrics before looking at test results.
+## 7. Data integrity and leakage
 
-## 8. Threats to validity
+- Split at report level, not sentence/event-pair level.
+- Group syndicated, duplicated, translated and near-duplicate reports before splitting.
+- Do not use held-out reports for prompt tuning, threshold selection or model selection.
+- Preserve source document version, dataset version and ATT&CK release.
+- Keep raw source files outside Git unless redistribution permission is confirmed.
 
-- Event mention detection and event coreference errors.
-- Ambiguous distinction between separate occurrences and repeated descriptions.
-- Relation schema disagreement, especially overlap vs concurrency.
-- Class imbalance and sparse positive temporal relations.
+## 8. Statistical analysis (only after sample design)
+
+- Report report-level counts and distributions, not only pooled event-pair counts.
+- Use report-clustered bootstrap intervals or another justified clustered method.
+- Report per-class support and uncertainty for rare relations.
+- Avoid pair-level independent significance tests where many pairs come from one report.
+- Predefine primary outcomes before looking at test results.
+
+## 9. Threats to validity
+
+- Distinguishing repeated event occurrences from repeated descriptions.
+- Event mention and coreference annotation error.
+- Temporal underspecification and narrative-order bias.
+- Overlap/concurrency/causality relation-schema mismatch.
+- Sparse positives and class imbalance.
 - Report-source and campaign leakage.
 - Candidate-pair generation bias.
-- Limited annotator expertise and pilot size.
-- Domain shift across vendors, years, and report styles.
-- Baseline incompatibility or irreproducible dependencies.
-- Source-text redistribution restrictions.
+- Annotator expertise, sample size and agreement.
+- Domain and time-period shift.
+- Baseline incompatibility and incomplete artifacts.
+- Source-text copyright and redistribution restrictions.
 
-## 9. Reproducibility record
+## 10. Reproducibility record
 
-Every run must record repository commit, dataset version and licence, report split, ATT&CK release, model/tokenizer revision, prompt hash if applicable, random seed, environment, hardware, evaluation command, and raw result artifacts.
+Each run must record repository commit, data version and licence, report split, ATT&CK release, model/tokenizer revision, prompt hash if applicable, random seed, environment, hardware, evaluation command and raw result artifacts.
