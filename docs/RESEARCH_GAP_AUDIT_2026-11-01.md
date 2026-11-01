@@ -107,7 +107,7 @@ Do not infer physical execution order from the order in which an analyst writes 
 
 ## 7. Feasibility pilot: gate before full implementation
 
-Do not commit to Gemini's proposed 50-report corpus yet.
+Do not fix the study at 50 reports before the feasibility pilot.
 
 First:
 1. Inspect ChronoCTI Figshare v3 metadata, files, schema and licence.
