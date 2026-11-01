@@ -147,7 +147,7 @@ The paper reports:
 - median Cohen's κ = 0.83 for a 15% sample of ATT&CK procedure-to-technique mappings (Section 4.2); this is mapping agreement, not the temporal relation task;
 - Cohen's κ = 0.49 for categorizing the 124 temporal attack patterns (Section 6.3); this is pattern-category agreement, not the 94-report pair labels.
 
-The temporal-relation IRR calculation in the public code and the exact intersection/alignment of the BW and QM pair annotations have not yet been independently reproduced. Audit the workbook schemas, pair-ID overlap, label definitions, duplicates, and the denominator used by `IRR.py` before citing a temporal-label agreement score.
+The temporal-relation IRR calculation in the public code and the exact intersection/alignment of the BW and QM pair annotations have not yet been independently reproduced. Audit the workbook schemas, pair-ID overlap, label definitions, duplicates, and the denominator used by `IRR.py` before citing a temporal-label agreement score. A code inspection also raises a denominator concern: the NEXT loop iterates over ordered, non-diagonal pairs for every report (`R × N × (N−1)`), while the code denominator is `R × N² − N`; the unordered-label loop iterates `R × N × (N−1) / 2`, while its denominator is `(R × N² − N) / 2`. Unless an undocumented exclusion is intended, these denominators do not match the loops. Reproduce the calculation from the workbook rows before treating any returned κ as valid.
 
 ChronoCTI paper: https://doi.org/10.1007/s10115-025-02491-6  
 IRR code: https://github.com/rayhanur-rahman/ChronoCTI/blob/main/temporal-learner-code/IRR.py  
