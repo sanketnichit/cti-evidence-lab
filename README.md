@@ -36,6 +36,16 @@ notebooks/  exploratory analysis only
 
 Validate the research question, legal data access, annotation feasibility, and fair baseline comparison before coding. See `docs/PROJECT_STATUS.md` and `docs/ROADMAP.md`.
 
+## Citation
+
+The machine-readable author fields in `CITATION.cff` intentionally store the given name and family name separately (`Sanket` / `Nichit`). GitHub's generated citation may render a conventional abbreviated form such as **Nichit, S.**; that is a citation-style choice, not a different author name.
+
+For a human-readable reference with the full name, use:
+
+> **Sanket Nichit** (2026). *CTI Evidence Lab* (Version 0.1.0) [Computer software]. https://github.com/sanketnichit/cti-evidence-lab
+
+For BibTeX, use the full-name-preserving entry in `CITATION.bib`.
+
 ## License
 
 The repository's original software and documentation are under the MIT License. This does not grant rights to third-party CTI reports, datasets, papers, trademarks, or model weights referenced by the project.
