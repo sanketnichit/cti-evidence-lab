@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this repository, please cite it as a software artifact. A research citation will be added only if a manuscript is produced."
+message: "If you use this repository, please cite it as a software artifact. For a human-readable citation using the author's full name, see README.md. A research-paper citation will be added only if a manuscript is produced."
 title: "CTI Evidence Lab"
 authors:
   - family-names: Nichit
