@@ -12,7 +12,7 @@ class AnnoCTRScreeningTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name) / "AnnoCTR" / "all"
-        for folder in ("text", "linking_mitre_only", "time"):
+        for folder in ("text", "linking", "linking_mitre_only", "time"):
             (self.root / folder).mkdir(parents=True, exist_ok=True)
         (self.root / "splits.tsv").write_text("", encoding="utf-8")
 
@@ -35,9 +35,12 @@ class AnnoCTRScreeningTests(unittest.TestCase):
                 "label_link": f"https://attack.mitre.org/techniques/{technique_id}",
                 "mention": mention,
             })
+        serialized = "\n".join(json.dumps(row) for row in records) + "\n"
         (self.root / "linking_mitre_only" / f"{report_id}.json").write_text(
-            "\n".join(json.dumps(row) for row in records) + "\n",
-            encoding="utf-8",
+            serialized, encoding="utf-8"
+        )
+        (self.root / "linking" / f"{report_id}.json").write_text(
+            serialized, encoding="utf-8"
         )
         (self.root / "time" / f"{report_id}.tml").write_text(
             timeml, encoding="utf-8"
@@ -54,7 +57,7 @@ class AnnoCTRScreeningTests(unittest.TestCase):
         row = rows[0]
         self.assertEqual(row.source_vendor, "Proofpoint")
         self.assertEqual(row.source_text_characters, len("Synthetic report text."))
-        self.assertEqual(row.link_record_count, 3)
+        self.assertEqual(row.mitre_link_record_count, 3)
         self.assertEqual(row.technique_link_record_count, 3)
         self.assertEqual(row.valid_attack_technique_link_record_count, 3)
         self.assertEqual(row.unresolved_technique_link_record_count, 0)
@@ -81,6 +84,9 @@ class AnnoCTRScreeningTests(unittest.TestCase):
             }
         ]
         path.write_text("\n".join(json.dumps(row) for row in records), encoding="utf-8")
+        (self.root / "linking" / f"{report_id}.json").write_text(
+            "\n".join(json.dumps(row) for row in records), encoding="utf-8"
+        )
         row = screen_corpus(self.root)[0]
         self.assertEqual(row.technique_link_record_count, 1)
         self.assertEqual(row.valid_attack_technique_link_record_count, 0)
@@ -118,6 +124,10 @@ class AnnoCTRScreeningTests(unittest.TestCase):
             json.dumps({"entity_type": "TECHNIQUE", "label_link": "T1059"}),
             encoding="utf-8",
         )
+        (self.root / "linking" / "lab52_report.json").write_text(
+            json.dumps({"entity_type": "TECHNIQUE", "label_link": "T1059"}),
+            encoding="utf-8",
+        )
         rows = screen_corpus(self.root)
         row = rows[0]
         self.assertEqual(row.source_vendor, "Lab52 / S2 Grupo")
@@ -142,11 +152,22 @@ class AnnoCTRScreeningTests(unittest.TestCase):
         cyne = rows["intel471_cyne_without_mitre_links"]
         self.assertEqual(cyne.dataset_split, "train")
         self.assertTrue(cyne.cyber_specific_document_expected)
-        self.assertFalse(cyne.cyber_specific_link_records_present)
+        # CON is a CyNE type but is linked to Wikipedia, so it can be absent
+        # from linking_mitre_only while present in the full linking export.
+        (self.root / "linking" / "intel471_cyne_without_mitre_links.json").write_text(
+            json.dumps({"entity_type": "CON", "label_link": "https://en.wikipedia.org/wiki/SCADA"}),
+            encoding="utf-8",
+        )
+        rows = {row.report_id: row for row in screen_corpus(self.root)}
+        cyne = rows["intel471_cyne_without_mitre_links"]
+        self.assertTrue(cyne.cyber_specific_link_records_present)
+        self.assertEqual(cyne.cyber_specific_link_record_count, 1)
+        self.assertEqual(cyne.mitre_link_record_count, 0)
 
         general_only = rows["intel471_general_only"]
         self.assertEqual(general_only.dataset_split, "ext")
         self.assertFalse(general_only.cyber_specific_document_expected)
+        self.assertFalse(general_only.cyber_specific_link_records_present)
 
     def test_csv_contains_aggregate_fields(self):
         self.write_report("intel471_report", [("T1566", "phishing")], "<TimeML/>")
