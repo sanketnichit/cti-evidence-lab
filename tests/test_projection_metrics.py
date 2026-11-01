@@ -11,7 +11,7 @@ class ProjectionMetricsTests(unittest.TestCase):
             {"event-1": {"T1059"}, "event-2": {"T1059"}},
             [TemporalEdge("r1", "event-1", "event-2", "BEFORE")],
         )
-        self.assertEqual(result["counts"]["same_technique_overlap_edges"], 1)
+        self.assertEqual(result["counts"]["shared_technique_endpoint_edges"], 1)
         self.assertEqual(result["counts"]["self_only_edges"], 1)
         self.assertEqual(result["counts"]["diagonal_pair_mappings"], 1)
         self.assertEqual(result["counts"]["distinct_technique_pairs"], 0)
@@ -103,6 +103,30 @@ class ProjectionMetricsTests(unittest.TestCase):
             result["strict_before_cycle_analysis"]["projected_cycle_components"],
             [["T_A", "T_B"]],
         )
+
+    def test_multimapping_fanout_cycle_is_not_mistaken_for_multiple_event_edges(self):
+        result = project_report(
+            {
+                "event_a": {"T_A", "T_B"},
+                "event_b": {"T_A", "T_B"},
+            },
+            [TemporalEdge("r1", "event_a", "event_b", "BEFORE")],
+        )
+        self.assertTrue(
+            result["strict_before_cycle_analysis"]["source_event_graph_is_acyclic"]
+        )
+        self.assertEqual(result["counts"]["projected_before_cycle_components"], 1)
+        self.assertEqual(
+            result["counts"]["projected_cycle_components_from_single_source_event_edge"],
+            1,
+        )
+        self.assertEqual(
+            result["counts"]["projected_cycle_components_with_multiple_source_event_edges"],
+            0,
+        )
+        provenance = result["strict_before_cycle_analysis"]["projected_cycle_provenance"][0]
+        self.assertEqual(provenance["source_event_edge_ids"], ["r1"])
+        self.assertTrue(provenance["single_event_edge_mapping_fanout"])
 
     def test_symmetric_relation_canonicalizes_technique_pair(self):
         result = project_report(
