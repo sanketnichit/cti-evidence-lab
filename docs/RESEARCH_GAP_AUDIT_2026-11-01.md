@@ -159,3 +159,63 @@ Maintain a lightweight AI assistance log recording material assistance, accepted
 - Cybersecurity event-extraction survey: https://doi.org/10.1049/cmu2.70187
 
 **Current conclusion:** NARROW. The representation-granularity problem is worth a controlled feasibility study, but the exact novelty, data sufficiency and baseline reproducibility remain unproven. No implementation or publication claim should begin before those gates are resolved.
+
+
+## 12. Follow-up prior-art audit — 1 November 2026
+
+The following studies change the novelty boundary and must be included before any research proposal or paper draft.
+
+### CASIE: cybersecurity event extraction already exists
+
+CASIE (Satyapanich et al., AAAI 2020) annotates 1,000 English cybersecurity news articles with event nuggets, arguments, semantic roles and realis values across five event subtypes. The original paper explicitly says the presented work focuses on the first four components and leaves event coreference and full knowledge-graph integration to future work. Its public repository README mentions a later `link_coref.py` helper; the code and any corresponding annotation output must be inspected before describing that capability as implemented or evaluated.
+
+Paper: https://doi.org/10.1609/aaai.v34i05.6401  
+Repository: https://github.com/Ebiquity/CASIE
+
+**Consequence:** generic “cybersecurity event extraction” is not our contribution. The corpus licence is also unverified for our potential use.
+
+### CSEM-CTI: evidence extraction for ATT&CK mapping already exists
+
+Peng et al. (iScience, published 25 June 2026) propose CSEM-CTI for evidence-token mining and sentence-level ATT&CK technique classification. The paper uses SeqMask, LLM-TIKG and CTIBench, and evaluates evidence faithfulness with ERASER. It states the corpora are sentence-level and that ERASER results are computed on SeqMask only, so the evidence claims are corpus-specific. It does not address event-instance coreference or temporal relations between two event occurrences.
+
+Paper: https://doi.org/10.1016/j.isci.2026.116466  
+Full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC13320542/
+
+**Consequence:** generic “evidence-grounded CTI classification” is not novel. Our positive temporal edge must carry evidence connecting two identified event instances; evidence supporting a single technique classification is not enough.
+
+### A 2026 STIX 2.1 dataset preprint already contains report-local behavior objects
+
+Das et al. (arXiv:2607.23312, submitted 25 July 2026) describe 150 English CTI reports as directed heterogeneous STIX graphs, including 1,273 attack-pattern objects mapped to 269 unique ATT&CK identifiers. Each report has a nodes file and an edges file; each node has a report-local identifier, object type, instance and source-derived description. This may preserve multiple attack-pattern objects in a report even when several map to the same ATT&CK technique.
+
+The paper explicitly says the dataset does not model temporal attack sequences and lists temporal relations as future work. It says complete data/code/materials will be made public upon acceptance; no public release was located in this check. Twenty-five reports were independently human-reviewed, with weighted kappa values of 0.64 (entity type), 0.67 (ATT&CK mapping) and 0.62 (relationship correctness). The full dataset therefore must not be treated as fully independently verified from the 25-report audit subset.
+
+Preprint: https://arxiv.org/abs/2607.23312
+
+**Consequence:** do not claim that preserving report-local attack-pattern objects is novel. The candidate should examine whether explicit occurrence-to-occurrence temporal relations can be annotated and how much those relations are lost or conflated when occurrence objects are normalized to ATT&CK technique nodes/pairs or omitted from existing graph schemas. Reassess the paper if its dataset becomes available.
+
+### AnnoCTR and SMAH-CTI: confirmed annotation boundaries
+
+AnnoCTR has 400 reports; its cybersecurity-specific layer covers 120. The corpus repository includes report text and TimeML temporal-expression files. It does not supply event-event temporal TLINKs or event-instance coreference. The corpus is labelled CC BY-SA 4.0 in the official repository, and the paper says vendors permitted republication under that licence. The cyber-specific labels were created primarily by one domain expert, with a limited second-annotator comparison reporting approximately 0.54 average document-level technique-set F1. Inspect exact file tree and report provenance before sampling.
+
+SMAH-CTI's public schema was inspected directly. It stores report/sentence/page IDs, preceding-sentence context, Action spans, ATT&CK labels and grounded procedure text. The data are licensed CC BY-NC 4.0 and code MIT. This is useful for CTI extraction, but the schema does not include event-instance coreference or event-event temporal links.
+
+### Revised bounded research question
+
+> In a sample of CTI reports with human-resolved event instances, how often do distinct event instances map to the same ATT&CK technique, and how much explicitly supported event-to-event temporal information becomes unrepresentable, lost or conflated when event instances are projected to report-level technique nodes or technique pairs?
+
+This is an empirical question, not yet a novelty claim. It is deliberately narrower than event extraction, event graph construction, or evidence-grounded technique classification.
+
+### Candidate measurement definitions to formalize before the pilot
+
+Let (V) be the set of human-resolved event instances in a report, (f:V\to T) map each instance to an ATT&CK technique, and (E_{before}\subseteq V\times V) be only explicitly supported strict BEFORE relations.
+
+1. **Repeated-instance prevalence:** proportion of reports where at least one technique has two or more distinct event instances.
+2. **Same-technique edge-loss rate:** proportion of strict BEFORE edges ((u,v)) for which (f(u)=f(v)). Such edges become self-relations and disappear if the projected graph disallows self-edges.
+3. **Technique-pair conflation:** count distinct event-instance edges that map to the same ordered technique pair, with denominators clearly reported. Preserve relation labels and evidence separately; do not deduplicate silently.
+4. **Projection-induced cycle rate:** proportion of reports where the projected strict-BEFORE graph contains a directed cycle even though the source event-instance graph is acyclic. Test only strict ordering edges; never include overlap, simultaneity, concurrency or dependencies.
+
+These are candidate definitions, not finalized metrics. Test them on manually constructed toy graphs first. Also examine whether event-level BEFORE labels are transitive in the report or only locally stated; do not add inferred/transitive edges to the primary gold layer without an explicit rule.
+
+### Current decision and stop rules
+
+Remain at **NARROW**. Do not build a predictive model until the Figshare and AnnoCTR source gates are resolved and a 5–8 report pilot demonstrates (a) enough repeated distinct instances, (b) enough explicit temporal relations, (c) consistent human annotation and (d) usable source rights. A second human annotator is preferred; absent one, state that inter-annotator agreement was not measured. AI may help locate candidate passages or audit schema consistency, but must not generate gold labels.
