@@ -1,6 +1,6 @@
 # CTI Evidence Lab
 
-A student-led, research-first study of event-instance granularity and temporal information in cyber threat intelligence (CTI) representations.
+A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
 **Status:** Research feasibility and annotation pilot setup. Toy projection/validation prototypes exist; no human annotations or empirical results yet. No novel contribution is claimed as established.
 
@@ -9,14 +9,6 @@ A student-led, research-first study of event-instance granularity and temporal i
 > In CTI reports, how often do two distinct event instances mapped to the same MITRE ATT&CK technique have an explicitly supported temporal relation, and what event-level temporal information becomes unrepresentable when those occurrences are projected to a distinct-technique-pair representation that excludes diagonal pairs?
 
 This is a candidate to test, not a validated research gap. ChronoCTI explicitly defines a distinct-technique-pair universe over 120 ATT&CK techniques, excluding same-technique diagonal pairs. General NLP already studies event mentions, event coreference, and temporal relation extraction. Our potential contribution is a CTI-specific empirical measurement of how often this exclusion matters in source reports, supported by human event-instance annotations and reproducible projection metrics.
-
-## Conditional secondary question
-
-If the annotation pilot is feasible:
-
-> Can evidence-linked event-instance relation extraction improve temporal-edge reliability at a useful level of coverage compared with appropriate technique-pair and text-based baselines?
-
-This secondary model question is not part of the primary experiment until data availability, annotation reliability, and sample size are established.
 
 ## Research integrity
 
@@ -35,12 +27,13 @@ This secondary model question is not part of the primary experiment until data a
 ## Repository layout
 
 ```text
-docs/       research charter, audit, architecture, methodology, decisions, roadmap
-research/   related-work matrix, evidence ledger, annotation protocol
-src/        pure-Python toy projection and annotation-validation utilities
-tests/      synthetic unit tests (23 passed in GitHub Actions on 2026-11-01)
+docs/       research charter, audits, architecture, methodology, decisions, roadmap
+research/   related-work matrix, evidence ledger, annotation and sampling protocols
+src/        pure-Python projection and annotation-validation utilities
+tests/      synthetic unit tests
+examples/   synthetic examples only
+scripts/    local data-screening utilities
 data/       local data only; raw and processed files are git-ignored
-notebooks/  exploratory analysis only
 ```
 
 ## Current phase
@@ -65,21 +58,22 @@ The repository's original software and documentation are under the MIT License. 
 ## Small prototype
 
 The current code is deliberately limited to synthetic and annotation-quality checks:
-- `src/projection_metrics.py`: project event-instance relation edges to ATT&CK technique pairs and calculate candidate collision/coverage/cycle summaries.
+- `src/projection_metrics.py`: project event-instance relation edges to ATT&CK technique pairs and calculate coverage, mapping collisions, diagonal omissions and cycle diagnostics.
 - `src/annotation_validation.py`: validate CSV annotation offsets, event references and relation evidence.
-- `tests/`: synthetic tests; do not interpret them as results on CTI reports.
+- `tests/`: synthetic tests only; do not interpret them as results on CTI reports.
 
-Automated verification: [GitHub Actions run #17](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41297408542) passed all **26 synthetic unit tests** and the toy projection demo smoke test on commit `572fe30`. This validates the current toy code paths only; it is not evidence from real CTI reports.
+The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
+
+Latest observed verification: [GitHub Actions run #26](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41314970298) passed **28 synthetic unit tests** and the module-based toy demo. This validates synthetic code paths only; it is not evidence from real CTI reports.
 
 Run from the repository root:
 
 ```bash
 python -m unittest discover -s tests -v
-python examples/toy_projection_demo.py
+python -m examples.toy_projection_demo
 ```
 
 The first report dry-run instructions are in `research/PILOT_REPORT_01_STARTER.md`. This repository contains no completed report-level gold annotations.
-
 
 ## AnnoCTR screening utility
 
@@ -92,4 +86,4 @@ python scripts/screen_annoctr.py \
   --top-per-vendor 5
 ```
 
-The scanner inventories all 400 reports, separates records carrying cybersecurity-specific annotations from general-layer-only reports, recognizes the QuoIntelligence filename alias, and counts an ATT&CK technique only when its link is a canonical `attack.mitre.org/techniques/Txxxx` URL. It ignores context/negative-linking variants. The full local inventory should reproduce the paper's 120 cyber-specific plus 280 general-layer-only split; verify this with the corrected scanner before sample selection. Repeated mentions remain candidate locators, not event-instance labels. Synthetic tests are in `tests/test_annoctr_screening.py`.
+The scanner reads the official `splits.tsv` document-level manifest (120 GNE+CyNE reports in `train`/`dev`/`test`; 280 GNE-only reports in `ext`). It detects cybersecurity-specific annotation types in the full `linking/` export, while counting canonical ATT&CK technique links from `linking_mitre_only/`. It recognizes the QuoIntelligence filename alias and ignores context/negative-linking variants. It also reports the presence of both linking exports separately. Repeated mentions remain candidate locators, not event-instance labels. Synthetic tests are in `tests/test_annoctr_screening.py`.
