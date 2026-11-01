@@ -1,7 +1,7 @@
-# Annotation Protocol v0.1 — CTI Event Instances and Temporal Evidence
+# Annotation Protocol v0.2 — CTI Event Instances and Temporal Evidence
 
 **Project:** CTI Evidence Lab  
-**Version:** 0.1-draft  
+**Version:** 0.2-draft  
 **Date:** 2026-11-01  
 **Status:** Pilot protocol for human review; not validated
 
@@ -14,14 +14,14 @@
 3. **ATT&CK concept:** the taxonomy technique/sub-technique associated with an event instance. A technique is not itself an event instance.
 4. **Relation:** a relation between two event instances, supported by report evidence.
 
-Same technique does not imply same event instance. Same malware/tool does not imply same event instance. Repeated mention does not imply repeated execution. If the text cannot resolve whether mentions refer to one or multiple occurrences, mark the identity unresolved rather than guessing.
+Same technique does not imply same event instance. Same malware/tool does not imply same event instance. Repeated mention does not imply repeated execution. A generic statement about what a malware family or actor typically does is not automatically a report-local event instance. If the text cannot resolve whether mentions refer to one or multiple occurrences, mark the identity unresolved rather than guessing.
 
 ## 2. Annotation workflow
 
 1. Read the complete report. Record source identifier, title, publication/retrieval dates, language, provenance and licence.
 2. Freeze the source text and calculate a source hash. Mark candidate event/action mentions using exact character offsets in this unmodified text.
 3. Group co-referring mentions into event instances only when the text supports that decision.
-4. Assign an ATT&CK technique/sub-technique only when report evidence supports the mapping. Record the pinned ATT&CK version.
+4. Assign zero or more ATT&CK technique/sub-technique mappings to each resolved event instance only when report evidence supports each mapping. Store each mapping separately with its own evidence span(s), and record the pinned ATT&CK version. Do not force a single mapping if the report supports multiple techniques, and do not infer multiple executions from multiple mappings.
 5. Identify temporal expressions and relation cues.
 6. Create event-instance pairs only when a temporal relation is explicitly stated or supported by an unambiguous construction in the report.
 7. Attach the smallest useful evidence span(s) supporting the relation, including the cue and enough context to resolve its arguments.
@@ -38,17 +38,17 @@ Do not use external threat-intelligence knowledge to fill gaps in the report. Ex
 | mention_text | Exact source substring |
 | char_start, char_end | Zero-based, half-open offsets into frozen source text |
 | sentence_id | Sentence containing the mention, if available |
-| event_instance_id | ID shared by mentions referring to the same occurrence |
-| instance_status | RESOLVED, UNRESOLVED, or NOT_AN_EVENT |
+| event_instance_id | ID shared by mentions referring to the same occurrence; null when there is no resolved instance |
+| instance_status | RESOLVED, UNRESOLVED, GENERIC_BEHAVIOUR, or NOT_AN_EVENT |
 | event_type_text | Short normalized action description, without adding facts |
 | actor, target, asset_or_host | Text-grounded values or null/unknown |
 | time_expression | Exact time phrase, if present |
-| attack_technique_id/name | ATT&CK mapping, if supported |
-| mapping_evidence | Span(s) supporting the mapping |
-| mapping_confidence | HIGH, MEDIUM, LOW, or UNMAPPED |
+| technique_mappings | Zero or more evidence-backed ATT&CK technique/sub-technique mapping records; each has its own ID, name, pinned version and mapping evidence |
+| mapping_evidence | Evidence spans stored separately for each mapping record |
+| mapping_confidence | HIGH, MEDIUM, or LOW per mapping; record UNMAPPED when the event has no supported mapping |
 | annotator_note | Concise explanation of difficult decisions |
 
-Offsets must match the exact frozen source text. Every proposed merge of mentions needs textual evidence that they refer to the same occurrence; every proposed split needs evidence of distinct occurrences. Two actions on different hosts are not automatically separate occurrences unless the report supports that distinction.
+Offsets must match the exact frozen source text. Every proposed merge of mentions needs textual evidence that they refer to the same occurrence; every proposed split needs evidence of distinct occurrences. Two actions on different hosts are not automatically separate occurrences unless the report supports that distinction. Use GENERIC_BEHAVIOUR when the report states a general capability or recurring pattern but does not assert a specific occurrence in the report. Use NOT_AN_EVENT for non-action material. Do not assign an event_instance_id to either status.
 
 ## 4. Temporal relation labels
 
@@ -154,3 +154,21 @@ If these conditions fail, revise or abandon the candidate question. Do not infla
 The student researcher owns final annotation decisions, adjudication, experiment execution and interpretation. AI may help find candidate passages, explain rules, check schema consistency and review code, but AI-generated labels must never be treated as gold annotations. Any AI-proposed label must be checked by a human against the original report.
 
 Maintain an assistance log recording tool, date, task, suggestions accepted/rejected and verification. Follow university and publication policies for disclosure.
+
+
+## 12. Mapping multiplicity and non-instance behaviour (v0.2 clarification)
+
+An event instance may have:
+- one supported ATT&CK technique/sub-technique mapping;
+- multiple supported mappings, each separately evidenced;
+- no supported mapping (UNMAPPED).
+
+Represent mappings as a list, not a single technique field. Each mapping record should include `technique_id`, `technique_name`, `attack_version`, `mapping_evidence_spans`, and `mapping_confidence`. A single event instance with multiple mappings remains one event instance. Multiple linked mentions or mappings do not prove multiple executions.
+
+Distinguish:
+- `RESOLVED`: one report-local occurrence has been identified;
+- `UNRESOLVED`: the text describes an occurrence, but whether this mention refers to one or multiple instances cannot be determined;
+- `GENERIC_BEHAVIOUR`: a general capability, modus operandi, or recurring-pattern statement that does not assert a specific report-local occurrence;
+- `NOT_AN_EVENT`: the span is not an action/event mention.
+
+For the projection study, only `RESOLVED` event instances enter the primary event-instance graph. Report counts of unresolved and generic-behaviour mentions separately so they do not silently disappear.
