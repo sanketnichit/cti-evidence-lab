@@ -17,6 +17,11 @@
 | APTIE: https://doi.org/10.1038/s41597-026-07487-7 | Scientific Data 2026 | Chinese CTI entity/relation/event extraction | Event-instance and relation annotations | Language/task mismatch to English temporal CTI | Adjacent work |
 | Open LLM ATT&CK mapping evaluation: https://arxiv.org/abs/2606.18166 | 2026 preprint | Sentence-level technique classification | Mapping difficulty and baselines | Not event-pair temporal relation extraction | Baseline context |
 | Digital Precognition: https://doi.org/10.1109/ICAIC67076.2026.11395807 | IEEE ICAIC 2026 | Retrieval plus cross-encoder ATT&CK mapping | Efficient technique retrieval | Not temporal relation extraction | Related mapping work |
+| Büchel et al., USENIX Security SoK: https://www.usenix.org/conference/usenixsecurity25/presentation/buechel | 2025 peer-reviewed SoK | Systematizes automated TTP extraction across 40+ papers and evaluates methods in a common setting | Highlights task/ontology/dataset comparability and TTP extraction limits | Does not supply the event-instance temporal relation labels required here | Important framing and reproducibility work; not a direct temporal-edge benchmark |
+| AttackSeqBench: https://arxiv.org/abs/2503.03170 | 2025 arXiv preprint | Builds ordered TTP sequences from 408 CTI reports and evaluates LLM sequence understanding through generated Q&A tasks | Directly overlaps attack-sequence reasoning from CTI reports | Sequences are produced by an LLM-based KG pipeline; it is not a human gold dataset of event-instance coreference and pairwise temporal relations | Close adjacent benchmark; distinguish sequence QA from relation annotation |
+| Hou et al., reachable attack chains: https://arxiv.org/abs/2607.19742 | 2026 arXiv preprint | Extracts attack units as preconditions, behavior and postconditions; uses Datalog for dependency and reachability reasoning; 20 reports and 334 human-validated steps | CTI attack-chain reconstruction and dependencies among steps | Focuses on executable state transitions and reachability, not a benchmark of same-technique event-instance temporal relations | Close adjacent work; compare dependency semantics carefully |
+| MATRES / Ning et al.: https://aclanthology.org/P18-1122/ | ACL 2018 | Multi-axis temporal annotation for main-axis verb events using start-point relations | Provides a clearer relation scheme and IAA precedent | General-domain news events; main-axis verb restriction may omit CTI actions and does not directly solve event identity in CTI | Useful annotation-design precedent, not a drop-in CTI schema |
+
 
 ## Candidate empirical opportunity
 
@@ -132,3 +137,18 @@ Primary source: Lange et al., LREC-COLING 2024, pp. 1147–1160: https://aclanth
 Section 4.5.2 defines the possible pair universe over 120 techniques as ((120^2-120)/2), excluding ((T,T)) diagonal pairs. The public code's pair construction confirms `idx1 != idx2`. Thus, an explicitly temporal relation between two distinct event instances carrying the same technique ID cannot be represented in this candidate-pair universe. This is a specific, inspectable limitation we can empirically evaluate; it is not proof that the limitation is common enough to be important.
 
 Paper: https://doi.org/10.1007/s10115-025-02491-6
+
+
+## Addendum — ChronoCTI agreement materials and cycle-audit prerequisite (1 November 2026)
+
+The ChronoCTI repository includes `temporal-learner-code/IRR_data/` with the final temporal relation workbook and separate `BW` and `QM` annotation workbooks, plus `IRR.py` with a `calculate_IRR_temporal_dataset()` routine. This means an agreement analysis is present in the public repository and must be audited before saying that ChronoCTI has no relation-annotation agreement materials.
+
+The paper reports:
+- median Cohen's κ = 0.83 for a 15% sample of ATT&CK procedure-to-technique mappings (Section 4.2); this is mapping agreement, not the temporal relation task;
+- Cohen's κ = 0.49 for categorizing the 124 temporal attack patterns (Section 6.3); this is pattern-category agreement, not the 94-report pair labels.
+
+The temporal-relation IRR calculation in the public code and the exact intersection/alignment of the BW and QM pair annotations have not yet been independently reproduced. Audit the workbook schemas, pair-ID overlap, label definitions, duplicates, and the denominator used by `IRR.py` before citing a temporal-label agreement score.
+
+ChronoCTI paper: https://doi.org/10.1007/s10115-025-02491-6  
+IRR code: https://github.com/rayhanur-rahman/ChronoCTI/blob/main/temporal-learner-code/IRR.py  
+IRR data directory: https://github.com/rayhanur-rahman/ChronoCTI/tree/main/temporal-learner-code/IRR_data
