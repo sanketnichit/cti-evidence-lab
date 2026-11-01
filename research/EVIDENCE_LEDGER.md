@@ -53,3 +53,8 @@ The candidate is no longer “CTI event extraction” or “evidence-grounded AT
 2. AnnoCTR exact file tree, report text, annotation alignment, and per-report source/provenance details.
 3. Current acceptance/release status of the 2026 STIX dataset preprint.
 4. CASIE actual `link_coref.py` functionality and corpus reuse permissions, if CASIE is considered as a candidate.
+
+
+| E-21 | AnnoCTR exposes aligned per-report source text, token-level labels, technique-link records and TimeML temporal-expression files; a screened report demonstrates repeated technique mentions but no event-event gold relations. | Direct GitHub file inspection of `AnnoCTR/all/text/intel471_2020-03-26_analysis-of-an-attempted-attack.txt`, corresponding `ner_bio/*.bio`, `linking_mitre_only/*.json` and `time/*.tml`. The report has 15,211 source-text characters, 32 technique-link records across five ATT&CK techniques, including 24 mention/link records for T1059, and 31 TIMEX3 elements. TimeML contains zero EVENT, MAKEINSTANCE and TLINK elements. | This is one screening example, not a gold annotation or prevalence estimate. The 24 T1059 mentions may refer to one behaviour instance, multiple behaviours, or explanatory references; human event-identity annotation is required. This report is a candidate for the 5–8 report pilot, not yet an accepted pilot inclusion. |
+
+**New AnnoCTR file-inspection result:** the repository has per-document full-text, BIO/JSON NER, linking and TimeML files under `AnnoCTR/all/`. The per-document formats support a reproducible source-text-based pilot. For the one screened report above, TimeML is temporal-expression-only: no TimeML EVENT, MAKEINSTANCE or TLINK elements occur. Do not use its TIMEX labels as event-to-event temporal relations.
