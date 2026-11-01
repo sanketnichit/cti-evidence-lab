@@ -2,33 +2,41 @@
 
 ## 2026-11-01 — Initial direction: CTI evidence and ATT&CK mapping
 
-**Status:** Superseded as the main research question; retained as a potential component.
+**Status:** Superseded as the main research question; retained as a possible component.
 
-**Reasoning:** Sentence-level evidence mining and ATT&CK mapping are active research areas, including CSEM-CTI and SMAH-CTI. A generic CTI mapper is insufficiently differentiated.
+**Reasoning:** Sentence-level evidence mining and ATT&CK mapping are active research areas, including TRAM, CSEM-CTI, and SMAH-CTI. A generic mapper is insufficiently differentiated.
 
-## 2026-11-01 — Refined direction: temporal event graph with relation evidence
+## 2026-11-01 — Refined direction: temporal CTI relations
 
-**Decision:** Make evidence-constrained temporal relation reconstruction the leading candidate. Preserve report-local event identity separately from ATT&CK taxonomy concepts. Require positive temporal edges to carry relation-specific source spans; allow abstention.
+**Status:** Superseded as the full research question; retained as the domain and baseline.
 
-**Superseding caveat:** Event-mention graphs and temporal edges are established general NLP work, while CTI research already covers temporal attack graphs and evidence mining. The representation itself is not novel. The project is only a CTI-specific empirical study hypothesis pending a pilot and closer related-work review.
+**Reasoning:** ChronoCTI already predicts temporal relations between ATT&CK technique pairs and constructs technique-node graphs.
 
-## 2026-11-01 — ChronoCTI data access is unresolved
+## 2026-11-01 — Current candidate: event-instance granularity
 
-**Decision:** Treat ChronoCTI as a published direct baseline, not yet as an accessible/licensed benchmark.
+**Decision:** Investigate how much temporal structure is lost when report-local action occurrences are collapsed into ATT&CK technique nodes.
 
-**Reasoning:** Its associated Figshare record appeared as “shared privately” during the initial audit. The public repository licence does not automatically settle individual dataset files or third-party report-text rights.
+**Reasoning:** A technique is an abstract taxonomy concept, whereas an incident report can describe multiple distinct occurrences of the same technique and multiple mentions of one occurrence. ChronoCTI defines its task over technique pairs, making this a clear representation difference to test.
 
-## 2026-11-01 — Data rights are a gate
+**Caveat:** Event mention graphs and event coreference are established general NLP topics. A CTI-specific contribution is not established until the literature, annotation pilot, and data comparison support it.
 
-**Decision:** Do not include source CTI reports or copied annotation files until rights are confirmed.
+## 2026-11-01 — Corrected ChronoCTI data-availability note
 
-## 2026-11-01 — No implementation before research gates
+**Decision:** Treat the ChronoCTI Figshare version 3 record as a public data-access route, as explicitly linked in the paper's Data Availability section.
 
-**Decision:** Keep the repository documentation-first until dataset schema, annotation feasibility, baseline comparability, and metrics are verified.
+**Correction:** An earlier internal note said the Figshare item appeared private. That note is superseded. Actual files, version metadata, and per-artifact licence must still be inspected before reuse.
+
+## 2026-11-01 — Dataset-driven stop gate
+
+**Decision:** Run a 5–8 report annotation pilot before model development.
+
+**Reasoning:** The research depends on whether separate event occurrences and event coreference can be distinguished consistently, and whether there are enough repeated techniques and temporal relations to evaluate.
 
 ## Open questions
 
-- Is a lawful copy of ChronoCTI temporal labels obtainable, and what is its exact schema?
-- Do existing labels already include event identity or relation-specific evidence spans?
-- Is a small new annotation subset feasible, with at least two annotators?
-- Which relation labels, baselines, splits, and metrics are defensible?
+- What exactly is in ChronoCTI Figshare v3, and how are its data files licensed?
+- How often do reports contain multiple distinct instances of the same technique?
+- Can annotators reliably separate different event occurrences from repeated mentions of the same event?
+- Does AnnoCTR contain full texts and usable span/time annotations for the candidate reports?
+- Can SMAH-CTI Action spans be paired with underlying full reports under its CC BY-NC licence?
+- Is a second independent annotator available for the pilot?
