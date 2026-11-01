@@ -100,10 +100,13 @@ def project_report(
 ) -> dict:
     """Project event-instance relations to ATT&CK technique pairs.
 
-    Only explicit positive temporal relations are accepted as input. The
-    strict-order cycle analysis uses BEFORE edges only and excludes diagonal
-    technique self-pairs. A missing technique mapping on either endpoint
-    makes that edge unmappable in the ATT&CK-only projection.
+    Only explicit positive temporal relations are accepted as input. Allowed
+    labels are BEFORE, AFTER, OVERLAP, SIMULTANEOUS and
+    CONCURRENT_UNSPECIFIED. Symmetric labels are canonicalized to unordered
+    technique pairs; BEFORE/AFTER remain directed. The strict-order cycle
+    analysis uses BEFORE edges only and excludes diagonal technique self-pairs.
+    A missing technique mapping on either endpoint makes that edge unmappable
+    in the ATT&CK-only projection.
 
     Raises:
         ValueError: for missing event IDs, duplicate relation IDs, empty IDs,
@@ -120,8 +123,15 @@ def project_report(
     for edge in temporal_edges:
         if not edge.edge_id or not edge.source_event or not edge.target_event:
             raise ValueError("Edge IDs and endpoint event IDs must be non-empty.")
-        if not edge.relation:
-            raise ValueError(f"Edge {edge.edge_id!r} has an empty relation label.")
+        if edge.relation not in {
+            "BEFORE", "AFTER", "OVERLAP", "SIMULTANEOUS",
+            "CONCURRENT_UNSPECIFIED",
+        }:
+            raise ValueError(
+                f"Edge {edge.edge_id!r} has non-positive/unsupported relation "
+                f"{edge.relation!r}; absence, ambiguity, and dependency labels "
+                "must not be supplied as temporal graph edges."
+            )
         if edge.edge_id in edge_ids:
             raise ValueError(f"Duplicate edge ID: {edge.edge_id}")
         edge_ids.add(edge.edge_id)
@@ -167,7 +177,17 @@ def project_report(
             continue
 
         mapped_edge_ids.append(edge.edge_id)
-        pairs = sorted(set(product(source_techniques, target_techniques)))
+        raw_pairs = set(product(source_techniques, target_techniques))
+        if edge.relation in {
+            "OVERLAP", "SIMULTANEOUS", "CONCURRENT_UNSPECIFIED"
+        }:
+            # These labels are symmetric, so canonicalize the technique pair
+            # to avoid treating A--B and B--A as different projected pairs.
+            pairs = sorted({tuple(sorted(pair)) for pair in raw_pairs})
+        else:
+            # BEFORE and AFTER preserve endpoint direction. BEFORE-only cycle
+            # analysis is handled separately below.
+            pairs = sorted(raw_pairs)
         edge_to_pairs[edge.edge_id] = pairs
 
         if set(source_techniques).intersection(target_techniques):
