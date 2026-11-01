@@ -101,3 +101,16 @@ The reviewed resources establish CTI event extraction (CASIE and others), CTI te
 A bounded, testable question remains: **in real CTI reports, how often do two distinct event instances map to the same ATT&CK technique, and how much explicitly supported event-to-event temporal information becomes unrepresentable, lost or conflated when the report is projected to a unique-technique-per-report or technique-pair graph?**
 
 This remains a hypothesis, not a proven research gap. The STIX preprint is a direct competitor for the occurrence-object part of the representation and must be revisited when its dataset is released. A pilot must establish the phenomenon's prevalence before any larger study or model work.
+
+
+### File-level AnnoCTR screening: one candidate report (not an annotation result)
+
+A first per-document example was opened from the official repository:
+- Raw report: `AnnoCTR/all/text/intel471_2020-03-26_analysis-of-an-attempted-attack.txt`
+- Token labels: corresponding `AnnoCTR/all/ner_bio/*.bio` and `ner_json/*.json`
+- MITRE-linked concepts: corresponding `AnnoCTR/all/linking_mitre_only/*.json`
+- Temporal expressions: corresponding `AnnoCTR/all/time/*.tml`
+
+Observed for this single report: 15,211 characters of text; 32 ATT&CK technique-link records across five unique techniques; 24 mention/link records map to T1059; 31 TIMEX3 elements; zero TimeML EVENT, MAKEINSTANCE or TLINK elements. This confirms that the resource can supply full report context plus technique-linked mention candidates, while its TimeML layer does not supply event-event temporal gold links.
+
+**Do not count the 24 mentions as 24 executions.** A repeated linked mention can refer to the same attack occurrence, a different occurrence, an artefact/description, or a general explanatory statement. A human annotator must resolve this from context. This report is a useful candidate for the 5–8 report pilot, but it is not yet selected as a pilot item and is not evidence of repeated-instance prevalence.
