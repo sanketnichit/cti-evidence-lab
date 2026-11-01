@@ -55,7 +55,7 @@ For every candidate report, the human reviewer must record:
 - whether the report actually contains enough positive and ambiguous/no-relation cases for the pilot;
 - annotation time, decisions requiring adjudication and reasons for exclusion.
 
-A second human annotator should independently review a subset if possible. AI can help locate candidate passages, but human annotators must assign the gold event identities and temporal relations.
+A second human annotator should independently review a subset if possible. Human annotators must assign the gold event identities and temporal relations against the original source text.
 
 ## Source
 
@@ -89,7 +89,9 @@ python scripts/screen_annoctr.py \
   --top-per-vendor 5
 ```
 
-The scanner's synthetic unit tests are in `tests/test_annoctr_screening.py`. Execution of the full test suite and the scanner on the actual full corpus has not yet been confirmed in this session.
+The scanner's synthetic unit tests are in `tests/test_annoctr_screening.py`. GitHub Actions run #20 passed 27 tests and the synthetic projection smoke test. A full local scan has also been run against the 400-report corpus, with no missing text/linking/TimeML file pairs.
+
+**Split-manifest reconciliation (1 November 2026):** the official `splits.tsv` marks `train`, `dev` and `test` as the 120 GNE+CyNE reports, and `ext` as the 280 additional GNE-only reports. The donor counts for the 120 are Intel471 30, Lab52 23, Proofpoint 28, QuoIntelligence 12 and ZScaler 27, matching the paper. The earlier scanner output of 117 measured reports with at least one cyber-specific record in `linking_mitre_only`; it did not measure the document-level CyNE split. The scanner has now been updated to read `splits.tsv` as the document-level source of truth and report link-record presence separately. Three reports in the GNE+CyNE split had no cyber-specific records detected in that specific export; the updated scanner lists them for checking against other annotation exports. This does not establish that their underlying annotations are absent. Rerun the updated scanner before final candidate selection.
 
 For final pilot selection:
 1. inspect the inventory CSV;
