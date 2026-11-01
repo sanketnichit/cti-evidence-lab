@@ -382,7 +382,11 @@ def print_summary(results: list[ReportScreen], top_per_vendor: int) -> None:
         cyne_count = sum(
             1 for row in results
             if row.source_vendor == vendor
-            and row.cyber_specific_document_expected is True
+            and (
+                row.cyber_specific_document_expected is True
+                if split_manifest_available
+                else row.cyber_specific_link_records_present is True
+            )
         )
         label = "in GNE+CyNE split" if split_manifest_available else "with cyber-specific link records"
         print(f"  {vendor}: {count} total ({cyne_count} {label})")
