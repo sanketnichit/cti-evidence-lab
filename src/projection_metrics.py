@@ -155,7 +155,7 @@ def project_report(
     edge_to_pairs: dict[str, list[tuple[str, str]]] = {}
     mapped_edge_ids: list[str] = []
     unmapped_edge_ids: list[str] = []
-    same_technique_overlap_ids: list[str] = []
+    shared_technique_endpoint_ids: list[str] = []
     self_only_edge_ids: list[str] = []
     diagonal_mappings = 0
     total_pair_mappings = 0
@@ -196,7 +196,7 @@ def project_report(
         edge_to_pairs[edge.edge_id] = pairs
 
         if set(source_techniques).intersection(target_techniques):
-            same_technique_overlap_ids.append(edge.edge_id)
+            shared_technique_endpoint_ids.append(edge.edge_id)
 
         if pairs and all(source == target for source, target in pairs):
             self_only_edge_ids.append(edge.edge_id)
@@ -246,23 +246,52 @@ def project_report(
     # Technique projection for strict ordering ignores diagonal/self-pairs,
     # matching a common unique-technique pair graph convention. The diagonal
     # information loss is separately reported above.
-    projected_before_pairs: set[tuple[str, str]] = set()
+    projected_before_pair_provenance: dict[tuple[str, str], set[str]] = defaultdict(set)
     for edge in temporal_edges:
         if edge.relation == "BEFORE":
-            projected_before_pairs.update(edge_to_pairs[edge.edge_id])
+            normalized_pairs = edge_to_pairs[edge.edge_id]
         elif edge.relation == "AFTER":
             # The stored projection preserves the original AFTER endpoint
             # order; reverse each pair for normalized strict-BEFORE analysis.
-            projected_before_pairs.update(
+            normalized_pairs = [
                 (target, source)
                 for source, target in edge_to_pairs[edge.edge_id]
-            )
-    projected_before_pairs = {
-        pair for pair in projected_before_pairs if pair[0] != pair[1]
-    }
+            ]
+        else:
+            continue
+
+        # Ignore diagonal pairs in the strict-order technique graph. Retain
+        # provenance by source event relation so that cycles produced by the
+        # Cartesian product of one multi-mapped event edge can be separated
+        # from cycles that require multiple source event relations.
+        for pair in normalized_pairs:
+            if pair[0] != pair[1]:
+                projected_before_pair_provenance[pair].add(edge.edge_id)
+
+    projected_before_pairs = set(projected_before_pair_provenance)
     projection_cycles = _cyclic_components(
         techniques, sorted(projected_before_pairs)
     )
+    projected_cycle_provenance = []
+    for component in projection_cycles:
+        component_nodes = set(component)
+        internal_pairs = sorted(
+            pair
+            for pair in projected_before_pair_provenance
+            if pair[0] in component_nodes and pair[1] in component_nodes
+        )
+        source_edge_ids = sorted({
+            edge_id
+            for pair in internal_pairs
+            for edge_id in projected_before_pair_provenance[pair]
+        })
+        projected_cycle_provenance.append({
+            "technique_nodes": list(component),
+            "internal_technique_pairs": [list(pair) for pair in internal_pairs],
+            "source_event_edge_ids": source_edge_ids,
+            "source_event_edge_count": len(source_edge_ids),
+            "single_event_edge_mapping_fanout": len(source_edge_ids) == 1,
+        })
 
     mapped_edge_count = len(mapped_edge_ids)
     total_edge_count = len(temporal_edges)
@@ -284,7 +313,7 @@ def project_report(
             "distinct_technique_pair_mappings": distinct_pair_mappings,
             "event_edges_with_distinct_technique_pair": len(distinct_pair_edge_ids),
             "event_edges_without_distinct_technique_pair": len(edge_ids_without_distinct_pair),
-            "same_technique_overlap_edges": len(same_technique_overlap_ids),
+            "shared_technique_endpoint_edges": len(shared_technique_endpoint_ids),
             "self_only_edges": len(self_only_edge_ids),
             "diagonal_pair_mappings": diagonal_mappings,
             "collision_technique_pairs": len(collision_pairs),
@@ -294,6 +323,14 @@ def project_report(
             "label_conflated_technique_pairs": len(label_conflation),
             "source_before_cycle_components": len(source_cycles),
             "projected_before_cycle_components": len(projection_cycles),
+            "projected_cycle_components_with_multiple_source_event_edges": sum(
+                1 for item in projected_cycle_provenance
+                if item["source_event_edge_count"] >= 2
+            ),
+            "projected_cycle_components_from_single_source_event_edge": sum(
+                1 for item in projected_cycle_provenance
+                if item["single_event_edge_mapping_fanout"]
+            ),
         },
         "rates": {
             "event_mapping_coverage": (
@@ -302,8 +339,8 @@ def project_report(
             "temporal_edge_mapping_coverage": (
                 mapped_edge_count / total_edge_count if total_edge_count else None
             ),
-            "same_technique_overlap_edge_rate": (
-                len(same_technique_overlap_ids) / mapped_edge_count
+            "shared_technique_endpoint_edge_rate": (
+                len(shared_technique_endpoint_ids) / mapped_edge_count
                 if mapped_edge_count
                 else None
             ),
@@ -368,8 +405,8 @@ def project_report(
                 f"{source} -> {target}": labels
                 for (source, target), labels in sorted(label_conflation.items())
             },
-            "same_technique_overlap_edge_ids": sorted(
-                same_technique_overlap_ids
+            "shared_technique_endpoint_edge_ids": sorted(
+                shared_technique_endpoint_ids
             ),
             "self_only_edge_ids": sorted(self_only_edge_ids),
             "unmapped_edge_ids": sorted(unmapped_edge_ids),
@@ -379,12 +416,16 @@ def project_report(
             "projection_cycle_analysis_valid": not bool(source_cycles),
             "source_cycle_components": [list(c) for c in source_cycles],
             "projected_cycle_components": [list(c) for c in projection_cycles],
+            "projected_cycle_provenance": projected_cycle_provenance,
             "note": (
                 "Projection-induced cycle incidence is interpretable only when "
                 "the source event-instance strict-order graph is acyclic, "
                 "after normalizing AFTER(A,B) to BEFORE(B,A). Diagonal "
                 "technique self-pairs are excluded from this cycle test and "
-                "reported separately."
+                "reported separately. A cycle generated by multiple mapping "
+                "combinations from only one source event relation is marked "
+                "as single-event-edge mapping fanout, not independent evidence "
+                "of repeated event instances."
             ),
         },
     }
