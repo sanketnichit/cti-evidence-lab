@@ -1,0 +1,1 @@
+report_id,mention_id,char_start,char_end,mention_text,sentence_id,instance_status,event_instance_id,event_type_text,actor_text,target_text,asset_or_host_text,time_expression,annotator_confidence,adjudication_status,annotator_note
