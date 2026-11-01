@@ -45,7 +45,7 @@ The projected technique-pair set is:
 P_r = \bigcup_{e \in E_{\text{temp}},\; Q(e)\ne\varnothing} Q(e)
 ]
 
-This set projection deduplicates repeated technique pairs. Keep a provenance map from each projected pair back to all source event-pair relations; never overwrite the original event graph.
+This set projection deduplicates repeated technique pairs. Keep a provenance map from each projected pair back to all source event-pair relations; never overwrite the original event graph. Only explicit positive temporal labels may enter this projection: BEFORE, AFTER, OVERLAP, SIMULTANEOUS and CONCURRENT_UNSPECIFIED. NO_TEMPORAL_CLAIM, VAGUE_OR_AMBIGUOUS, NOT_ASSESSABLE, and causal/dependency/narrative-order labels must never be supplied as positive temporal edges.
 
 **Versioning rule:** compare exact ATT&CK IDs under a single pinned release. Parent/sub-technique collapsing is a separate sensitivity analysis, not something to do implicitly.
 
@@ -159,3 +159,26 @@ Do not implement a model yet. First:
 4. have a second human annotate an overlapping subset if possible;
 5. test toy cases and finalize definitions;
 6. then choose statistical summaries and whether a predictive task is justified.
+
+
+## 9. Toy implementation added
+
+A pure-Python prototype is in `src/projection_metrics.py`; toy unit tests are in `tests/test_projection_metrics.py`; a synthetic example is in `examples/toy_projection_demo.py`.
+
+Run from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+python examples/toy_projection_demo.py
+```
+
+The prototype:
+- accepts only explicit positive temporal relation labels;
+- supports zero, one or multiple ATT&CK mappings per event instance;
+- canonicalizes symmetric technique pairs and preserves direction for BEFORE/AFTER;
+- retains the many-to-many provenance from technique pairs back to source event edges;
+- reports unmapped edge coverage rather than silently dropping those edges;
+- keeps same-technique diagonal projections separate from strict cycle analysis;
+- only treats projection-induced cycles as interpretable if the source BEFORE graph is acyclic.
+
+A GitHub Actions workflow is configured to run the standard-library unit tests on relevant pushes and pull requests. Its execution status has not yet been confirmed from this audit session. These tests validate synthetic cases only; they do not validate the annotation definitions or establish any empirical finding.
