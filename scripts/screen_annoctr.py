@@ -6,6 +6,7 @@ mention is a candidate locator, never evidence of repeated execution.
 
 Expected input directory is the AnnoCTR/all folder containing:
   text/*.txt
+  linking/*.json
   linking_mitre_only/*.json
   time/*.tml
 
@@ -50,7 +51,7 @@ class ReportScreen:
     dataset_split: str | None
     cyber_specific_document_expected: bool | None
     source_text_characters: int | None
-    link_record_count: int | None
+    mitre_link_record_count: int | None
     technique_link_record_count: int | None
     valid_attack_technique_link_record_count: int | None
     unresolved_technique_link_record_count: int | None
@@ -66,6 +67,7 @@ class ReportScreen:
     signal_tag_count: int | None
     text_file_present: bool
     linking_file_present: bool
+    mitre_linking_file_present: bool
     timeml_file_present: bool
     screening_status: str
 
@@ -138,15 +140,18 @@ def screen_one(
     *,
     text_dir: Path,
     linking_dir: Path,
+    mitre_linking_dir: Path,
     time_dir: Path,
     dataset_split: str | None = None,
 ) -> ReportScreen:
     text_path = text_dir / f"{report_id}.txt"
     linking_path = linking_dir / f"{report_id}.json"
+    mitre_linking_path = mitre_linking_dir / f"{report_id}.json"
     time_path = time_dir / f"{report_id}.tml"
 
     text_present = text_path.is_file()
     linking_present = linking_path.is_file()
+    mitre_linking_present = mitre_linking_path.is_file()
     timeml_present = time_path.is_file()
 
     char_count = (
@@ -159,12 +164,16 @@ def screen_one(
     if linking_present:
         link_records = read_json_records(linking_path)
 
+    mitre_link_records: list[dict[str, Any]] | None = None
+    if mitre_linking_present:
+        mitre_link_records = read_json_records(mitre_linking_path)
+
     technique_records = (
         [
-            row for row in link_records
+            row for row in mitre_link_records
             if str(row.get("entity_type", "")).upper() == "TECHNIQUE"
         ]
-        if link_records is not None
+        if mitre_link_records is not None
         else None
     )
 
@@ -177,6 +186,9 @@ def screen_one(
             if technique_id:
                 technique_frequency[technique_id] += 1
 
+    # CyNE includes CONCEPT (CON), which is linked to Wikipedia rather than
+    # MITRE ATT&CK. Detect all cyber-specific types in the full linking export,
+    # not in linking_mitre_only.
     cyber_specific_records = (
         [
             row for row in link_records
@@ -204,6 +216,8 @@ def screen_one(
         missing.append("TEXT")
     if not linking_present:
         missing.append("LINKING")
+    if not mitre_linking_present:
+        missing.append("MITRE_LINKING")
     if not timeml_present:
         missing.append("TIMEML")
 
@@ -216,7 +230,9 @@ def screen_one(
             if dataset_split is not None else None
         ),
         source_text_characters=char_count,
-        link_record_count=len(link_records) if link_records is not None else None,
+        mitre_link_record_count=(
+            len(mitre_link_records) if mitre_link_records is not None else None
+        ),
         technique_link_record_count=(
             len(technique_records) if technique_records is not None else None
         ),
@@ -249,6 +265,7 @@ def screen_one(
         signal_tag_count=tags["SIGNAL"] if timeml_present else None,
         text_file_present=text_present,
         linking_file_present=linking_present,
+        mitre_linking_file_present=mitre_linking_present,
         timeml_file_present=timeml_present,
         screening_status="OK" if not missing else "MISSING_" + "_".join(missing),
     )
@@ -291,12 +308,17 @@ def read_split_assignments(path: Path) -> dict[str, str]:
 def screen_corpus(root: Path) -> list[ReportScreen]:
     """Screen report files and join them to the official document split manifest."""
     text_dir = root / "text"
-    linking_dir = root / "linking_mitre_only"
+    linking_dir = root / "linking"
+    mitre_linking_dir = root / "linking_mitre_only"
     time_dir = root / "time"
 
     if not linking_dir.is_dir():
         raise FileNotFoundError(
-            f"Expected linking folder not found: {linking_dir}"
+            f"Expected full linking folder not found: {linking_dir}"
+        )
+    if not mitre_linking_dir.is_dir():
+        raise FileNotFoundError(
+            f"Expected MITRE-only linking folder not found: {mitre_linking_dir}"
         )
 
     split_assignments = read_split_assignments(root / "splits.tsv")
@@ -306,16 +328,21 @@ def screen_corpus(root: Path) -> list[ReportScreen]:
     # *_w_con_w_neg.json). They are not separate reports and must not
     # inflate the inventory or appear as missing text/TimeML files.
     variant_suffix = re.compile(r"_w_(?:con|neg)(?:_w_neg)?$")
-    report_ids = sorted(
-        path.stem
-        for path in linking_dir.glob("*.json")
-        if not variant_suffix.search(path.stem)
+    report_ids = (
+        sorted(split_assignments)
+        if split_assignments
+        else sorted(
+            path.stem
+            for path in linking_dir.glob("*.json")
+            if not variant_suffix.search(path.stem)
+        )
     )
     results = [
         screen_one(
             report_id,
             text_dir=text_dir,
             linking_dir=linking_dir,
+            mitre_linking_dir=mitre_linking_dir,
             time_dir=time_dir,
             dataset_split=split_assignments.get(report_id),
         )
@@ -357,11 +384,11 @@ def print_summary(results: list[ReportScreen], top_per_vendor: int) -> None:
         print(f"Reports in GNE-only split (ext): {len(general_only_reports)}")
         print(
             "GNE+CyNE reports with cybersecurity-specific records in "
-            f"linking_mitre_only: {len(with_cyber_links)}"
+            f"full linking export: {len(with_cyber_links)}"
         )
         print(
             "GNE+CyNE reports without cybersecurity-specific records in "
-            f"linking_mitre_only: {len(without_cyber_links)}"
+            f"full linking export: {len(without_cyber_links)}"
         )
         if without_cyber_links:
             print("  Check these split-positive reports against the other annotation exports:")
@@ -374,8 +401,8 @@ def print_summary(results: list[ReportScreen], top_per_vendor: int) -> None:
             )
     else:
         print(
-            "WARNING: splits.tsv is unavailable; link-record presence cannot be "
-            "used as a document-level annotation-layer count."
+            "WARNING: splits.tsv is unavailable; full-linking record presence "
+            "is only a file-level proxy for annotation-layer membership."
         )
     vendor_counts = Counter(row.source_vendor for row in results)
     for vendor, count in sorted(vendor_counts.items()):
