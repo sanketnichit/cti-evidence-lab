@@ -28,6 +28,11 @@ A secondary experiment on evidence-linked event-instance relation extraction may
 
 This is a hypothesis to test—not a validated gap, novel method, implemented system, or publication claim.
 
+## New working artifact
+
+- Drafted `research/ANNOTATION_PROTOCOL_v0.1.md` to separate text mentions, event instances, ATT&CK concepts, temporal relations, and non-temporal dependencies. It defines evidence-span requirements, uncertainty labels, a 5–8 report feasibility pilot, and stop criteria. This is a draft for human review, not a validated annotation standard.
+- Confirmed the repository citation metadata already encodes the author's name correctly: given name `Sanket`, family name `Nichit`. The generated abbreviated citation `Nichit, S.` is the normal family-name-first bibliographic rendering; the README also gives the full-name form `Sanket Nichit`. No author-field correction is required.
+
 ## Blocking gates
 
 1. Inspect ChronoCTI Figshare v3 metadata, all files, schemas, versions and licence.
