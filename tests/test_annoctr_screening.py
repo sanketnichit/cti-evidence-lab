@@ -14,11 +14,15 @@ class AnnoCTRScreeningTests(unittest.TestCase):
         self.root = Path(self.tmp.name) / "AnnoCTR" / "all"
         for folder in ("text", "linking_mitre_only", "time"):
             (self.root / folder).mkdir(parents=True, exist_ok=True)
+        (self.root / "splits.tsv").write_text("", encoding="utf-8")
 
     def tearDown(self):
         self.tmp.cleanup()
 
-    def write_report(self, report_id, techniques, timeml):
+    def write_report(self, report_id, techniques, timeml, split="train"):
+        split_path = self.root / "splits.tsv"
+        existing = split_path.read_text(encoding="utf-8")
+        split_path.write_text(existing + f"{report_id}\t{split}\n", encoding="utf-8")
         (self.root / "text" / f"{report_id}.txt").write_text(
             "Synthetic report text.", encoding="utf-8"
         )
@@ -55,8 +59,9 @@ class AnnoCTRScreeningTests(unittest.TestCase):
         self.assertEqual(row.valid_attack_technique_link_record_count, 3)
         self.assertEqual(row.unresolved_technique_link_record_count, 0)
         self.assertEqual(row.unique_technique_count, 2)
-        self.assertEqual(row.cyber_specific_record_count, 3)
-        self.assertTrue(row.cyber_specific_layer_present)
+        self.assertEqual(row.cyber_specific_link_record_count, 3)
+        self.assertTrue(row.cyber_specific_document_expected)
+        self.assertTrue(row.cyber_specific_link_records_present)
         self.assertEqual(row.repeated_technique_ids, "T1059:2")
         self.assertEqual(row.timex3_count, 1)
         self.assertEqual(row.event_tag_count, 1)
@@ -82,7 +87,7 @@ class AnnoCTRScreeningTests(unittest.TestCase):
         self.assertEqual(row.unresolved_technique_link_record_count, 1)
         self.assertEqual(row.unique_technique_count, 0)
         self.assertEqual(row.repeated_technique_ids, "")
-        self.assertEqual(row.cyber_specific_record_count, 1)
+        self.assertEqual(row.cyber_specific_link_record_count, 1)
 
     def test_quoteintelligence_vendor_alias(self):
         self.assertEqual(infer_vendor("quoteintelligence_2021_report"), "QuoIntelligence")
@@ -118,6 +123,30 @@ class AnnoCTRScreeningTests(unittest.TestCase):
         self.assertEqual(row.source_vendor, "Lab52 / S2 Grupo")
         self.assertIsNone(row.timex3_count)
         self.assertIn("MISSING_TIMEML", row.screening_status)
+
+    def test_split_manifest_is_authoritative_for_document_layer(self):
+        self.write_report(
+            "intel471_cyne_without_mitre_links",
+            [],
+            "<TimeML/>",
+            split="train",
+        )
+        self.write_report(
+            "intel471_general_only",
+            [],
+            "<TimeML/>",
+            split="ext",
+        )
+        rows = {row.report_id: row for row in screen_corpus(self.root)}
+
+        cyne = rows["intel471_cyne_without_mitre_links"]
+        self.assertEqual(cyne.dataset_split, "train")
+        self.assertTrue(cyne.cyber_specific_document_expected)
+        self.assertFalse(cyne.cyber_specific_link_records_present)
+
+        general_only = rows["intel471_general_only"]
+        self.assertEqual(general_only.dataset_split, "ext")
+        self.assertFalse(general_only.cyber_specific_document_expected)
 
     def test_csv_contains_aggregate_fields(self):
         self.write_report("intel471_report", [("T1566", "phishing")], "<TimeML/>")
