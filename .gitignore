@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Environments and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local data (review each dataset license before redistribution)
+data/raw/**
+data/processed/**
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Notebooks and experiment outputs
+.ipynb_checkpoints/
+outputs/
+artifacts/
+mlruns/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
