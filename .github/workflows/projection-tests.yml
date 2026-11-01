@@ -1,0 +1,32 @@
+name: Projection metric toy tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "examples/**"
+      - ".github/workflows/projection-tests.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "examples/**"
+      - ".github/workflows/projection-tests.yml"
+  workflow_dispatch:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run standard-library unit tests
+        env:
+          PYTHONPATH: .
+        run: python -m unittest discover -s tests -v
