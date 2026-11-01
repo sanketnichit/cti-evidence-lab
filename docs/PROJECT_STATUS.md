@@ -49,3 +49,31 @@ If repeated distinct occurrences are rare, source text cannot lawfully be used, 
 ## Student-led research
 
 The student researcher owns final research decisions, human annotations, experiment execution/reproduction, interpretation and conclusions. AI may support literature discovery, explanations, debugging and review. AI-generated annotations are not gold labels; AI assistance must be logged and disclosed according to institutional and venue policies.
+
+
+## Follow-up audit — 1 November 2026
+
+### Important prior-art corrections
+
+- **CASIE (AAAI 2020)** already covers cybersecurity event nuggets, event arguments, semantic roles and realis. The paper says event coreference and full knowledge-graph integration were future work in the presented study. Its public repo README mentions a `link_coref.py` helper; its exact implementation and whether any gold coreference outputs exist have not been verified. Do not describe generic cybersecurity event extraction as our novelty.
+- **CSEM-CTI (iScience 2026)** mines evidence tokens for sentence-level ATT&CK technique classification and evaluates rationale faithfulness with ERASER. It does not provide report-level event identity or event-to-event temporal relation labels. Therefore generic “evidence-grounded CTI classification” is also not a novelty claim; our evidence must be tied to a relation between two specific event instances.
+- **A July 2026 STIX 2.1 CTI preprint** describes 150 report-level graphs with 1,273 attack-pattern objects mapped to ATT&CK. This could already preserve multiple behavior objects per report. However, the preprint explicitly does not model temporal attack sequences and lists temporal relationships as future work. It says dataset/code will be public upon acceptance; no release was found in this check. Revisit this work and its data release before freezing novelty.
+- **AnnoCTR** is now the leading pilot candidate: 400 full-text reports, with cybersecurity-specific technique/entity annotations on 120; corpus licence stated as CC BY-SA 4.0; TimeML temporal-expression files are not event-event TLINKs or event coreference. Exact corpus tree and per-report provenance/alignment still need inspection.
+- **SMAH-CTI** schema and data licence have been inspected. It is sentence-level with Action spans and ATT&CK labels, not event-event temporal/coreference gold data; CC BY-NC 4.0 dataset and MIT code.
+
+### Refined research direction
+
+The candidate is narrowed to an empirical question: in CTI reports, how often do two distinct event instances map to the same ATT&CK technique, and what explicitly supported event-to-event temporal information becomes unrepresentable, lost or conflated when the report is projected to a unique-technique-per-report or technique-pair graph?
+
+This is not a proven gap. The 2026 STIX preprint is a direct adjacent work for preserving behavior objects; ChronoCTI is the direct temporal technique-pair baseline; CSEM-CTI covers evidence extraction at sentence/technique-classification granularity; CASIE covers cybersecurity event extraction. The contribution must be about temporal relation preservation/loss and supported by a pilot, not generic extraction or graph creation.
+
+### Current next gates
+
+1. Resolve ChronoCTI Figshare v3 files, schema, licence and access status.
+2. Inspect AnnoCTR's actual corpus directory/file structure, text-to-annotation alignment and source provenance.
+3. Recheck the STIX preprint's acceptance and data release status.
+4. Screen 5–8 AnnoCTR reports with transparent selection criteria and manually annotate mentions, event identity, ATT&CK mapping, event-pair temporal labels and relation-specific evidence.
+5. Double-annotate a subset with another human if possible; do not use AI output as gold data.
+6. Define projection metrics and test toy cases before coding a complete system.
+
+**Implementation remains not started. Novelty remains not established. Current decision remains NARROW.**
