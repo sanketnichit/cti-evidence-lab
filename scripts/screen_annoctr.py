@@ -47,14 +47,16 @@ VENDOR_MARKERS = {
 class ReportScreen:
     report_id: str
     source_vendor: str
+    dataset_split: str | None
+    cyber_specific_document_expected: bool | None
     source_text_characters: int | None
     link_record_count: int | None
     technique_link_record_count: int | None
     valid_attack_technique_link_record_count: int | None
     unresolved_technique_link_record_count: int | None
     unique_technique_count: int | None
-    cyber_specific_record_count: int | None
-    cyber_specific_layer_present: bool | None
+    cyber_specific_link_record_count: int | None
+    cyber_specific_link_records_present: bool | None
     repeated_technique_ids: str
     repeated_technique_mention_count: int | None
     timex3_count: int | None
@@ -137,6 +139,7 @@ def screen_one(
     text_dir: Path,
     linking_dir: Path,
     time_dir: Path,
+    dataset_split: str | None = None,
 ) -> ReportScreen:
     text_path = text_dir / f"{report_id}.txt"
     linking_path = linking_dir / f"{report_id}.json"
@@ -207,6 +210,11 @@ def screen_one(
     return ReportScreen(
         report_id=report_id,
         source_vendor=infer_vendor(report_id),
+        dataset_split=dataset_split,
+        cyber_specific_document_expected=(
+            dataset_split in {"train", "dev", "test"}
+            if dataset_split is not None else None
+        ),
         source_text_characters=char_count,
         link_record_count=len(link_records) if link_records is not None else None,
         technique_link_record_count=(
@@ -222,10 +230,10 @@ def screen_one(
         unique_technique_count=(
             len(technique_frequency) if technique_records is not None else None
         ),
-        cyber_specific_record_count=(
+        cyber_specific_link_record_count=(
             len(cyber_specific_records) if cyber_specific_records is not None else None
         ),
-        cyber_specific_layer_present=(
+        cyber_specific_link_records_present=(
             bool(cyber_specific_records) if cyber_specific_records is not None else None
         ),
         repeated_technique_ids=";".join(
@@ -246,8 +254,42 @@ def screen_one(
     )
 
 
+def read_split_assignments(path: Path) -> dict[str, str]:
+    """Read the official AnnoCTR split manifest.
+
+    In splits.tsv, train/dev/test identify the 120 GNE+CyNE reports;
+    ext identifies the 280 additional GNE-only reports. This is the
+    document-level source of truth, distinct from whether a particular
+    linking export contains any cyber-specific link records.
+    """
+    if not path.is_file():
+        return {}
+
+    assignments: dict[str, str] = {}
+    allowed_splits = {"train", "dev", "test", "ext"}
+    for line_number, line in enumerate(
+        path.read_text(encoding="utf-8-sig").splitlines(), start=1
+    ):
+        if not line.strip():
+            continue
+        fields = line.split("\t")
+        if len(fields) != 2 or not fields[0].strip():
+            raise ValueError(
+                f"{path}: expected report_id<TAB>split on line {line_number}"
+            )
+        report_id, split = fields[0].strip(), fields[1].strip().lower()
+        if split not in allowed_splits:
+            raise ValueError(
+                f"{path}: unknown split {split!r} on line {line_number}"
+            )
+        if report_id in assignments:
+            raise ValueError(f"{path}: duplicate report ID {report_id!r}")
+        assignments[report_id] = split
+    return assignments
+
+
 def screen_corpus(root: Path) -> list[ReportScreen]:
-    """Screen all report IDs present in the MITRE-only linking folder."""
+    """Screen report files and join them to the official document split manifest."""
     text_dir = root / "text"
     linking_dir = root / "linking_mitre_only"
     time_dir = root / "time"
@@ -256,6 +298,8 @@ def screen_corpus(root: Path) -> list[ReportScreen]:
         raise FileNotFoundError(
             f"Expected linking folder not found: {linking_dir}"
         )
+
+    split_assignments = read_split_assignments(root / "splits.tsv")
 
     # The public corpus also ships context/negative sampling variants for
     # some reports (e.g. *_w_con.json, *_w_neg.json,
@@ -273,6 +317,7 @@ def screen_corpus(root: Path) -> list[ReportScreen]:
             text_dir=text_dir,
             linking_dir=linking_dir,
             time_dir=time_dir,
+            dataset_split=split_assignments.get(report_id),
         )
         for report_id in report_ids
     ]
@@ -293,16 +338,54 @@ def write_csv(results: Iterable[ReportScreen], output: Path) -> None:
 
 def print_summary(results: list[ReportScreen], top_per_vendor: int) -> None:
     print(f"Reports screened (full corpus): {len(results)}")
-    cyber_reports = [row for row in results if row.cyber_specific_layer_present]
-    print(f"Reports with cybersecurity-specific annotations: {len(cyber_reports)}")
-    print(f"Reports with general-layer-only / no cyber-specific link records: {len(results) - len(cyber_reports)}")
+    split_manifest_available = any(row.dataset_split is not None for row in results)
+    cyne_reports = [
+        row for row in results if row.cyber_specific_document_expected is True
+    ]
+    general_only_reports = [row for row in results if row.dataset_split == "ext"]
+    if split_manifest_available:
+        unknown_split_reports = [row for row in results if row.dataset_split is None]
+        with_cyber_links = [
+            row for row in cyne_reports
+            if row.cyber_specific_link_records_present is True
+        ]
+        without_cyber_links = [
+            row for row in cyne_reports
+            if row.cyber_specific_link_records_present is False
+        ]
+        print(f"Reports in GNE+CyNE splits (train/dev/test): {len(cyne_reports)}")
+        print(f"Reports in GNE-only split (ext): {len(general_only_reports)}")
+        print(
+            "GNE+CyNE reports with cybersecurity-specific records in "
+            f"linking_mitre_only: {len(with_cyber_links)}"
+        )
+        print(
+            "GNE+CyNE reports without cybersecurity-specific records in "
+            f"linking_mitre_only: {len(without_cyber_links)}"
+        )
+        if without_cyber_links:
+            print("  Check these split-positive reports against the other annotation exports:")
+            for row in without_cyber_links:
+                print(f"    {row.report_id}")
+        if unknown_split_reports:
+            print(
+                "WARNING: reports missing from splits.tsv: "
+                f"{len(unknown_split_reports)}"
+            )
+    else:
+        print(
+            "WARNING: splits.tsv is unavailable; link-record presence cannot be "
+            "used as a document-level annotation-layer count."
+        )
     vendor_counts = Counter(row.source_vendor for row in results)
     for vendor, count in sorted(vendor_counts.items()):
-        cyber_count = sum(
+        cyne_count = sum(
             1 for row in results
-            if row.source_vendor == vendor and row.cyber_specific_layer_present
+            if row.source_vendor == vendor
+            and row.cyber_specific_document_expected is True
         )
-        print(f"  {vendor}: {count} total ({cyber_count} with cyber-specific annotations)")
+        label = "in GNE+CyNE split" if split_manifest_available else "with cyber-specific link records"
+        print(f"  {vendor}: {count} total ({cyne_count} {label})")
 
     print("\nReports with missing paired files:")
     missing = [row for row in results if row.screening_status != "OK"]
@@ -317,6 +400,7 @@ def print_summary(results: list[ReportScreen], top_per_vendor: int) -> None:
         candidates = [
             row for row in results
             if row.source_vendor == vendor
+            and row.cyber_specific_document_expected is not False
             and row.screening_status == "OK"
             and (row.repeated_technique_mention_count or 0) > 1
         ]
