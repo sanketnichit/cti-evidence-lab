@@ -77,3 +77,11 @@ This is not a proven gap. The 2026 STIX preprint is a direct adjacent work for p
 6. Define projection metrics and test toy cases before coding a complete system.
 
 **Implementation remains not started. Novelty remains not established. Current decision remains NARROW.**
+
+
+### File-level source inspection completed
+
+- Opened one actual AnnoCTR report and its paired BIO labels, MITRE-only linking annotations and TimeML file. The source report is 15,211 characters, with 32 technique-link records across five ATT&CK techniques; 24 mention/link records map to T1059. Its TimeML has 31 TIMEX3 elements but no EVENT, MAKEINSTANCE or TLINK elements.
+- This confirms the per-report files are suitable for a human screening/annotation workflow, but do not provide temporal event relations. Repeated technique-link mentions are not automatically distinct executions.
+- Candidate screening seed: `intel471_2020-03-26_analysis-of-an-attempted-attack`. It remains a candidate only; human annotators must decide whether any mentions refer to distinct event instances and whether explicit temporal evidence exists.
+- The AnnoCTR GitHub repository was reported as archived on 19 February 2026; this does not itself invalidate the corpus, but maintenance should not be expected.
