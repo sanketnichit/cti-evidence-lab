@@ -11,13 +11,13 @@ class AnnotationValidationTests(unittest.TestCase):
         self.mentions = [
             {
                 "report_id": "r1", "mention_id": "m1",
-                "char_start": "13", "char_end": "29",
+                "char_start": "13", "char_end": "32",
                 "mention_text": "ran a script before",
                 "instance_status": "RESOLVED", "event_instance_id": "e1",
             },
             {
                 "report_id": "r1", "mention_id": "m2",
-                "char_start": "39", "char_end": "58",
+                "char_start": "33", "char_end": "54",
                 "mention_text": "downloading a payload",
                 "instance_status": "RESOLVED", "event_instance_id": "e2",
             },
@@ -29,15 +29,15 @@ class AnnotationValidationTests(unittest.TestCase):
                 "technique_id": "T1059", "technique_name": "Command and Scripting Interpreter",
                 "attack_version": "vTEST",
                 "evidence_span_id": "me1", "evidence_start": "13",
-                "evidence_end": "24", "evidence_text": "ran a script",
+                "evidence_end": "25", "evidence_text": "ran a script",
             },
             {
                 "report_id": "r1", "event_instance_id": "e2",
                 "mapping_id": "map2", "mapping_status": "MAPPED",
                 "technique_id": "T1105", "technique_name": "Ingress Tool Transfer",
                 "attack_version": "vTEST",
-                "evidence_span_id": "me2", "evidence_start": "39",
-                "evidence_end": "58", "evidence_text": "downloading a payload",
+                "evidence_span_id": "me2", "evidence_start": "33",
+                "evidence_end": "54", "evidence_text": "downloading a payload",
             },
         ]
         self.relations = [
@@ -46,7 +46,7 @@ class AnnotationValidationTests(unittest.TestCase):
                 "event_a_id": "e1", "event_b_id": "e2",
                 "relation_label": "BEFORE",
                 "evidence_span_id": "re1", "evidence_start": "13",
-                "evidence_end": "33", "evidence_text": "ran a script before",
+                "evidence_end": "32", "evidence_text": "ran a script before",
                 "evidence_scope": "SENTENCE",
             }
         ]
