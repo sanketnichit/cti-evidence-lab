@@ -1,65 +1,90 @@
 # Candidate System Architecture
 
-This is a research hypothesis, not an implementation specification. Event schema and edge semantics must be validated during the annotation pilot.
+This is a research hypothesis, not an implementation specification. Validate every layer with a small annotation pilot before implementing a full pipeline.
 
 ```text
 Authorized CTI report + immutable source metadata
                       |
-             normalization / segmentation
+       text normalization + offset preservation
                       |
-           event-instance mention extraction
+              event mention detection
                       |
-       source spans + ATT&CK concept grounding
+          event-mention coreference / clustering
                       |
-          candidate event-pair generation
+            report-local event instances
                       |
-            temporal relation prediction
+       ATT&CK concept grounding (optional metadata)
+                      |
+          candidate event-instance pairs
+                      |
+             temporal relation prediction
                       |
         relation-specific evidence attribution
                       |
-        evidence / contradiction / ambiguity checks
+       accept / unresolved / abstain decision
                       |
-                 accept / abstain
-                      |
-       traceable event graph + audit record
+       traceable event-instance temporal graph
 ```
 
-## Core distinctions
+## Core representation
 
-- **Event instance:** a specific occurrence or report mention of an adversarial action, with report-local identity and offsets.
-- **ATT&CK concept:** a taxonomy-level technique/sub-technique ID. Multiple event instances may link to the same concept.
-- **Temporal edge:** a relation between two event instances, not merely between two technique IDs.
-- **Relation evidence:** one or more text spans that justify the relation. A span that only mentions one event does not by itself justify the edge.
+### Event mention
 
-Event-mention graphs are established prior work. A potential diagnostic is whether collapsing repeated report-local event mentions into ATT&CK technique nodes loses measurable temporal information in CTI reports.
+A span in the report that describes an action. It has:
+- report ID and document version;
+- source character offsets (zero-based, end-exclusive);
+- exact source text;
+- sentence/paragraph location;
+- optional normalised description.
 
-## Candidate relation vocabulary
+### Event instance
 
-Begin by matching ChronoCTI semantics where possible. The following labels are provisional and must be reconciled with its paper and actual workbook:
+One underlying action occurrence in the incident narrative. An event instance can have multiple text mentions. It has:
+- stable report-local instance ID;
+- one or more linked event mentions;
+- optional actor, object, target, time, and context arguments;
+- one or more ATT&CK concept links where supported.
 
-- `BEFORE`: one event occurs before another.
-- `SIMULTANEOUS_OVERLAP`: events overlap in the specific sense defined by the source annotation manual.
-- `CONCURRENT`: independent events occur during the same phase, if reliably distinguishable.
-- `NO_TEMPORAL_CLAIM`: source does not establish a positive relation for the pair.
-- `UNRESOLVED`: annotators cannot confidently determine a relation.
+### ATT&CK concept
 
-Keep model `ABSTAIN` separate from the ground-truth label set.
+A reusable taxonomy item. It is linked to an event instance but is not the event instance itself. Several distinct occurrences may share one technique ID.
 
-## Candidate evidence categories
+### Temporal edge
 
-- `EXPLICIT_CUE`: text has a temporal marker or construction.
-- `CROSS_SENTENCE_CONTEXT`: relation requires resolving a reference across sentences with identifiable textual support.
-- `NARRATIVE_ORDER_ONLY`: inferred only from report ordering; not accepted as direct evidence in the primary condition.
-- `DOMAIN_PRIOR_ONLY`: plausible from generic attack knowledge but unsupported by the report.
-- `AMBIGUOUS_OR_CONFLICTING`: source evidence is insufficient or contradictory.
+A directed or symmetric temporal relation between event instances. Its record must include:
+- source and target instance IDs;
+- relation label;
+- supporting evidence span(s);
+- annotation/model provenance;
+- confidence and adjudication status.
 
-These categories need pilot examples, adjudication, and agreement analysis before becoming gold labels.
+A sentence that merely mentions both endpoints is not necessarily evidence for the relation between them.
 
-## Design constraints
+## Provisional relation labels
 
-- Preserve raw source offsets through normalization and segmentation.
-- Do not silently convert report order into event order.
-- Store confidence, evidence type, schema validity, and review status as separate fields.
-- Pin ATT&CK release identifiers.
-- Store dataset IDs and source URLs rather than re-hosting copyrighted reports.
-- Preserve the distinction between source-reported fact and model inference.
+The vocabulary must be reconciled with ChronoCTI's exact schema and tested in the pilot:
+- `BEFORE`: source event occurs before target event.
+- `OVERLAP`: time intervals overlap; define exact scope from annotation examples.
+- `CONCURRENT`: events occur during the same period but are independent, if annotators can reliably distinguish it from overlap.
+- `NO_RELATION`: the report does not establish a positive temporal relation for this candidate pair.
+- `UNRESOLVED`: source wording does not support a reliable human decision.
+
+Keep model `ABSTAIN` outside the gold-label vocabulary.
+
+## Evidence categories to test
+
+- explicit temporal cue;
+- cross-sentence contextual evidence;
+- report chronology / narrative order only;
+- domain prior only;
+- ambiguous or conflicting evidence.
+
+Do not accept narrative order or domain prior alone as direct evidence in the primary evidence-supported evaluation.
+
+## Representation comparison
+
+The key comparison is between:
+1. **Technique-level graph:** aggregate event descriptions by ATT&CK concept within a report, following the broad representation used by ChronoCTI.
+2. **Event-instance graph:** preserve separate event occurrences and their relations; repeated text mentions can be coreferentially linked to one instance.
+
+The project should measure information loss under aggregation, not merely claim that an event-instance graph is more detailed.
