@@ -46,7 +46,7 @@ MITRE Attack Flow arrows encode dependency, not the same semantics as a BEFORE r
 - Record annotation time, ambiguous/unresolved cases, repeated-instance counts, relation-label distribution and agreement.
 - Revise the guide before any larger annotation effort.
 
-Do not use an LLM-generated annotation as ground truth. AI may help locate candidate passages or explain a schema, but human annotators must verify and create the evaluation labels.
+Only human-created and adjudicated labels may serve as evaluation ground truth. Any candidate passage or mapping suggestion must be checked against the original report before annotation.
 
 ## 5. Candidate representation-loss outcomes
 

@@ -1,6 +1,6 @@
 # Annotation Template Files
 
-These blank CSV files are data-entry templates for the human pilot. They contain no report text or AI-generated labels.
+These blank CSV files are data-entry templates for the human pilot. They contain no report text or completed annotations.
 
 ## Files and row granularity
 
@@ -11,7 +11,7 @@ These blank CSV files are data-entry templates for the human pilot. They contain
 
 ## Labels
 
-Use the exact labels and distinctions in `research/ANNOTATION_PROTOCOL_v0.2.md`. Do not infer event order from sentence order. Do not count repeated technique mentions as multiple executions. Do not treat an ATT&CK technique as an event instance.
+Use the exact labels and distinctions in `research/ANNOTATION_PROTOCOL_v0.3.md`. Do not infer event order from sentence order. Do not count repeated technique mentions as multiple executions. Do not treat an ATT&CK technique as an event instance.
 
 The projection prototype accepts only these positive temporal labels:
 `BEFORE`, `AFTER`, `OVERLAP`, `SIMULTANEOUS`, `CONCURRENT_UNSPECIFIED`.

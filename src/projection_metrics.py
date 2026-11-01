@@ -8,15 +8,15 @@ Input contract:
 - each key in techniques_by_event is a resolved, report-local event instance;
 - each value is the set/list of evidence-backed ATT&CK IDs assigned to it;
 - each TemporalEdge is a positive temporal relation between those instances;
-- AFTER should be normalized by swapping endpoints and storing BEFORE if the
-  experiment is measuring strict ordering cycles. Keep original annotations
-  separately in the source data.
+- AFTER is normalized internally by swapping endpoints for strict-order
+  cycle analysis. Original labels, endpoint order and evidence remain in the
+  input annotations.
 """
 
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from itertools import product
 from typing import Iterable, Mapping, Sequence
 
@@ -104,7 +104,8 @@ def project_report(
     labels are BEFORE, AFTER, OVERLAP, SIMULTANEOUS and
     CONCURRENT_UNSPECIFIED. Symmetric labels are canonicalized to unordered
     technique pairs; BEFORE/AFTER remain directed. The strict-order cycle
-    analysis uses BEFORE edges only and excludes diagonal technique self-pairs.
+    analysis normalizes AFTER(A,B) to BEFORE(B,A) and excludes diagonal
+    technique self-pairs.
     A missing technique mapping on either endpoint makes that edge unmappable
     in the ATT&CK-only projection.
 
@@ -165,7 +166,11 @@ def project_report(
     for edge in temporal_edges:
         if edge.relation == "BEFORE":
             before_event_edges.append((edge.source_event, edge.target_event))
-        else:
+        elif edge.relation == "AFTER":
+            # AFTER(A, B) is strict BEFORE(B, A) in the normalized ordering
+            # graph. Preserve the original relation in the source annotation.
+            before_event_edges.append((edge.target_event, edge.source_event))
+        elif edge.relation not in {"BEFORE", "AFTER"}:
             non_before_edge_ids.append(edge.edge_id)
 
         source_techniques = normalized[edge.source_event]
@@ -204,6 +209,26 @@ def project_report(
                 diagonal_mappings += 1
 
     projection_pairs = sorted(projected_provenance)
+    # ChronoCTI's published technique-pair universe excludes diagonal pairs:
+    # (T, T) is not a candidate pair. Keep the full projection above, then
+    # report the distinct-technique-pair view separately.
+    distinct_technique_pairs = [
+        pair for pair in projection_pairs if pair[0] != pair[1]
+    ]
+    distinct_pair_provenance = {
+        pair: sorted(projected_provenance[pair])
+        for pair in distinct_technique_pairs
+    }
+    distinct_pair_edge_ids = sorted({
+        edge_id
+        for edge_id, pairs in edge_to_pairs.items()
+        if any(source != target for source, target in pairs)
+    })
+    edge_ids_without_distinct_pair = sorted(
+        set(edge_to_pairs) - set(distinct_pair_edge_ids)
+    )
+    distinct_pair_mappings = total_pair_mappings - diagonal_mappings
+
     collision_pairs = {
         pair: sorted(edge_ids_for_pair)
         for pair, edge_ids_for_pair in projected_provenance.items()
@@ -221,12 +246,19 @@ def project_report(
     # Technique projection for strict ordering ignores diagonal/self-pairs,
     # matching a common unique-technique pair graph convention. The diagonal
     # information loss is separately reported above.
+    projected_before_pairs: set[tuple[str, str]] = set()
+    for edge in temporal_edges:
+        if edge.relation == "BEFORE":
+            projected_before_pairs.update(edge_to_pairs[edge.edge_id])
+        elif edge.relation == "AFTER":
+            # The stored projection preserves the original AFTER endpoint
+            # order; reverse each pair for normalized strict-BEFORE analysis.
+            projected_before_pairs.update(
+                (target, source)
+                for source, target in edge_to_pairs[edge.edge_id]
+            )
     projected_before_pairs = {
-        pair
-        for edge in temporal_edges
-        if edge.relation == "BEFORE"
-        for pair in edge_to_pairs[edge.edge_id]
-        if pair[0] != pair[1]
+        pair for pair in projected_before_pairs if pair[0] != pair[1]
     }
     projection_cycles = _cyclic_components(
         techniques, sorted(projected_before_pairs)
@@ -247,7 +279,11 @@ def project_report(
             "unmapped_temporal_edges": len(unmapped_edge_ids),
             "non_before_temporal_edges": len(non_before_edge_ids),
             "projected_technique_pairs": len(projection_pairs),
+            "distinct_technique_pairs": len(distinct_technique_pairs),
             "event_edge_to_pair_mappings": total_pair_mappings,
+            "distinct_technique_pair_mappings": distinct_pair_mappings,
+            "event_edges_with_distinct_technique_pair": len(distinct_pair_edge_ids),
+            "event_edges_without_distinct_technique_pair": len(edge_ids_without_distinct_pair),
             "same_technique_overlap_edges": len(same_technique_overlap_ids),
             "self_only_edges": len(self_only_edge_ids),
             "diagonal_pair_mappings": diagonal_mappings,
@@ -281,6 +317,21 @@ def project_report(
                 if total_pair_mappings
                 else None
             ),
+            "distinct_pair_mapping_share": (
+                distinct_pair_mappings / total_pair_mappings
+                if total_pair_mappings
+                else None
+            ),
+            "distinct_technique_pair_coverage_over_mapped_edges": (
+                len(distinct_pair_edge_ids) / mapped_edge_count
+                if mapped_edge_count
+                else None
+            ),
+            "distinct_technique_pair_coverage_over_all_temporal_edges": (
+                len(distinct_pair_edge_ids) / total_edge_count
+                if total_edge_count
+                else None
+            ),
             "collision_pair_share": (
                 len(collision_pairs) / len(projection_pairs)
                 if projection_pairs
@@ -290,6 +341,17 @@ def project_report(
         "projection": {
             "technique_nodes": techniques,
             "technique_pairs": [list(pair) for pair in projection_pairs],
+            "distinct_technique_pairs": [
+                list(pair) for pair in distinct_technique_pairs
+            ],
+            "distinct_pair_provenance": {
+                f"{source} -> {target}": edge_ids
+                for (source, target), edge_ids in sorted(
+                    distinct_pair_provenance.items()
+                )
+            },
+            "edge_ids_with_distinct_technique_pair": distinct_pair_edge_ids,
+            "edge_ids_without_distinct_technique_pair": edge_ids_without_distinct_pair,
             "edge_to_pairs": {
                 edge_id: [list(pair) for pair in pairs]
                 for edge_id, pairs in sorted(edge_to_pairs.items())
@@ -319,7 +381,8 @@ def project_report(
             "projected_cycle_components": [list(c) for c in projection_cycles],
             "note": (
                 "Projection-induced cycle incidence is interpretable only when "
-                "the source event-instance BEFORE graph is acyclic. Diagonal "
+                "the source event-instance strict-order graph is acyclic, "
+                "after normalizing AFTER(A,B) to BEFORE(B,A). Diagonal "
                 "technique self-pairs are excluded from this cycle test and "
                 "reported separately."
             ),

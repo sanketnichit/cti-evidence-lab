@@ -114,3 +114,21 @@ A first per-document example was opened from the official repository:
 Observed for this single report: 15,211 characters of text; 32 ATT&CK technique-link records across five unique techniques; 24 mention/link records map to T1059; 31 TIMEX3 elements; zero TimeML EVENT, MAKEINSTANCE or TLINK elements. This confirms that the resource can supply full report context plus technique-linked mention candidates, while its TimeML layer does not supply event-event temporal gold links.
 
 **Do not count the 24 mentions as 24 executions.** A repeated linked mention can refer to the same attack occurrence, a different occurrence, an artefact/description, or a general explanatory statement. A human annotator must resolve this from context. This report is a useful candidate for the 5–8 report pilot, but it is not yet selected as a pilot item and is not evidence of repeated-instance prevalence.
+
+
+### AnnoCTR corpus counts and licence distinction checked against the paper PDF
+
+The AnnoCTR paper's Table 2 reports the 120 cybersecurity-plus-general-layer reports split across five donors: Intel471 30, Lab52 23, Proofpoint 28, QuoIntelligence 12 and ZScaler 27. These five-vendor counts matter for transparent pilot sampling. The paper describes 400 reports with the general layer and 120 with cybersecurity-specific annotations. The Table 1 corpus entry reports 120 documents, 12,179 sentences and 13,244 annotations for the full multi-layer/cybersecurity subset. The paper's Table 3 also reports 3,375 technique mention annotations across that subset (1,098 explicit and 2,292 implicit; sum 3,390, so verify the table's apparent arithmetic discrepancy against the original PDF before quoting a combined total).
+
+**Licence distinction:** the paper proceedings PDF carries a CC BY-NC 4.0 copyright line, while the authors explicitly state that the underlying CTI vendor reports were donated by copyright holders and permitted for republication under CC BY-SA 4.0. The repository likewise labels the corpus folder CC BY-SA 4.0. Do not confuse the paper-PDF licence with the corpus licence; retain attribution and verify any per-report terms/provenance for the actual use. The report text itself is not to be copied into this project repository.
+
+**Annotation reliability caveat:** the general layer (TIMEX, ORG, LOC, SECTOR, CodeSnippet) was annotated by two trained annotators. The cybersecurity-specific layer was created by one specialist annotator. A second professional's document-level technique-set comparison produced average F1 about 0.54, but the paper explicitly says this was not a proper agreement study due to limited training/time. This makes independent human annotation and careful adjudication essential for our new event-instance layer.
+
+Primary source: Lange et al., LREC-COLING 2024, pp. 1147–1160: https://aclanthology.org/2024.lrec-main.103.pdf
+
+
+### ChronoCTI: same-technique event-pair exclusion is explicit in the paper
+
+Section 4.5.2 defines the possible pair universe over 120 techniques as ((120^2-120)/2), excluding ((T,T)) diagonal pairs. The public code's pair construction confirms `idx1 != idx2`. Thus, an explicitly temporal relation between two distinct event instances carrying the same technique ID cannot be represented in this candidate-pair universe. This is a specific, inspectable limitation we can empirically evaluate; it is not proof that the limitation is common enough to be important.
+
+Paper: https://doi.org/10.1007/s10115-025-02491-6

@@ -16,15 +16,18 @@ This roadmap is gate-driven rather than feature-driven. Dates are planning place
 
 - [x] Inspect AnnoCTR per-report text/NER/linking/TimeML formats and SMAH-CTI JSON schema.
 - [ ] Check duplicate/syndicated report families and available source text.
-- [x] Run a five-report AnnoCTR Intel471 convenience screen for report lengths, repeated technique-link mentions and TIMEX3 density.\n- [ ] Screen at least two additional donor sources and assess event identity/temporal evidence manually.
-- [x] Confirm the five inspected AnnoCTR TimeML files contain TIMEX3 but no EVENT / MAKEINSTANCE / TLINK tags.\n- [ ] Inspect ChronoCTI Figshare v3 workbooks and exact temporal label schema.
+- [x] Run a five-report AnnoCTR Intel471 convenience screen for report lengths, repeated technique-link mentions and TIMEX3 density.
+- [ ] Screen at least two additional donor sources and assess event identity/temporal evidence manually.
+- [x] Confirm the five inspected AnnoCTR TimeML files contain TIMEX3 but no EVENT / MAKEINSTANCE / TLINK tags.
+- [ ] Inspect ChronoCTI Figshare v3 workbooks and exact temporal label schema.
 - [ ] Verify AnnoCTR provenance workbook and per-report source terms; formally select reports only after review.
 
 **Exit condition:** dataset supports a reproducible, non-leaky, sufficiently powered pilot.
 
 ## Phase 2 — Annotation pilot
 
-- [x] Draft annotation protocol v0.2 and blank annotation templates.\n- [ ] Add human-authored worked examples and review the guide with a second annotator.
+- [x] Draft annotation protocol v0.3 and blank annotation templates.
+- [ ] Add human-authored worked examples and review the guide with a second annotator.
 - [ ] Independently annotate a small sample with at least two annotators if feasible.
 - [ ] Adjudicate disagreements and calculate agreement appropriate to the label structure.
 - [ ] Revise or abandon categories that are not consistently annotatable.
@@ -37,7 +40,8 @@ This roadmap is gate-driven rather than feature-driven. Dates are planning place
 - [ ] State the exact question and hypotheses.
 - [ ] Choose baselines and ensure task/data comparability.
 - [ ] Predefine candidate-pair generation and negative sampling.
-- [x] Draft projection metrics v0.1 and a pure-Python toy prototype.\n- [ ] Human-review metric definitions and validate additional toy cases before freezing denominators.
+- [x] Draft projection metrics v0.1 and a pure-Python toy prototype.
+- [ ] Human-review metric definitions and validate additional toy cases before freezing denominators.
 - [ ] Specify report-level splits and leakage checks.
 - [ ] Record model versions, random seeds, hardware, and experiment configs.
 
@@ -46,11 +50,14 @@ This roadmap is gate-driven rather than feature-driven. Dates are planning place
 ## Phase 4 — Minimal implementation
 
 Only after Phase 0–3 exit conditions pass:
-- [x] Add a CSV annotation validator for offsets, event IDs, mapping and relation evidence.\n- [ ] Run tests in CI and validate against manually entered sample rows.
+- [x] Add a CSV annotation validator for offsets, event IDs, mapping and relation evidence.
+- [x] Run the standard-library unit suite in GitHub Actions (26 tests passed and toy demo smoke-tested on 2026-11-01; [run #17](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41297408542)).
+- [ ] Validate the validator against manually entered sample rows.
 - [ ] Implement a deterministic baseline before adding learned components.
-- [ ] Add event mention and temporal edge schemas.
+- [x] Add blank CSV event mention, ATT&CK mapping and temporal relation schemas.
 - [ ] Add evidence-span validation and abstention evaluation.
-- [ ] Confirm CI execution, then expand tests for taxonomy versioning, CSV round-trips and multi-evidence relations.
+- [x] Confirm CI execution (run #17 passed).
+- [ ] Expand tests for taxonomy versioning, CSV round-trips and multi-evidence relations.
 
 ## Phase 5 — Evaluation and writing
 

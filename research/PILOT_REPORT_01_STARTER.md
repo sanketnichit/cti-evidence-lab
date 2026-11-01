@@ -45,7 +45,7 @@ Fill the blank templates:
 - `research/templates/event_mappings.csv`
 - `research/templates/temporal_relations.csv`
 
-Use `research/ANNOTATION_PROTOCOL_v0.2.md`. Keep one report ID consistent across all files. It is fine for a report to produce zero positive temporal relations; do not invent them to make the experiment look successful.
+Use `research/ANNOTATION_PROTOCOL_v0.3.md` and follow `research/PILOT_SAMPLING_PLAN_v0.1.md` before freezing the pilot sample. Keep one report ID consistent across all files. It is fine for a report to produce zero positive temporal relations; do not invent them to make the experiment look successful.
 
 ## Stop point
 
@@ -61,3 +61,14 @@ After Report 01, review the annotation guide before doing the other four reports
 A second human should independently annotate this report or an overlapping subset if possible. If no second human is available, we will not report inter-annotator agreement.
 
 **Pilot inclusion status:** shortlisted only. Confirm report provenance and source-text rights in the AnnoCTR provenance file before freezing it into a formal pilot sample.
+
+
+## Preliminary source-file screening note — review only after your first pass
+
+To reduce anchoring, read the source report and make your own first-pass event-mention notes before relying on this locator. This is **not an annotation** and must not be copied into the gold CSVs without independent human verification.
+
+A direct inspection of the linked technique file found 64 newline-delimited JSON records: 32 technique, 28 malware and 4 tactic records. Of the technique rows, 24 are linked to T1059. Their mention spans mix macro-related wording with references to an Excel document builder, documents, sample files and repeated descriptions. They are not 24 event mentions, 24 executions, or automatically valid event-to-technique mappings.
+
+The report prose also contains an explicit local ordering cue describing a file as retrieved/saved **before being executed** (around character offset 4,009 in the current source text). Treat this only as a candidate relation cue. A human must identify the two action arguments, decide whether they are separate resolved event instances, verify any ATT&CK mappings independently, and record the exact evidence offsets. No relation has been pre-annotated.
+
+**Interpretation:** this candidate is promising for testing the protocol because it contains both repeated technique-link annotations and at least one explicit temporal cue. It is not yet confirmed as suitable for the formal pilot, and it says nothing about prevalence across AnnoCTR.

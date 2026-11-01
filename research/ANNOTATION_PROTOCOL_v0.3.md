@@ -1,7 +1,7 @@
-# Annotation Protocol v0.2 — CTI Event Instances and Temporal Evidence
+# Annotation Protocol v0.3 — CTI Event Instances and Temporal Evidence
 
 **Project:** CTI Evidence Lab  
-**Version:** 0.2-draft  
+**Version:** 0.3-draft  
 **Date:** 2026-11-01  
 **Status:** Pilot protocol for human review; not validated
 
@@ -23,7 +23,7 @@ Same technique does not imply same event instance. Same malware/tool does not im
 3. Group co-referring mentions into event instances only when the text supports that decision.
 4. Assign zero or more ATT&CK technique/sub-technique mappings to each resolved event instance only when report evidence supports each mapping. Store each mapping separately with its own evidence span(s), and record the pinned ATT&CK version. Do not force a single mapping if the report supports multiple techniques, and do not infer multiple executions from multiple mappings.
 5. Identify temporal expressions and relation cues.
-6. Create event-instance pairs only when a temporal relation is explicitly stated or supported by an unambiguous construction in the report.
+6. Read the complete report for positive temporal relations and link every pair of resolved event instances whose relative timing is explicitly stated or unambiguously supported. Attach the relation-specific evidence. Do not infer a relation for every possible pair. If a pair is included in a pre-defined candidate-pair assessment set but the report makes no relative-time claim, annotate `NO_TEMPORAL_CLAIM`; use `VAGUE_OR_AMBIGUOUS` or `NOT_ASSESSABLE` where appropriate. Freeze the candidate-pair selection rule before any negative-pair annotation.
 7. Attach the smallest useful evidence span(s) supporting the relation, including the cue and enough context to resolve its arguments.
 8. Record uncertainty and adjudication notes rather than forcing a label.
 
@@ -65,7 +65,7 @@ Offsets must match the exact frozen source text. Every proposed merge of mention
 
 For a derived representation, AFTER(A,B) may be normalized to BEFORE(B,A), but preserve the original annotation and evidence.
 
-These labels are not interchangeable. NO_TEMPORAL_CLAIM describes what the report says; VAGUE_OR_AMBIGUOUS describes unresolved meaning; NOT_ASSESSABLE describes insufficient available context; model ABSTAIN is a system decision not to predict.
+These labels are not interchangeable. NO_TEMPORAL_CLAIM describes what the report says for a pair that was actually assessed under the declared candidate-pair rule; it is not a default label for every unannotated event pair. VAGUE_OR_AMBIGUOUS describes unresolved meaning; NOT_ASSESSABLE describes insufficient available context; model ABSTAIN is a system decision not to predict.
 
 ## 5. Keep non-temporal relations separate
 
@@ -110,6 +110,8 @@ A span that merely mentions both endpoints is insufficient: it must support the 
 
 Start with **5–8 reports** selected to include apparent repeated occurrences of one technique, clear temporal cues, cross-sentence references, and ambiguous/no-relation cases. This is a protocol/debugging sample, not a representative sample or prevalence estimate.
 
+For the primary descriptive projection study, the key target is completeness of **positive, explicitly supported temporal relations** discovered by reading the complete report. An event pair that was not annotated is not a negative example. If candidate pairs are separately assigned NO_TEMPORAL_CLAIM / VAGUE_OR_AMBIGUOUS / NOT_ASSESSABLE labels, freeze and document the candidate-pair rule first (for example, pairs connected by a temporal cue, cross-sentence reference, or a pre-specified local-context window). Do not enumerate arbitrary all-pairs and silently call every unlabelled pair negative. If a predictive classifier is later considered, define the pair universe, negative sampling, report-level split and sampling weights as a separate pre-registration step.
+
 Obtain independent annotations from a second human annotator for an overlapping subset if possible. If this is not possible, state plainly that inter-annotator agreement was not measured. Do not present self-consistency as inter-annotator agreement.
 
 Record:
@@ -149,11 +151,9 @@ Proceed to a larger study only if:
 
 If these conditions fail, revise or abandon the candidate question. Do not inflate the dataset or relax definitions just to obtain positive results.
 
-## 11. Student-led research and AI assistance
+## 11. Human annotation and adjudication
 
-The student researcher owns final annotation decisions, adjudication, experiment execution and interpretation. AI may help find candidate passages, explain rules, check schema consistency and review code, but AI-generated labels must never be treated as gold annotations. Any AI-proposed label must be checked by a human against the original report.
-
-Maintain an assistance log recording tool, date, task, suggestions accepted/rejected and verification. Follow university and publication policies for disclosure.
+The researcher is responsible for final annotation decisions, adjudication, experiment execution and interpretation. All gold labels must be created and verified by human annotators against the original report. Candidate spans, mappings and relations require direct source-evidence review before acceptance.
 
 
 ## 12. Mapping multiplicity and non-instance behaviour (v0.2 clarification)
@@ -172,3 +172,20 @@ Distinguish:
 - `NOT_AN_EVENT`: the span is not an action/event mention.
 
 For the projection study, only `RESOLVED` event instances enter the primary event-instance graph. Report counts of unresolved and generic-behaviour mentions separately so they do not silently disappear.
+
+
+## 13. Candidate-pair frame and negative labels (v0.3 clarification)
+
+Keep two annotation products distinct:
+
+**A. Positive relation discovery (primary descriptive study).** Read the full report and record every event-to-event temporal relation that is explicitly asserted or unambiguously supported by the report. Each positive edge must have resolved endpoints and relation-specific evidence. This supports measuring projection loss among supported relations. It does not require treating all possible event pairs as negative.
+
+**B. Candidate-pair assessment (optional, only if needed).** If a pair is being assessed because it is linked by a temporal cue, cross-sentence reference, local discourse connection, or a pre-registered candidate-generation rule, record one of:
+- a positive temporal label;
+- `NO_TEMPORAL_CLAIM` when the report makes no relative-time claim for this assessed pair;
+- `VAGUE_OR_AMBIGUOUS` when a temporal claim exists but cannot be resolved;
+- `NOT_ASSESSABLE` when the report context does not allow assessment.
+
+Do not assign `NO_TEMPORAL_CLAIM` to event pairs that were never assessed. The candidate-pair selection rule, its report-level coverage and its sampling limitations must be recorded before any negative-pair analysis. A later predictive study requires its own pair-universe and negative-sampling protocol; do not reuse convenience negatives as if they were exhaustive.
+
+**Primary metric denominator:** projection-loss rates are calculated over human-adjudicated positive temporal event edges with their mapping status reported separately. Negative or unassessed pairs are not silently included in that denominator.

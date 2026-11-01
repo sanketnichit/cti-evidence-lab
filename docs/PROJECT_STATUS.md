@@ -22,15 +22,15 @@
 
 ## Current candidate
 
-Measure how much event-instance identity and explicitly supported temporal structure is lost, conflated, or made ambiguous when distinct report-local actions are represented using report-level ATT&CK technique nodes or technique-pair relations.
+Measure how often two distinct report-local event instances mapped to the same ATT&CK technique have an explicitly supported temporal relation, and what event-level temporal information becomes unrepresentable when those occurrences are projected to a distinct-technique-pair representation that excludes diagonal pairs.
 
-A secondary experiment on evidence-linked event-instance relation extraction may follow only if the annotation pilot is feasible.
+This is a descriptive measurement study first. A predictive event-relation model is not currently part of the primary plan; any model extension must be justified by the human pilot and a fresh baseline audit.
 
 This is a hypothesis to test—not a validated gap, novel method, implemented system, or publication claim.
 
 ## New working artifact
 
-- Drafted `research/ANNOTATION_PROTOCOL_v0.2.md` to separate text mentions, event instances, ATT&CK concepts, temporal relations, and non-temporal dependencies. It defines evidence-span requirements, uncertainty labels, a 5–8 report feasibility pilot, and stop criteria. This is a draft for human review, not a validated annotation standard.
+- Drafted `research/ANNOTATION_PROTOCOL_v0.3.md` to separate text mentions, event instances, ATT&CK concepts, temporal relations, and non-temporal dependencies. It supports multiple ATT&CK mappings per event instance and clarifies the candidate-pair/negative-label frame. It remains a draft for human review, not a validated annotation standard.
 - Confirmed the repository citation metadata already encodes the author's name correctly: given name `Sanket`, family name `Nichit`. The generated abbreviated citation `Nichit, S.` is the normal family-name-first bibliographic rendering; the README also gives the full-name form `Sanket Nichit`. No author-field correction is required.
 
 ## Blocking gates
@@ -48,7 +48,7 @@ If repeated distinct occurrences are rare, source text cannot lawfully be used, 
 
 ## Student-led research
 
-The student researcher owns final research decisions, human annotations, experiment execution/reproduction, interpretation and conclusions. AI may support literature discovery, explanations, debugging and review. AI-generated annotations are not gold labels; AI assistance must be logged and disclosed according to institutional and venue policies.
+The researcher owns final research decisions, human annotations, experiment execution/reproduction, interpretation and conclusions. Evaluation labels must be created and verified by humans against the original source evidence.
 
 
 ## Follow-up audit — 1 November 2026
@@ -73,7 +73,7 @@ This is not a proven gap. The 2026 STIX preprint is a direct adjacent work for p
 2. Inspect AnnoCTR's actual corpus directory/file structure, text-to-annotation alignment and source provenance.
 3. Recheck the STIX preprint's acceptance and data release status.
 4. Screen 5–8 AnnoCTR reports with transparent selection criteria and manually annotate mentions, event identity, ATT&CK mapping, event-pair temporal labels and relation-specific evidence.
-5. Double-annotate a subset with another human if possible; do not use AI output as gold data.
+5. Double-annotate a subset with another human if possible; gold labels must be created and verified against the source text.
 6. Define projection metrics and test toy cases before coding a complete system.
 
 **Implementation remains not started. Novelty remains not established. Current decision remains NARROW.**
@@ -95,14 +95,49 @@ This is not a proven gap. The 2026 STIX preprint is a direct adjacent work for p
 - The five screened reports are all Intel471. This is a selection limitation. Do not claim multi-vendor screening or general prevalence.
 
 ### Annotation and implementation artifacts
-- Annotation protocol v0.2 now allows multiple separately evidenced ATT&CK mappings per event instance and separates specific report-local events from generic behaviour statements.
+- Annotation protocol v0.3 now allows multiple separately evidenced ATT&CK mappings per event instance and separates specific report-local events from generic behaviour statements.
 - Four blank CSV templates are available under `research/templates/`, with row granularity and label instructions in `research/templates/README.md`.
 - Added `src/projection_metrics.py`, a pure-Python synthetic projection prototype; `tests/test_projection_metrics.py`; and `examples/toy_projection_demo.py`.
 - Added `src/annotation_validation.py` and `tests/test_annotation_validation.py` for source-span, ID and evidence structure checks.
-- Added a GitHub Actions workflow for the standard-library tests. The available commit-status query returned no status entries, so test execution is **not yet independently confirmed**. No test pass is claimed.
+- Added a GitHub Actions workflow for the standard-library tests. [Latest run #15](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41296800818) passed all 24 synthetic unit tests and smoke-tested the toy projection demo on commit `572fe30`. This verifies the toy code paths only; it is not evidence from real CTI reports.
 - These utilities are scaffolding only. They have not been run on human-annotated CTI data and do not establish a research finding.
 
 ### Immediate human task
-Read Report 01 in full and complete the first human event-mention and event-instance decisions. Do not ask an AI to generate the gold labels. Use the starter guide and record annotation time and unresolved decisions. A second human reviewer is strongly preferred.
+Read Report 01 in full and complete the first event-mention and event-instance decisions against the original source text. Use the starter guide and record annotation time and unresolved decisions. A second human reviewer is strongly preferred.
 
 **Current status:** implementation of toy metric/validation helpers has begun; production pipeline/model not started; human annotations zero; experimental results zero; novelty not established; decision NARROW.
+
+
+### Full-corpus sampling preparation — 1 November 2026
+
+- Verified the AnnoCTR paper's five-donor counts: Intel471 30, Lab52 23, Proofpoint 28, QuoIntelligence 12 and ZScaler 27 reports in the 120-report cybersecurity-specific subset.
+- Confirmed the paper's licence distinction: donor reports were permitted for republication under CC BY-SA 4.0; the proceedings PDF itself carries a CC BY-NC 4.0 notice. Keep those licences separate.
+- Confirmed the annotation process distinction: the general layer was annotated by two trained annotators; the cyber-specific layer was produced by one domain specialist. The paper's rough comparison for document-level technique sets gave mean F1 around 0.54, and the authors say it was not a formal agreement study.
+- Added `scripts/screen_annoctr.py` and synthetic tests `tests/test_annoctr_screening.py` so the complete local `AnnoCTR/all/` folder can be inventoried by donor before choosing reports. The tool outputs aggregate counts only, not raw text or event labels.
+- An initial full-corpus scan was run locally: 400 report IDs, all with text/linking/TimeML files present. The vendor totals (34 Intel471, 28 Lab52, 101 Proofpoint, 14 QuoIntelligence, 223 ZScaler) match the paper's combined 120 cyber-specific + 280 general-only donor counts, although the first parser displayed QuoIntelligence as UNKNOWN. Before sample selection, rerun the corrected scanner: it now excludes `_w_con`, `_w_neg` and `_w_con_w_neg` variants, recognizes `quoteintelligence`, separates cyber-specific records from general-only reports, and only treats canonical MITRE ATT&CK URLs as technique IDs. CI is verified by run #17 (26 tests plus toy demo). The initial five-report Intel471 screen remains a convenience sample.
+
+**Next:** execute the inventory on a local copy, apply `research/PILOT_SAMPLING_PLAN_v0.1.md`, verify vendor/source file pairing and provenance, then complete the human dry run in `research/PILOT_REPORT_01_STARTER.md`. Report 01 is an initial dry-run candidate, not a confirmed or random sample.
+
+
+### ChronoCTI pair-universe finding — 1 November 2026
+
+The ChronoCTI paper does not merely use technique-level pairs in general. Section 4.5.2 defines all candidate pairs over 120 techniques as ((120^2-120)/2), which excludes every diagonal pair ((T,T)). The public graph code also loops over technique indices only when `idx1 != idx2`. Thus, if a report contains two distinct event instances mapped to the same technique and a positive temporal relation between them, that relation has no candidate pair under this distinct-technique-pair universe.
+
+The paper's task and pair cardinality are described in Sections 2.3 and 4.5.1–4.5.2: https://doi.org/10.1007/s10115-025-02491-6
+
+This is a verified representational limitation of the inspected ChronoCTI setup. What remains unverified is how often real reports contain such event-instance relations. Our pilot must measure that; the code now reports fully omitted vs partially represented multi-mapped event edges.
+
+
+### Annotation protocol v0.3 — candidate-pair frame
+
+- Clarified that positive relation discovery is a full-report pass, while NO_TEMPORAL_CLAIM / VAGUE_OR_AMBIGUOUS / NOT_ASSESSABLE can only be assigned to candidate pairs that were actually assessed under a frozen rule.
+- Unannotated event pairs are not automatically negatives. If a future prediction task is defined, it requires a separate pair-universe and negative-sampling protocol.
+
+
+## Current working hypotheses (not established)
+
+- H1: In some CTI reports, two distinct human-resolved event instances map to the same ATT&CK technique and have an explicitly supported temporal relation.
+- H2: A unique-technique-per-report projection or distinct-technique-pair candidate universe can make at least some such event-level temporal relations unrepresentable.
+- H3: The size and practical significance of this omission can be measured reliably from report text using a transparent human annotation protocol.
+
+The pilot must be allowed to reject all three. No prevalence, accuracy, or performance result exists yet.

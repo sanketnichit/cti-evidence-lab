@@ -1,7 +1,7 @@
 # Projection Metrics v0.1 — Event Instances to ATT&CK Techniques
 
 **Date:** 1 November 2026  
-**Status:** Candidate definitions for toy-graph testing and pilot review; not finalized or implemented.
+**Status:** Candidate definitions with a synthetic Python prototype; not validated on human-annotated CTI data.
 
 ## 1. Scope
 
@@ -80,7 +80,41 @@ These are distinct. With multi-label mappings, two instances may share one techn
 
 If the target graph discards self-loops (as many technique-pair candidate generators do), the diagonal part is unrepresentable in that graph. State the graph convention explicitly.
 
-### 4.3 Technique-pair collision / occurrence conflation
+
+### 4.3 Omission under a distinct-technique-pair restriction
+
+ChronoCTI's paper defines its candidate pair universe over 120 techniques using \((120^2-120)/2\), which excludes same-technique diagonal pairs. Its public graph code also constructs candidate pairs only for distinct technique indices. This is a documented design choice in that approach, not a claim that all CTI graph systems must do the same.
+
+For each event relation (e=(u,v)), split its technique-pair image into:
+
+[
+Q_{diag}(e)={(t,t):t\in A(u)\cap A(v)}
+]
+
+[
+Q_{distinct}(e)=Q(e)\setminus Q_{diag}(e)
+]
+
+Record three separate outcomes:
+
+1. **Fully omitted event relation:** (Q_{distinct}(e)=\varnothing). The event pair has no non-diagonal technique pair and is therefore unavailable under a distinct-technique-pair candidate rule.
+2. **Partially represented event relation:** both (Q_{diag}(e)\ne\varnothing) and (Q_{distinct}(e)\ne\varnothing). Some technique mapping combinations are excluded, but at least one distinct pair remains.
+3. **No diagonal mapping:** (Q_{diag}(e)=\varnothing). All of the event edge's mapping combinations are non-diagonal.
+
+The implementation reports:
+- count of unique distinct-technique pairs;
+- count of event edges with at least one distinct pair;
+- count of event edges without a distinct pair;
+- pair-mapping share that is non-diagonal;
+- edge-level coverage over mapped edges and over all positive temporal edges;
+- a provenance map from each distinct pair to its source event edges.
+
+Unmapped event edges are reported separately, even though they also have no distinct technique pair. This prevents an unmapped edge from being misreported as a same-technique omission.
+
+**Interpretation rule:** for multi-mapped event instances, do not label an entire temporal relation as lost just because one shared technique ID creates a diagonal pair. It is fully omitted only when no non-diagonal pair remains. The current metrics are descriptive and do not reproduce every stage or label convention of ChronoCTI.
+
+**Primary paper source:** Rahman et al. (2025), Section 4.5.1–4.5.2: https://doi.org/10.1007/s10115-025-02491-6
+### 4.4 Technique-pair collision / occurrence conflation
 
 For a projected pair (p=(a,b)\in P_r), let:
 
@@ -95,15 +129,15 @@ Report:
 
 This measures how many different event-instance relations share the same technique pair after projection. Report separately whether their temporal labels agree or conflict. If one event edge maps to multiple technique pairs because it is multi-label, the provenance map must retain that fan-out.
 
-### 4.4 Relation-label conflation (optional extension)
+### 4.5 Relation-label conflation (optional extension)
 
 If (E_{\text{temp}}) contains multiple temporal labels, retain the label on every source edge. For each projected pair (p), count the distinct normalized temporal labels among (E_p).
 
 A projected pair with multiple labels is label-ambiguous under a single-label pair model. Do not merge BEFORE, AFTER, OVERLAP, SIMULTANEOUS or CONCURRENT_UNSPECIFIED into one class. Any normalization (e.g. AFTER(A,B) to BEFORE(B,A)) must preserve the original direction and evidence in the source annotation.
 
-### 4.5 Projection-induced strict-order cycles
+### 4.6 Projection-induced strict-order cycles
 
-Use only explicitly supported strict BEFORE edges. First check that the adjudicated event-instance graph is acyclic. Exclude or separately adjudicate source-level contradictory cycles.
+Use only explicitly supported strict BEFORE and AFTER edges. Normalize AFTER(A,B) as BEFORE(B,A) in the cycle-analysis view; retain the original label and endpoints in the source annotation. First check that the adjudicated event-instance graph is acyclic. Exclude or separately adjudicate source-level contradictory cycles.
 
 Project these edges to a unique-technique graph and check whether contraction creates a directed cycle that was absent from the event-instance graph. A canonical example is:
 
@@ -150,12 +184,14 @@ For each toy case, manually compute the event graph, mapping sets, projected pai
 - Report positive and negative/ambiguous evidence together. Do not select only reports that show the effect.
 - The pilot is a feasibility study. Only a larger, transparently sampled corpus can estimate prevalence or support statistical claims.
 
-## 8. Current implementation gate
+## 8. Implementation gate and status
 
-Do not implement a model yet. First:
+A pure-Python toy implementation is in `src/projection_metrics.py`; tests are in `tests/test_projection_metrics.py`. It rejects non-positive/ambiguous labels, retains relation provenance, canonicalizes symmetric relations and normalizes AFTER to strict-before orientation for cycle checks. It has not been executed in this session and has not been used on human-annotated CTI data.
+
+Do not implement a learned model yet. First:
 1. finish source/provenance checks;
 2. select 5–8 reports with transparent criteria and more than one vendor if feasible;
-3. run human annotation under protocol v0.2;
+3. run human annotation under protocol v0.3;
 4. have a second human annotate an overlapping subset if possible;
 5. test toy cases and finalize definitions;
 6. then choose statistical summaries and whether a predictive task is justified.
@@ -182,3 +218,14 @@ The prototype:
 - only treats projection-induced cycles as interpretable if the source BEFORE graph is acyclic.
 
 A GitHub Actions workflow is configured to run the standard-library unit tests on relevant pushes and pull requests. Its execution status has not yet been confirmed from this audit session. These tests validate synthetic cases only; they do not validate the annotation definitions or establish any empirical finding.
+
+## 9. Reproduction commands
+
+From the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+python examples/toy_projection_demo.py
+```
+
+These commands have been added to the project README and GitHub Actions workflow. The GitHub connector did not return any commit status entries during this audit, so test execution has **not** been independently verified. Do not claim a passing test suite until a run is observed.

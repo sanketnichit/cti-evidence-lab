@@ -63,3 +63,40 @@ Official repository and corpus licence: https://github.com/boschresearch/anno-ct
 Paper: https://aclanthology.org/2024.lrec-main.103/
 
 **Decision:** AnnoCTR remains the leading pilot candidate, not a final corpus selection. The initial screen establishes file availability and repeated linked-mention candidates, not repeated distinct event instances or temporal-link density.
+
+
+## Full-corpus donor distribution and automated inventory plan
+
+The original paper's Table 2 reports the 120 reports with both annotation layers as follows:
+
+| Donor collection | Reports |
+|---|---:|
+| Intel471 | 30 |
+| Lab52 | 23 |
+| Proofpoint | 28 |
+| QuoIntelligence | 12 |
+| ZScaler | 27 |
+| **Total** | **120** |
+
+The five-report screen above was only from Intel471, so it is not the intended sampling frame. A local inventory utility has now been added at `scripts/screen_annoctr.py`. It scans the actual `AnnoCTR/all/` report text, MITRE-only link JSON and TimeML files, writes aggregate counts to CSV, and prints candidate locators separately by vendor. It does not infer event instances or temporal relations and does not copy report text into its output.
+
+After downloading/cloning the official AnnoCTR repository locally, run:
+
+```bash
+python scripts/screen_annoctr.py \
+  --root /path/to/anno-ctr-lrec-coling-2024/AnnoCTR/all \
+  --output data/annoctr_screening.csv \
+  --top-per-vendor 5
+```
+
+The scanner's synthetic unit tests are in `tests/test_annoctr_screening.py`. Execution of the full test suite and the scanner on the actual full corpus has not yet been confirmed in this session.
+
+For final pilot selection:
+1. inspect the inventory CSV;
+2. shortlist from at least three vendors if available (not only the largest donor);
+3. read every shortlisted report manually;
+4. check donor/source URL, report date and provenance before selecting;
+5. choose a mix of repeated-technique mention counts, report lengths and temporal-expression densities; and
+6. human-decide whether there are distinct report-local event instances and explicit relation evidence.
+
+Do not choose the highest mention-count reports alone: this would bias the pilot toward dense reports and vendor-specific writing styles.

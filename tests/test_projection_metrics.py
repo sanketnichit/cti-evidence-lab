@@ -14,6 +14,15 @@ class ProjectionMetricsTests(unittest.TestCase):
         self.assertEqual(result["counts"]["same_technique_overlap_edges"], 1)
         self.assertEqual(result["counts"]["self_only_edges"], 1)
         self.assertEqual(result["counts"]["diagonal_pair_mappings"], 1)
+        self.assertEqual(result["counts"]["distinct_technique_pairs"], 0)
+        self.assertEqual(result["counts"]["event_edges_without_distinct_technique_pair"], 1)
+        self.assertEqual(
+            result["projection"]["distinct_technique_pairs"], []
+        )
+        self.assertEqual(
+            result["projection"]["edge_ids_without_distinct_technique_pair"],
+            ["r1"],
+        )
         self.assertEqual(result["projection"]["technique_pairs"], [["T1059", "T1059"]])
 
     def test_distinct_event_pairs_collapse_to_one_technique_pair(self):
@@ -46,6 +55,20 @@ class ProjectionMetricsTests(unittest.TestCase):
         self.assertEqual(
             result["projection"]["technique_pairs"],
             [["T1059", "T1071"], ["T1105", "T1071"]],
+        )
+
+    def test_multilabel_edge_is_partially_representable_after_diagonal_exclusion(self):
+        result = project_report(
+            {"a": {"T1059", "T1105"}, "b": {"T1059", "T1071"}},
+            [TemporalEdge("r1", "a", "b", "BEFORE")],
+        )
+        self.assertEqual(result["counts"]["diagonal_pair_mappings"], 1)
+        self.assertEqual(result["counts"]["distinct_technique_pair_mappings"], 3)
+        self.assertEqual(result["counts"]["event_edges_with_distinct_technique_pair"], 1)
+        self.assertEqual(result["counts"]["event_edges_without_distinct_technique_pair"], 0)
+        self.assertEqual(
+            result["projection"]["distinct_technique_pairs"],
+            [["T1059", "T1071"], ["T1105", "T1059"], ["T1105", "T1071"]],
         )
 
     def test_unmapped_endpoint_is_counted_not_silently_dropped(self):
@@ -102,6 +125,28 @@ class ProjectionMetricsTests(unittest.TestCase):
                 {"a": {"T_A"}, "b": {"T_B"}},
                 [TemporalEdge("r1", "a", "b", "NO_TEMPORAL_CLAIM")],
             )
+
+    def test_after_is_normalized_for_strict_order_cycle_analysis(self):
+        result = project_report(
+            {
+                "a1": {"T_A"},
+                "b1": {"T_B"},
+                "a2": {"T_A"},
+            },
+            [
+                TemporalEdge("r1", "a1", "b1", "BEFORE"),
+                TemporalEdge("r2", "a2", "b1", "AFTER"),
+            ],
+        )
+        self.assertTrue(
+            result["strict_before_cycle_analysis"]["source_event_graph_is_acyclic"]
+        )
+        self.assertEqual(result["counts"]["projected_before_cycle_components"], 1)
+        self.assertEqual(result["counts"]["non_before_temporal_edges"], 0)
+        self.assertEqual(
+            result["strict_before_cycle_analysis"]["projected_cycle_components"],
+            [["T_A", "T_B"]],
+        )
 
     def test_overlap_does_not_create_strict_before_cycle(self):
         result = project_report(

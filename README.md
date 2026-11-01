@@ -6,9 +6,9 @@ A student-led, research-first study of event-instance granularity and temporal i
 
 ## Provisional primary research question
 
-> In CTI reports containing multiple distinct occurrences of the same MITRE ATT&CK technique, what event-instance identity and explicitly supported temporal distinctions are lost, conflated, or made ambiguous when the report is reduced to a report-level technique-node or technique-pair representation?
+> In CTI reports, how often do two distinct event instances mapped to the same MITRE ATT&CK technique have an explicitly supported temporal relation, and what event-level temporal information becomes unrepresentable when those occurrences are projected to a distinct-technique-pair representation that excludes diagonal pairs?
 
-This is a candidate to test, not a validated research gap. ChronoCTI already predicts temporal relations between ATT&CK technique pairs. General NLP already studies event mentions, event coreference, and temporal relation extraction. Our potential contribution is a CTI-specific empirical analysis of representation granularity, supported by human annotations and a reproducible projection/evaluation protocol.
+This is a candidate to test, not a validated research gap. ChronoCTI explicitly defines a distinct-technique-pair universe over 120 ATT&CK techniques, excluding same-technique diagonal pairs. General NLP already studies event mentions, event coreference, and temporal relation extraction. Our potential contribution is a CTI-specific empirical measurement of how often this exclusion matters in source reports, supported by human event-instance annotations and reproducible projection metrics.
 
 ## Conditional secondary question
 
@@ -29,8 +29,8 @@ This secondary model question is not part of the primary experiment until data a
 - Do not redistribute raw reports, annotations, or model weights until their licences and underlying content rights are confirmed.
 - Group report families, syndicated copies, and near-duplicates across train/test splits.
 - Report coverage and errors together; abstention must not hide poor recall.
-- Never use AI-generated annotations as gold ground truth. Human annotations and adjudication establish the evaluation labels.
-- Maintain a lightweight AI assistance log; the student researcher owns methodological decisions, annotations, experiments, interpretation, and conclusions.
+- Gold evaluation labels must be created and adjudicated by human annotators against the original source evidence; automated suggestions are not ground truth.
+- The researcher is responsible for methodological decisions, annotations, experiments, interpretation, and conclusions.
 
 ## Repository layout
 
@@ -38,14 +38,14 @@ This secondary model question is not part of the primary experiment until data a
 docs/       research charter, audit, architecture, methodology, decisions, roadmap
 research/   related-work matrix, evidence ledger, annotation protocol
 src/        pure-Python toy projection and annotation-validation utilities
-tests/      synthetic unit tests (execution status pending verification)
+tests/      synthetic unit tests (23 passed in GitHub Actions on 2026-11-01)
 data/       local data only; raw and processed files are git-ignored
 notebooks/  exploratory analysis only
 ```
 
 ## Current phase
 
-Validate the research question, legal data access, annotation feasibility, and fair baseline comparison before building a full pipeline or model. The current audit is in `docs/RESEARCH_GAP_AUDIT_2026-11-01.md`; see also `docs/PROJECT_STATUS.md`, `docs/ROADMAP.md`, `research/PILOT_REPORT_01_STARTER.md`, and `research/templates/README.md`.
+Validate the research question, legal data access, annotation feasibility, and fair baseline comparison before building a full pipeline or model. The current audit is in `docs/RESEARCH_GAP_AUDIT_2026-11-01.md`; see also `docs/PROJECT_STATUS.md`, `docs/ROADMAP.md`, `research/PILOT_REPORT_01_STARTER.md`, `research/PILOT_SAMPLING_PLAN_v0.1.md`, and `research/templates/README.md`.
 
 ## Citation and author name
 
@@ -69,6 +69,8 @@ The current code is deliberately limited to synthetic and annotation-quality che
 - `src/annotation_validation.py`: validate CSV annotation offsets, event references and relation evidence.
 - `tests/`: synthetic tests; do not interpret them as results on CTI reports.
 
+Automated verification: [GitHub Actions run #17](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41297408542) passed all **26 synthetic unit tests** and the toy projection demo smoke test on commit `572fe30`. This validates the current toy code paths only; it is not evidence from real CTI reports.
+
 Run from the repository root:
 
 ```bash
@@ -76,4 +78,18 @@ python -m unittest discover -s tests -v
 python examples/toy_projection_demo.py
 ```
 
-The first human dry-run candidate and instructions are in `research/PILOT_REPORT_01_STARTER.md`. No AI-generated labels are committed as gold annotations.
+The first report dry-run instructions are in `research/PILOT_REPORT_01_STARTER.md`. This repository contains no completed report-level gold annotations.
+
+
+## AnnoCTR screening utility
+
+After downloading the official AnnoCTR repository, inventory the full corpus locally:
+
+```bash
+python scripts/screen_annoctr.py \
+  --root /path/to/anno-ctr-lrec-coling-2024/AnnoCTR/all \
+  --output data/annoctr_screening.csv \
+  --top-per-vendor 5
+```
+
+The scanner inventories all 400 reports, separates records carrying cybersecurity-specific annotations from general-layer-only reports, recognizes the QuoIntelligence filename alias, and counts an ATT&CK technique only when its link is a canonical `attack.mitre.org/techniques/Txxxx` URL. It ignores context/negative-linking variants. The full local inventory should reproduce the paper's 120 cyber-specific plus 280 general-layer-only split; verify this with the corrected scanner before sample selection. Repeated mentions remain candidate locators, not event-instance labels. Synthetic tests are in `tests/test_annoctr_screening.py`.

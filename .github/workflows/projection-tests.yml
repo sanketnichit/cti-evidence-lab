@@ -7,6 +7,7 @@ on:
       - "src/**"
       - "tests/**"
       - "examples/**"
+      - "scripts/**"
       - ".github/workflows/projection-tests.yml"
   pull_request:
     paths:
@@ -30,3 +31,7 @@ jobs:
         env:
           PYTHONPATH: .
         run: python -m unittest discover -s tests -v
+      - name: Smoke-test synthetic projection demo
+        env:
+          PYTHONPATH: .
+        run: python examples/toy_projection_demo.py
