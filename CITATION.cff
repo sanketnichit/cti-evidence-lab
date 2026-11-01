@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it as a software artifact. A research citation will be added only if a manuscript is produced."
+title: "CTI Evidence Lab"
+authors:
+  - family-names: Nichit
+    given-names: Sanket
+version: 0.1.0
+date-released: 2026-11-01
+license: MIT
