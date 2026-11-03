@@ -1,3 +1,1 @@
-<PARSED TEXT FOR SHEET: 1 / 1 TABS
-TAB NAME: time_evidence.csv>
-index,report_id,annotator_id,annotation_pass_id,time_evidence_id,activity_unit_id,mention_id,raw_time_text,time_type,time_precision,timezone_text,timezone_status,normalized_start,normalized_end,normalized_timezone,normalization_status,uncertainty_notes,primary_evidence_span_id,annotator_confidence,adjudication_status,time_notes
+report_id,annotator_id,annotation_pass_id,time_evidence_id,activity_unit_id,mention_id,raw_time_text,time_type,time_precision,timezone_text,timezone_status,normalized_start,normalized_end,normalized_timezone,normalization_status,uncertainty_notes,primary_evidence_span_id,annotator_confidence,adjudication_status,time_notes

@@ -1,3 +1,1 @@
-<PARSED TEXT FOR SHEET: 1 / 1 TABS
-TAB NAME: evidence_spans.csv>
-index,report_id,annotator_id,annotation_pass_id,evidence_span_id,char_start,char_end,evidence_text,sentence_id,section_locator,paragraph_locator,figure_locator,source_text_sha256,span_kind,span_notes
+report_id,annotator_id,annotation_pass_id,evidence_span_id,char_start,char_end,evidence_text,sentence_id,section_locator,paragraph_locator,figure_locator,source_text_sha256,span_kind,span_notes

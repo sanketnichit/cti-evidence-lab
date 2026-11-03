@@ -1,3 +1,1 @@
-<PARSED TEXT FOR SHEET: 1 / 1 TABS
-TAB NAME: activity_units.csv>
-index,report_id,annotator_id,annotation_pass_id,activity_unit_id,scope_id,parent_activity_unit_id,granularity,unit_role,instance_status,count_status,count_exact,count_min,count_max,count_qualitative,recurrence_pattern,unit_summary,actor_ref,host_or_asset_ref,annotator_confidence,adjudication_status,unit_notes
+report_id,annotator_id,annotation_pass_id,activity_unit_id,scope_id,parent_activity_unit_id,granularity,unit_role,instance_status,count_status,count_exact,count_min,count_max,count_qualitative,recurrence_pattern,unit_summary,actor_ref,host_or_asset_ref,annotator_confidence,adjudication_status,unit_notes

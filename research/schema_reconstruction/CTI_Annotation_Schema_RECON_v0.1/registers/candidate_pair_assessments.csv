@@ -1,3 +1,1 @@
-<PARSED TEXT FOR SHEET: 1 / 1 TABS
-TAB NAME: candidate_pair_assessments.csv>
-index,report_id,annotator_id,annotation_pass_id,assessment_id,event_a_id,event_b_id,candidate_rule_id,candidate_rule_version,comparison_scope_id,scope_compatibility,assessment_label,related_relation_id,assessment_reason,adjudication_status,assessment_notes
+report_id,annotator_id,annotation_pass_id,assessment_id,event_a_id,event_b_id,candidate_rule_id,candidate_rule_version,comparison_scope_id,scope_compatibility,assessment_label,related_relation_id,assessment_reason,adjudication_status,assessment_notes
