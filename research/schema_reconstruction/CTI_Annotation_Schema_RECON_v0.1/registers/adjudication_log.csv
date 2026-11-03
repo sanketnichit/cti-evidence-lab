@@ -1,0 +1,3 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: adjudication_log.csv>
+index,report_id,annotation_pass_id,adjudication_id,target_annotator_id,reviewer_id,target_register,target_record_id,field_name,original_value,proposed_value,final_value,decision_status,rationale,decision_date,primary_evidence_span_id,adjudication_notes

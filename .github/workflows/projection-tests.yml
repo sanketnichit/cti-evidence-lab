@@ -8,12 +8,16 @@ on:
       - "tests/**"
       - "examples/**"
       - "scripts/**"
+      - "research/schema_reconstruction/**"
+      - "data/processed/annoctr_screening/**"
       - ".github/workflows/projection-tests.yml"
   pull_request:
     paths:
       - "src/**"
       - "tests/**"
       - "examples/**"
+      - "research/schema_reconstruction/**"
+      - "data/processed/annoctr_screening/**"
       - ".github/workflows/projection-tests.yml"
   workflow_dispatch:
 
@@ -33,3 +37,6 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Smoke-test synthetic projection demo
         run: python -m examples.toy_projection_demo
+      - name: Run reconstructed schema/projection synthetic tests
+        working-directory: research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1
+        run: python -m unittest discover -s tests -v

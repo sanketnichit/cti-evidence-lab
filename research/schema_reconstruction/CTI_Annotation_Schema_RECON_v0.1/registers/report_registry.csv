@@ -1,0 +1,3 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: report_registry.csv>
+index,report_id,annotator_id,annotation_pass_id,protocol_version,schema_version,source_title,source_vendor,source_url,source_path,retrieval_date,publication_date,corpus_name,corpus_release,split,language,source_text_sha256,source_text_char_count,extraction_method,transformation_notes,source_scope_eligibility,source_scope_reason,local_research_use_status,local_research_use_basis,public_reuse_status,rights_notes,report_assessability,assessability_reason,full_report_review_status,prior_exposure_status,annotator_notes

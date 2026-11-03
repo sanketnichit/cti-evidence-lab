@@ -1,0 +1,69 @@
+# CTI Evidence Lab — Project State
+
+**Snapshot date:** 3 November 2026  
+**Status:** Research design and tooling preparation; no human-locked AnnoCTR annotations or real-report projection results exist.
+
+## Research question
+
+> Across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented, or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
+
+This remains a candidate empirical question, not an established novelty claim. The primary mapping comparison is intended to use the parent-level `A_120` vocabulary selected by ChronoCTI; exact technique/sub-technique results are a separate sensitivity analysis.
+
+## Data inventory
+
+- Official AnnoCTR archive SHA-256: `118549e9ce885559cd0c07a8de42b321892754cc2e4f07fea0230eaefe4cea35`.
+- Archive ZIP integrity passed; all 400 manifest reports have their expected text, full-linking, MITRE-only-linking and TimeML files.
+- Official split manifest: 70 train, 16 dev, 34 test, 280 ext. The 120 train/dev/test reports define the GNE+CyNE sampling frame.
+- Donor counts in the 120-report frame: Intel471 30, Lab52/S2 Grupo 23, Proofpoint 28, QuoIntelligence 12, ZScaler 27.
+- 118/120 have cybersecurity-specific records in the full linking export; 112/120 have at least one valid canonical ATT&CK technique link. These are inventory statistics, not sampling filters.
+- Two reports have no observed cybersecurity-specific rows in the inspected full linking export. They remain in the 120-row inventory pending the researcher's content-scope decision.
+- Across all 400 TimeML files: 3,324 TIMEX3 tags and zero EVENT, MAKEINSTANCE, TLINK or SIGNAL tags.
+- The raw AnnoCTR corpus and full report text are intentionally not committed. The repository contains only the report-level metadata inventory, aggregate summary, source archive hash and reproducible methodology. Raw data stay local under the corpus licence/provenance constraints.
+
+## Sampling and candidate status
+
+- The five rank-1 candidates remain feasibility candidates, one per donor. They are not selected/frozen reports.
+- Researcher eligibility decisions: 0/5. Human-locked annotations: 0.
+- The five-report batch is for feasibility/protocol debugging only; it cannot estimate vendor or corpus prevalence.
+- Do not replace a candidate because it lacks two resolved event leaves, a same-technique pair opportunity or a positive temporal relation. Replacement is allowed only for predeclared source identity, scope, completeness, provenance/rights or practical local-use failure.
+- The old event-enumerability gate in the sample-adequacy audit is superseded.
+
+## Protocol and schema versions
+
+- Recovered protocol: `CTI_Event_Instance_Annotation_Protocol_v0.4-draft.md`. It is a draft, not a frozen researcher-approved protocol.
+- Exact protocol v0.4.1 was not recovered.
+- Original `CTI_Annotation_Schema_v0.4.2-draft.zip` was not recovered. Its conformance audit is available.
+- `research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/` is a newly reconstructed replacement design based on the recovered v0.4 draft, migration note, v0.4.2 audit and v0.3 templates. It is explicitly **not** the original v0.4.2 and is not approved for formal annotation.
+- The RECON package has 12 blank registers, a field dictionary, controlled vocabularies, validator, projection module, adapter and synthetic tests. The exact original schema headers may differ.
+
+## Implementation verification
+
+- RECON synthetic tests: 39/39 passed (17 validator, 13 projection, 9 adapter tests).
+- Internal SHA256SUMS checks: 29/29 entries matched.
+- Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
+- The RECON code has not been run on human annotations or real AnnoCTR event graphs.
+- Public v0.3-era validator/projection modules remain unchanged pending review and an explicit migration decision.
+
+## Metrics and open researcher decisions
+
+- Pair opportunity and positive within-technique temporal-relation incidence are separate measures.
+- Proposed primary relation labels: direct-source/direct-timestamp `BEFORE`, `AFTER`, `OVERLAP`, `SIMULTANEOUS`, `CONCURRENT_UNSPECIFIED`; strict cycle analysis uses only normalized `BEFORE`/`AFTER`.
+- The assessable-report denominator and treatment of reports that are eligible but `NOT_ASSESSABLE` remain explicit researcher decisions. Do not silently count them as zero-edge outcomes.
+- The researcher decision register is in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.1.md`.
+
+## ChronoCTI baseline
+
+The current audit is a workbook and selected source-code control-flow audit, not a full feature-table rebuild or model re-training. Preserve raw `NEXT`; any conversion to a BEFORE-like interpretation is a separate hypothesis. The 120-technique list is pinned to the ChronoCTI temporal learner's `selected_techniquesWName.json`; the derived identifier-only list is included in the RECON package with provenance and hash.
+
+## Current blockers / next sequence
+
+1. Resolve the open P0 researcher decisions in the decision register (metric denominator/assessability, temporal-label estimand, mapping level, and the two no-CyNE genre cases).
+2. Review the reconstructed schema against the missing original v0.4.1/v0.4.2 artifacts if they ever become available; otherwise approve or revise RECON explicitly as a new version.
+3. Make separate researcher eligibility, local research-use and public-reuse decisions for each of the five rank-1 candidates.
+4. Only after protocol/schema freeze, start source-first human annotation. Keep raw sources and long excerpts local.
+5. Add a second human annotator for an overlapping subset if available; otherwise state that IAA was not measured. AI is not a second annotator.
+6. Lock and hash human annotation files before any projection analysis. Only then compute real-report metrics.
+
+## Research integrity status
+
+No human annotations, real-report projection results, prevalence estimates, IAA measurements, validated novelty claim or publication-ready result currently exist. Synthetic test success establishes only code-path behavior on synthetic fixtures.

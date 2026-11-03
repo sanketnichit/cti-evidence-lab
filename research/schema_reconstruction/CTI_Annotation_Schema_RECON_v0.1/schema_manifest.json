@@ -1,0 +1,99 @@
+{
+  "package_name": "CTI Annotation Schema RECON",
+  "package_version": "0.1",
+  "status": "RECONSTRUCTION_NOT_ORIGINAL_V0.4.2_DRAFT_NOT_APPROVED_NOT_FROZEN",
+  "prepared_date": "2026-11-03",
+  "register_count": 12,
+  "registers": [
+    "report_registry.csv",
+    "report_scopes.csv",
+    "activity_units.csv",
+    "event_mentions.csv",
+    "evidence_spans.csv",
+    "record_evidence_links.csv",
+    "event_mappings.csv",
+    "time_evidence.csv",
+    "temporal_relations.csv",
+    "candidate_pair_assessments.csv",
+    "non_temporal_relations.csv",
+    "adjudication_log.csv"
+  ],
+  "vocabulary": {
+    "artifact": "A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json",
+    "status": "DERIVED_ID_EXTRACTION_NOT_ORIGINAL_CHRONOCTI_JSON",
+    "count": 120,
+    "sha256": "97b599ffdcfcc5864a9352cf1467de0f6cac92f9141053a76098e4f2d33fb1bc",
+    "source_repository": "https://github.com/rayhanur-rahman/ChronoCTI",
+    "source_commit": "4906a0a5e399b6e2aa10435fd6e3894e041e4549",
+    "source_path": "temporal-learner-code/selected_techniquesWName.json",
+    "source_git_blob_sha": "ca14535ad0b67af4c8297707b4c134c9de2d577f"
+  },
+  "source_inputs": [
+    "CTI_Event_Instance_Annotation_Protocol_v0.4-draft.md",
+    "CTI_Protocol_v0.4_Migration_Note.md",
+    "CTI_Annotation_Schema_v0.4.2_Conformance_Audit_v0.1.md",
+    "CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md",
+    "AnnoCTR_Fresh_MultiVendor_Sampling_Method_v0.3.2.md"
+  ],
+  "not_included": [
+    "original Schema v0.4.2 ZIP",
+    "exact Protocol v0.4.1 draft",
+    "production validator",
+    "human annotations"
+  ],
+  "validator": {
+    "path": "validator/validate_annotations.py",
+    "status": "SYNTHETICALLY_TESTED_STRUCTURAL_VALIDATOR_FOR_RECONSTRUCTION_ONLY",
+    "test_path": "tests/test_validator.py",
+    "test_count": 17,
+    "test_command": "python -m unittest discover -s tests -v",
+    "known_limitations": [
+      "Does not make semantic judgments about source evidence or event identity",
+      "Does not approve protocol or schema decisions",
+      "Does not make this reconstruction equivalent to original Schema v0.4.2",
+      "Source substring/hash verification requires the exact frozen source text"
+    ],
+    "qa_result_path": "QA/SYNTHETIC_VALIDATION_RESULTS.md",
+    "tested_invariants": [
+      "valid direct positive temporal edge",
+      "source text hash and offsets",
+      "distinct event endpoints",
+      "atomic event-leaf eligibility",
+      "comparison-scope ancestry",
+      "A_120 membership",
+      "source mapping basis and mapping evidence",
+      "evidence-link composite uniqueness",
+      "candidate pair assessment semantics",
+      "non-temporal relation separation",
+      "zero-edge assessable denominator retention",
+      "report/annotator/pass isolation",
+      "activity-unit and scope hierarchy acyclicity"
+    ]
+  },
+  "projection_metrics": {
+    "path": "analysis/projection_metrics_recon.py",
+    "status": "PROVISIONAL_SYNTHETICALLY_TESTED_NOT_RUN_ON_REAL_REPORTS",
+    "documentation": "docs/PROJECTION_METRICS_RECON_v0.1.md",
+    "test_path": "tests/test_projection_metrics_recon.py",
+    "test_count": 13,
+    "test_command": "python -m unittest discover -s tests -v",
+    "not_integrated_with_public_github_source": true
+  },
+  "test_suite": {
+    "total_synthetic_tests": 39,
+    "test_command": "python -m unittest discover -s tests -v",
+    "real_report_rows_used": 0,
+    "real_report_runs": 0,
+    "note": "All tests use synthetic fixtures. No AnnoCTR candidate or prior DFIR report has been passed through this package."
+  },
+  "annotation_projection_adapter": {
+    "path": "analysis/annotation_projection_adapter.py",
+    "status": "FAIL_CLOSED_SYNTHETICALLY_TESTED_NOT_RUN_ON_REAL_REPORTS",
+    "documentation": "docs/ANNOTATION_PROJECTION_ADAPTER_RECON_v0.1.md",
+    "test_path": "tests/test_annotation_projection_adapter.py",
+    "test_count": 9,
+    "requires_explicit_annotation_lock_confirmation": true,
+    "requires_nonempty_immutable_lock_reference": true,
+    "not_integrated_with_public_github_source": true
+  }
+}

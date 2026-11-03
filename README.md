@@ -2,7 +2,7 @@
 
 A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
-**Status:** Research feasibility and annotation pilot setup. Toy projection/validation prototypes exist; no human annotations or empirical results yet. No novel contribution is claimed as established.
+**Status (3 November 2026):** AnnoCTR corpus screening and multi-vendor feasibility-frame preparation are complete; a draft reconstructed annotation schema and synthetic validator/projection pipeline are versioned separately. No human annotations or real-report projection results exist. No novel contribution is claimed as established.
 
 ## Provisional primary research question
 
@@ -27,13 +27,14 @@ This is a candidate to test, not a validated research gap. ChronoCTI explicitly 
 ## Repository layout
 
 ```text
-docs/       research charter, audits, architecture, methodology, decisions, roadmap
-research/   related-work matrix, evidence ledger, annotation and sampling protocols
-src/        pure-Python projection and annotation-validation utilities
+docs/       research charter, audits, architecture, methodology, decisions, roadmap, project state
+research/   related work, evidence ledger, protocols, sampling, schema reconstruction and metric contracts
+src/        public v0.3-era projection and annotation-validation utilities
 tests/      synthetic unit tests
 examples/   synthetic examples only
 scripts/    local data-screening utilities
-data/       local data only; raw and processed files are git-ignored
+data/raw/   local source corpus only; never commit raw reports or full source text
+data/processed/annoctr_screening/  versioned report-level metadata only; no raw text
 ```
 
 ## Current phase
@@ -87,3 +88,45 @@ python scripts/screen_annoctr.py \
 ```
 
 The scanner reads the official `splits.tsv` document-level manifest (120 GNE+CyNE reports in `train`/`dev`/`test`; 280 GNE-only reports in `ext`). It detects cybersecurity-specific annotation types in the full `linking/` export, while counting canonical ATT&CK technique links from `linking_mitre_only/`. It recognizes the QuoIntelligence filename alias and ignores context/negative-linking variants. It also reports the presence of both linking exports separately. Repeated mentions remain candidate locators, not event-instance labels. Synthetic tests are in `tests/test_annoctr_screening.py`.
+
+
+## Latest project checkpoint — 3 November 2026
+
+The official AnnoCTR archive has been screened locally. Its SHA-256 is recorded in
+`data/processed/annoctr_screening/screening_summary.json`. The inventory covers all
+400 manifest reports; the official train/dev/test GNE+CyNE frame contains 120 reports
+(30 Intel471, 23 Lab52/S2 Grupo, 28 Proofpoint, 12 QuoIntelligence and 27 ZScaler).
+All expected text/linking/TimeML paired files are present. 118/120 GNE+CyNE reports
+have cyber-specific rows in the full linking export; 112/120 have a valid canonical
+ATT&CK technique link. These link counts are descriptive inventory only and do not
+filter the 120-report frame. The two no-CyNE-row documents remain in the inventory
+pending a researcher content-scope decision.
+
+The tracked screening CSV contains report-level metadata only (IDs, split/vendor,
+counts, flags and hashes); it contains no report text or long source excerpts.
+The raw AnnoCTR corpus remains local and is not included in this repository.
+
+### Annotation schema reconstruction
+
+`research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/` is a new
+reconstruction based on the recovered Protocol v0.4 draft, its migration note, the
+v0.4.2 conformance audit and the public v0.3 templates. It is **not** the missing
+original `CTI_Annotation_Schema_v0.4.2-draft.zip`, and it is not approved or frozen
+for formal annotation. The exact v0.4.1 protocol and original v0.4.2 ZIP were not
+recovered. The package contains 12 blank registers, a field dictionary, controlled
+vocabularies, a structural validator, a projection module, an annotation-to-projection
+adapter, and 39 synthetic tests. None of these tests are results on real CTI reports.
+
+### Current evidence boundary
+
+- Five rank-1 reports remain candidates; researcher eligibility decisions are 0/5.
+- Human-locked AnnoCTR annotations: 0.
+- Real-report event projections: 0.
+- Independent human agreement: not measured.
+- Novelty: not established.
+- The five-report design is a feasibility/protocol-debugging pilot, not a prevalence sample.
+
+See `docs/PROJECT_STATE.md` and `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md`
+for the current status and open decisions. The original v0.3 public implementation is
+left unchanged; the RECON package is kept isolated until the researcher approves the
+protocol/schema migration.

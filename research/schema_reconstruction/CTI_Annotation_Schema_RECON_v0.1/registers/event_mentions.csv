@@ -1,0 +1,3 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: event_mentions.csv>
+index,report_id,annotator_id,annotation_pass_id,mention_id,activity_unit_id,primary_evidence_span_id,sentence_id,section_locator,mention_kind,instance_status,resolved_event_instance_id,event_type_text,actor_text,target_text,asset_or_host_text,time_expression,mention_unit_status_note,annotator_confidence,adjudication_status,mention_notes

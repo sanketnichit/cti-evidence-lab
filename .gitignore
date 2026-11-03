@@ -14,11 +14,14 @@ venv/
 *.pem
 *.key
 
-# Local data (review each dataset license before redistribution)
+# Local/raw data (review each dataset license before redistribution)
 data/raw/**
 data/processed/**
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+# Allow-list the text-free AnnoCTR screening inventory; never place raw report text here.
+!data/processed/annoctr_screening/
+!data/processed/annoctr_screening/**
 
 # Notebooks and experiment outputs
 .ipynb_checkpoints/

@@ -1,0 +1,66 @@
+{
+  "screening_version": "0.1",
+  "screening_date": "2026-11-03",
+  "input_archive": "anno-ctr-lrec-coling-2024-main(2).zip",
+  "input_archive_sha256": "118549e9ce885559cd0c07a8de42b321892754cc2e4f07fea0230eaefe4cea35",
+  "zip_integrity": "passed",
+  "manifest": {
+    "total_reports": 400,
+    "train": 70,
+    "dev": 16,
+    "test": 34,
+    "ext": 280,
+    "cyber_specific_frame_train_dev_test": 120,
+    "donors_120": {
+      "Intel471": 30,
+      "Lab52 / S2 Grupo": 23,
+      "Proofpoint": 28,
+      "QuoIntelligence": 12,
+      "ZScaler": 27
+    }
+  },
+  "paired_file_presence": {
+    "all_expected_pairs_present": true,
+    "reports_with_missing_expected_files": 0
+  },
+  "cyber_layer": {
+    "reports_with_cyber_specific_rows_in_full_linking": 118,
+    "reports_without_cyber_specific_rows_in_full_linking": 2,
+    "without_rows_ids": [
+      "proofpoint_2021-05-24_compromised-cloud-accounts-cost-firms",
+      "quoteintelligence_2020-07-09_what-is-tiber-eu-and"
+    ]
+  },
+  "attack_mapping_inventory": {
+    "reports_with_at_least_one_canonical_attack_technique_link": 112,
+    "reports_without_valid_canonical_attack_technique_link": 8,
+    "no_valid_link_report_ids": [
+      "intel471_2016-06-17_who-hacked-the-democratic-national",
+      "intel471_2021-01-27_emotet-takedown-2021",
+      "intel471_2021-02-12_scada-oldsmar-florida-water-treatment",
+      "lab52_2019-10-18_cyber-gru-xiv-conclusions",
+      "lab52_2019-10-18_cyber-iii-cold-war-hack",
+      "proofpoint_2021-05-24_compromised-cloud-accounts-cost-firms",
+      "proofpoint_2021-11-18_triple-threat-north-korea-aligned",
+      "quoteintelligence_2020-07-09_what-is-tiber-eu-and"
+    ]
+  },
+  "timeml_tag_totals": {
+    "TIMEX3": 3324,
+    "EVENT": 0,
+    "MAKEINSTANCE": 0,
+    "TLINK": 0,
+    "SIGNAL": 0
+  },
+  "output_csv": {
+    "file": "AnnoCTR_Corpus_Screening_v0.1.csv",
+    "rows": 400,
+    "sha256": "9691ef5cbd9f5e83a0c6337bf2470f232f342377b745596499cfe62d9ae50c79"
+  },
+  "limitations": [
+    "This is file-level and annotation-layer inventory only; it does not create event-instance or temporal-relation gold labels.",
+    "Repeated technique-linked mentions are candidate locators, not distinct execution counts.",
+    "Absence of an AnnoCTR ATT&CK link is not a researcher judgement that the source event is UNMAPPED.",
+    "The two reports without observed cybersecurity-specific linking rows remain in the official 120-row frame pending a researcher content-scope decision."
+  ]
+}

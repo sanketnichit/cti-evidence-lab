@@ -1,0 +1,3 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: non_temporal_relations.csv>
+index,report_id,annotator_id,annotation_pass_id,non_temporal_relation_id,activity_unit_a_id,activity_unit_b_id,relation_label,evidence_scope,primary_evidence_span_id,annotator_confidence,adjudication_status,relation_notes
