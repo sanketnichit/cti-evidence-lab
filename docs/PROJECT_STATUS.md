@@ -1,5 +1,7 @@
 # Project Status — 2026-11-01
 
+**Historical snapshot:** This document records the project state on 1 November 2026. It is retained as a dated record, not as the current status. See `docs/PROJECT_STATE.md` for the current repository and research state.
+
 **Current phase:** Research question refinement and dataset feasibility.  
 **Implementation status:** Toy projection and annotation-validation prototypes added; real-data ingestion and modelling not started.  
 **Novelty status:** Not established.  

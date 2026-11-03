@@ -550,3 +550,23 @@ The three local screening CSVs (`v0.1`, `v0.2`, and the 3-November recheck) are 
 ### 15.5 Local artifact status
 
 The frame v0.9 and method v0.3.2 corrections are local artifacts only. The public GitHub repository remains at the previously verified `b002486...` main head and has not been changed. The v0.4.2 schema and conformance audit are also local drafts, not a public implementation.
+
+---
+
+## 16. Repository synchronization addendum — 3 November 2026
+
+Sections 2.1, 4, and 15.5 above describe the state at the time this audit was assembled, before the subsequent repository synchronization. Their statements that the newer screening, sampling, and schema artifacts were local-only are historical and must not be read as the current GitHub state.
+
+The following project artifacts are now committed on `main`:
+
+- Text-free 400-report AnnoCTR screening inventory, screening report, and summary under `data/processed/annoctr_screening/`.
+- The 120-row manifest-defined GNE+CyNE frame, Sampling Method v0.3.2, and five-report source re-audit under `research/annoctr_sampling/`.
+- The provisional metric contract and researcher decision register under `research/metric_contract/`.
+- The separate `CTI_Annotation_Schema_RECON_v0.1` source package, including 12 blank registers, field dictionary, controlled vocabularies, structural validator, projection module, fail-closed adapter, synthetic tests, manifest, and checksum list.
+
+The RECON package is a reconstruction, not the missing original v0.4.2 schema. It is not researcher-approved or frozen for annotation. Its tests are synthetic only. The recovered protocol remains the v0.4 draft; exact v0.4.1 and original v0.4.2 materials remain unrecovered. Public v0.3 modules/templates remain in place as historical implementation artifacts pending a researcher-approved migration.
+
+Independent checks for this synchronization reproduced the AnnoCTR screening output from the recorded archive (400 rows; screening CSV SHA-256 `9691ef5cbd9f5e83a0c6337bf2470f232f342377b745596499cfe62d9ae50c79`), verified all 120 frame priority hashes/ranks and source-text hashes, and ran the root and RECON synthetic suites. The raw AnnoCTR corpus, full report text, and detailed source-review working spreadsheets are not committed. The tracked frame CSV and the source re-audit Markdown are the repository-visible sampling and candidate-review records.
+
+Current human/research status is unchanged: 0/5 researcher eligibility decisions locked, 0 human-locked AnnoCTR annotations, 0 real-report projections, no IAA result, no prevalence estimate, and no established novelty claim. `docs/PROJECT_STATE.md` is the current concise status source.
+

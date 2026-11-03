@@ -67,3 +67,14 @@ The current audit is a workbook and selected source-code control-flow audit, not
 ## Research integrity status
 
 No human annotations, real-report projection results, prevalence estimates, IAA measurements, validated novelty claim or publication-ready result currently exist. Synthetic test success establishes only code-path behavior on synthetic fixtures.
+
+## Repository checkpoint — 3 November 2026
+
+The current project artifacts are version-controlled on `main`: the text-free 400-report AnnoCTR screening inventory and summary, the 120-row multi-vendor frame, Sampling Method v0.3.2, the five-report source re-audit, the provisional metric contract and decision register, and the separate RECON v0.1 schema reconstruction. The original public v0.3 implementation remains unchanged.
+
+Independent verification on the frozen AnnoCTR archive reproduced the screening CSV byte-for-byte (400 rows; SHA-256 `9691ef5cbd9f5e83a0c6337bf2470f232f342377b745596499cfe62d9ae50c79`). The official archive hash matched the recorded value. The 120-row frame was checked against the fixed seed, all 120 source-text hashes were matched against the local corpus, and donor counts and within-vendor ranks were consistent.
+
+The current checked code state passed 28 root tests and 39 RECON synthetic tests; the toy projection demo ran and Python compilation passed. The RECON checksum manifest contains 29 package entries and is maintained against the committed file bytes. These are reproducibility and synthetic-code checks only; no human source annotation or real-report projection result exists.
+
+`docs/PROJECT_STATUS.md` is a historical 1 November snapshot. This file is the current project-state record. The project-wide audit v1.4 below has a 3 November repository-synchronization addendum clarifying which earlier statements described the pre-sync state.
+
