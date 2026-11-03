@@ -119,7 +119,7 @@ Specific items to fix or explicitly constrain:
 - The validator should verify that every positive event edge connects distinct resolved atomic event leaves in a comparable scope; current v0.3 checks some of the endpoint identity requirements, but not the v0.4.1 granularity/scope rules.
 - Offset checking is only valid for the exact frozen text and transformation recorded in the registry. Preserve the original and the exact normalized annotation text; never silently normalize whitespace after offsets are created.
 
-A second annotator is a human. An LLM or prior ChatGPT reconstruction is not a second rater. If no independent human is available, report that agreement was not measured; a later blind re-annotation by the same researcher is intra-annotator consistency, not IAA.
+A second annotator is a human. An LLM or prior automated reconstruction is not a second rater. If no independent human is available, report that agreement was not measured; a later blind re-annotation by the same researcher is intra-annotator consistency, not IAA.
 
 ### 4.4 Projection prototype: strengths and corrections — P1
 
