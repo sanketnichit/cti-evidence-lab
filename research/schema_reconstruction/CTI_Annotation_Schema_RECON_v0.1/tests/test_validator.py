@@ -298,6 +298,23 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue(result.ok, [x for x in result.errors])
         self.assertEqual(result.primary_positive_temporal_edges, 1)
 
+    def test_conflicting_report_level_decisions_are_flagged_and_excluded(self):
+        second_partition = {"report_id": "r-test", "annotator_id": "annotator-2", "annotation_pass_id": "pass-1"}
+        second_registry = dict(self.rows["report_registry"][0])
+        second_registry.update(second_partition)
+        second_registry["source_scope_eligibility"] = "INELIGIBLE"
+        second_registry["source_scope_reason"] = "Conflicting synthetic decision"
+        second_registry["local_research_use_status"] = "NOT_PERMITTED"
+        self.rows["report_registry"].append(second_registry)
+        self.save("report_registry")
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(result.report_level_decision_conflicts, 1)
+        self.assertEqual(result.eligible_reports, 0)
+        self.assertEqual(result.assessable_reports, 0)
+        self.assertEqual(result.eligible_report_partitions, 1)
+        self.assertIn("REPORT_LEVEL_DECISION_CONFLICT", {x.code for x in result.warnings})
+
     def test_annotation_pass_partition_isolation(self):
         # A second annotator/pass can use the same local IDs without collision.
         second_partition = {"report_id": "r-test", "annotator_id": "annotator-2", "annotation_pass_id": "pass-1"}

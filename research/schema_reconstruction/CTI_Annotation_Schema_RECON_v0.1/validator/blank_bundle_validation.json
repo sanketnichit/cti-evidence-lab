@@ -32,5 +32,6 @@
     }
   ],
   "eligible_report_partitions": 0,
-  "assessable_report_partitions": 0
+  "assessable_report_partitions": 0,
+  "report_level_decision_conflicts": 0
 }

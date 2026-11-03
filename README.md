@@ -117,7 +117,7 @@ original `CTI_Annotation_Schema_v0.4.2-draft.zip`, and it is not approved or fro
 for formal annotation. The exact v0.4.1 protocol and original v0.4.2 ZIP were not
 recovered. The package contains 12 blank registers, a field dictionary, controlled
 vocabularies, a structural validator, a projection module, an annotation-to-projection
-adapter, and 39 synthetic tests. None of these tests are results on real CTI reports.
+adapter, and 40 synthetic tests. None of these tests are results on real CTI reports.
 
 ### Current evidence boundary
 

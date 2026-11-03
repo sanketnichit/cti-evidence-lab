@@ -79,6 +79,7 @@ class ValidationReport:
     eligible_reports: int
     eligible_report_partitions: int
     assessable_report_partitions: int
+    report_level_decision_conflicts: int
     vocabulary_count: int
     vocabulary_sha256: str
 
@@ -106,6 +107,7 @@ class ValidationReport:
             "assessable_reports": self.assessable_reports,
             "eligible_report_partitions": self.eligible_report_partitions,
             "assessable_report_partitions": self.assessable_report_partitions,
+            "report_level_decision_conflicts": self.report_level_decision_conflicts,
             "a120_vocabulary_count": self.vocabulary_count,
             "a120_vocabulary_sha256": self.vocabulary_sha256,
             "issues": [asdict(x) for x in self.issues],
@@ -636,10 +638,38 @@ def validate_bundle(
         r for r in eligible_partitions
         if r.get("report_assessability") == "ASSESSABLE"
     ]
-    # Report-level incidence uses distinct report IDs, not report × annotator
-    # × pass rows. Keep partition counts visible to expose repeat annotation.
-    eligible_reports = len({r.get("report_id", "") for r in eligible_partitions})
-    assessable_reports = len({r.get("report_id", "") for r in assessable_partitions})
+
+    # A report may have multiple annotator/pass partitions. Never choose one
+    # partition as the canonical report-level decision implicitly. If source
+    # eligibility, local-use permission, or assessability differs across its
+    # partitions, flag the conflict and exclude that report from denominators
+    # until a researcher/adjudicator resolves it.
+    decisions_by_report: dict[str, set[tuple[str, str, str]]] = {}
+    for row in tables["report_registry"]:
+        decisions_by_report.setdefault(row.get("report_id", ""), set()).add((
+            row.get("source_scope_eligibility", ""),
+            row.get("local_research_use_status", ""),
+            row.get("report_assessability", ""),
+        ))
+    conflicted_report_ids = {
+        report_id for report_id, decisions in decisions_by_report.items()
+        if report_id and len(decisions) > 1
+    }
+    for report_id in sorted(conflicted_report_ids):
+        _add(
+            issues, "WARNING", "REPORT_LEVEL_DECISION_CONFLICT",
+            "Conflicting source eligibility, local-use, or assessability decisions across annotator/pass partitions; exclude from report-level denominators until adjudicated",
+            "report_registry",
+        )
+
+    eligible_reports = len({
+        r.get("report_id", "") for r in eligible_partitions
+        if r.get("report_id", "") not in conflicted_report_ids
+    })
+    assessable_reports = len({
+        r.get("report_id", "") for r in assessable_partitions
+        if r.get("report_id", "") not in conflicted_report_ids
+    })
 
     if not any(rows_by_register.values()):
         _add(issues, "WARNING", "EMPTY_ANNOTATION_BUNDLE", "All registers are header-only; this validates the package shape only, not an annotation dataset")
@@ -653,6 +683,7 @@ def validate_bundle(
         eligible_reports=eligible_reports,
         eligible_report_partitions=len(eligible_partitions),
         assessable_report_partitions=len(assessable_partitions),
+        report_level_decision_conflicts=len(conflicted_report_ids),
         vocabulary_count=len(a120),
         vocabulary_sha256=a120_sha,
     )

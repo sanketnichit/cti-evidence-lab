@@ -570,3 +570,8 @@ Independent checks for this synchronization reproduced the AnnoCTR screening out
 
 Current human/research status is unchanged: 0/5 researcher eligibility decisions locked, 0 human-locked AnnoCTR annotations, 0 real-report projections, no IAA result, no prevalence estimate, and no established novelty claim. `docs/PROJECT_STATE.md` is the current concise status source.
 
+---
+
+## 17. Validator denominator conflict guard — 3 November 2026
+
+A further synthetic regression check was added after repository synchronization. When multiple annotator/pass partitions for the same report disagree on source-scope eligibility, local research-use status, or report assessability, the RECON validator now emits `REPORT_LEVEL_DECISION_CONFLICT` and excludes that report from report-level eligible/assessable denominators until the disagreement is adjudicated. Partition-level counts remain visible. The RECON validator suite is now 18 tests; projection remains 13 and the adapter remains 9 (**40 total**). This is a synthetic safeguard only and does not define the final researcher-adjudication policy.

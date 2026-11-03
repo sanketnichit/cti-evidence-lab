@@ -43,10 +43,10 @@ Consequently, the following cannot be asserted as exact original v0.4.2 details:
 |---|---|
 | A_120 source provenance | Pinned to ChronoCTI commit and blob; ordered ID-only extraction SHA-256 recorded |
 | RECON schema package | 12 blank proposed registers; not original v0.4.2; not approved/frozen |
-| Structural validator | 17 synthetic tests pass |
+| Structural validator | 18 synthetic tests pass |
 | Projection module | 13 synthetic tests pass |
 | Register-to-projection adapter | 9 synthetic tests pass; requires explicit lock confirmation/reference |
-| Combined synthetic suite | 39/39 pass; Python compile pass; blank bundle 0 errors + 1 expected empty-bundle warning |
+| Combined synthetic suite | 40/40 pass; Python compile pass; blank bundle 0 errors + 1 expected empty-bundle warning |
 | Real AnnoCTR data through RECON | 0 rows |
 | Researcher eligibility decisions | 0/5 |
 | Human annotation locks | 0 |

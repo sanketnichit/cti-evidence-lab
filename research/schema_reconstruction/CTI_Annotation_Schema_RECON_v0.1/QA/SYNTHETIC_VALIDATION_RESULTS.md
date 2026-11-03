@@ -6,8 +6,8 @@
 ## Overall result
 
 - Python compilation of all package Python modules: **PASS**
-- `python -m unittest discover -s tests -v`: **39 tests passed**
-  - Schema validator: 17
+- `python -m unittest discover -s tests -v`: **40 tests passed**
+  - Schema validator: 18
   - Projection metrics: 13
   - Annotation-to-projection adapter: 9
 - Header-only blank-bundle check: 0 errors and 1 expected `EMPTY_ANNOTATION_BUNDLE` warning.
@@ -60,6 +60,7 @@
 37. Incomplete report review stops the adapter.
 38. Ineligible or locally unpermitted reports are blocked.
 39. Explicit annotation-lock confirmation and a non-empty immutable lock reference are required.
+40. Conflicting report-level eligibility, local-use or assessability decisions are warned and excluded from report-level denominators until adjudicated.
 
 ## Limitations
 
