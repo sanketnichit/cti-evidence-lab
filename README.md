@@ -34,12 +34,12 @@ tests/      synthetic unit tests
 examples/   synthetic examples only
 scripts/    local data-screening utilities
 data/raw/   local source corpus only; never commit raw reports or full source text
-data/processed/annoctr_screening/  versioned report-level metadata only; no raw text
+data/processed/annoctr_screening/  three allow-listed, text-free screening metadata files only
 ```
 
 ## Current phase
 
-Validate the research question, legal data access, annotation feasibility, and fair baseline comparison before building a full pipeline or model. The current audit is in `docs/RESEARCH_GAP_AUDIT_2026-11-01.md`; see also `docs/PROJECT_STATUS.md`, `docs/ROADMAP.md`, `research/PILOT_REPORT_01_STARTER.md`, `research/PILOT_SAMPLING_PLAN_v0.1.md`, and `research/templates/README.md`.
+Validate the research question, legal data access, annotation feasibility, and fair baseline comparison before building a full pipeline or model. The current source of truth is `docs/PROJECT_STATE.md`, with the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.1.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
 
 ## Citation and author name
 
@@ -103,7 +103,9 @@ filter the 120-report frame. The two no-CyNE-row documents remain in the invento
 pending a researcher content-scope decision.
 
 The tracked screening CSV contains report-level metadata only (IDs, split/vendor,
-counts, flags and hashes); it contains no report text or long source excerpts.
+counts, flags and hashes); it contains no report text or long source excerpts. The
+`.gitignore` allow-list names only this CSV, `SCREENING_REPORT_v0.1.md`, and
+`screening_summary.json`; other files under `data/processed/` remain ignored.
 The raw AnnoCTR corpus remains local and is not included in this repository.
 
 ### Annotation schema reconstruction
@@ -126,7 +128,6 @@ adapter, and 39 synthetic tests. None of these tests are results on real CTI rep
 - Novelty: not established.
 - The five-report design is a feasibility/protocol-debugging pilot, not a prevalence sample.
 
-See `docs/PROJECT_STATE.md` and `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md`
-for the current status and open decisions. The original v0.3 public implementation is
+The 120-row sampling frame is versioned at `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.csv`. Its AI triage state is separate from the still-pending human source-scope, local research-use, and public-reuse decisions. See `docs/PROJECT_STATE.md`, the project-wide audit v1.4, and the researcher decision register for current status and open decisions. The original v0.3 public implementation is
 left unchanged; the RECON package is kept isolated until the researcher approves the
 protocol/schema migration.

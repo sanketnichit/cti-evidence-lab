@@ -123,7 +123,7 @@ Continue local analysis with provenance. For public outputs, prefer report ID, t
 - Valid ATT&CK mapping availability inventoried; TimeML limitations recorded.
 - Five vendor-stratified rank-1 candidates identified using a fixed hash-priority seed.
 - Common source triage completed for all five, including scope, activity-unit, time-type, mapping-provenance, and rights cautions.
-- Separate worked ZScaler source-pass draft and five-report comparison/triage workbooks prepared.
+- Separate working ZScaler source-pass and comparison workbooks were prepared locally. They are not distributed in this repository; the text-free frame CSV and this report are the version-controlled summary of candidate identity, status and source-review cautions.
 
 ### Not done
 

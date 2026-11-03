@@ -311,6 +311,12 @@ class ValidatorTests(unittest.TestCase):
         result = self.validate()
         self.assertTrue(result.ok, [x for x in result.errors])
         self.assertEqual(result.primary_positive_temporal_edges, 2)
+        # One report with two annotation partitions remains one report in the
+        # report-level denominator; partition counts remain separately visible.
+        self.assertEqual(result.eligible_reports, 1)
+        self.assertEqual(result.assessable_reports, 1)
+        self.assertEqual(result.eligible_report_partitions, 2)
+        self.assertEqual(result.assessable_report_partitions, 2)
 
 
 if __name__ == "__main__":

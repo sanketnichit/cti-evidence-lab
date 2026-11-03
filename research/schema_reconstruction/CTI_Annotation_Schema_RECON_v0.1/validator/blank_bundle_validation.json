@@ -30,5 +30,7 @@
       "register": "",
       "row": 0
     }
-  ]
+  ],
+  "eligible_report_partitions": 0,
+  "assessable_report_partitions": 0
 }

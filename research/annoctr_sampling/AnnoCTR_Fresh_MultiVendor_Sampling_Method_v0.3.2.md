@@ -1,4 +1,4 @@
-# AnnoCTR fresh multi-vendor feasibility sample method v0.3.1
+# AnnoCTR fresh multi-vendor feasibility sample method v0.3.2
 
 **Prepared:** 3 November 2026  
 **Status:** Corrected feasibility-sampling rule; corpus screened; five rank-1 candidates reviewed by AI; no human eligibility decision or base report selection is locked. This version clarifies that the 112 link-positive count is an inventory statistic, not the sampling frame.
@@ -27,11 +27,13 @@ The uploaded official corpus archive passed ZIP integrity validation. All 400 ma
 - Across all 400 TimeML files: 3,324 `TIMEX3` tags; zero `EVENT`, `MAKEINSTANCE`, `TLINK`, and `SIGNAL` tags. TimeML therefore does not provide event-instance or event-to-event temporal relation gold for this project.
 - Automated text comparison found no exact normalized-text duplicates and no report pairs with 5-word-shingle Jaccard similarity >= 0.50 across all 400 reports. This does not rule out paraphrase or external syndication.
 
-See `AnnoCTR_Corpus_Screening_Report_v0.1.md` and `AnnoCTR_Corpus_Screening_v0.1.csv` for detailed methods and report-level outputs.
+See `data/processed/annoctr_screening/SCREENING_REPORT_v0.1.md`, `data/processed/annoctr_screening/AnnoCTR_Corpus_Screening_v0.1.csv`, and `data/processed/annoctr_screening/screening_summary.json` for detailed methods and report-level outputs.
 
 ## Base feasibility sample
 
 Target: **five reports**, one per donor, selected only after eligibility review.
+
+The tracked frame CSV keeps machine triage and human decisions in separate columns. `ai_triage_status` records the inventory/AI screening state only. `source_scope_eligibility` remains `PENDING`, while `local_research_use_status` and `public_reuse_status` remain `UNRESOLVED` until the researcher records those decisions independently. `researcher_review_status=NOT_REVIEWED` means no human decision has been locked for that row. These defaults are not approvals or exclusions.
 
 1. Verify that the exact source text and corresponding MITRE-link file exist and are readable. The full scan found all paired files. A file may be present but contain no AnnoCTR ATT&CK links; non-empty link labels are not required for manual source annotation.
 2. Record exact corpus path, raw source-text SHA-256, title, and publication date.
@@ -46,13 +48,13 @@ Target: **five reports**, one per donor, selected only after eligibility review.
 **Deterministic priority seed:** `CTI-EVIDENCE-LAB-ANNOCTR-PILOT-2026-11-03-v1`  
 Priority is the SHA-256 hex digest of `seed|report_id`; rank is ascending within donor. The seed and method must remain unchanged once eligibility review starts.
 
-The first hash-ranked candidate in each donor stratum is now listed in the workbook's `Priority Review` sheet (latest corrected dashboard export: `AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.xlsx`). They are not selected reports. Their source pages have been matched to the corpus title/date and exact source-text SHA-256 values reproduce against the frozen corpus files, but researcher eligibility decisions and event annotations remain outstanding.
+The five rank-1 candidates and all 120 frame records are stored in the version-controlled `AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.csv`. This CSV, rather than an untracked workbook, is the canonical repository record of donor strata, deterministic priority hashes, ranks, and current review states. The rank-1 entries are candidates only, not selected reports; source triage does not replace the researcher's separate source-scope, local-use, and public-reuse decisions.
 
 If a donor stratum has no eligible report, record that outcome; do not silently substitute another donor. If the rank-1 report is ineligible because of source identity, CTI-report scope, provenance, or local research-use constraints, advance to the next hash-ranked report and record the reason. Never advance because the report lacks resolved event pairs, shared ATT&CK mappings, or positive temporal edges. If necessary, revise the pilot design before annotating.
 
 ## Additional challenge cases
 
-The `Stress Queue` sheet contains eight content-review rows plus the already exposed Intel471 dry-run candidate. One of those rows (`intel471_2021-09-09_groove-gang-ransomware-babuk-revil`) is also the current Intel471 rank-1 base candidate and is explicitly flagged `BASE_CANDIDATE_OVERLAP` in frame v0.9. It must not be counted or selected a second time as a stress report if it enters the base sample. If it fails a predeclared source/scope/local-use gate, it is ineligible for the stress set as well. Up to three *additional, non-overlapping* reports may be selected purposively to stress specific annotation challenges, labelled `PURPOSIVE_STRESS` and reported separately from the five base reports.
+No purposive stress report is selected or frozen in this version-controlled frame. Any later stress cases must be recorded in a separate, versioned report-level register with predeclared challenge criteria, and must not overlap the five base reports. In particular, the Intel471 Groove rank-1 candidate cannot be counted a second time as a stress case if it enters the base sample. A report that fails a predeclared source/scope/local-use gate cannot be retained as a stress case merely to preserve an interesting challenge.
 
 No candidate is selected because it has a high repeated-technique count, multiple resolvable events, a shared-technique pair, or a positive temporal edge. Such counts only locate text worth reviewing; they do not establish event multiplicity or temporal edges.
 
@@ -106,6 +108,6 @@ Input archive SHA-256: `118549e9ce885559cd0c07a8de42b321892754cc2e4f07fea0230eae
 
 ## Version 0.3.2 correction note
 
-- Frame workbook v0.9 fixes stale internal references to the v0.1 batch-review workbook, updates its dashboard version label, and flags the Intel471 Groove candidate that appears in both the rank-1 base review and the proposed stress queue.
+- The version-controlled CSV is the canonical 120-row frame artifact; no workbook is required to reproduce the donor counts or hash-priority ordering.
 - The priority seed, SHA-256 hash formula, within-vendor ranks, five rank-1 candidate IDs, and 120-report frame are unchanged.
-- The overlapping Intel471 record remains a base candidate; it is not an additional stress case. No sample selection or researcher eligibility decision is implied by this workbook correction.
+- The Intel471 Groove rank-1 record remains a base candidate only. No sample selection, human eligibility decision, local-use permission, or public-reuse decision is implied by this correction.

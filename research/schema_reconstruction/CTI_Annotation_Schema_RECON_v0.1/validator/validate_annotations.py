@@ -77,6 +77,8 @@ class ValidationReport:
     accepted_a120_mappings: int
     assessable_reports: int
     eligible_reports: int
+    eligible_report_partitions: int
+    assessable_report_partitions: int
     vocabulary_count: int
     vocabulary_sha256: str
 
@@ -102,6 +104,8 @@ class ValidationReport:
             "accepted_a120_mappings": self.accepted_a120_mappings,
             "eligible_reports": self.eligible_reports,
             "assessable_reports": self.assessable_reports,
+            "eligible_report_partitions": self.eligible_report_partitions,
+            "assessable_report_partitions": self.assessable_report_partitions,
             "a120_vocabulary_count": self.vocabulary_count,
             "a120_vocabulary_sha256": self.vocabulary_sha256,
             "issues": [asdict(x) for x in self.issues],
@@ -623,8 +627,19 @@ def validate_bundle(
         if r.get("primary_evidence_span_id") and not _has_ref(evidence_index, {**r, "annotator_id": r.get("target_annotator_id", "")}, r.get("primary_evidence_span_id")):
             _add(issues, "ERROR", "UNKNOWN_ADJUDICATION_EVIDENCE", "Unknown adjudication evidence span", "adjudication_log", i)
 
-    eligible_reports = sum(1 for r in tables["report_registry"] if r.get("source_scope_eligibility") == "ELIGIBLE" and r.get("local_research_use_status") == "PERMITTED")
-    assessable_reports = sum(1 for r in tables["report_registry"] if r.get("source_scope_eligibility") == "ELIGIBLE" and r.get("local_research_use_status") == "PERMITTED" and r.get("report_assessability") == "ASSESSABLE")
+    eligible_partitions = [
+        r for r in tables["report_registry"]
+        if r.get("source_scope_eligibility") == "ELIGIBLE"
+        and r.get("local_research_use_status") == "PERMITTED"
+    ]
+    assessable_partitions = [
+        r for r in eligible_partitions
+        if r.get("report_assessability") == "ASSESSABLE"
+    ]
+    # Report-level incidence uses distinct report IDs, not report × annotator
+    # × pass rows. Keep partition counts visible to expose repeat annotation.
+    eligible_reports = len({r.get("report_id", "") for r in eligible_partitions})
+    assessable_reports = len({r.get("report_id", "") for r in assessable_partitions})
 
     if not any(rows_by_register.values()):
         _add(issues, "WARNING", "EMPTY_ANNOTATION_BUNDLE", "All registers are header-only; this validates the package shape only, not an annotation dataset")
@@ -636,6 +651,8 @@ def validate_bundle(
         accepted_a120_mappings=accepted_a120,
         assessable_reports=assessable_reports,
         eligible_reports=eligible_reports,
+        eligible_report_partitions=len(eligible_partitions),
+        assessable_report_partitions=len(assessable_partitions),
         vocabulary_count=len(a120),
         vocabulary_sha256=a120_sha,
     )

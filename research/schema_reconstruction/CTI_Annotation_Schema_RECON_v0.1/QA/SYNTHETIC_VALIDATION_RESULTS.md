@@ -28,7 +28,7 @@
 11. `NO_TEMPORAL_CLAIM` is permitted for a rule-versioned candidate-pair assessment.
 12. An assessable eligible report with zero positive edges remains in the denominator.
 13. Non-temporal relations do not enter the temporal-edge count.
-14. IDs remain isolated by report / annotator / annotation pass.
+14. IDs remain isolated by report / annotator / annotation pass; report-level denominator counts deduplicate repeated report IDs and expose partition counts separately.
 15. Accepted source-supported mappings require their own mapping evidence link.
 16. Scope hierarchy cycles are rejected.
 17. Accepted A_120 mapping counts exclude container-unit mappings.

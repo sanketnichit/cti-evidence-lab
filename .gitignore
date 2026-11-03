@@ -21,7 +21,9 @@ data/processed/**
 !data/processed/.gitkeep
 # Allow-list the text-free AnnoCTR screening inventory; never place raw report text here.
 !data/processed/annoctr_screening/
-!data/processed/annoctr_screening/**
+!data/processed/annoctr_screening/AnnoCTR_Corpus_Screening_v0.1.csv
+!data/processed/annoctr_screening/SCREENING_REPORT_v0.1.md
+!data/processed/annoctr_screening/screening_summary.json
 
 # Notebooks and experiment outputs
 .ipynb_checkpoints/
