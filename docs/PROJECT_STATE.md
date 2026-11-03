@@ -41,7 +41,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 - RECON synthetic tests: 40/40 passed (18 validator, 13 projection, 9 adapter tests).
 - Internal SHA256SUMS checks: 29/29 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
-- The RECON code has not been run on human annotations or real AnnoCTR event graphs.
+- The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags conflicting report-level eligibility/local-use/assessability decisions across annotator/pass partitions and excludes those reports from denominator summaries until adjudicated. Exact-technique-to-parent mapping is not checked against a bundled ATT&CK release crosswalk; this remains a pre-freeze validation task.
 - Public v0.3-era validator/projection modules remain unchanged pending review and an explicit migration decision.
 
 ## Metrics and open researcher decisions
@@ -74,7 +74,7 @@ The current project artifacts are version-controlled on `main`: the text-free 40
 
 Independent verification on the frozen AnnoCTR archive reproduced the screening CSV byte-for-byte (400 rows; SHA-256 `9691ef5cbd9f5e83a0c6337bf2470f232f342377b745596499cfe62d9ae50c79`). The official archive hash matched the recorded value. The 120-row frame was checked against the fixed seed, all 120 source-text hashes were matched against the local corpus, and donor counts and within-vendor ranks were consistent.
 
-The current checked code state passed 33 root tests and 40 RECON synthetic tests; the toy projection demo ran and Python compilation passed. The RECON checksum manifest contains 29 package entries and is maintained against the committed file bytes. These are reproducibility and synthetic-code checks only; no human source annotation or real-report projection result exists.
+The current checked code state passed 33 root tests and 40 RECON synthetic tests; the toy projection demo ran and Python compilation passed. GitHub Actions run #41693198880 passed the root suite, sampling-frame checks, RECON checksums, RECON tests, and blank-bundle validation. The RECON checksum manifest contains 29 package entries and all 29 match. These are reproducibility and synthetic-code checks only; no human source annotation or real-report projection result exists.
 
 `docs/PROJECT_STATUS.md` is a historical 1 November snapshot. This file is the current project-state record. The project-wide audit v1.4 below has a 3 November repository-synchronization addendum clarifying which earlier statements described the pre-sync state.
 
