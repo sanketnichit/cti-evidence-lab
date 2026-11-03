@@ -51,3 +51,13 @@ jobs:
       - name: Validate blank reconstructed annotation bundle
         working-directory: research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1
         run: python validator/validate_annotations.py --bundle .
+      - name: Package the tested source snapshot
+        run: git archive --format=zip --prefix=cti-evidence-lab/ HEAD > cti-evidence-lab-main.zip
+      - name: Upload source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: cti-evidence-lab-source-${{ github.sha }}
+          path: cti-evidence-lab-main.zip
+          if-no-files-found: error
+          retention-days: 14
+
