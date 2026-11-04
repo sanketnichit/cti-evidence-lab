@@ -1,0 +1,60 @@
+name: Build pinned ATT&CK crosswalk
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/build_attack_crosswalk.py"
+      - "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json"
+      - ".github/workflows/attack-crosswalk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-crosswalk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Download, hash-check and build Enterprise ATT&CK v12.1 crosswalk
+        run: python scripts/build_attack_crosswalk.py --download
+      - name: Verify generated crosswalk artifact
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+
+          base = Path("research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary")
+          csv_path = base / "A_120_Exact_to_Parent_Crosswalk_v0.1.csv"
+          manifest_path = base / "A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json"
+          with csv_path.open(encoding="utf-8", newline="") as handle:
+              rows = list(csv.DictReader(handle))
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          assert len(rows) == 737, len(rows)
+          assert len({row["exact_technique_id"] for row in rows}) == 737
+          assert sum(row["is_subtechnique"] == "true" for row in rows) == 404
+          assert sum(row["is_subtechnique"] == "false" for row in rows) == 333
+          assert sum(row["parent_in_A_120"] == "true" for row in rows) >= 120
+          assert manifest["source"]["sha256"] == "ad169215c75f94271124d3888791323e43aaedad2755f7d7eea8d4185af7f536"
+          assert manifest["source"]["git_blob_sha1"] == "7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee"
+          print("Crosswalk rows:", len(rows))
+          print("Top-level / sub-technique:", 333, "/", 404)
+          print("Source hashes and row uniqueness: PASS")
+          PY
+      - name: Upload generated crosswalk and source manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: attack-crosswalk-v12.1-${{ github.sha }}
+          path: |
+            research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv
+            research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json
+          if-no-files-found: error
+          retention-days: 14
