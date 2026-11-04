@@ -20,11 +20,11 @@ Existing work already covers CTI event extraction, temporal attack graphs, ATT&C
 
 ## Primary research question
 
- > Across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
+> Across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
 
 ## Secondary research question
 
- > Conditional on the source-grounded event-instance annotations, which parts of the observed occurrence identity and temporal structure remain represented, become partially represented, are conflated, or are omitted under the named distinct-technique-pair projection?
+> Conditional on the source-grounded event-instance annotations, which parts of the observed occurrence identity and temporal structure remain represented, become partially represented, are conflated, or are omitted under the named distinct-technique-pair projection?
 
 This is a descriptive representation comparison, not an evaluation of ChronoCTI model outputs on AnnoCTR. ChronoCTI's learned model has not been run on the AnnoCTR reports.
 
