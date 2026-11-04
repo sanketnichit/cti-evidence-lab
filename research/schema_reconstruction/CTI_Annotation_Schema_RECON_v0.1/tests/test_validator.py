@@ -331,6 +331,19 @@ class ValidatorTests(unittest.TestCase):
         result = self.validate()
         self.assertTrue(result.ok, [x for x in result.errors])
 
+    def test_positive_pair_assessment_must_match_linked_relation(self):
+        self.rows["candidate_pair_assessments"].append({
+            **PARTITION, "assessment_id": "assessment-a-b", "event_a_id": "event-a", "event_b_id": "event-b",
+            "candidate_rule_id": "same-scope-event-pairs", "candidate_rule_version": "0.1",
+            "comparison_scope_id": "scope-incident", "scope_compatibility": "COMPATIBLE",
+            "assessment_label": "OVERLAP", "related_relation_id": "rel-a-b",
+            "assessment_reason": "Synthetic mismatch probe", "adjudication_status": "UNREVIEWED",
+            "assessment_notes": "",
+        })
+        self.save("candidate_pair_assessments")
+        result = self.validate()
+        self.assertIn("ASSESSMENT_RELATION_MISMATCH", {x.code for x in result.errors})
+
     def test_accepted_a120_count_excludes_container_mapping(self):
         self.rows["activity_units"].append({
             **PARTITION, "activity_unit_id": "series-unit", "scope_id": "scope-incident",
