@@ -9,7 +9,7 @@
 - Dates use ISO 8601 `YYYY-MM-DD`; timestamps use ISO 8601 with explicit timezone where available.
 - Boolean-like decisions use controlled values, not free-form `yes/no` text.
 - Empty cells mean unavailable/not applicable only where the field definition permits it. They never imply a negative event-pair label.
-- Character offsets are zero-based and end-exclusive.
+- Character offsets are zero-based and end-exclusive Python Unicode code-point indices into the exact decoded annotation text.\n- Source text is decoded as strict UTF-8. An optional leading UTF-8 BOM is removed; CRLF/LF are preserved; Unicode is not normalized. `source_text_sha256` hashes the UTF-8 encoding of that exact decoded text, not newline-translated text.
 
 ## `report_registry.csv` — one row per report × annotator × pass
 
