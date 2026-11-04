@@ -94,14 +94,26 @@ def resolve_stix_path(stix_path: Path | None, download: bool) -> Path:
 
     request = Request(
         SOURCE_RAW_URL,
-        headers={"User-Agent": "CTI-Evidence-Lab-crosswalk-builder/0.1"},
+        headers={
+            "User-Agent": "CTI-Evidence-Lab-crosswalk-builder/0.1",
+            "Accept-Encoding": "identity",
+        },
     )
     with urlopen(request, timeout=180) as response:
         source_bytes = response.read()
-    if sha256_bytes(source_bytes) != EXPECTED_STIX_SHA256:
-        raise ValueError("Downloaded STIX file failed the pinned SHA-256 check")
-    if git_blob_sha1(source_bytes) != EXPECTED_STIX_GIT_BLOB_SHA1:
-        raise ValueError("Downloaded STIX file failed the pinned Git blob SHA-1 check")
+    actual_sha256 = sha256_bytes(source_bytes)
+    actual_blob_sha1 = git_blob_sha1(source_bytes)
+    if (
+        actual_sha256 != EXPECTED_STIX_SHA256
+        or actual_blob_sha1 != EXPECTED_STIX_GIT_BLOB_SHA1
+    ):
+        raise ValueError(
+            "Downloaded STIX file did not match the pinned input: "
+            f"bytes={len(source_bytes)}, sha256={actual_sha256}, "
+            f"git_blob_sha1={actual_blob_sha1}, "
+            f"expected_sha256={EXPECTED_STIX_SHA256}, "
+            f"expected_git_blob_sha1={EXPECTED_STIX_GIT_BLOB_SHA1}"
+        )
     stix_path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = stix_path.with_name(stix_path.name + ".download")
     try:
