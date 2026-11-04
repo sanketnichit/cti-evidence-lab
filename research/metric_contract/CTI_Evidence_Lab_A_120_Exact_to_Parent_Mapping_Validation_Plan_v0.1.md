@@ -85,11 +85,40 @@ Interpretation: v14.1 contains every selected ChronoCTI parent-level ID and expl
 
 No v14.1 crosswalk has been generated or added to RECON. Keep these results as a non-primary compatibility record.
 
-### 3.2 Primary crosswalk preflight still required — Enterprise ATT&CK v12.1
+### 3.2 Non-freezing compatibility preflight — Enterprise ATT&CK v12.1 (4 November 2026)
 
-The paper's Section 4.1 statement is the source-grounded reason to use v12.1 as the primary crosswalk candidate. The official versioned Enterprise v12.1 STIX file must still be retrieved, hashed and parsed. For that exact release, verify that all 120 `A_120` IDs exist as top-level techniques and resolve every sub-technique to exactly one parent via the explicit `subtechnique-of` relationship. Also record any missing, revoked, deprecated, or otherwise unresolved identifiers. No v12.1 STIX artifact or crosswalk has yet been added to the repository, and this plan does not claim the compatibility checks have passed.
+The paper's Section 4.1 statement is the source-grounded reason to use v12.1 as the primary crosswalk candidate. A non-freezing structural preflight has now been run against the official versioned Enterprise v12.1 STIX collection. This establishes compatibility of the selected `A_120` vocabulary with v12.1; it does not approve v12.1, create a final crosswalk, or freeze a schema input.
 
-Official ChronoCTI paper: https://doi.org/10.1007/s10115-025-02491-6 (Section 4.1, ATT&CK v12.1). The primary versioned ATT&CK input must come from MITRE's official versioned collection: https://github.com/mitre-attack/attack-stix-data.
+**Exact source identity used for this preflight**
+
+- Versioned file: `enterprise-attack/enterprise-attack-12.1.json` in `mitre-attack/attack-stix-data`.
+- Git blob SHA-1: `7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee`.
+- Retrieved-file SHA-256: `ad169215c75f94271124d3888791323e43aaedad2755f7d7eea8d4185af7f536`.
+- STIX bundle ID: `bundle--19413d5e-67e5-4a48-a4c8-afb06b7954de`.
+- Collection metadata: `Enterprise ATT&CK`, version `12.1`, modified `2022-11-08T14:00:00.188Z`.
+- UTF-8 file size used for the SHA-256 calculation: 38,207,821 bytes.
+
+**Compatibility preflight results**
+
+| Check | Result |
+|---|---:|
+| Enterprise `attack-pattern` objects | 737 |
+| Unique exact ATT&CK technique IDs | 737 |
+| Top-level techniques | 333 |
+| Sub-techniques | 404 |
+| Explicit `subtechnique-of` relationships | 404 |
+| Sub-techniques with exactly one valid top-level parent | 404 |
+| Sub-techniques with missing, multiple or invalid parents | 0 |
+| ChronoCTI `A_120` IDs found exactly once | 120/120 |
+| `A_120` IDs represented as top-level techniques | 120/120 |
+| `A_120` IDs missing, duplicated or unexpectedly sub-techniques | 0 |
+| `A_120` objects with revoked/deprecated flags | 0 |
+
+Interpretation: all 120 selected ChronoCTI IDs exist exactly once as top-level Enterprise ATT&CK v12.1 techniques. All 404 sub-techniques in the release have one explicit, valid top-level parent relationship. This supports v12.1 as a structurally suitable, source-aligned candidate for the primary crosswalk. It does not establish that the project has approved the release or that any exact-to-parent crosswalk has been generated and independently inspected.
+
+The full STIX bundle has not been committed to the repository. No v12.1 crosswalk has been added to RECON, no `attack_version` rule has been frozen, and the researcher approval gate remains open.
+
+Official ChronoCTI paper: https://doi.org/10.1007/s10115-025-02491-6 (Section 4.1, ATT&CK v12.1). Official ATT&CK source: https://github.com/mitre-attack/attack-stix-data (the immutable file identity above is recorded by Git blob SHA-1 and retrieved-file SHA-256).
 
 ## 4. Required crosswalk semantics
 
