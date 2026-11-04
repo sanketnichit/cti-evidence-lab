@@ -31,17 +31,17 @@ The source Git blob is `ca14535ad0b67af4c8297707b4c134c9de2d577f`. The derived J
 
 That is the **selected parent-level vocabulary artifact**. It is not an ATT&CK release crosswalk and does not establish how any exact/sub-technique ID maps to one of its 120 members.
 
-The pinned ChronoCTI commit metadata dates to 29 December 2023. MITRE's official release index lists Enterprise ATT&CK v14.1 on 14 November 2023, and the current index lists v20.0 on 13 October 2026. The ChronoCTI file itself does not state which ATT&CK release it used. Release chronology alone must not be presented as proof of the version used by ChronoCTI.
+The pinned ChronoCTI temporal-learner commit metadata dates to 29 December 2023. More importantly, the ChronoCTI version-of-record paper explicitly states in Section 4.1 that the study used MITRE ATT&CK **v12.1**, containing 193 techniques. This paper statement is the primary provenance for the baseline release; do not infer the release from source commit chronology. The exact source file containing the selected 120 techniques remains pinned separately.
 
 ## 3. ATT&CK release selection — proposed, not frozen
 
-**Recommended candidate for the primary crosswalk: Enterprise ATT&CK v14.1.**
+**Source-aligned primary crosswalk candidate: Enterprise ATT&CK v12.1.**
 
-Rationale: v14.1 was the latest listed Enterprise release before the pinned ChronoCTI source commit dated 29 December 2023. This is a transparent temporal alignment choice for the reconstruction, not a recovered statement about ChronoCTI's original ATT&CK version.
+Rationale: ChronoCTI's published paper explicitly names v12.1 in Section 4.1. Using the same named release is the most defensible starting point for a historically faithful reconstruction of the `A_120` parent vocabulary. This does not mean the derived `A_120` list alone is a v12.1 crosswalk, and the exact-to-parent relationships still require verification from the official versioned STIX collection.
 
-Enterprise v20.0 is current as of this plan's date, but using it as the primary mapping release would introduce a taxonomy snapshot released well after the ChronoCTI source snapshot. It may be examined later as a version-sensitivity check, but it must not be mixed into primary mappings.
+Enterprise v14.1 has been inspected separately as a non-primary compatibility preflight (Section 3.1). It may be used later as a taxonomy-version sensitivity comparison, but it must not silently replace v12.1 in the primary comparison.
 
-Before implementation, the researcher must approve the release choice. If v14.1 is approved, obtain the official versioned Enterprise STIX collection, record its source URL and SHA-256, and keep that exact file as the reproducibility input. Do not use a moving `master` file as the data source for a frozen crosswalk.
+**No ATT&CK release is approved or frozen by this plan.** Before implementation, the researcher must approve the source-aligned v12.1 choice. Then obtain the exact official versioned Enterprise STIX collection, record its immutable source identity and SHA-256, and use that exact file as the reproducibility input. Do not use a moving `master` reference as the source for a frozen crosswalk.
 
 Official references:
 
@@ -50,9 +50,9 @@ Official references:
 - MITRE technique data model, including the `subtechnique-of` relationship: https://mitre-attack.github.io/attack-data-model/schemas/3.3.0/sdo/technique.schema/
 - Pinned ChronoCTI source commit: https://github.com/rayhanur-rahman/ChronoCTI/commit/4906a0a5e399b6e2aa10435fd6e3894e041e4549
 
-### 3.1 Non-freezing preflight check — 4 November 2026
+### 3.1 Non-primary compatibility preflight — Enterprise ATT&CK v14.1 (4 November 2026)
 
-An exploratory check was run against the official, versioned Enterprise ATT&CK v14.1 STIX collection. This was a compatibility preflight only; it does **not** approve v14.1, freeze the release, or establish that ChronoCTI used that release.
+An exploratory check was run against the official, versioned Enterprise ATT&CK v14.1 STIX collection. This was a compatibility preflight only. It does **not** approve v14.1 for the primary crosswalk, freeze the release, or override ChronoCTI's paper-stated v12.1 version.
 
 Source identity recorded for this inspection:
 
@@ -81,9 +81,15 @@ Preflight results:
 | Sub-techniques whose parent is in `A_120` | 341 |
 | Sub-techniques whose parent is outside `A_120` | 86 |
 
-Interpretation: v14.1 contains every selected ChronoCTI parent-level ID and provides an explicit, unambiguous parent relationship for every sub-technique in the collection. This makes it a structurally suitable candidate for generating the proposed crosswalk. It does not establish which ATT&CK release ChronoCTI originally used; the pinned ChronoCTI source file does not state that version, and chronology alone is not provenance.
+Interpretation: v14.1 contains every selected ChronoCTI parent-level ID and explicit parent relationships for all sub-techniques in that release. This establishes compatibility with the selected 120 parent IDs only. It does not reproduce ChronoCTI's primary release, which the paper identifies as v12.1.
 
-No crosswalk has been generated or added to RECON, and no validator decision has been frozen. The researcher must still approve or replace the candidate release before the crosswalk becomes a project input.
+No v14.1 crosswalk has been generated or added to RECON. Keep these results as a non-primary compatibility record.
+
+### 3.2 Primary crosswalk preflight still required — Enterprise ATT&CK v12.1
+
+The paper's Section 4.1 statement is the source-grounded reason to use v12.1 as the primary crosswalk candidate. The official versioned Enterprise v12.1 STIX file must still be retrieved, hashed and parsed. For that exact release, verify that all 120 `A_120` IDs exist as top-level techniques and resolve every sub-technique to exactly one parent via the explicit `subtechnique-of` relationship. Also record any missing, revoked, deprecated, or otherwise unresolved identifiers. No v12.1 STIX artifact or crosswalk has yet been added to the repository, and this plan does not claim the compatibility checks have passed.
+
+Official ChronoCTI paper: https://doi.org/10.1007/s10115-025-02491-6 (Section 4.1, ATT&CK v12.1). The primary versioned ATT&CK input must come from MITRE's official versioned collection: https://github.com/mitre-attack/attack-stix-data.
 
 ## 4. Required crosswalk semantics
 
@@ -174,12 +180,12 @@ Tests must include a deliberately incorrect parent that is nevertheless a member
 
 Next order:
 
-1. Researcher approves or changes the proposed Enterprise ATT&CK release.
-2. Obtain and hash that exact official STIX collection.
-3. Generate and independently inspect the crosswalk.
-4. Implement validator checks against the crosswalk and A_120.
-5. Add the regression tests above and run the full synthetic suite/CI.
-6. Update the project state and schema package checksums only after the release and crosswalk are frozen.
+1. Researcher approves or changes the source-aligned Enterprise ATT&CK v12.1 candidate.
+2. Obtain and hash the official versioned v12.1 STIX collection.
+3. Generate and independently inspect the 768/total-release appropriate exact-to-parent crosswalk from explicit STIX relationships; record its true object counts rather than assuming v14.1 counts apply.
+4. Implement validator checks against that pinned crosswalk and `A_120`.
+5. Add the full crosswalk regression suite, then run local tests and GitHub Actions.
+6. Update the project state and package checksums only after the approved release and crosswalk are frozen.
 
 **Do not freeze RECON or begin formal annotation until this validation gate is complete.**
 
