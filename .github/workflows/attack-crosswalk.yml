@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-crosswalk:
@@ -58,3 +58,40 @@ jobs:
             research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json
           if-no-files-found: error
           retention-days: 14
+      - name: Commit generated crosswalk and refresh package checksums
+        if: github.ref == 'refs/heads/main'
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          package = Path("research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1")
+          relative_paths = [
+              "vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv",
+              "vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json",
+          ]
+          sums_path = package / "SHA256SUMS.txt"
+          lines = sums_path.read_text(encoding="utf-8").splitlines()
+          for relative in relative_paths:
+              digest = hashlib.sha256((package / relative).read_bytes()).hexdigest()
+              replacement = f"{digest}  {relative}"
+              matching = [i for i, line in enumerate(lines) if line.endswith("  " + relative)]
+              if len(matching) > 1:
+                  raise SystemExit(f"Duplicate checksum entries for {relative}")
+              if matching:
+                  lines[matching[0]] = replacement
+              else:
+                  lines.append(replacement)
+          sums_path.write_text("\\n".join(lines) + "\\n", encoding="utf-8", newline="")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv
+          git add research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json
+          git add research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/SHA256SUMS.txt
+          if git diff --cached --quiet; then
+            echo "Crosswalk and package checksums are already current."
+          else
+            git commit -m "Add verified Enterprise ATT&CK v12.1 crosswalk"
+            git push origin HEAD:main
+          fi
