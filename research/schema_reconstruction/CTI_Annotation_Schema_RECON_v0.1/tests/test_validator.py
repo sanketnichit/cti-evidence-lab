@@ -216,6 +216,89 @@ class ValidatorTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("A120_MEMBERSHIP_FAILURE", {x.code for x in result.errors})
 
+    def test_top_level_exact_technique_must_map_to_itself_as_parent(self):
+        mapping = self.rows["event_mappings"][0]
+        mapping.update(exact_technique_id="T1105", baseline_parent_technique_id="T1059")
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("TOP_LEVEL_PARENT_MISMATCH", {x.code for x in result.errors})
+
+    def test_subtechnique_requires_verified_parent_crosswalk_before_a120_classification(self):
+        mapping = self.rows["event_mappings"][0]
+        mapping.update(exact_technique_id="T1059.001", baseline_parent_technique_id="T1059")
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("EXACT_PARENT_CROSSWALK_UNVERIFIED", {x.code for x in result.errors})
+
+    def test_crosswalk_file_presence_does_not_bypass_crosswalk_validation(self):
+        mapping = self.rows["event_mappings"][0]
+        mapping.update(exact_technique_id="T1059.001", baseline_parent_technique_id="T1059")
+        self.save("event_mappings")
+        (self.bundle / "vocabulary" / "A_120_Exact_to_Parent_Crosswalk_v0.1.csv").write_text(
+            "not,a,verified,crosswalk\n", encoding="utf-8"
+        )
+        result = self.validate()
+        self.assertIn("EXACT_PARENT_CROSSWALK_UNVERIFIED", {x.code for x in result.errors})
+
+    def test_prior_exposure_status_is_controlled(self):
+        self.rows["report_registry"][0]["prior_exposure_status"] = "MAYBE"
+        self.save("report_registry")
+        result = self.validate()
+        self.assertIn("INVALID_PRIOR_EXPOSURE_STATUS", {x.code for x in result.errors})
+
+    def test_direct_timestamp_requires_time_evidence_for_both_endpoints(self):
+        self.rows["temporal_relations"][0]["relation_basis"] = "direct_timestamp"
+        self.save("temporal_relations")
+        result = self.validate()
+        self.assertEqual(
+            sum(x.code == "DIRECT_TIMESTAMP_ENDPOINT_TIME_MISSING" for x in result.errors),
+            2,
+        )
+
+    def test_direct_timestamp_passes_with_normalized_evidence_for_both_endpoints(self):
+        self.rows["temporal_relations"][0]["relation_basis"] = "direct_timestamp"
+        for time_id, event_id, mention_id, span_id, raw, normalized in [
+            ("time-a", "event-a", "mention-a", "span-a", "08:00", "2026-01-01T08:00:00Z"),
+            ("time-b", "event-b", "mention-b", "span-b", "09:00", "2026-01-01T09:00:00Z"),
+        ]:
+            self.rows["time_evidence"].append({
+                **PARTITION, "time_evidence_id": time_id, "activity_unit_id": event_id,
+                "mention_id": mention_id, "raw_time_text": raw, "time_type": "ATTACK_OCCURRENCE",
+                "time_precision": "HOUR", "timezone_text": "UTC", "timezone_status": "EXPLICIT",
+                "normalized_start": normalized, "normalized_end": normalized,
+                "normalized_timezone": "UTC", "normalization_status": "NORMALIZED",
+                "uncertainty_notes": "synthetic", "primary_evidence_span_id": span_id,
+                "annotator_confidence": "HIGH", "adjudication_status": "UNREVIEWED", "time_notes": "",
+            })
+        self.save("temporal_relations")
+        self.save("time_evidence")
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.errors])
+
+    def test_duplicate_temporal_relation_is_rejected(self):
+        duplicate = dict(self.rows["temporal_relations"][0])
+        duplicate["relation_id"] = "rel-a-b-duplicate"
+        self.rows["temporal_relations"].append(duplicate)
+        self.save("temporal_relations")
+        result = self.validate()
+        self.assertIn("DUPLICATE_TEMPORAL_RELATION", {x.code for x in result.errors})
+
+    def test_reciprocal_before_relations_are_rejected(self):
+        reverse = dict(self.rows["temporal_relations"][0])
+        reverse.update(relation_id="rel-b-a", event_a_id="event-b", event_b_id="event-a")
+        self.rows["temporal_relations"].append(reverse)
+        self.save("temporal_relations")
+        result = self.validate()
+        self.assertIn("CONTRADICTORY_TEMPORAL_RELATION", {x.code for x in result.errors})
+
+    def test_before_and_overlap_for_same_event_pair_are_rejected(self):
+        overlap = dict(self.rows["temporal_relations"][0])
+        overlap.update(relation_id="rel-a-b-overlap", relation_label="OVERLAP")
+        self.rows["temporal_relations"].append(overlap)
+        self.save("temporal_relations")
+        result = self.validate()
+        self.assertIn("CONTRADICTORY_TEMPORAL_RELATION", {x.code for x in result.errors})
+
     def test_evidence_text_must_match_frozen_source(self):
         self.rows["evidence_spans"][0]["evidence_text"] = "Event X"
         self.save("evidence_spans")
