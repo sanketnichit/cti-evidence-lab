@@ -429,7 +429,7 @@ def validate_bundle(
             _add(issues, "ERROR", "ACCEPTED_MAPPING_NO_ATTACK_VERSION", "Accepted mapping requires a pinned ATT&CK version", "event_mappings", i)
         exact_id = r.get("exact_technique_id", "")
         parent_id = r.get("baseline_parent_technique_id", "")
-        if decision == "ACCEPTED" and exact_id and not re.fullmatch(r"T\\d{4}(?:\\.\\d{3})?", exact_id):
+        if decision == "ACCEPTED" and exact_id and not re.fullmatch(r"T\d{4}(?:\.\d{3})?", exact_id):
             _add(issues, "ERROR", "INVALID_EXACT_TECHNIQUE_ID", f"Invalid exact ATT&CK technique ID {exact_id!r}", "event_mappings", i)
         if decision == "ACCEPTED" and exact_id and "." not in exact_id and parent_id and parent_id != exact_id:
             _add(issues, "ERROR", "TOP_LEVEL_PARENT_MISMATCH", "A top-level technique must map to itself as its parent; exact technique and baseline parent differ", "event_mappings", i)
