@@ -150,6 +150,49 @@ class ProjectionMetricsTests(unittest.TestCase):
                 [TemporalEdge("r1", "a", "b", "NO_TEMPORAL_CLAIM")],
             )
 
+    def test_inverse_after_and_before_share_normalized_pair_without_label_conflict(self):
+        result = project_report(
+            {"a": {"T_A"}, "b": {"T_B"}, "c": {"T_A"}, "d": {"T_B"}},
+            [
+                TemporalEdge("r1", "a", "b", "BEFORE"),
+                TemporalEdge("r2", "d", "c", "AFTER"),
+            ],
+        )
+        self.assertEqual(result["counts"]["projected_technique_pairs"], 1)
+        self.assertEqual(result["counts"]["collision_technique_pairs"], 1)
+        self.assertEqual(result["counts"]["label_conflated_technique_pairs"], 0)
+        self.assertEqual(result["projection"]["technique_pairs"], [["T_A", "T_B"]])
+        self.assertEqual(result["projection"]["edge_to_pairs"]["r2"], [["T_B", "T_A"]])
+
+    def test_before_and_overlap_for_same_projected_pair_remain_label_conflict(self):
+        result = project_report(
+            {"a": {"T_A"}, "b": {"T_B"}, "c": {"T_A"}, "d": {"T_B"}},
+            [
+                TemporalEdge("r1", "a", "b", "BEFORE"),
+                TemporalEdge("r2", "c", "d", "OVERLAP"),
+            ],
+        )
+        self.assertEqual(result["counts"]["label_conflated_technique_pairs"], 1)
+
+    def test_redundant_source_edge_does_not_hide_single_edge_mapping_fanout(self):
+        event_mappings = {
+            "event_a": {"T_A", "T_B"},
+            "event_b": {"T_A", "T_B"},
+            "event_c": {"T_A"},
+        }
+        edges = [
+            TemporalEdge("r1", "event_a", "event_b", "BEFORE"),
+            TemporalEdge("r2", "event_c", "event_b", "BEFORE"),
+        ]
+        result = project_report(event_mappings, edges)
+        self.assertEqual(result["counts"]["projected_before_cycle_components"], 1)
+        self.assertEqual(result["counts"]["projected_cycle_components_from_single_source_event_edge"], 1)
+        self.assertEqual(result["counts"]["projected_cycle_components_requiring_multiple_source_event_edges"], 0)
+        provenance = result["strict_before_cycle_analysis"]["projected_cycle_provenance"][0]
+        self.assertEqual(provenance["source_event_edge_count"], 2)
+        self.assertIn("r1", provenance["single_source_edges_inducing_cycle"])
+        self.assertTrue(provenance["single_event_edge_mapping_fanout"])
+
     def test_after_is_normalized_for_strict_order_cycle_analysis(self):
         result = project_report(
             {
