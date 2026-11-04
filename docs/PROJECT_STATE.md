@@ -41,7 +41,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 - RECON synthetic tests: 40/40 passed (18 validator, 13 projection, 9 adapter tests).
 - Internal SHA256SUMS checks: 29/29 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
-- The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags conflicting report-level eligibility/local-use/assessability decisions across annotator/pass partitions and excludes those reports from denominator summaries until adjudicated. Exact-technique-to-parent mapping is not checked against a bundled ATT&CK release crosswalk; this remains a pre-freeze validation task.
+- The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags conflicting report-level eligibility/local-use/assessability decisions across annotator/pass partitions and excludes those reports from denominator summaries until adjudicated. Exact-technique-to-parent mapping is not checked against a bundled ATT&CK release crosswalk; this remains a pre-freeze validation task. The gap and acceptance tests are specified in [A_120 Exact-to-Parent Mapping Validation Plan v0.1](../research/metric_contract/CTI_Evidence_Lab_A_120_Exact_to_Parent_Mapping_Validation_Plan_v0.1.md); the proposed Enterprise ATT&CK release and crosswalk remain unapproved/unbuilt.
 - Public v0.3-era validator/projection modules remain unchanged pending review and an explicit migration decision.
 
 ## Metrics and open researcher decisions
