@@ -620,6 +620,12 @@ def validate_bundle(
         if r.get("assessment_label") in POSITIVE_TEMPORAL_LABELS:
             if not r.get("related_relation_id") or not _has_ref(indexes["temporal_relations"], r, r.get("related_relation_id")):
                 _add(issues, "ERROR", "POSITIVE_ASSESSMENT_NO_RELATION", "Positive candidate assessment must link to temporal_relations row", "candidate_pair_assessments", i)
+            else:
+                linked = indexes["temporal_relations"].get((*_partition(r), r.get("related_relation_id", "")))
+                if linked:
+                    same_pair = {r.get("event_a_id"), r.get("event_b_id")} == {linked.get("event_a_id"), linked.get("event_b_id")}
+                    if not same_pair or r.get("assessment_label") != linked.get("relation_label"):
+                        _add(issues, "ERROR", "ASSESSMENT_RELATION_MISMATCH", "Positive candidate assessment must match the linked relation's event pair and label", "candidate_pair_assessments", i)
 
     # Non-temporal relations stay separate and never count as temporal graph edges.
     for i, r in enumerate(tables["non_temporal_relations"], 2):
