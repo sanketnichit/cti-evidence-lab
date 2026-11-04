@@ -13,7 +13,7 @@
 - Header-only blank-bundle check: 0 errors and 1 expected `EMPTY_ANNOTATION_BUNDLE` warning.
 - Pinned derived A_120 vocabulary: 120 unique identifiers loaded and checked.
 
-## Schema validator tests (1–29)
+## Schema validator tests (1–31)
 
 1. Valid two-event direct `BEFORE` relation is accepted.
 2. Missing source text produces a warning rather than silently validating offsets.
@@ -44,39 +44,41 @@
 27. Conflicting report-level eligibility/local-use/assessability decisions are warned and excluded from report-level denominators until adjudicated.
 28. CRLF source text is hashed and offset-checked without newline translation.
 29. Positive candidate-pair assessments must match their linked temporal relation's event pair and label.
+30. A fully reviewed assessable report with zero resolved event leaves remains in `N_assessable`.
+31. An otherwise assessable report with an incomplete full-report review is not yet counted in `N_assessable`.
 
-## Projection metric tests (30–45)
+## Projection metric tests (32–47)
 
-30. The four event-edge projection statuses are mutually exclusive and exhaustive.
-31. `project_report_recon()` rejects self-event edges itself.
-32. Unmapped endpoints are not mislabeled as fully omitted mapped edges.
-33. `AFTER` direction is reversed for strict-order projection.
-34. Symmetric temporal labels use unordered technique dyads.
-35. Distinct-pair collisions and conflicting labels retain source-edge provenance.
-36. Technique-cycle components preserve source event-edge provenance.
-37. Single-event-edge mapping-fanout cycles are distinguished from multi-edge cycles.
-38. Source event-graph cycles invalidate projection-induced cycle diagnostics.
-39. Non-positive, inferred/transitive and scope-incompatible edges are rejected.
-40. Alternative, workbook-only, out-of-vocabulary and container mappings are excluded from A_120.
-41. Duplicate mapping IDs are rejected.
-42. Zero-edge input returns undefined (`null`) edge rates rather than divide-by-zero values.
-43. Inverse `AFTER` and `BEFORE` claims normalize to one strict-order pair and do not create a label conflict.
-44. A strict-order claim and `OVERLAP` remain a pair-level label conflict.
-45. Adding a redundant source edge does not hide a cycle induced by one source edge's mapping fan-out.
+32. The four event-edge projection statuses are mutually exclusive and exhaustive.
+33. `project_report_recon()` rejects self-event edges itself.
+34. Unmapped endpoints are not mislabeled as fully omitted mapped edges.
+35. `AFTER` direction is reversed for strict-order projection.
+36. Symmetric temporal labels use unordered technique dyads.
+37. Distinct-pair collisions and conflicting labels retain source-edge provenance.
+38. Technique-cycle components preserve source event-edge provenance.
+39. Single-event-edge mapping-fanout cycles are distinguished from multi-edge cycles.
+40. Source event-graph cycles invalidate projection-induced cycle diagnostics.
+41. Non-positive, inferred/transitive and scope-incompatible edges are rejected.
+42. Alternative, workbook-only, out-of-vocabulary and container mappings are excluded from A_120.
+43. Duplicate mapping IDs are rejected.
+44. Zero-edge input returns undefined (`null`) edge rates rather than divide-by-zero values.
+45. Inverse `AFTER` and `BEFORE` claims normalize to one strict-order pair and do not create a label conflict.
+46. A strict-order claim and `OVERLAP` remain a pair-level label conflict.
+47. Adding a redundant source edge does not hide a cycle induced by one source edge's mapping fan-out.
 
-## Annotation-to-projection adapter tests (46–56)
+## Annotation-to-projection adapter tests (48–58)
 
-46. A valid exact report/annotator/pass partition projects only eligible primary rows.
-47. Mixed annotator rows do not leak across partitions.
-48. Container mappings are excluded from the primary event mapping set.
-49. Inferred/non-primary temporal relations are not projected.
-50. Empty mapping sets keep event relations visible as unmapped-endpoint edges.
-51. Scope or structural validation errors stop the adapter.
-52. Incomplete report review stops the adapter.
-53. Ineligible or locally unpermitted reports are blocked.
-54. Explicit annotation-lock confirmation and a non-empty lock reference are required.
-55. Arbitrary or stale lock references are rejected against the computed partition digest.
-56. Prior-exposure status and the associated caution flag are exposed in projection output.
+48. A valid exact report/annotator/pass partition projects only eligible primary rows.
+49. Mixed annotator rows do not leak across partitions.
+50. Container mappings are excluded from the primary event mapping set.
+51. Inferred/non-primary temporal relations are not projected.
+52. Empty mapping sets keep event relations visible as unmapped-endpoint edges.
+53. Scope or structural validation errors stop the adapter.
+54. Incomplete report review stops the adapter.
+55. Ineligible or locally unpermitted reports are blocked.
+56. Explicit annotation-lock confirmation and a non-empty lock reference are required.
+57. Arbitrary or stale lock references are rejected against the computed partition digest.
+58. Prior-exposure status and the associated caution flag are exposed in projection output.
 
 ## Limitations
 

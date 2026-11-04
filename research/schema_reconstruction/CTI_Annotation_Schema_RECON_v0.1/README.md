@@ -53,7 +53,7 @@ Only resolved `event_leaf` activity units with `atomic_event` granularity may en
 
 ## Validator and synthetic tests
 
-Run the synthetic test suite from this directory with Python 3.10 or later (56 tests across the validator, projection module, and fail-closed adapter: 29 validator, 16 projection, 11 adapter):
+Run the synthetic test suite from this directory with Python 3.10 or later (58 tests across the validator, projection module, and fail-closed adapter: 31 validator, 16 projection, 11 adapter):
 
 ```bash
 python -m unittest discover -s tests -v

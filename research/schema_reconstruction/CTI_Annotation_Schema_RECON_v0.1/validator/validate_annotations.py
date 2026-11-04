@@ -699,9 +699,13 @@ def validate_bundle(
         if r.get("source_scope_eligibility") == "ELIGIBLE"
         and r.get("local_research_use_status") == "PERMITTED"
     ]
+    # N_assessable requires an assessable source and at least one completed
+    # eligible full-report review partition. Source suitability alone is not
+    # enough while the review remains pending or in progress.
     assessable_partitions = [
         r for r in eligible_partitions
         if r.get("report_assessability") == "ASSESSABLE"
+        and r.get("full_report_review_status") == "COMPLETE"
     ]
 
     # A report may have multiple annotator/pass partitions. Never choose one

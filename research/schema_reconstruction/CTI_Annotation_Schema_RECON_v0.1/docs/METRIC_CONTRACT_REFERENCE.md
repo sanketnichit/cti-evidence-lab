@@ -89,13 +89,13 @@ Reports that pass the researcher's source/scope eligibility and local-research-u
 
 ### 4.2 Assessable eligible reports (`N_assessable`)
 
-Eligible reports for which the frozen source is complete/readable and the full-report annotation pass was completed sufficiently to determine whether the source supports the target structure.
+An eligible report enters `N_assessable` when at least one eligible human annotation partition records a complete/readable frozen source, `report_assessability = ASSESSABLE`, and `full_report_review_status = COMPLETE`, and no unresolved cross-partition conflict remains in source/scope eligibility, local-use permission, or report assessability.
 
-The primary report-level rate uses `N_assessable` as its denominator. Report assessability coverage is always disclosed as `N_assessable / N_eligible`.
+Count each report once, not once per annotator or annotation pass. When multiple passes or annotators exist, calculate report-level outcomes from the designated locked final annotation or agreed/adjudicated consensus partition; do not sum outcomes across passes. An incomplete auxiliary or second-annotator pass does not duplicate or negate a report that already has a completed qualifying review, but agreement status must be reported separately. The primary report-level rate uses `N_assessable` as its denominator. Report assessability coverage is always disclosed as `N_assessable / N_eligible`. Public-reuse permission is tracked separately and is not part of the local-use denominator gate.
 
-A report with zero resolved atomic event leaves can still be assessable. It remains in `N_assessable`, receives zero for the positive target outcome, and is separately classified as having no primary event-leaf opportunity. This is an important study outcome, not an exclusion reason.
+A report with zero resolved atomic event leaves can still be assessable. If its source and full-report review meet the conditions above, it remains in `N_assessable`, receives zero for the positive target outcome, and is separately classified as having no primary event-leaf opportunity. This is an important study outcome, not an exclusion reason.
 
-A report marked `NOT_ASSESSABLE` is not treated as a zero-edge report. It is excluded from `N_assessable` but remains visible in the assessability coverage count and missingness table. A report that fails source/scope or local-use eligibility is outside `N_eligible` and must have a documented reason.
+A report marked `NOT_ASSESSABLE` or `PENDING`, or one whose full-report review is `NOT_STARTED` or `IN_PROGRESS`, is not counted in `N_assessable`. It remains visible in the assessability-coverage and missingness tables and is never silently recoded as a zero-edge report. A report that fails source/scope or local-use eligibility is outside `N_eligible` and must have a documented reason. Conflicting report-level decisions across annotator/pass partitions are excluded until adjudicated.
 
 **Five-report limitation:** these denominators describe a feasibility sample. They do not support corpus or vendor prevalence estimates or conventional population-level confidence intervals.
 
@@ -242,16 +242,16 @@ Missing annotation rows never become automatic negative labels. The full-report 
 
 ## 10. Decision status and approval boundary
 
-This v0.1 contract recommends the following design choices for researcher approval:
+This v0.1 contract contains design choices with different decision states:
 
-1. Primary mapping level is `A_120`; `A_exact` is a separately reported sensitivity analysis.
-2. Primary within-technique temporal incidence includes all five directly supported positive temporal labels in §3.1.
-3. Strict cycle analysis uses only `BEFORE`/`AFTER` after documented normalization.
-4. Primary rate denominator is assessable eligible reports; assessability coverage is reported against all eligible reports.
-5. Zero-event-leaf but otherwise assessable reports remain in the primary denominator.
-6. Pair opportunity and positive temporal-relation outcomes remain separate.
+1. Primary mapping level is `A_120`; `A_exact` is a separately reported sensitivity analysis — **recommended, not yet adopted**.
+2. Primary within-technique temporal incidence includes all five directly supported positive temporal labels in §3.1 — **recommended, not yet adopted**.
+3. Strict cycle analysis uses only `BEFORE`/`AFTER` after documented normalization — **source-grounded rule; synthetic implementation corrected**.
+4. Primary report-level denominator is `N_assessable`; assessability coverage is `N_assessable / N_eligible` — **adopted as the project default on 4 November 2026 under delegated decision**.
+5. A zero-event-leaf report remains in `N_assessable` only when source/scope and local-use eligibility pass, report assessability is `ASSESSABLE`, and at least one eligible full-report review is `COMPLETE`; `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved conflicts are disclosed separately, never recoded as zero — **adopted with the denominator rule**.
+6. Pair opportunity and positive temporal-relation outcomes remain separate — **recommended; metric naming/formula approval pending**.
 
-No researcher approval is implied by this draft. No real-report metric may be computed until the protocol/schema decisions, exact `A_120` vocabulary artifact, and validator gates are resolved.
+Adopting the denominator rule does not approve or freeze this entire metric contract, protocol, or RECON schema. No real-report metric may be computed until the remaining protocol/schema decisions, exact `A_120` vocabulary artifact, report eligibility decisions and validator gates are resolved.
 
 ## 11. Implementation acceptance tests implied by this contract
 
@@ -264,6 +264,7 @@ The future validator / metric adapter must reject or flag:
 - `NO_TEMPORAL_CLAIM` without a declared candidate-pair assessment frame;
 - `workbook_only`, rejected, alternative-only, or out-of-vocabulary mappings entering `A_120`;
 - an `A_120` mapping whose ID is not present in the pinned selected-120 vocabulary;
+- an otherwise assessable report with `full_report_review_status` other than `COMPLETE` entering `N_assessable`;
 - `OVERLAP`, `SIMULTANEOUS`, or `CONCURRENT_UNSPECIFIED` entering strict-order cycle analysis;
 - missing or incomplete annotation rows being interpreted as negative event-pair labels;
 - projection calls with self-event edges.

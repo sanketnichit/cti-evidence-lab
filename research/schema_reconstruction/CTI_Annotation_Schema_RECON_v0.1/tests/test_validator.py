@@ -409,6 +409,30 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(result.assessable_reports, 1)
         self.assertEqual(result.primary_positive_temporal_edges, 0)
 
+    def test_zero_event_leaf_report_remains_assessable_after_completed_review(self):
+        # A fully reviewed report with no resolved event leaves is still an
+        # assessable zero outcome; event yield must not determine inclusion.
+        for register in (
+            "activity_units", "event_mentions", "event_mappings",
+            "temporal_relations", "time_evidence", "candidate_pair_assessments",
+            "non_temporal_relations", "record_evidence_links",
+        ):
+            self.rows[register] = []
+            self.save(register)
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(result.eligible_reports, 1)
+        self.assertEqual(result.assessable_reports, 1)
+        self.assertEqual(result.primary_positive_temporal_edges, 0)
+
+    def test_assessable_report_is_not_in_denominator_until_full_review_complete(self):
+        self.rows["report_registry"][0]["full_report_review_status"] = "IN_PROGRESS"
+        self.save("report_registry")
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(result.eligible_reports, 1)
+        self.assertEqual(result.assessable_reports, 0)
+
     def test_non_temporal_edge_does_not_enter_temporal_graph_count(self):
         self.rows["non_temporal_relations"].append({
             **PARTITION, "non_temporal_relation_id": "causal-a-b", "activity_unit_a_id": "event-a",

@@ -38,7 +38,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 
 ## Implementation verification
 
-- Root synthetic tests: 43/43 passed. RECON synthetic tests: 56/56 passed (29 validator, 16 projection, 11 adapter tests).
+- Root synthetic tests: 43/43 passed. RECON synthetic tests: 58/58 passed (31 validator, 16 projection, 11 adapter tests).
 - Internal SHA256SUMS checks: 29/29 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
 - The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags report-level eligibility/local-use/assessability conflicts across annotator/pass partitions and excludes conflicting reports from denominator summaries until adjudicated. It also validates prior-exposure values, requires normalized evidence-linked time records at both endpoints of `direct_timestamp`, rejects duplicate/contradictory direct temporal-pair claims, checks positive candidate assessments against their linked relation, and requires top-level exact techniques to map to themselves. Accepted sub-technique mapping rows remain fail-closed until a real version-pinned exact-to-parent crosswalk is integrated. The validator's synthetic checks do not establish semantic annotation correctness.
@@ -50,7 +50,7 @@ Source text convention: strict UTF-8; an optional leading UTF-8 BOM is removed; 
 
 - Pair opportunity and positive within-technique temporal-relation incidence are separate measures.
 - Proposed primary relation labels: direct-source/direct-timestamp `BEFORE`, `AFTER`, `OVERLAP`, `SIMULTANEOUS`, `CONCURRENT_UNSPECIFIED`; strict cycle analysis uses only normalized `BEFORE`/`AFTER`.
-- The assessable-report denominator and treatment of reports that are eligible but `NOT_ASSESSABLE` remain explicit researcher decisions. Do not silently count them as zero-edge outcomes.
+- **Adopted project default (4 November 2026):** primary report-level rates use `N_assessable`; assessability coverage is `N_assessable / N_eligible`. `N_eligible` requires source/scope eligibility and local-use permission. `N_assessable` additionally requires a complete/readable frozen source, `report_assessability=ASSESSABLE`, and at least one completed eligible human full-report review partition, with report-level conflicts resolved. Count each report once. If multiple annotators or passes exist, calculate report-level outcomes from the designated locked final annotation or agreed/adjudicated consensus partition, not by summing partitions. A fully reviewed assessable report with zero resolved event leaves remains a zero outcome; `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved conflicts are disclosed separately and are not recoded as zero. Public-reuse permission is tracked separately.
 - The researcher decision register is in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.1.md`.
 
 ## ChronoCTI baseline
@@ -59,7 +59,7 @@ The current audit is a workbook and selected source-code control-flow audit, not
 
 ## Current blockers / next sequence
 
-1. Resolve the open P0 researcher decisions in the decision register (metric denominator/assessability, temporal-label estimand, mapping level, and the two no-CyNE genre cases).
+1. Resolve the remaining open P0 decisions in the decision register (temporal-label estimand, mapping level, and the two no-CyNE genre cases). The report-level denominator default is recorded; the wider protocol remains provisional.
 2. Review the reconstructed schema against the missing original v0.4.1/v0.4.2 artifacts if they ever become available; otherwise approve or revise RECON explicitly as a new version.
 3. Make separate researcher eligibility, local research-use and public-reuse decisions for each of the five rank-1 candidates.
 4. Only after protocol/schema freeze, start source-first human annotation. Keep raw sources and long excerpts local.
