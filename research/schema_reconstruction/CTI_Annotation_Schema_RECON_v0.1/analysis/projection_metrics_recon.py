@@ -268,7 +268,7 @@ def project_report_recon(
                 continue
             relation_class_pairs[(rclass, pair)].add(edge.edge_id)
             global_pair_edges[pair].add(edge.edge_id)
-            global_pair_labels[pair].add(edge.relation)
+            global_pair_labels[pair].add(_relation_class(edge))
 
     mapped_count = len(mapped_edge_ids)
     total_edges = len(temporal_edges)
@@ -314,12 +314,21 @@ def project_report_recon(
             edge_id for pair in internal_pairs
             for edge_id in relation_class_pairs[("STRICT_ORDER", pair)]
         })
+        single_source_edges_inducing_cycle = []
+        for source_edge_id in source_ids:
+            pairs_from_one_source_edge = [
+                pair for pair in internal_pairs
+                if source_edge_id in relation_class_pairs[("STRICT_ORDER", pair)]
+            ]
+            if _cyclic_components(component_set, pairs_from_one_source_edge):
+                single_source_edges_inducing_cycle.append(source_edge_id)
         cycle_provenance.append({
             "technique_nodes": list(component),
             "internal_pairs": [list(pair) for pair in internal_pairs],
             "source_event_edge_ids": source_ids,
             "source_event_edge_count": len(source_ids),
-            "single_event_edge_mapping_fanout": len(source_ids) == 1,
+            "single_source_edges_inducing_cycle": single_source_edges_inducing_cycle,
+            "single_event_edge_mapping_fanout": bool(single_source_edges_inducing_cycle),
         })
 
     return {
@@ -343,7 +352,8 @@ def project_report_recon(
             "distinct_pair_label_conflicts": len(label_conflicts),
             "source_strict_order_cycle_components": len(source_cycles),
             "projected_strict_order_cycle_components": len(technique_cycles),
-            "projected_cycle_components_with_multiple_source_edges": sum(1 for row in cycle_provenance if row["source_event_edge_count"] >= 2),
+            "projected_cycle_components_with_multiple_source_edges": sum(1 for row in cycle_provenance if not row["single_event_edge_mapping_fanout"]),
+            "projected_cycle_components_requiring_multiple_source_edges": sum(1 for row in cycle_provenance if not row["single_event_edge_mapping_fanout"]),
             "projected_cycle_components_from_single_edge_fanout": sum(1 for row in cycle_provenance if row["single_event_edge_mapping_fanout"]),
         },
         "rates": {
