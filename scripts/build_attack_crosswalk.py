@@ -34,6 +34,10 @@ A120_RELATIVE_PATH = (
     "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/"
     "vocabulary/A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json"
 )
+OUTPUT_RELATIVE_PATH = (
+    "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/"
+    "vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv"
+)
 EXPECTED_A120_SHA256 = "97b599ffdcfcc5864a9352cf1467de0f6cac92f9141053a76098e4f2d33fb1bc"
 EXPECTED_COUNTS = {
     "attack_pattern_objects": 737,
@@ -323,7 +327,7 @@ def write_crosswalk(
             "size_bytes": len(source_bytes),
         },
         "a120": {
-            "path": str(a120_path),
+            "path": A120_RELATIVE_PATH,
             "sha256": a120_sha256,
             "record_count": 120,
         },
@@ -334,7 +338,7 @@ def write_crosswalk(
             "counts": counts,
         },
         "output": {
-            "path": str(output_csv),
+            "path": OUTPUT_RELATIVE_PATH,
             "sha256": sha256_bytes(csv_bytes),
         },
         "policy": {
