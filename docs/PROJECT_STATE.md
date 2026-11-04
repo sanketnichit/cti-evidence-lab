@@ -1,6 +1,6 @@
 # CTI Evidence Lab — Project State
 
-**Snapshot date:** 3 November 2026  
+**Snapshot date:** 4 November 2026  
 **Status:** Research design and tooling preparation; no human-locked AnnoCTR annotations or real-report projection results exist.
 
 ## Research question
@@ -41,7 +41,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 - RECON synthetic tests: 40/40 passed (18 validator, 13 projection, 9 adapter tests).
 - Internal SHA256SUMS checks: 29/29 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
-- The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags conflicting report-level eligibility/local-use/assessability decisions across annotator/pass partitions and excludes those reports from denominator summaries until adjudicated. Exact-technique-to-parent mapping is not checked against a bundled ATT&CK release crosswalk; this remains a pre-freeze validation task. The gap and acceptance tests are specified in [A_120 Exact-to-Parent Mapping Validation Plan v0.1](../research/metric_contract/CTI_Evidence_Lab_A_120_Exact_to_Parent_Mapping_Validation_Plan_v0.1.md); the proposed Enterprise ATT&CK release and crosswalk remain unapproved/unbuilt.
+- The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags conflicting report-level eligibility/local-use/assessability decisions across annotator/pass partitions and excludes those reports from denominator summaries until adjudicated. Exact-technique-to-parent mapping is not yet checked by the validator against a bundled ATT&CK release crosswalk. An exploratory preflight of official Enterprise ATT&CK v14.1 found all 120 A_120 IDs as top-level techniques and verified explicit parent relationships for all 427 sub-techniques; v14.1 remains an unapproved candidate, no crosswalk is frozen, and this does not establish ChronoCTI's original ATT&CK release. Details and source hashes are in [A_120 Exact-to-Parent Mapping Validation Plan v0.1](../research/metric_contract/CTI_Evidence_Lab_A_120_Exact_to_Parent_Mapping_Validation_Plan_v0.1.md).
 - Public v0.3-era validator/projection modules remain unchanged pending review and an explicit migration decision.
 
 ## Metrics and open researcher decisions
@@ -67,6 +67,10 @@ The current audit is a workbook and selected source-code control-flow audit, not
 ## Research integrity status
 
 No human annotations, real-report projection results, prevalence estimates, IAA measurements, validated novelty claim or publication-ready result currently exist. Synthetic test success establishes only code-path behavior on synthetic fixtures.
+
+## Update — 4 November 2026
+
+The Enterprise ATT&CK v14.1 preflight findings are recorded in the mapping validation plan. The release remains unapproved and the exact-to-parent validator integration remains pending. A documentation command audit also corrected the obsolete direct-script invocation in `research/PROJECTION_METRICS_v0.1.md` to the repository-root module invocation used by the README and workflow.
 
 ## Repository checkpoint — 3 November 2026
 
