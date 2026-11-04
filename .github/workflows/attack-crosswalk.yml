@@ -71,7 +71,11 @@ jobs:
               "vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json",
           ]
           sums_path = package / "SHA256SUMS.txt"
-          lines = sums_path.read_text(encoding="utf-8").splitlines()
+          raw = sums_path.read_text(encoding="utf-8")
+          # Repair a previous literal-backslash-n write before updating entries.
+          if "\n" not in raw and "\\n" in raw:
+              raw = raw.replace("\\n", "\n")
+          lines = raw.splitlines()
           for relative in relative_paths:
               digest = hashlib.sha256((package / relative).read_bytes()).hexdigest()
               replacement = f"{digest}  {relative}"
@@ -82,7 +86,7 @@ jobs:
                   lines[matching[0]] = replacement
               else:
                   lines.append(replacement)
-          sums_path.write_text("\\n".join(lines) + "\\n", encoding="utf-8", newline="")
+          sums_path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="")
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
