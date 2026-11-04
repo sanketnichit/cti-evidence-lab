@@ -16,25 +16,24 @@ A report can describe several distinct occurrences of the same technique. It can
 
 ChronoCTI defines its temporal-relation task over pairs of ATT&CK techniques within a report and builds graphs with techniques as nodes. This makes it a valuable direct baseline, but also creates a concrete representation question: what incident-level temporal detail is lost when repeated event occurrences are collapsed into a single technique node?
 
-General NLP already studies event mentions, event coreference, and temporal relations. The project is not claiming those representations are novel. The potential contribution is an empirical, CTI-specific investigation of this granularity problem, supported by a clearly documented annotation protocol and reproducible evaluation.
+Existing work already covers CTI event extraction, temporal attack graphs, ATT&CK-linked behaviour and technique-pair temporal prediction. General NLP also studies event coreference and temporal relations. This project does not claim novelty for generic CTI event extraction, ATT&CK mapping, attack sequencing or event-level graph construction. Its remaining candidate contribution is narrower: a human source-grounded measurement of which distinct occurrence-level relations are explicitly supported in a transparently sampled CTI report set, and what information is retained, conflated or omitted by a named distinct-technique-pair projection.
 
 ## Primary research question
 
-> How much temporal structure is lost when CTI reports are represented as ATT&CK technique nodes rather than distinct report-local event instances?
+ > Across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
 
 ## Secondary research question
 
-> Can an evidence-linked event-instance representation recover temporal relations with better event-level fidelity than a technique-pair representation, at a useful level of coverage?
+ > Conditional on the source-grounded event-instance annotations, which parts of the observed occurrence identity and temporal structure remain represented, become partially represented, are conflated, or are omitted under the named distinct-technique-pair projection?
 
-The secondary question is conditional on the annotation pilot and a reproducible baseline being feasible.
+This is a descriptive representation comparison, not an evaluation of ChronoCTI model outputs on AnnoCTR. ChronoCTI's learned model has not been run on the AnnoCTR reports.
 
 ## Candidate hypotheses
 
-- **H1 — Aggregation loss:** In reports containing multiple distinct occurrences of the same ATT&CK technique, collapsing occurrences into one technique node loses or conflates at least some event-level temporal distinctions.
-- **H2 — Relation fidelity:** An event-instance graph evaluated against event-instance annotations provides more faithful temporal structure than a graph that aggregates by technique ID.
-- **H3 — Evidence support:** Requiring relation-specific source spans reduces unsupported temporal edges compared with a model that predicts relations without producing relation evidence.
+- **H1 — Aggregation consequence:** When two distinct event instances share a technique, a representation that excludes diagonal technique pairs cannot preserve that same-technique event-pair edge as a distinct technique pair. This is a consequence of the projection definition; the empirical question is how often the source reports actually support such relations.
+- A model-based comparison of event-instance extraction or evidence-grounded relation prediction is a possible later extension, conditional on the annotation pilot, a fair baseline and sufficient data.
 
-These hypotheses are unverified. We will measure how often their preconditions occur before deciding whether to test them at scale.
+The initial study is descriptive and tests annotation feasibility and representation-level measurement. It does not claim model superiority or generic hallucination reduction.
 
 ## Units and definitions
 
@@ -78,4 +77,4 @@ Out of scope until separately justified:
 
 ## Decision rule
 
-Proceed beyond the pilot only if the data contain enough repeated event occurrences and temporal relations, annotation boundaries are sufficiently reliable, source rights are clear, and a fair baseline comparison can be reproduced. Otherwise narrow or replace the project.
+Proceed beyond the pilot only if the data support reliable source-grounded annotation, occurrence boundaries are defensible, source rights are clear, and a fair named-projection comparison can be reproduced. A zero-positive pilot is not failure if it reveals a genuine limitation of the sampling frame or annotation protocol. Otherwise narrow or replace the project.
