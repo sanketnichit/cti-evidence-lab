@@ -152,3 +152,67 @@ The temporal-relation IRR calculation in the public code and the exact intersect
 ChronoCTI paper: https://doi.org/10.1007/s10115-025-02491-6  
 IRR code: https://github.com/rayhanur-rahman/ChronoCTI/blob/main/temporal-learner-code/IRR.py  
 IRR data directory: https://github.com/rayhanur-rahman/ChronoCTI/tree/main/temporal-learner-code/IRR_data
+
+
+## Addendum — Focused prior-art coverage and scope correction (4 November 2026)
+
+The following work is directly relevant to the remaining candidate contribution. These entries narrow the claim; they do not establish novelty.
+
+### AttacKG+ — temporally unfolding CTI attack graphs
+
+Zhang et al., *AttacKG+: Boosting Attack Knowledge Graph Construction with Large Language Models*, **Computers & Security 150** (March 2025), article 104220. DOI: https://doi.org/10.1016/j.cose.2024.104220. Preprint: https://arxiv.org/abs/2405.04753.
+
+The paper represents an attack as temporally unfolding steps. Each step contains a behavior graph, MITRE TTP labels, and a state summary; the system constructs attack graphs from CTI reports using an LLM-based pipeline. This is direct prior art for structured, temporally ordered CTI attack representations. It rules out claiming that event-oriented temporal attack-graph construction or attaching ATT&CK labels to behavior is itself new.
+
+**Required comparison:** inspect the paper's exact schema, event/step identity semantics, temporal relation semantics, source-evidence granularity, annotation/evaluation data, and availability of implementation materials. Do not assume that a temporal step is equivalent to our proposed atomic event instance or that the paper evaluates the same report-level projection estimand.
+
+### SecIE — temporal relation extraction in CTI
+
+Park and Lee, *Full-Stack Information Extraction System for Cybersecurity Intelligence*, **EMNLP 2022 Industry Track**, pp. 531–539. DOI: https://doi.org/10.18653/v1/2022.emnlp-industry.54. ACL Anthology: https://aclanthology.org/2022.emnlp-industry.54/.
+
+SecIE extracts cybersecurity entities, relations, and temporal information from CTI reports. The paper reports evaluation on 133 labeled threat reports containing 108,021 tokens. This is established prior art for CTI relation and temporal-information extraction. The exact annotation unit and whether its temporal labels connect event instances, entity mentions, or other relation endpoints must be checked in the primary paper before making a direct schema comparison.
+
+### EXTRACTOR — provenance graphs from threat reports
+
+Satvat, Gjomemo, and Venkatakrishnan, *EXTRACTOR: Extracting Attack Behavior from Threat Reports* (2021). https://arxiv.org/abs/2104.08618.
+
+EXTRACTOR extracts concise attack behaviors from CTI reports as provenance graphs. This is relevant prior work on graph-structured attack-behavior extraction from report text. It should be included when comparing the project's proposed source-grounded activity-unit representation with existing report-to-graph systems. It is not, on the abstract evidence alone, proof that EXTRACTOR solves our narrower event-pair projection measurement.
+
+### TTPDrill — threat-action extraction and ATT&CK-like mapping
+
+Husari et al., *TTPDrill: Automatic and Accurate Extraction of Threat Actions from Unstructured Text of CTI Sources*, **ACSAC 2017**, pp. 103–115. DOI: https://doi.org/10.1145/3134600.3134646.
+
+TTPDrill extracts threat actions from CTI text and maps actions to techniques, tactics, kill-chain phases, and sharing standards such as STIX. It is prior art for threat-action extraction and taxonomy mapping. It should prevent us from presenting action extraction plus ATT&CK mapping as a new contribution.
+
+### ChainSmith — campaign-stage extraction from CTI reports
+
+Zhu and Dumitraș, *ChainSmith: Automatically Learning the Semantics of Malicious Campaigns by Mining Threat Intelligence Reports*, **IEEE EuroS&P 2018**, pp. 458–472. DOI: https://doi.org/10.1109/EuroSP.2018.00039.
+
+ChainSmith extracts indicators of compromise from technical reports and classifies their roles in a four-stage malware-delivery campaign model. It is relevant to campaign- and sequence-oriented CTI mining, but its primary target is IOC extraction and campaign-stage classification rather than the event-instance temporal-relation estimand proposed here.
+
+### TRACE-CTI — evidence provenance and governance of TTP claims
+
+Valletta et al., *TRACE-CTI: Auditable Post-Extraction Governance of TTP Claims with Knowledge Graphs* (arXiv preprint, July 2026). https://arxiv.org/abs/2607.24563.
+
+TRACE-CTI focuses on provenance, validation grounds, versioned trust decisions, and governance of extracted TTP claims across CTI corpora. It is relevant to our evidence and annotation-provenance discipline. It does not, based on its stated task, remove the need to compare event-instance temporal relations and their technique-pair projection separately.
+
+### ChronoCTI — version and evaluation boundary
+
+Rahman et al., *Mining temporal attack patterns from cyberthreat intelligence reports*, **Knowledge and Information Systems 67** (2025), 8941–8981. DOI: https://doi.org/10.1007/s10115-025-02491-6.
+
+The version-of-record paper states in Section 4.1 that the study used MITRE ATT&CK **v12.1**, containing 193 techniques. Its temporal technique-pair task uses a selected 120-technique vocabulary and excludes same-technique diagonal pairs in the candidate-pair universe (Section 4.5.1/4.5.2). This is a source-stated version, not an inference from the repository commit date.
+
+The paper reports technique-mapping and temporal-relation model results on its own dataset. We have not run those models on AnnoCTR. Consequently, this project may measure how source-grounded human annotations behave under a named distinct-technique-pair projection on the selected AnnoCTR sample; it must not present those measurements as ChronoCTI's model error rate on AnnoCTR.
+
+### Revised candidate gap — deliberately narrow
+
+The literature establishes CTI action/entity extraction, ATT&CK mapping, campaign-stage extraction, provenance-graph construction, temporal information extraction, temporally unfolding attack graphs, and technique-pair temporal prediction. The project will not claim these as novel.
+
+The remaining candidate contribution is a **descriptive, source-grounded measurement** on a transparently sampled CTI report set:
+
+1. whether the report explicitly supports a temporal relation between two distinct, resolved report-local activity occurrences;
+2. whether those occurrences share one or more ATT&CK parent-technique mappings;
+3. what the explicitly supported event relation retains, partially represents, conflates, or omits under a clearly specified projection to distinct technique pairs;
+4. how annotation uncertainty, mapping granularity, relation evidence, and report assessability affect that measurement.
+
+This is a proposed estimand and protocol, not a proven research gap. The AnnoCTR feasibility sample does not by itself establish population prevalence. The result is not a direct evaluation of ChronoCTI's trained model on AnnoCTR. AttacKG+ and other temporally structured CTI graph systems require full schema-level comparison before any final novelty claim.
