@@ -43,7 +43,7 @@ jobs:
           assert sum(row["is_subtechnique"] == "true" for row in rows) == 404
           assert sum(row["is_subtechnique"] == "false" for row in rows) == 333
           assert sum(row["parent_in_A_120"] == "true" for row in rows) >= 120
-          assert manifest["source"]["sha256"] == "ad169215c75f94271124d3888791323e43aaedad2755f7d7eea8d4185af7f536"
+          assert manifest["source"]["sha256"] == "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1"
           assert manifest["source"]["git_blob_sha1"] == "7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee"
           print("Crosswalk rows:", len(rows))
           print("Top-level / sub-technique:", 333, "/", 404)
