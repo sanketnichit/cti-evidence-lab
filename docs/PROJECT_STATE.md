@@ -38,13 +38,13 @@ This remains a candidate empirical question, not an established novelty claim. T
 
 ## Implementation verification
 
-- RECON synthetic tests: 40/40 passed (18 validator, 13 projection, 9 adapter tests).
+- Root synthetic tests: 43/43 passed. RECON synthetic tests: 56/56 passed (29 validator, 16 projection, 11 adapter tests).
 - Internal SHA256SUMS checks: 29/29 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
-- The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags conflicting report-level eligibility/local-use/assessability decisions across annotator/pass partitions and excludes those reports from denominator summaries until adjudicated. Exact-technique-to-parent mapping is not yet checked by the validator against a bundled ATT&CK release crosswalk. An exploratory preflight of official Enterprise ATT&CK v14.1 found all 120 A_120 IDs as top-level techniques and verified explicit parent relationships for all 427 sub-techniques; v14.1 remains an unapproved candidate, no crosswalk is frozen, and this does not establish ChronoCTI's original ATT&CK release. Details and source hashes are in [A_120 Exact-to-Parent Mapping Validation Plan v0.1](../research/metric_contract/CTI_Evidence_Lab_A_120_Exact_to_Parent_Mapping_Validation_Plan_v0.1.md).
-- Public v0.3-era validator/projection modules remain unchanged pending review and an explicit migration decision.
+- The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags report-level eligibility/local-use/assessability conflicts across annotator/pass partitions and excludes conflicting reports from denominator summaries until adjudicated. It also validates prior-exposure values, requires normalized evidence-linked time records at both endpoints of `direct_timestamp`, rejects duplicate/contradictory direct temporal-pair claims, checks positive candidate assessments against their linked relation, and requires top-level exact techniques to map to themselves. Accepted sub-technique mapping rows remain fail-closed until a real version-pinned exact-to-parent crosswalk is integrated. The validator's synthetic checks do not establish semantic annotation correctness.
+- The public v0.3-era CSV schema and root annotation validator remain unchanged. `src/projection_metrics.py` has received separate mechanical corrections for normalized strict-order pair orientation and single-edge cycle-fan-out attribution. RECON remains isolated pending protocol/schema approval.
 
-## Metrics and open researcher decisions
+Source text convention: strict UTF-8; optional leading UTF-8 BOM removed; CRLF/LF preserved; no Unicode normalization; SHA-256 over the UTF-8 bytes of the exact decoded annotation text; offsets are zero-based, end-exclusive Python Unicode code-point indices. `scripts/hash_annoctr_sources.py` can check/recompute the 120 frame hashes against a local AnnoCTR corpus. The raw corpus is not in the repository, so the existing 120 hashes have **not** been regenerated under this clarified convention. Do not assume they already comply.\n\n## Metrics and open researcher decisions
 
 - Pair opportunity and positive within-technique temporal-relation incidence are separate measures.
 - Proposed primary relation labels: direct-source/direct-timestamp `BEFORE`, `AFTER`, `OVERLAP`, `SIMULTANEOUS`, `CONCURRENT_UNSPECIFIED`; strict cycle analysis uses only normalized `BEFORE`/`AFTER`.
@@ -53,7 +53,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 
 ## ChronoCTI baseline
 
-The current audit is a workbook and selected source-code control-flow audit, not a full feature-table rebuild or model re-training. Preserve raw `NEXT`; any conversion to a BEFORE-like interpretation is a separate hypothesis. The 120-technique list is pinned to the ChronoCTI temporal learner's `selected_techniquesWName.json`; the derived identifier-only list is included in the RECON package with provenance and hash.
+The current audit is a workbook and selected source-code control-flow audit, not a full feature-table rebuild or model re-training. Preserve raw `NEXT`; any conversion to a BEFORE-like interpretation is a separate hypothesis. ChronoCTI's paper identifies Enterprise ATT&CK v12.1 (Section 4.1) and describes the 120-technique pair task with diagonal pairs excluded (Section 4.5.1). The selected 120 IDs are pinned to ChronoCTI's `selected_techniquesWName.json`; the derived identifier-only list is included in RECON with provenance/hash. We have not run ChronoCTI's learned model on AnnoCTR; our proposed analysis measures source-grounded annotations under a named projection, not ChronoCTI's measured errors on AnnoCTR.
 
 ## Current blockers / next sequence
 
@@ -70,7 +70,7 @@ No human annotations, real-report projection results, prevalence estimates, IAA 
 
 ## Update — 4 November 2026
 
-The Enterprise ATT&CK v14.1 preflight findings are recorded in the mapping validation plan. The release remains unapproved and the exact-to-parent validator integration remains pending. A documentation command audit also corrected the obsolete direct-script invocation in `research/PROJECTION_METRICS_v0.1.md` to the repository-root module invocation used by the README and workflow.
+The earlier ATT&CK v14.1 inspection is retained only as a non-primary compatibility preflight and possible sensitivity resource. ChronoCTI's published paper explicitly identifies v12.1 as the release used in its study, making v12.1 the source-aligned primary crosswalk candidate. No release has been approved and no v12.1 crosswalk has been generated: the official versioned STIX collection still needs to be obtained, hashed and validated. The exact-to-parent validator now fails closed for sub-technique classifications until that crosswalk is integrated. The documentation command audit also corrected the obsolete direct-script invocation.
 
 ## Repository checkpoint — 3 November 2026
 
