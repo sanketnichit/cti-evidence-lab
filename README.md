@@ -106,7 +106,7 @@ The tracked screening CSV contains report-level metadata only (IDs, split/vendor
 counts, flags and hashes); it contains no report text or long source excerpts. The
 `.gitignore` allow-list names only this CSV, `SCREENING_REPORT_v0.1.md`, and
 `screening_summary.json`; other files under `data/processed/` remain ignored.
-The raw AnnoCTR corpus remains local and is not included in this repository. The source-hash convention is strict UTF-8, optional leading BOM removal, preserved CRLF/LF, no Unicode normalization, and zero-based end-exclusive Python code-point offsets. Existing 120 frame hashes have not yet been regenerated under this convention because the raw corpus is not in this repository. To verify/recompute them locally, use `python scripts/hash_annoctr_sources.py --corpus-root /path/to/AnnoCTR/all` (add `--write` only after reviewing the mismatches).
+The raw AnnoCTR corpus is not included in this repository. The source-hash convention is strict UTF-8, optional leading BOM removal, preserved CRLF/LF, no Unicode normalization, and zero-based end-exclusive Python code-point offsets. On 4 November 2026, all 120 frame `source_text_sha256` values were independently recomputed from the official AnnoCTR repository text files at pinned commit `d510b6949e1938d47c93a43eedd562dc538439dc`; all 120 matched. This verifies the hashes against that source revision, not the separate downloaded-archive SHA-256. To reproduce from a local corpus, use `python scripts/hash_annoctr_sources.py --corpus-root /path/to/AnnoCTR/all` (add `--write` only after reviewing any mismatches). Raw report text remains excluded from Git.
 
 ### Annotation schema reconstruction
 
