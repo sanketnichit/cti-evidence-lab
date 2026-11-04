@@ -6,7 +6,7 @@ A student-led empirical study of event-instance identity and temporal informatio
 
 ## Provisional primary research question
 
- > Across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented, or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
+> Across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented, or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
 
 This is a candidate report-level estimand, not a validated research gap. ChronoCTI uses a 120-technique pair universe that excludes same-technique diagonal pairs, and its paper identifies Enterprise ATT&CK v12.1. Existing work already covers CTI event extraction, temporal attack graphs, ATT&CK mapping and technique-pair temporal prediction. The possible contribution is narrower: human source-evidenced measurement of what occurrence-level relations are supported in a named CTI sample and what a specified distinct-technique-pair projection retains, conflates or omits. We have not run ChronoCTI's learned model on AnnoCTR and must not describe our projection as its measured error rate.
 
