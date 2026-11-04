@@ -182,7 +182,7 @@ Next order:
 
 1. Researcher approves or changes the source-aligned Enterprise ATT&CK v12.1 candidate.
 2. Obtain and hash the official versioned v12.1 STIX collection.
-3. Generate and independently inspect the 768/total-release appropriate exact-to-parent crosswalk from explicit STIX relationships; record its true object counts rather than assuming v14.1 counts apply.
+3. Generate and independently inspect the complete exact-to-parent crosswalk for all exact technique IDs present in the pinned v12.1 release, using explicit STIX relationships; record the release's actual object counts rather than assuming v14.1 counts apply.
 4. Implement validator checks against that pinned crosswalk and `A_120`.
 5. Add the full crosswalk regression suite, then run local tests and GitHub Actions.
 6. Update the project state and package checksums only after the approved release and crosswalk are frozen.
