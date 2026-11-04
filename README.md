@@ -2,13 +2,13 @@
 
 A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
-**Status (3 November 2026):** AnnoCTR corpus screening and multi-vendor feasibility-frame preparation are complete; a draft reconstructed annotation schema and synthetic validator/projection pipeline are versioned separately. No human annotations or real-report projection results exist. No novel contribution is claimed as established.
+**Status (4 November 2026):** AnnoCTR corpus screening and the 120-report feasibility frame are prepared; the reconstructed annotation schema and synthetic validator/projection tooling remain drafts. No human annotations or real-report projection results exist. No novel contribution is claimed as established.
 
 ## Provisional primary research question
 
-> In CTI reports, how often do two distinct event instances mapped to the same MITRE ATT&CK technique have an explicitly supported temporal relation, and what event-level temporal information becomes unrepresentable when those occurrences are projected to a distinct-technique-pair representation that excludes diagonal pairs?
+ > Across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented, or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
 
-This is a candidate to test, not a validated research gap. ChronoCTI explicitly defines a distinct-technique-pair universe over 120 ATT&CK techniques, excluding same-technique diagonal pairs. General NLP already studies event mentions, event coreference, and temporal relation extraction. Our potential contribution is a CTI-specific empirical measurement of how often this exclusion matters in source reports, supported by human event-instance annotations and reproducible projection metrics.
+This is a candidate report-level estimand, not a validated research gap. ChronoCTI uses a 120-technique pair universe that excludes same-technique diagonal pairs, and its paper identifies Enterprise ATT&CK v12.1. Existing work already covers CTI event extraction, temporal attack graphs, ATT&CK mapping and technique-pair temporal prediction. The possible contribution is narrower: human source-evidenced measurement of what occurrence-level relations are supported in a named CTI sample and what a specified distinct-technique-pair projection retains, conflates or omits. We have not run ChronoCTI's learned model on AnnoCTR and must not describe our projection as its measured error rate.
 
 ## Research integrity
 
@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest observed verification: [GitHub Actions run #26](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41314970298) passed **28 synthetic unit tests** and the module-based toy demo. This validates synthetic code paths only; it is not evidence from real CTI reports.
+Latest local verification on the 4 November working tree: **43 root tests** and **56 RECON synthetic tests** pass, including the expanded validator and projection regressions. Python compilation and the toy projection demo pass; blank-bundle validation reports zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning. These are synthetic/code-integrity checks only, not real-report findings. GitHub Actions for the current changes must be checked separately.
 
 Run from the repository root:
 
@@ -90,7 +90,7 @@ python scripts/screen_annoctr.py \
 The scanner reads the official `splits.tsv` document-level manifest (120 GNE+CyNE reports in `train`/`dev`/`test`; 280 GNE-only reports in `ext`). It detects cybersecurity-specific annotation types in the full `linking/` export, while counting canonical ATT&CK technique links from `linking_mitre_only/`. It recognizes the QuoIntelligence filename alias and ignores context/negative-linking variants. It also reports the presence of both linking exports separately. Repeated mentions remain candidate locators, not event-instance labels. Synthetic tests are in `tests/test_annoctr_screening.py`.
 
 
-## Latest project checkpoint — 3 November 2026
+## Dataset, sampling and schema checkpoint — 4 November 2026
 
 The official AnnoCTR archive has been screened locally. Its SHA-256 is recorded in
 `data/processed/annoctr_screening/screening_summary.json`. The inventory covers all
@@ -106,7 +106,7 @@ The tracked screening CSV contains report-level metadata only (IDs, split/vendor
 counts, flags and hashes); it contains no report text or long source excerpts. The
 `.gitignore` allow-list names only this CSV, `SCREENING_REPORT_v0.1.md`, and
 `screening_summary.json`; other files under `data/processed/` remain ignored.
-The raw AnnoCTR corpus remains local and is not included in this repository.
+The raw AnnoCTR corpus remains local and is not included in this repository. The source-hash convention is strict UTF-8, optional leading BOM removal, preserved CRLF/LF, no Unicode normalization, and zero-based end-exclusive Python code-point offsets. Existing 120 frame hashes have not yet been regenerated under this convention because the raw corpus is not in this repository. To verify/recompute them locally, use `python scripts/hash_annoctr_sources.py --corpus-root /path/to/AnnoCTR/all` (add `--write` only after reviewing the mismatches).
 
 ### Annotation schema reconstruction
 
@@ -117,7 +117,7 @@ original `CTI_Annotation_Schema_v0.4.2-draft.zip`, and it is not approved or fro
 for formal annotation. The exact v0.4.1 protocol and original v0.4.2 ZIP were not
 recovered. The package contains 12 blank registers, a field dictionary, controlled
 vocabularies, a structural validator, a projection module, an annotation-to-projection
-adapter, and 40 synthetic tests. None of these tests are results on real CTI reports.
+adapter, and 56 synthetic tests (29 validator, 16 projection, 11 adapter). None of these tests are results on real CTI reports.
 
 ### Current evidence boundary
 
@@ -128,6 +128,4 @@ adapter, and 40 synthetic tests. None of these tests are results on real CTI rep
 - Novelty: not established.
 - The five-report design is a feasibility/protocol-debugging pilot, not a prevalence sample.
 
-The 120-row sampling frame is versioned at `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.csv`. Its AI triage state is separate from the still-pending human source-scope, local research-use, and public-reuse decisions. See `docs/PROJECT_STATE.md`, the project-wide audit v1.4, and the researcher decision register for current status and open decisions. The original v0.3 public implementation is
-left unchanged; the RECON package is kept isolated until the researcher approves the
-protocol/schema migration.
+The 120-row sampling frame is versioned at `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.csv`. Automated triage and prior exposure are recorded separately from human source-scope, local research-use and public-reuse decisions. The five candidates have not received human eligibility approval. See `docs/PROJECT_STATE.md`, the project-wide audit v1.4 and the researcher decision register for current status. The RECON package remains a reconstruction, not the missing original v0.4.2 schema, and has not been approved for formal annotation.
