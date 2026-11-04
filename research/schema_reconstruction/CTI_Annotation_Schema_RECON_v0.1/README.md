@@ -45,7 +45,7 @@ The original `CTI_Annotation_Schema_v0.4.2-draft.zip` and exact `CTI_Event_Insta
 
 ## Evidence handling
 
-`evidence_spans.csv` is the canonical store for exact text spans. Direct `primary_evidence_span_id` fields identify the primary evidence span on mentions, times, temporal relations and non-temporal relations. `record_evidence_links.csv` stores additional spans, not duplicates of the primary span. All offsets are zero-based and end-exclusive into the exact frozen source text identified by the matching report registry SHA-256.
+`evidence_spans.csv` is the canonical store for exact text spans. Direct `primary_evidence_span_id` fields identify the primary evidence span on mentions, times, temporal relations and non-temporal relations. `record_evidence_links.csv` stores additional spans, not duplicates of the primary span. Source text uses strict UTF-8; an optional leading UTF-8 BOM is removed, CRLF/LF line endings are preserved, and no Unicode normalization is applied. `source_text_sha256` hashes the UTF-8 bytes of that exact decoded annotation text. Offsets are zero-based, end-exclusive Python Unicode code-point indices into the same decoded text; they are not byte or UTF-16 offsets.
 
 ## Primary analysis gates
 
@@ -53,13 +53,13 @@ Only resolved `event_leaf` activity units with `atomic_event` granularity may en
 
 ## Validator and synthetic tests
 
-Run the synthetic test suite from this directory with Python 3.10 or later (40 tests across the validator, projection module, and fail-closed adapter):
+Run the synthetic test suite from this directory with Python 3.10 or later (56 tests across the validator, projection module, and fail-closed adapter: 29 validator, 16 projection, 11 adapter):
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-The suite covers the schema validator, provisional projection module and annotation-to-projection adapter; it currently contains 40 synthetic tests. None are real report annotations. The projection module is not the public GitHub implementation and has not been run on real annotations.
+The suite covers the schema validator, provisional projection module and annotation-to-projection adapter; it currently contains 56 synthetic tests. None are real report annotations. The projection module is not the public GitHub implementation and has not been run on real annotations.
 
 Run the validator against the blank package (this should report an empty-bundle warning, not an annotation success):
 
