@@ -93,7 +93,7 @@ The paper's Section 4.1 statement is the source-grounded reason for the adopted 
 
 - Versioned file: `enterprise-attack/enterprise-attack-12.1.json` in `mitre-attack/attack-stix-data`.
 - Git blob SHA-1: `7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee`.
-- Retrieved-file SHA-256: `ad169215c75f94271124d3888791323e43aaedad2755f7d7eea8d4185af7f536`.
+- Retrieved-file SHA-256: `e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1`.
 - STIX bundle ID: `bundle--19413d5e-67e5-4a48-a4c8-afb06b7954de`.
 - Collection metadata: `Enterprise ATT&CK`, version `12.1`, modified `2022-11-08T14:00:00.188Z`.
 - UTF-8 file size used for the SHA-256 calculation: 38,207,821 bytes.

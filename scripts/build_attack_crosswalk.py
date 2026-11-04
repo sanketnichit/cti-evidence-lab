@@ -29,7 +29,7 @@ SOURCE_RAW_URL = (
     "enterprise-attack/enterprise-attack-12.1.json"
 )
 EXPECTED_STIX_GIT_BLOB_SHA1 = "7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee"
-EXPECTED_STIX_SHA256 = "ad169215c75f94271124d3888791323e43aaedad2755f7d7eea8d4185af7f536"
+EXPECTED_STIX_SHA256 = "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1"
 A120_RELATIVE_PATH = (
     "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/"
     "vocabulary/A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json"
