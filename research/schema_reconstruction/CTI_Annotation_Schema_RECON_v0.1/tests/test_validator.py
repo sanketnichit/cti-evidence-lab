@@ -11,6 +11,7 @@ from pathlib import Path
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PACKAGE_ROOT / "validator"))
 import validate_annotations as validator  # noqa: E402
+from src.source_text_integrity import read_frozen_source  # noqa: E402
 
 SOURCE_TEXT = "Event A precedes Event B."
 SOURCE_HASH = hashlib.sha256(SOURCE_TEXT.encode("utf-8")).hexdigest()
@@ -298,6 +299,32 @@ class ValidatorTests(unittest.TestCase):
         self.save("temporal_relations")
         result = self.validate()
         self.assertIn("CONTRADICTORY_TEMPORAL_RELATION", {x.code for x in result.errors})
+
+    def test_crlf_source_text_hash_and_offsets_are_preserved(self):
+        crlf_source = SOURCE_TEXT + "\r\n"
+        source_dir = self.bundle / "sources"
+        source_dir.mkdir(parents=True, exist_ok=True)
+        source_path = source_dir / "r-test.txt"
+        source_path.write_bytes(crlf_source.encode("utf-8"))
+        loaded_source = read_frozen_source(source_path)
+        expected_hash = hashlib.sha256(crlf_source.encode("utf-8")).hexdigest()
+
+        self.rows["report_registry"][0]["source_text_sha256"] = expected_hash
+        self.rows["report_registry"][0]["source_text_char_count"] = str(len(crlf_source))
+        for span in self.rows["evidence_spans"]:
+            span["source_text_sha256"] = expected_hash
+        self.save("report_registry")
+        self.save("evidence_spans")
+
+        result = validator.validate_bundle(
+            self.bundle,
+            {(
+                PARTITION["report_id"], PARTITION["annotator_id"], PARTITION["annotation_pass_id"]
+            ): loaded_source},
+        )
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(len(loaded_source), len(SOURCE_TEXT) + 2)
+        self.assertTrue(loaded_source.endswith("\r\n"))
 
     def test_evidence_text_must_match_frozen_source(self):
         self.rows["evidence_spans"][0]["evidence_text"] = "Event X"
