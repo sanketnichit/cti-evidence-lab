@@ -10,9 +10,9 @@
 
 - exact `report_id`, `annotator_id`, and `annotation_pass_id`;
 - the exact frozen source text for that report;
-- explicit `annotation_lock_confirmed=True` and a non-empty immutable `annotation_lock_reference` (for example, the checksum/reference for the read-only locked annotation snapshot).
+- explicit `annotation_lock_confirmed=True` and the exact `sha256:` digest returned by `compute_annotation_lock_reference()` for the selected report/annotator/pass partition and source text.
 
-The explicit lock arguments default to false/empty, and the adapter refuses to proceed without them. A completed report-review status alone is not treated as an annotation lock.
+The explicit lock arguments default to false/empty, and the adapter refuses to proceed without them. The computed digest covers the exact frozen source text and all register rows for the exact report/annotator/pass partition. Any source or register-row change makes the supplied digest stale and the adapter stops. The digest detects mutation; it is not a digital signature and does not prove who created or approved the annotation. A completed report-review status alone is not treated as an annotation lock.
 
 ## Fail-closed gates
 
@@ -23,12 +23,12 @@ The explicit lock arguments default to false/empty, and the adapter refuses to p
 5. Select only `event_leaf` + `atomic_event` + `RESOLVED` activity units.
 6. Build A_120 only from accepted, source-supported mappings with `baseline_mapping_status=IN_VOCAB` and pinned vocabulary membership/hash.
 7. Pass only positive temporal labels with `direct_source`/`direct_timestamp` basis and `scope_compatibility=COMPATIBLE` to projection. Other temporal records remain in the source registers and are not treated as negative examples.
-8. Pass the exact report/annotator/pass partition only; other annotation partitions cannot leak into the calculation.
+8. Pass the exact report/annotator/pass partition only; other annotation partitions cannot leak into the calculation.\n9. Surface `prior_exposure_status` in the output; any value other than `UNEXPOSED` sets `prior_exposure_requires_caution=true`, without reclassifying an exposed pass as blind.
 
 ## Output and limits
 
-The adapter returns counts, mapping-filter exclusions, source and A_120 hashes, validator warnings, the annotation-lock reference, and projection results. It does not include raw source text. It does not decide semantic correctness. Any annotation-lock reference supplied by a future caller must correspond to an actual human-approved, immutable annotation snapshot; a synthetic test string is used only inside tests.
+The adapter returns counts, mapping-filter exclusions, source and A_120 hashes, validator warnings, the verified annotation-lock reference, `prior_exposure_status`, a prior-exposure caution flag, and projection results. It does not include raw source text. It does not decide semantic correctness. Any annotation-lock reference supplied by a future caller must correspond to an actual human-approved, immutable annotation snapshot; a synthetic test string is used only inside tests.
 
 ## Synthetic coverage
 
-Nine adapter tests cover valid projection, mixed-annotator partition isolation, container mapping exclusion, non-primary relation filtering, empty mapping sets, scope/structural error blocking, incomplete report blocking, local-use eligibility blocking, and the required explicit annotation-lock reference. No AnnoCTR data were used.
+Eleven adapter tests cover valid projection, mixed-annotator partition isolation, container mapping exclusion, non-primary relation filtering, empty mapping sets, scope/structural error blocking, incomplete report blocking, local-use eligibility blocking, computed partition-lock digest checking, stale/forged lock rejection, and prior-exposure surfacing. No AnnoCTR data were used.
