@@ -103,9 +103,9 @@ The cyber-specific labels on the 120-report subset were produced by one domain e
 
 The reviewed resources establish CTI event extraction (CASIE and others), CTI technique-pair temporal prediction (ChronoCTI), sentence-level ATT&CK evidence mining (CSEM-CTI), and report-level STIX graphs with attack-pattern objects (the 2026 preprint). General-domain event coreference and temporal relation annotation are also established (MAVEN-ERE).
 
-A bounded, testable question remains: **in real CTI reports, how often do two distinct event instances map to the same ATT&CK technique, and how much explicitly supported event-to-event temporal information becomes unrepresentable, lost or conflated when the report is projected to a unique-technique-per-report or technique-pair graph?**
+A narrower candidate question remains: **across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved report-local activity occurrences that share one or more ATT&CK parent-technique mappings, and what occurrence identity or temporal information is retained, partially represented, conflated or omitted under a named distinct-technique-pair projection?**
 
-This remains a hypothesis, not a proven research gap. The STIX preprint is a direct competitor for the occurrence-object part of the representation and must be revisited when its dataset is released. A pilot must establish the phenomenon's prevalence before any larger study or model work.
+This is a candidate descriptive estimand, not a proven research gap. AttacKG+ and the other adjacent systems above require exact schema-level comparison before a novelty claim. AnnoCTR's five-report pilot can test feasibility and source yield, not population prevalence. No ChronoCTI model outputs have been generated on AnnoCTR, so projection measurements must not be described as that model's empirical error rate.
 
 
 ### File-level AnnoCTR screening: one candidate report (not an annotation result)
