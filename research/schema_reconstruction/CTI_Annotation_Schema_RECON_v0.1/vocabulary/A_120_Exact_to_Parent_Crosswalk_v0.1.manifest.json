@@ -1,6 +1,6 @@
 {
   "a120": {
-    "path": "/home/runner/work/cti-evidence-lab/cti-evidence-lab/research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json",
+    "path": "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json",
     "record_count": 120,
     "sha256": "97b599ffdcfcc5864a9352cf1467de0f6cac92f9141053a76098e4f2d33fb1bc"
   },
@@ -17,12 +17,12 @@
       "top_level_techniques": 333,
       "unique_exact_technique_ids": 737
     },
-    "generated_at_utc": "2026-11-04T15:48:33.686065+00:00",
+    "generated_at_utc": "2026-11-04T15:49:39.984739+00:00",
     "record_count": 737,
     "script": "scripts/build_attack_crosswalk.py"
   },
   "output": {
-    "path": "/home/runner/work/cti-evidence-lab/cti-evidence-lab/research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv",
+    "path": "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv",
     "sha256": "f449ff8bd1551b6d6656d2f25a82b7c55a0b134bbecd4215f0f10330ec85be29"
   },
   "policy": {
