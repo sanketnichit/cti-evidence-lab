@@ -31,6 +31,10 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from src.source_text_integrity import read_frozen_source  # noqa: E402
+
 
 TAG_NAMES = ("TIMEX3", "EVENT", "MAKEINSTANCE", "TLINK", "SIGNAL")
 CYBER_SPECIFIC_TYPES = {"CON", "GROUP", "MALWARE", "TACTIC", "TECHNIQUE", "TOOL"}
@@ -155,7 +159,7 @@ def screen_one(
     timeml_present = time_path.is_file()
 
     char_count = (
-        len(text_path.read_text(encoding="utf-8-sig"))
+        len(read_frozen_source(text_path))
         if text_present
         else None
     )
