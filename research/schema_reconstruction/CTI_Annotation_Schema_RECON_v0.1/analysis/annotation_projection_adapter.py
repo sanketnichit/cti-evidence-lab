@@ -39,11 +39,50 @@ def _read_rows(root: Path, register: str) -> list[dict[str, str]]:
 
 
 def _partition_matches(row: dict[str, str], report_id: str, annotator_id: str, annotation_pass_id: str) -> bool:
+    row_annotator = row.get("annotator_id") or row.get("target_annotator_id", "")
     return (
         row.get("report_id") == report_id
-        and row.get("annotator_id") == annotator_id
+        and row_annotator == annotator_id
         and row.get("annotation_pass_id") == annotation_pass_id
     )
+
+
+def compute_annotation_lock_reference(
+    bundle_root: str | Path,
+    *,
+    report_id: str,
+    annotator_id: str,
+    annotation_pass_id: str,
+    source_text: str,
+) -> str:
+    """Return deterministic SHA-256 for one exact annotation partition.
+
+    The digest covers the frozen source-text hash and all register rows for
+    the selected report/annotator/pass partition. It detects later edits but
+    is not a digital signature or proof of human authorship.
+    """
+    if not all((report_id, annotator_id, annotation_pass_id)):
+        raise AdapterError("report_id, annotator_id and annotation_pass_id are required")
+    root = Path(bundle_root)
+    partition = (report_id, annotator_id, annotation_pass_id)
+    partition_registers = {}
+    for name in validate_annotations.HEADERS:
+        rows = _read_rows(root, name)
+        partition_registers[name] = [
+            row for row in rows if _partition_matches(row, *partition)
+        ]
+    payload = {
+        "lock_format": "CTI-EVIDENCE-LAB-ANNOTATION-LOCK-v1",
+        "partition": {
+            "report_id": report_id,
+            "annotator_id": annotator_id,
+            "annotation_pass_id": annotation_pass_id,
+        },
+        "source_text_sha256": hashlib.sha256(source_text.encode("utf-8")).hexdigest(),
+        "registers": partition_registers,
+    }
+    canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def build_projection_for_partition(
@@ -70,6 +109,15 @@ def build_projection_for_partition(
         raise AdapterError("Explicit annotation-lock confirmation and a non-empty immutable lock reference are required")
     root = Path(bundle_root)
     partition = (report_id, annotator_id, annotation_pass_id)
+    expected_lock_reference = compute_annotation_lock_reference(
+        root,
+        report_id=report_id,
+        annotator_id=annotator_id,
+        annotation_pass_id=annotation_pass_id,
+        source_text=source_text,
+    )
+    if annotation_lock_reference != expected_lock_reference:
+        raise AdapterError("Annotation-lock reference does not match the current source and partition registers")
     source_texts = {partition: source_text}
     validation = validate_annotations.validate_bundle(root, source_texts)
     if validation.errors:
@@ -167,6 +215,9 @@ def build_projection_for_partition(
             "annotation_pass_id": annotation_pass_id,
         },
         "annotation_lock_reference": annotation_lock_reference,
+        "annotation_lock_verified": True,
+        "prior_exposure_status": report.get("prior_exposure_status"),
+        "prior_exposure_requires_caution": report.get("prior_exposure_status") != "UNEXPOSED",
         "source_text_sha256": report.get("source_text_sha256"),
         "a120_vocabulary_sha256": a120_sha,
         "counts": {
