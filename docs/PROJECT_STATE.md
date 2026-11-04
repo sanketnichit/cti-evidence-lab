@@ -60,7 +60,7 @@ The current audit is a workbook and selected source-code control-flow audit, not
 
 ## Current blockers / next sequence
 
-1. Generate and integrate the pinned Enterprise ATT&CK v12.1 exact-to-parent crosswalk; until then, sub-technique parent mappings stay fail-closed.
+1. Run `python scripts/build_attack_crosswalk.py --download`, inspect the generated v12.1 crosswalk and manifest, then integrate the hash/release checks into the RECON validator. Until then, sub-technique parent mappings stay fail-closed.
 2. Resolve the two no-CyNE genre cases through source-content review and complete the remaining evidence-scope, mapping-acceptance and prior-exposure decisions.
 3. Review the reconstructed schema against the missing original v0.4.1/v0.4.2 artifacts if they ever become available; otherwise approve or revise RECON explicitly as a new version.
 4. Make separate researcher eligibility, local research-use and public-reuse decisions for each of the five rank-1 candidates.

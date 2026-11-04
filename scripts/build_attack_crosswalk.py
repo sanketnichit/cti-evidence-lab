@@ -15,12 +15,17 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = "Enterprise ATT&CK v12.1"
 SOURCE_RELATIVE_PATH = "enterprise-attack/enterprise-attack-12.1.json"
 SOURCE_URL = (
     "https://github.com/mitre-attack/attack-stix-data/blob/master/"
+    "enterprise-attack/enterprise-attack-12.1.json"
+)
+SOURCE_RAW_URL = (
+    "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/"
     "enterprise-attack/enterprise-attack-12.1.json"
 )
 EXPECTED_STIX_GIT_BLOB_SHA1 = "7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee"
@@ -63,6 +68,48 @@ def sha256_bytes(data: bytes) -> str:
 def git_blob_sha1(data: bytes) -> str:
     header = f"blob {len(data)}\0".encode("ascii")
     return hashlib.sha1(header + data).hexdigest()
+
+
+def resolve_stix_path(stix_path: Path | None, download: bool) -> Path:
+    if not download:
+        if stix_path is None:
+            raise ValueError("Pass --stix PATH or use --download")
+        return stix_path
+
+    if stix_path is None:
+        import tempfile
+
+        stix_path = (
+            Path(tempfile.gettempdir())
+            / "cti-evidence-lab"
+            / "enterprise-attack-12.1.json"
+        )
+    if stix_path.is_file():
+        existing = stix_path.read_bytes()
+        if (
+            sha256_bytes(existing) == EXPECTED_STIX_SHA256
+            and git_blob_sha1(existing) == EXPECTED_STIX_GIT_BLOB_SHA1
+        ):
+            return stix_path
+
+    request = Request(
+        SOURCE_RAW_URL,
+        headers={"User-Agent": "CTI-Evidence-Lab-crosswalk-builder/0.1"},
+    )
+    with urlopen(request, timeout=180) as response:
+        source_bytes = response.read()
+    if sha256_bytes(source_bytes) != EXPECTED_STIX_SHA256:
+        raise ValueError("Downloaded STIX file failed the pinned SHA-256 check")
+    if git_blob_sha1(source_bytes) != EXPECTED_STIX_GIT_BLOB_SHA1:
+        raise ValueError("Downloaded STIX file failed the pinned Git blob SHA-1 check")
+    stix_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = stix_path.with_name(stix_path.name + ".download")
+    try:
+        temporary_path.write_bytes(source_bytes)
+        temporary_path.replace(stix_path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+    return stix_path
 
 
 def load_a120(path: Path) -> tuple[list[str], str]:
@@ -302,14 +349,16 @@ def main() -> int:
         / "vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv"
     )
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--stix", required=True, type=Path, help="Exact Enterprise ATT&CK v12.1 STIX JSON file")
+    parser.add_argument("--stix", type=Path, help="Local Enterprise ATT&CK v12.1 STIX JSON file")
+    parser.add_argument("--download", action="store_true", help="Download the official release and verify its pinned hashes")
     parser.add_argument("--a120", type=Path, default=default_a120)
     parser.add_argument("--output-csv", type=Path, default=default_output)
     parser.add_argument("--manifest", type=Path, default=default_output.with_suffix(".manifest.json"))
     args = parser.parse_args()
 
     try:
-        source_bytes = args.stix.read_bytes()
+        stix_path = resolve_stix_path(args.stix, args.download)
+        source_bytes = stix_path.read_bytes()
         actual_sha256 = sha256_bytes(source_bytes)
         actual_blob_sha1 = git_blob_sha1(source_bytes)
         if actual_sha256 != EXPECTED_STIX_SHA256:
@@ -325,7 +374,7 @@ def main() -> int:
         rows, counts = build_crosswalk_records(bundle, a120_ids)
         verify_release_counts(counts)
         manifest = write_crosswalk(
-            rows, args.stix, args.a120, args.output_csv, args.manifest, counts, a120_sha
+            rows, stix_path, args.a120, args.output_csv, args.manifest, counts, a120_sha
         )
         print(f"Release: {RELEASE}")
         print(f"Exact technique rows: {len(rows)}")

@@ -209,8 +209,8 @@ Tests must include a deliberately incorrect parent that is nevertheless a member
 
 Next order:
 
-1. Retrieve the official versioned Enterprise v12.1 STIX collection and verify its exact bytes against the recorded Git blob and SHA-256; record immutable source identity and retrieval details.
-2. Generate and independently inspect the complete exact-to-parent crosswalk for all exact technique IDs present in the pinned v12.1 release, using explicit STIX relationships; record the release's actual object counts rather than assuming v14.1 counts apply.
+1. Run `python scripts/build_attack_crosswalk.py --download`. The script downloads the official versioned Enterprise v12.1 file to the system temporary directory (unless `--stix` supplies a path), and refuses to proceed unless both the recorded Git blob SHA-1 and SHA-256 match.
+2. Inspect the generated 737-row exact-to-parent crosswalk and manifest, confirming the 333/404 top-level/sub-technique split, all 404 explicit parent relationships, and 120/120 `A_120` top-level entries. The raw STIX bundle remains outside Git.
 4. Implement validator checks against that pinned crosswalk and `A_120`.
 5. Add the full crosswalk regression suite, then run local tests and GitHub Actions.
 6. Update the project state and package checksums only after the approved release and crosswalk are frozen.
