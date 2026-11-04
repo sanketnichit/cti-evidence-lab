@@ -7,7 +7,7 @@ PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PACKAGE_ROOT / "analysis"))
 sys.path.insert(0, str(PACKAGE_ROOT / "validator"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from annotation_projection_adapter import AdapterError, build_projection_for_partition  # noqa: E402
+from annotation_projection_adapter import AdapterError, build_projection_for_partition, compute_annotation_lock_reference  # noqa: E402
 from test_validator import PARTITION, SOURCE_TEXT, make_fixture, write_register  # noqa: E402
 
 
@@ -30,7 +30,13 @@ class AnnotationProjectionAdapterTests(unittest.TestCase):
             "annotation_pass_id": PARTITION["annotation_pass_id"],
             "source_text": SOURCE_TEXT,
             "annotation_lock_confirmed": True,
-            "annotation_lock_reference": "synthetic-test-lock-reference",
+            "annotation_lock_reference": compute_annotation_lock_reference(
+                self.bundle,
+                report_id=PARTITION["report_id"],
+                annotator_id=PARTITION["annotator_id"],
+                annotation_pass_id=PARTITION["annotation_pass_id"],
+                source_text=SOURCE_TEXT,
+            ),
         }
         args.update(overrides)
         return build_projection_for_partition(self.bundle, **args)
@@ -44,6 +50,24 @@ class AnnotationProjectionAdapterTests(unittest.TestCase):
                 annotation_pass_id=PARTITION["annotation_pass_id"],
                 source_text=SOURCE_TEXT,
             )
+
+    def test_arbitrary_or_stale_lock_reference_is_rejected(self):
+        original = compute_annotation_lock_reference(
+            self.bundle, report_id=PARTITION["report_id"],
+            annotator_id=PARTITION["annotator_id"],
+            annotation_pass_id=PARTITION["annotation_pass_id"], source_text=SOURCE_TEXT,
+        )
+        self.rows["event_mentions"][0]["mention_notes"] = "changed after lock"
+        self.save("event_mentions")
+        with self.assertRaisesRegex(AdapterError, "does not match the current source"):
+            self.run_adapter(annotation_lock_reference=original)
+
+    def test_prior_exposure_is_surface_in_projection_output(self):
+        self.rows["report_registry"][0]["prior_exposure_status"] = "AI_EXPOSED"
+        self.save("report_registry")
+        result = self.run_adapter()
+        self.assertEqual(result["prior_exposure_status"], "AI_EXPOSED")
+        self.assertTrue(result["prior_exposure_requires_caution"])
 
     def test_valid_partition_projects_only_primary_rows(self):
         result = self.run_adapter()
