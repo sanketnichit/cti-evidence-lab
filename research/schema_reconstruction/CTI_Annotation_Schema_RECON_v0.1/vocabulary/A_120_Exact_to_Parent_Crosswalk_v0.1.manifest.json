@@ -1,0 +1,43 @@
+{
+  "a120": {
+    "path": "/home/runner/work/cti-evidence-lab/cti-evidence-lab/research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json",
+    "record_count": 120,
+    "sha256": "97b599ffdcfcc5864a9352cf1467de0f6cac92f9141053a76098e4f2d33fb1bc"
+  },
+  "artifact_name": "CTI Evidence Lab A_120 exact-to-parent crosswalk",
+  "artifact_version": "v0.1",
+  "attack_release": "Enterprise ATT&CK v12.1",
+  "generation": {
+    "counts": {
+      "A_120_ids_found": 120,
+      "A_120_ids_top_level": 120,
+      "attack_pattern_objects": 737,
+      "sub_techniques": 404,
+      "subtechnique_of_relationships": 404,
+      "top_level_techniques": 333,
+      "unique_exact_technique_ids": 737
+    },
+    "generated_at_utc": "2026-11-04T15:48:33.686065+00:00",
+    "record_count": 737,
+    "script": "scripts/build_attack_crosswalk.py"
+  },
+  "output": {
+    "path": "/home/runner/work/cti-evidence-lab/cti-evidence-lab/research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv",
+    "sha256": "f449ff8bd1551b6d6656d2f25a82b7c55a0b134bbecd4215f0f10330ec85be29"
+  },
+  "policy": {
+    "no_id_truncation": true,
+    "revoked_and_deprecated": "preserved as flags; no automatic replacement",
+    "subtechnique_parent": "explicit STIX subtechnique-of relationship only",
+    "top_level_parent": "self"
+  },
+  "source": {
+    "git_blob_sha1": "7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee",
+    "path": "enterprise-attack/enterprise-attack-12.1.json",
+    "repository": "https://github.com/mitre-attack/attack-stix-data",
+    "sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+    "size_bytes": 38207821,
+    "url": "https://github.com/mitre-attack/attack-stix-data/blob/master/enterprise-attack/enterprise-attack-12.1.json"
+  },
+  "status": "GENERATED_FROM_HASH_VERIFIED_ENTERPRISE_ATTACK_V12_1"
+}
