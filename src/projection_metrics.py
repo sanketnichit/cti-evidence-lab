@@ -153,6 +153,7 @@ def project_report(
     projected_provenance: dict[tuple[str, str], set[str]] = defaultdict(set)
     projected_labels: dict[tuple[str, str], set[str]] = defaultdict(set)
     edge_to_pairs: dict[str, list[tuple[str, str]]] = {}
+    edge_to_normalized_pairs: dict[str, list[tuple[str, str]]] = {}
     mapped_edge_ids: list[str] = []
     unmapped_edge_ids: list[str] = []
     shared_technique_endpoint_ids: list[str] = []
@@ -190,10 +191,17 @@ def project_report(
             # to avoid treating A--B and B--A as different projected pairs.
             pairs = sorted({tuple(sorted(pair)) for pair in raw_pairs})
         else:
-            # BEFORE and AFTER preserve endpoint direction. BEFORE-only cycle
-            # analysis is handled separately below.
+            # Keep source endpoint order in edge_to_pairs. For derived strict-
+            # order pair keys, inverse AFTER claims share BEFORE precedence.
             pairs = sorted(raw_pairs)
         edge_to_pairs[edge.edge_id] = pairs
+        if edge.relation in {"OVERLAP", "SIMULTANEOUS", "CONCURRENT_UNSPECIFIED"}:
+            normalized_pairs = pairs
+        elif edge.relation == "AFTER":
+            normalized_pairs = sorted((target, source) for source, target in pairs)
+        else:
+            normalized_pairs = pairs
+        edge_to_normalized_pairs[edge.edge_id] = normalized_pairs
 
         if set(source_techniques).intersection(target_techniques):
             shared_technique_endpoint_ids.append(edge.edge_id)
@@ -201,12 +209,12 @@ def project_report(
         if pairs and all(source == target for source, target in pairs):
             self_only_edge_ids.append(edge.edge_id)
 
-        for pair in pairs:
+        for pair in normalized_pairs:
             projected_provenance[pair].add(edge.edge_id)
-            projected_labels[pair].add(edge.relation)
-            total_pair_mappings += 1
-            if pair[0] == pair[1]:
-                diagonal_mappings += 1
+            relation_class = "STRICT_ORDER" if edge.relation in {"BEFORE", "AFTER"} else edge.relation
+            projected_labels[pair].add(relation_class)
+        total_pair_mappings += len(pairs)
+        diagonal_mappings += sum(1 for pair in pairs if pair[0] == pair[1])
 
     projection_pairs = sorted(projected_provenance)
     # ChronoCTI's published technique-pair universe excludes diagonal pairs:
@@ -285,12 +293,21 @@ def project_report(
             for pair in internal_pairs
             for edge_id in projected_before_pair_provenance[pair]
         })
+        single_source_edges_inducing_cycle = []
+        for source_edge_id in source_edge_ids:
+            pairs_from_one_source_edge = [
+                pair for pair in internal_pairs
+                if source_edge_id in projected_before_pair_provenance[pair]
+            ]
+            if _cyclic_components(component_nodes, pairs_from_one_source_edge):
+                single_source_edges_inducing_cycle.append(source_edge_id)
         projected_cycle_provenance.append({
             "technique_nodes": list(component),
             "internal_technique_pairs": [list(pair) for pair in internal_pairs],
             "source_event_edge_ids": source_edge_ids,
             "source_event_edge_count": len(source_edge_ids),
-            "single_event_edge_mapping_fanout": len(source_edge_ids) == 1,
+            "single_source_edges_inducing_cycle": single_source_edges_inducing_cycle,
+            "single_event_edge_mapping_fanout": bool(single_source_edges_inducing_cycle),
         })
 
     mapped_edge_count = len(mapped_edge_ids)
@@ -325,11 +342,15 @@ def project_report(
             "projected_before_cycle_components": len(projection_cycles),
             "projected_cycle_components_with_multiple_source_event_edges": sum(
                 1 for item in projected_cycle_provenance
-                if item["source_event_edge_count"] >= 2
+                if not item["single_event_edge_mapping_fanout"]
             ),
             "projected_cycle_components_from_single_source_event_edge": sum(
                 1 for item in projected_cycle_provenance
                 if item["single_event_edge_mapping_fanout"]
+            ),
+            "projected_cycle_components_requiring_multiple_source_event_edges": sum(
+                1 for item in projected_cycle_provenance
+                if not item["single_event_edge_mapping_fanout"]
             ),
         },
         "rates": {
@@ -392,6 +413,10 @@ def project_report(
             "edge_to_pairs": {
                 edge_id: [list(pair) for pair in pairs]
                 for edge_id, pairs in sorted(edge_to_pairs.items())
+            },
+            "edge_to_normalized_pairs": {
+                edge_id: [list(pair) for pair in pairs]
+                for edge_id, pairs in sorted(edge_to_normalized_pairs.items())
             },
             "pair_provenance": {
                 f"{source} -> {target}": sorted(ids)
