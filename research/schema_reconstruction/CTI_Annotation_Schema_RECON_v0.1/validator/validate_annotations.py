@@ -12,12 +12,17 @@ import csv
 import hashlib
 import json
 import re
+import sys
 from dataclasses import dataclass, asdict
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Iterable
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = PACKAGE_ROOT.parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+from src.source_text_integrity import frozen_source_sha256, read_frozen_source  # noqa: E402
+
 REGISTER_DIR = PACKAGE_ROOT / "registers"
 VOCAB_PATH = PACKAGE_ROOT / "vocabulary" / "A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json"
 
@@ -57,6 +62,7 @@ ELIGIBILITY = {"ELIGIBLE", "INELIGIBLE", "PENDING"}
 LOCAL_USE = {"PERMITTED", "NOT_PERMITTED", "UNRESOLVED"}
 PUBLIC_REUSE = {"PERMITTED", "RESTRICTED", "UNRESOLVED", "NOT_PLANNED"}
 FULL_REVIEW = {"NOT_STARTED", "IN_PROGRESS", "COMPLETE"}
+PRIOR_EXPOSURE = {"UNEXPOSED", "AI_EXPOSED", "HUMAN_EXPOSED", "MIXED", "UNKNOWN"}
 DECISION_REGISTER = {"report_registry", "report_scopes", "activity_units", "event_mentions", "evidence_spans", "record_evidence_links", "event_mappings", "time_evidence", "temporal_relations", "candidate_pair_assessments", "non_temporal_relations"}
 
 
@@ -235,13 +241,15 @@ def validate_bundle(
                 _add(issues, "ERROR", "INVALID_ASSESSABILITY", f"Invalid report_assessability {r.get('report_assessability')!r}", "report_registry", i)
             if r.get("full_report_review_status") not in FULL_REVIEW:
                 _add(issues, "ERROR", "INVALID_REVIEW_STATUS", f"Invalid full_report_review_status {r.get('full_report_review_status')!r}", "report_registry", i)
+            if r.get("prior_exposure_status") not in PRIOR_EXPOSURE:
+                _add(issues, "ERROR", "INVALID_PRIOR_EXPOSURE_STATUS", f"Invalid prior_exposure_status {r.get('prior_exposure_status')!r}", "report_registry", i)
             if not re.fullmatch(r"[0-9a-fA-F]{64}", r.get("source_text_sha256", "")):
                 _add(issues, "ERROR", "INVALID_SOURCE_HASH", "source_text_sha256 must be a 64-character SHA-256 hex digest", "report_registry", i)
             count = _int_value(r.get("source_text_char_count", ""), "report_registry", "source_text_char_count", i, issues)
             key = part
             if key in source_texts:
                 text = source_texts[key]
-                actual_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
+                actual_hash = frozen_source_sha256(text)
                 if r.get("source_text_sha256", "").lower() != actual_hash:
                     _add(issues, "ERROR", "SOURCE_HASH_MISMATCH", "Frozen source text SHA-256 does not match report registry", "report_registry", i)
                 if count is not None and count != len(text):
@@ -419,6 +427,14 @@ def validate_bundle(
             _add(issues, "ERROR", "ACCEPTED_MAPPING_NO_TECHNIQUE", "Accepted mapping requires exact_technique_id", "event_mappings", i)
         if decision == "ACCEPTED" and not r.get("attack_version"):
             _add(issues, "ERROR", "ACCEPTED_MAPPING_NO_ATTACK_VERSION", "Accepted mapping requires a pinned ATT&CK version", "event_mappings", i)
+        exact_id = r.get("exact_technique_id", "")
+        parent_id = r.get("baseline_parent_technique_id", "")
+        if decision == "ACCEPTED" and exact_id and not re.fullmatch(r"T\\d{4}(?:\\.\\d{3})?", exact_id):
+            _add(issues, "ERROR", "INVALID_EXACT_TECHNIQUE_ID", f"Invalid exact ATT&CK technique ID {exact_id!r}", "event_mappings", i)
+        if decision == "ACCEPTED" and exact_id and "." not in exact_id and parent_id and parent_id != exact_id:
+            _add(issues, "ERROR", "TOP_LEVEL_PARENT_MISMATCH", "A top-level technique must map to itself as its parent; exact technique and baseline parent differ", "event_mappings", i)
+        if decision == "ACCEPTED" and exact_id and "." in exact_id and r.get("baseline_mapping_status") in {"IN_VOCAB", "OUT_OF_VOCAB"}:
+            _add(issues, "ERROR", "EXACT_PARENT_CROSSWALK_UNVERIFIED", "Accepted sub-technique mapping cannot be classified IN_VOCAB or OUT_OF_VOCAB until the pinned ATT&CK release crosswalk is generated and validated", "event_mappings", i)
         if r.get("event_instance_id") and r.get("event_instance_id") != unit_id:
             _add(issues, "ERROR", "MAPPING_EVENT_ID_NOT_UNIT_ID", "event_instance_id must equal activity_unit_id for resolved event leaves", "event_mappings", i)
         status = r.get("baseline_mapping_status")
@@ -466,7 +482,9 @@ def validate_bundle(
             _add(issues, "ERROR", "INVALID_NORMALIZATION_STATUS", f"Invalid normalization_status {r.get('normalization_status')!r}", "time_evidence", i)
         if not r.get("raw_time_text"):
             _add(issues, "ERROR", "RAW_TIME_MISSING", "raw_time_text must be preserved", "time_evidence", i)
-        if r.get("primary_evidence_span_id") and not _has_ref(evidence_index, r, r.get("primary_evidence_span_id")):
+        if not r.get("primary_evidence_span_id"):
+            _add(issues, "ERROR", "TIME_EVIDENCE_SPAN_MISSING", "Every time_evidence row requires a primary source evidence span", "time_evidence", i)
+        elif not _has_ref(evidence_index, r, r.get("primary_evidence_span_id")):
             _add(issues, "ERROR", "UNKNOWN_TIME_EVIDENCE", f"Unknown primary_evidence_span_id {r.get('primary_evidence_span_id')!r}", "time_evidence", i)
         if r.get("normalization_status") == "NORMALIZED" and (not r.get("normalized_start") or not r.get("normalized_end")):
             _add(issues, "ERROR", "NORMALIZED_TIME_BOUNDS_MISSING", "NORMALIZED time requires normalized_start and normalized_end", "time_evidence", i)
@@ -490,8 +508,22 @@ def validate_bundle(
             current = scope_row.get("parent_scope_id", "")
         return False
 
-    # Temporal relations and positive edge eligibility.
+    # Temporal relations and positive edge eligibility. Pair-level invariants
+    # use canonical event-pair semantics: AFTER(A,B) is the same precedence
+    # as BEFORE(B,A); symmetric labels use unordered pairs.
     primary_edges = 0
+    temporal_pair_signatures: dict[tuple[tuple[str, str, str], tuple[str, str]], dict[tuple, int]] = {}
+    time_rows_by_unit: dict[tuple[str, str, str, str], list[dict[str, str]]] = {}
+    for time_row in tables["time_evidence"]:
+        if time_row.get("activity_unit_id"):
+            key = (*_partition(time_row), time_row["activity_unit_id"])
+            time_rows_by_unit.setdefault(key, []).append(time_row)
+        elif time_row.get("mention_id"):
+            mention = indexes["event_mentions"].get((*_partition(time_row), time_row["mention_id"]))
+            if mention and mention.get("activity_unit_id"):
+                key = (*_partition(time_row), mention["activity_unit_id"])
+                time_rows_by_unit.setdefault(key, []).append(time_row)
+
     for i, r in enumerate(tables["temporal_relations"], 2):
         a, b = r.get("event_a_id", ""), r.get("event_b_id", "")
         if not _has_ref(units, r, a):
@@ -505,6 +537,21 @@ def validate_bundle(
             _add(issues, "ERROR", "INVALID_RELATION_LABEL", f"Invalid relation_label {label!r}", "temporal_relations", i)
         if label == "NO_TEMPORAL_CLAIM":
             _add(issues, "ERROR", "NO_TEMPORAL_CLAIM_WRONG_REGISTER", "NO_TEMPORAL_CLAIM belongs in candidate_pair_assessments, not temporal_relations", "temporal_relations", i)
+        if label in POSITIVE_TEMPORAL_LABELS and basis in DIRECT_RELATION_BASES and a and b and a != b:
+            unordered_pair = tuple(sorted((a, b)))
+            if label == "BEFORE":
+                signature = ("STRICT_ORDER", a, b)
+            elif label == "AFTER":
+                signature = ("STRICT_ORDER", b, a)
+            else:
+                signature = (label, unordered_pair[0], unordered_pair[1])
+            partition_pair = (_partition(r), unordered_pair)
+            prior = temporal_pair_signatures.setdefault(partition_pair, {})
+            if signature in prior:
+                _add(issues, "ERROR", "DUPLICATE_TEMPORAL_RELATION", f"Temporal relation duplicates normalized pair claim from row {prior[signature]}", "temporal_relations", i)
+            elif prior:
+                _add(issues, "ERROR", "CONTRADICTORY_TEMPORAL_RELATION", "The same event pair has multiple incompatible temporal relation claims", "temporal_relations", i)
+            prior[signature] = i
         if basis not in RELATION_BASES:
             _add(issues, "ERROR", "INVALID_RELATION_BASIS", f"Invalid relation_basis {basis!r}", "temporal_relations", i)
         if r.get("evidence_scope") not in EVIDENCE_SCOPES:
@@ -516,6 +563,18 @@ def validate_bundle(
         if label in POSITIVE_TEMPORAL_LABELS and basis in DIRECT_RELATION_BASES:
             if not r.get("primary_evidence_span_id") or not _has_ref(evidence_index, r, r.get("primary_evidence_span_id")):
                 _add(issues, "ERROR", "DIRECT_RELATION_NO_EVIDENCE", "Direct positive temporal relation requires primary evidence span", "temporal_relations", i)
+            if basis == "direct_timestamp":
+                for endpoint_id in (a, b):
+                    endpoint_times = time_rows_by_unit.get((*_partition(r), endpoint_id), [])
+                    normalized_times = [
+                        time_row for time_row in endpoint_times
+                        if time_row.get("normalization_status") == "NORMALIZED"
+                        and time_row.get("normalized_start") and time_row.get("normalized_end")
+                        and time_row.get("primary_evidence_span_id")
+                        and _has_ref(evidence_index, time_row, time_row.get("primary_evidence_span_id"))
+                    ]
+                    if not normalized_times:
+                        _add(issues, "ERROR", "DIRECT_TIMESTAMP_ENDPOINT_TIME_MISSING", f"direct_timestamp requires normalized, evidence-linked time_evidence for endpoint {endpoint_id!r}", "temporal_relations", i)
             ua = units.get((*_partition(r), a))
             ub = units.get((*_partition(r), b))
             for endpoint_name, unit in (("event_a_id", ua), ("event_b_id", ub)):
@@ -703,7 +762,7 @@ def main() -> int:
                 report_id = row.get("report_id", "")
                 source_path = args.sources_dir / f"{report_id}.txt"
                 if source_path.exists():
-                    source_texts[(report_id, row.get("annotator_id", ""), row.get("annotation_pass_id", ""))] = source_path.read_text(encoding="utf-8")
+                    source_texts[(report_id, row.get("annotator_id", ""), row.get("annotation_pass_id", ""))] = read_frozen_source(source_path)
     result = validate_bundle(args.bundle, source_texts)
     payload = result.to_dict()
     rendered = json.dumps(payload, indent=2)
