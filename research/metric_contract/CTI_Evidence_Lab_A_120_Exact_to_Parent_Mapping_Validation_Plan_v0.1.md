@@ -50,6 +50,41 @@ Official references:
 - MITRE technique data model, including the `subtechnique-of` relationship: https://mitre-attack.github.io/attack-data-model/schemas/3.3.0/sdo/technique.schema/
 - Pinned ChronoCTI source commit: https://github.com/rayhanur-rahman/ChronoCTI/commit/4906a0a5e399b6e2aa10435fd6e3894e041e4549
 
+### 3.1 Non-freezing preflight check — 4 November 2026
+
+An exploratory check was run against the official, versioned Enterprise ATT&CK v14.1 STIX collection. This was a compatibility preflight only; it does **not** approve v14.1, freeze the release, or establish that ChronoCTI used that release.
+
+Source identity recorded for this inspection:
+
+- Versioned file: `enterprise-attack/enterprise-attack-14.1.json` in `mitre-attack/attack-stix-data`.
+- GitHub file URL: https://github.com/mitre-attack/attack-stix-data/blob/master/enterprise-attack/enterprise-attack-14.1.json
+- Git blob SHA-1: `57df0ea1181a3902b39f33fc3134ae5117c96502`.
+- Retrieved-file SHA-256: `13af7514ad1bcb59deba6b6b46571168544bbe674eb52f41361916bb1cd9c3d6`.
+- STIX bundle ID: `bundle--feb75802-6feb-4205-87dd-3d739c429ed4`.
+- Collection metadata: `Enterprise ATT&CK`, version `14.1`, modified `2023-11-14T14:00:00.188Z`.
+
+Preflight results:
+
+| Check | Result |
+|---|---:|
+| Enterprise attack-pattern objects | 768 |
+| Top-level techniques | 341 |
+| Sub-techniques | 427 |
+| Explicit `subtechnique-of` relationships | 427 |
+| Sub-techniques with exactly one valid top-level parent | 427 |
+| Sub-techniques with missing, multiple, or invalid parents | 0 |
+| Orphaned `subtechnique-of` relationships | 0 |
+| ChronoCTI `A_120` IDs found in v14.1 | 120/120 |
+| `A_120` IDs represented as top-level techniques | 120/120 |
+| `A_120` IDs missing or unexpectedly sub-techniques | 0 |
+| Revoked/deprecated flags among the 120 `A_120` objects | 0 |
+| Sub-techniques whose parent is in `A_120` | 341 |
+| Sub-techniques whose parent is outside `A_120` | 86 |
+
+Interpretation: v14.1 contains every selected ChronoCTI parent-level ID and provides an explicit, unambiguous parent relationship for every sub-technique in the collection. This makes it a structurally suitable candidate for generating the proposed crosswalk. It does not establish which ATT&CK release ChronoCTI originally used; the pinned ChronoCTI source file does not state that version, and chronology alone is not provenance.
+
+No crosswalk has been generated or added to RECON, and no validator decision has been frozen. The researcher must still approve or replace the candidate release before the crosswalk becomes a project input.
+
 ## 4. Required crosswalk semantics
 
 The crosswalk must be generated from the selected, versioned Enterprise ATT&CK STIX collection.
