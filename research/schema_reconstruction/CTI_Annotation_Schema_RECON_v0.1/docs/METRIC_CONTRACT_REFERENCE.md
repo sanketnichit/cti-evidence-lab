@@ -244,14 +244,14 @@ Missing annotation rows never become automatic negative labels. The full-report 
 
 This v0.1 contract contains design choices with different decision states:
 
-1. Primary mapping level is `A_120`; `A_exact` is a separately reported sensitivity analysis — **recommended, not yet adopted**.
-2. Primary within-technique temporal incidence includes all five directly supported positive temporal labels in §3.1 — **recommended, not yet adopted**.
+1. Primary mapping level is `A_120`; `A_exact` is a separately reported sensitivity analysis — **adopted as the working project default on 4 November 2026 under delegated direction; the exact-to-parent crosswalk remains a technical gate**.
+2. Primary within-technique temporal incidence includes all five directly supported positive temporal labels in §3.1 — **adopted as the working project default on 4 November 2026 under delegated direction**.
 3. Strict cycle analysis uses only `BEFORE`/`AFTER` after documented normalization — **source-grounded rule; synthetic implementation corrected**.
 4. Primary report-level denominator is `N_assessable`; assessability coverage is `N_assessable / N_eligible` — **adopted as the project default on 4 November 2026 under delegated decision**.
 5. A zero-event-leaf report remains in `N_assessable` only when source/scope and local-use eligibility pass, report assessability is `ASSESSABLE`, and at least one eligible full-report review is `COMPLETE`; `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved conflicts are disclosed separately, never recoded as zero — **adopted with the denominator rule**.
 6. Pair opportunity and positive temporal-relation outcomes remain separate — **recommended; metric naming/formula approval pending**.
 
-Adopting the denominator rule does not approve or freeze this entire metric contract, protocol, or RECON schema. No real-report metric may be computed until the remaining protocol/schema decisions, exact `A_120` vocabulary artifact, report eligibility decisions and validator gates are resolved.
+Adopting these working defaults does not approve or freeze this entire metric contract, protocol, or RECON schema. No real-report metric may be computed until the pinned `A_120` exact-to-parent crosswalk, remaining protocol/schema decisions, report eligibility decisions and validator gates are resolved.
 
 ## 11. Implementation acceptance tests implied by this contract
 

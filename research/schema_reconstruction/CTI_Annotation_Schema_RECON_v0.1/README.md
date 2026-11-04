@@ -59,7 +59,7 @@ Run the synthetic test suite from this directory with Python 3.10 or later (58 t
 python -m unittest discover -s tests -v
 ```
 
-The suite covers the schema validator, provisional projection module and annotation-to-projection adapter; it currently contains 56 synthetic tests. None are real report annotations. The projection module is not the public GitHub implementation and has not been run on real annotations.
+The suite covers the schema validator, provisional projection module and annotation-to-projection adapter; it currently contains 58 synthetic tests. None are real report annotations. The projection module is not the public GitHub implementation and has not been run on real annotations.
 
 Run the validator against the blank package (this should report an empty-bundle warning, not an annotation success):
 
