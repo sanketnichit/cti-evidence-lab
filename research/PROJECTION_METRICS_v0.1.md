@@ -215,7 +215,7 @@ Run from the repository root:
 
 ```bash
 python -m unittest discover -s tests -v
-python examples/toy_projection_demo.py
+python -m examples.toy_projection_demo
 ```
 
 The prototype:
@@ -235,7 +235,7 @@ From the repository root:
 
 ```bash
 python -m unittest discover -s tests -v
-python examples/toy_projection_demo.py
+python -m examples.toy_projection_demo
 ```
 
 These commands have been added to the project README and GitHub Actions workflow. The GitHub connector did not return any commit status entries during this audit, so test execution has **not** been independently verified. Do not claim a passing test suite until a run is observed.
