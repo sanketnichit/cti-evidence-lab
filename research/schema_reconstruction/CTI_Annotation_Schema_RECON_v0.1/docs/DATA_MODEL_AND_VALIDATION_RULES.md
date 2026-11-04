@@ -101,6 +101,6 @@ A row enters the primary positive temporal graph only when:
 - A report with no resolved event leaves must not be excluded for that reason alone.
 
 
-## Executable validator scope
+## Frozen source-text convention\n\nSource text is decoded as strict UTF-8. An optional leading UTF-8 BOM is removed; CRLF/LF line endings are preserved; no Unicode normalization is applied. `source_text_sha256` is SHA-256 over the UTF-8 bytes of the exact decoded annotation text. `source_text_char_count` and zero-based end-exclusive offsets count Python Unicode code points in that same text. The source hash/offset check must use the exact frozen text; do not normalize line endings after annotations have been created.\n\nFor `direct_timestamp`, both event endpoints require normalized time evidence with their own source evidence spans. Candidate-pair positive assessments must match the linked temporal relation's unordered event pair and relation label. Duplicate or contradictory direct temporal claims for one event pair are rejected by the reconstruction validator.\n\n## Executable validator scope
 
 `validator/validate_annotations.py` enforces the structural checks listed above for this reconstructed package. Its synthetic test suite is in `tests/test_validator.py`. It deliberately does not decide whether the report semantically supports an activity-unit identity, ATT&CK mapping, scope boundary, or temporal relation. A valid validator result means only that recorded values are structurally consistent under this reconstructed contract.
