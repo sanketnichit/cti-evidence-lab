@@ -100,6 +100,41 @@ class ProjectionMetricsReconTests(unittest.TestCase):
         fanout = [x for x in result["strict_order_cycle_analysis"]["projected_cycle_provenance"] if x["single_event_edge_mapping_fanout"]]
         self.assertTrue(fanout)
 
+    def test_redundant_source_edge_does_not_hide_single_edge_fanout(self):
+        result = project_report_recon(
+            {"a": {"T1059", "T1105"}, "b": {"T1059", "T1105"}},
+            [
+                TemporalEdge("r1", "a", "b", "BEFORE"),
+                TemporalEdge("r2", "a", "b", "BEFORE"),
+            ],
+        )
+        component = result["strict_order_cycle_analysis"]["projected_cycle_provenance"][0]
+        self.assertEqual(component["source_event_edge_count"], 2)
+        self.assertEqual(component["single_source_edges_inducing_cycle"], ["r1", "r2"])
+        self.assertTrue(component["single_event_edge_mapping_fanout"])
+        self.assertEqual(result["counts"]["projected_cycle_components_requiring_multiple_source_edges"], 0)
+
+    def test_before_and_inverse_after_are_not_a_label_conflict(self):
+        result = project_report_recon(
+            {"a": {"T1059"}, "b": {"T1105"}},
+            [
+                TemporalEdge("r1", "a", "b", "BEFORE"),
+                TemporalEdge("r2", "b", "a", "AFTER"),
+            ],
+        )
+        self.assertEqual(result["counts"]["distinct_pair_label_conflicts"], 0)
+        self.assertTrue(result["strict_order_cycle_analysis"]["source_event_graph_is_acyclic"])
+
+    def test_before_and_overlap_remain_a_label_conflict(self):
+        result = project_report_recon(
+            {"a": {"T1059"}, "b": {"T1105"}},
+            [
+                TemporalEdge("r1", "a", "b", "BEFORE"),
+                TemporalEdge("r2", "a", "b", "OVERLAP"),
+            ],
+        )
+        self.assertEqual(result["counts"]["distinct_pair_label_conflicts"], 1)
+
     def test_source_event_cycle_makes_projection_cycle_diagnostic_invalid(self):
         result = project_report_recon(
             {"a": {"T1059"}, "b": {"T1105"}},
