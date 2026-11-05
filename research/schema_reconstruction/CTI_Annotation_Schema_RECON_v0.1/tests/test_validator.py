@@ -272,6 +272,35 @@ class ValidatorTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("ENDPOINT_OUTSIDE_COMPARISON_SCOPE", {x.code for x in result.errors})
 
+        # A shared report aggregate is not a valid comparison scope, even
+        # though both event scopes descend from it.
+        next(x for x in self.rows["activity_units"] if x["activity_unit_id"] == "event-b")["scope_id"] = "scope-incident"
+        next(x for x in self.rows["report_scopes"] if x["scope_id"] == "scope-incident")["parent_scope_id"] = "scope-report"
+        self.rows["report_scopes"].append({
+            **PARTITION, "scope_id": "scope-report", "parent_scope_id": "",
+            "scope_type": "REPORT_AGGREGATE", "scope_label": "Whole report",
+            "scope_description": "Report-level container", "scope_status": "RESOLVED",
+            "scope_confidence": "HIGH", "adjudication_status": "UNREVIEWED", "scope_notes": "",
+        })
+        self.rows["temporal_relations"][0]["comparison_scope_id"] = "scope-report"
+        self.save("report_scopes")
+        self.save("activity_units")
+        self.save("temporal_relations")
+        result = self.validate()
+        self.assertIn("PRIMARY_RELATION_SCOPE_NOT_COMPARABLE", {x.code for x in result.errors})
+
+        self.rows["candidate_pair_assessments"] = [{
+            **PARTITION, "assessment_id": "assessment-a-b", "event_a_id": "event-a",
+            "event_b_id": "event-b", "candidate_rule_id": "same-scope-event-pairs",
+            "candidate_rule_version": "v1", "comparison_scope_id": "scope-report",
+            "scope_compatibility": "COMPATIBLE", "assessment_label": "NO_TEMPORAL_CLAIM",
+            "related_relation_id": "", "assessment_reason": "Synthetic assessed pair",
+            "adjudication_status": "UNREVIEWED", "assessment_notes": "",
+        }]
+        self.save("candidate_pair_assessments")
+        result = self.validate()
+        self.assertIn("ASSESSMENT_SCOPE_NOT_COMPARABLE", {x.code for x in result.errors})
+
     def test_workbook_only_cannot_be_accepted(self):
         self.rows["event_mappings"][0]["mapping_basis"] = "workbook_only"
         self.save("event_mappings")
