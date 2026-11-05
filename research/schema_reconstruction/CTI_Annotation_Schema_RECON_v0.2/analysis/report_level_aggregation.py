@@ -314,6 +314,32 @@ def compute_event_pair_opportunity(
     }
 
 
+def _conditional_within_technique_opportunity_rate(
+    outcomes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Compute the report-level conditional rate on the opportunity subset.
+
+    A report contributes to the numerator only when it has both a same-technique
+    pair opportunity and a within-technique positive temporal relation.
+    """
+    opportunity_reports = [
+        row for row in outcomes
+        if bool(row.get("has_same_technique_pair_opportunity"))
+    ]
+    denominator = len(opportunity_reports)
+    numerator = sum(
+        bool(row.get("has_within_technique_temporal_relation"))
+        for row in opportunity_reports
+    )
+    return {
+        "within_technique_temporal_relation_given_same_technique_pair_opportunity": (
+            numerator / denominator if denominator else None
+        ),
+        "numerator_reports_with_both": numerator,
+        "denominator_reports_with_same_technique_pair_opportunity": denominator,
+    }
+
+
 def _rates(outcomes: list[dict[str, Any]], denominator: int) -> dict[str, Any]:
     if denominator <= 0:
         return {
@@ -674,19 +700,17 @@ def aggregate_selected_report_projections(
         selected_subset_rates["scope_pair_opportunity_rate_status"] = "APPROVED_BY_CALLER"
 
     if approve_scope_pair_rule:
-        shared_opportunity_reports = sum(
-            bool(x["has_same_technique_pair_opportunity"]) for x in report_outcomes
+        conditional_descriptive_rates = _conditional_within_technique_opportunity_rate(
+            report_outcomes
         )
-        conditional_descriptive_rates = {
-            "within_technique_temporal_relation_given_same_technique_pair_opportunity": (
-                sum(bool(x["has_within_technique_temporal_relation"]) for x in report_outcomes)
-                / shared_opportunity_reports if shared_opportunity_reports else None
-            ),
-            "status": "DESCRIPTIVE_SELECTED_SUBSET_NOT_POPULATION_ESTIMATE",
-        }
+        conditional_descriptive_rates["status"] = (
+            "DESCRIPTIVE_SELECTED_SUBSET_NOT_POPULATION_ESTIMATE"
+        )
     else:
         conditional_descriptive_rates = {
             "within_technique_temporal_relation_given_same_technique_pair_opportunity": None,
+            "numerator_reports_with_both": None,
+            "denominator_reports_with_same_technique_pair_opportunity": None,
             "status": "WITHHELD_PENDING_APPROVAL_OF_SCOPE_PAIR_OPPORTUNITY_RULE",
         }
 
