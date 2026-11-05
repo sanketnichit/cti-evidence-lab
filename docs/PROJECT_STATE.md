@@ -42,7 +42,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 
 ## Implementation verification
 
-- Root synthetic tests: 43/43 passed. RECON synthetic tests are expanded to 63 (36 validator, 16 projection, 11 adapter); the current CI run is the acceptance check.
+- Root synthetic tests: 43/43 passed. RECON synthetic tests: 63/63 passed (36 validator, 16 projection, 11 adapter). GitHub Actions run [#41974194194](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41974194194) passed on 5 November 2026, including root tests, the projection demo, all 29 RECON checksums, all 63 RECON tests and blank-bundle validation.
 - Internal SHA256SUMS checks: 29/29 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
 - The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags report-level eligibility/local-use/assessability conflicts across annotator/pass partitions and excludes conflicting reports from denominator summaries until adjudicated. It also validates prior-exposure values, requires normalized evidence-linked time records at both endpoints of `direct_timestamp`, rejects duplicate/contradictory direct temporal-pair claims, checks positive candidate assessments against their linked relation, and requires top-level exact techniques to map to themselves. The validator now checks accepted exact IDs and sub-technique parents against the pinned v12.1 crosswalk. The validator's synthetic checks do not establish semantic annotation correctness.
@@ -65,8 +65,8 @@ The current audit is a workbook and selected source-code control-flow audit, not
 ## Current blockers / next sequence
 
 1. Record the formal source-scope disposition for the two no-CyNE reports against the source-based recommendations in `research/ANNOCTR_CANDIDATE_CONTENT_REVIEW_v0.1.md`; keep both rows in the historical 120-report inventory.
-2. Verify canonical source URLs, publication dates and source identity for the five rank-1 candidates; record local research-use and public-reuse decisions separately.
-3. Resolve remaining evidence-scope, mapping-acceptance and prior-exposure protocol choices; keep the original protocol/schema recovery gap explicit.
+2. Obtain/confirm local research-use permission for the five rank-1 reports through the AnnoCTR/donor permission chain. Source identity (canonical URLs, titles and dates) is verified 5/5; local research-use and public-reuse remain UNRESOLVED for all five.
+3. Resolve the two no-CyNE source-scope recommendations and remaining evidence-scope, mapping-acceptance and prior-exposure choices; keep all researcher-owned decisions pending until formally disposed and keep the original protocol/schema recovery gap explicit.
 4. Freeze a new, clearly versioned protocol/schema package only after the decisions are recorded. RECON v0.1 remains a reconstruction, not the original v0.4.2.
 5. Begin the first source-first human feasibility annotation only after that freeze. Do not replace candidates because of event yield or absence of positive relations.
 6. Add a second human annotator for an overlapping subset if available; otherwise report that IAA was not measured. AI is not a second annotator.

@@ -63,10 +63,10 @@ Consequently, the following cannot be asserted as exact original v0.4.2 details:
 |---|---|
 | A_120 source provenance | Pinned to ChronoCTI commit and blob; ordered ID-only extraction SHA-256 recorded |
 | RECON schema package | 12 blank proposed registers; not original v0.4.2; not approved/frozen |
-| Structural validator | 31 synthetic tests pass |
+| Structural validator | 36 synthetic tests pass |
 | Projection module | 16 synthetic tests pass |
 | Register-to-projection adapter | 11 synthetic tests pass; requires a matching computed partition/source digest |
-| Combined synthetic suite | 58/58 pass (31 validator, 16 projection, 11 adapter); blank bundle 0 errors + 1 expected empty-bundle warning |
+| Combined synthetic suite | 63/63 pass (36 validator, 16 projection, 11 adapter); blank bundle 0 errors + 1 expected empty-bundle warning; CI run #41974194194 passed on 5 November 2026 |
 | Real AnnoCTR data through RECON | 0 rows |
 | Researcher eligibility decisions | 0/5 |
 | Human annotation locks | 0 |
@@ -76,10 +76,10 @@ Consequently, the following cannot be asserted as exact original v0.4.2 details:
 
 ## 5. Approval boundary and next sequence
 
-1. Generate and independently inspect the immutable Enterprise ATT&CK v12.1 exact-to-parent crosswalk; integrate its release and hash checks before accepting sub-technique parent mappings.
-2. Review remaining decisions, including the two no-CyNE genre cases, evidence-scope and mapping-acceptance details, and the prior-exposure rule.
-3. Reconcile the working defaults against the exact protocol and schema originals if recovered; otherwise explicitly approve or revise RECON as a new schema version, never as v0.4.2.
-4. Complete the five candidate source-identity, source/scope eligibility, local research-use and public-reuse records separately.
-5. Freeze protocol/schema/version/pass identity and hash the approved package before source-first annotation. AI triage remains separate from human labels; an exposed pass is not blind. Projection requires explicit confirmation and a computed digest matching the selected human-approved source/partition registers.
+1. **Complete — crosswalk technical gate.** The 737-row v12.1 exact-to-parent artifact is generated, independently inspected and hash-verified; the RECON validator checks accepted exact IDs, canonical names, explicit parents, vocabulary status and lifecycle flags. The 63-test suite and root CI passed in run #41974194194. This is a working technical default, not a researcher protocol/schema freeze.
+2. Resolve the two no-CyNE source-scope recommendations and the remaining evidence-scope, mapping-acceptance and prior-exposure choices. Keep researcher-owned decisions visibly pending until explicitly disposed.
+3. Confirm local research-use permission for the five rank-1 reports through the AnnoCTR/donor permission chain. Public reuse remains a separate decision; do not infer either permission from a non-applicable portal or product terms page.
+4. Reconcile the working defaults against the exact protocol and schema originals if recovered; otherwise explicitly approve or revise RECON as a new schema version, never as v0.4.2.
+5. Freeze protocol/schema/version/pass identity and hash the approved package before source-first annotation. An exposed human pass is not blind; projection requires explicit confirmation and a computed digest matching the selected human-approved source/partition registers.
 
-**No formal annotation should begin solely because the 58 synthetic tests pass.** These tests show that the proposed structure behaves as coded on synthetic fixtures; they do not establish semantic validity, protocol approval, source eligibility, human agreement, or research findings.
+**No formal annotation should begin solely because the 63 synthetic tests pass.** These tests show that the proposed structure behaves as coded on synthetic fixtures; they do not establish semantic validity, protocol approval, source eligibility, human agreement, or research findings.
