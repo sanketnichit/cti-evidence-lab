@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 HEADERS = [
@@ -28,12 +30,26 @@ REQUIRED = {
     "time_evidence": {
         "report_id", "annotator_id", "annotation_pass_id", "time_evidence_id",
         "activity_unit_id", "time_type", "normalization_status",
-        "normalized_start", "normalized_end", "primary_evidence_span_id",
+        "normalized_start", "normalized_end", "normalized_timezone",
+        "timezone_status", "uncertainty_notes", "primary_evidence_span_id",
     },
 }
 POSITIVE = {"BEFORE", "AFTER", "OVERLAP", "SIMULTANEOUS", "CONCURRENT_UNSPECIFIED"}
 DIRECT = {"direct_source", "direct_timestamp"}
 ROLES = {"EVENT_A_SUPPORT", "EVENT_B_SUPPORT", "RELATION_CONTEXT"}
+
+SELECTION_HEADERS = [
+    "report_id", "analysis_partition_id", "annotator_id", "annotation_pass_id",
+    "partition_role", "selection_status", "lock_reference",
+    "selection_rationale", "selection_date",
+]
+PARTITION_ROLES = {
+    "DEVELOPMENT", "REPEAT", "INDEPENDENT", "CONSENSUS",
+    "ADJUDICATED_FINAL", "SINGLE_ANNOTATOR_FINAL",
+}
+SELECTION_STATES = {"PENDING", "NOT_SELECTED", "SELECTED_FINAL"}
+FINAL_ROLES = {"CONSENSUS", "ADJUDICATED_FINAL", "SINGLE_ANNOTATOR_FINAL"}
+LOCK_REFERENCE = re.compile(r"^sha256:[0-9a-f]{64}$")
 
 
 def part(row):
@@ -62,7 +78,133 @@ def load(path, required, exact=False):
         return [], f"cannot read {path}: {exc}"
 
 
-def validate_bundle(base_bundle: Path, evidence_file: Path):
+def _parse_aware_timestamp(value: str):
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        return None
+    return parsed.astimezone(timezone.utc)
+
+
+def validate_analysis_partition_selection(base_bundle: Path, selection_file: Path):
+    """Validate the report-level selection of one final analysis partition."""
+    errors = []
+    selections, error = load(selection_file, SELECTION_HEADERS, exact=True)
+    if error:
+        return [{"code": "PARTITION_SELECTION_REGISTER_INVALID", "message": error}], 0
+
+    registry, error = load(
+        base_bundle / "registers" / "report_registry.csv",
+        {
+            "report_id", "annotator_id", "annotation_pass_id",
+            "source_scope_eligibility", "local_research_use_status",
+            "report_assessability", "full_report_review_status",
+        },
+    )
+    if error:
+        errors.append({"code": "PARTITION_SELECTION_BASE_INVALID", "message": error})
+        registry = []
+    adjudications, error = load(
+        base_bundle / "registers" / "adjudication_log.csv",
+        {"report_id", "annotation_pass_id", "target_annotator_id", "decision_status"},
+    )
+    if error:
+        errors.append({"code": "PARTITION_SELECTION_BASE_INVALID", "message": error})
+        adjudications = []
+
+    registry_by_partition = {part(row): row for row in registry}
+    annotators_by_report = {}
+    for row in registry:
+        if row.get("annotator_id"):
+            annotators_by_report.setdefault(row.get("report_id", ""), set()).add(row["annotator_id"])
+    adjudicated = {
+        (
+            row.get("report_id", ""),
+            row.get("target_annotator_id", ""),
+            row.get("annotation_pass_id", ""),
+        )
+        for row in adjudications
+        if row.get("decision_status") in {"AGREED", "ADJUDICATED"}
+    }
+
+    seen_ids = set()
+    selected_by_report = {}
+    for line, row in enumerate(selections, 2):
+        report_id = row.get("report_id", "")
+        selection_id = row.get("analysis_partition_id", "")
+        p = part(row)
+        if not report_id or not selection_id or not all(p):
+            errors.append({
+                "code": "PARTITION_SELECTION_KEY_MISSING",
+                "message": f"line {line}: report, selection, annotator and pass IDs are required",
+            })
+        id_key = (report_id, selection_id)
+        if id_key in seen_ids:
+            errors.append({
+                "code": "DUPLICATE_PARTITION_SELECTION_ID",
+                "message": f"line {line}: analysis_partition_id is duplicated within the report",
+            })
+        seen_ids.add(id_key)
+        selected_partition = registry_by_partition.get(p)
+        if selected_partition is None:
+            errors.append({
+                "code": "UNKNOWN_SELECTED_PARTITION",
+                "message": f"line {line}: selected partition does not resolve in report_registry",
+            })
+
+        role = row.get("partition_role", "")
+        state = row.get("selection_status", "")
+        if role not in PARTITION_ROLES:
+            errors.append({"code": "INVALID_PARTITION_ROLE", "message": f"line {line}: invalid partition_role {role!r}"})
+        if state not in SELECTION_STATES:
+            errors.append({"code": "INVALID_SELECTION_STATUS", "message": f"line {line}: invalid selection_status {state!r}"})
+
+        if state == "SELECTED_FINAL":
+            selected_by_report[report_id] = selected_by_report.get(report_id, 0) + 1
+            if role not in FINAL_ROLES:
+                errors.append({"code": "NONFINAL_ROLE_SELECTED", "message": f"line {line}: only a final role may be SELECTED_FINAL"})
+            if not LOCK_REFERENCE.fullmatch(row.get("lock_reference", "")):
+                errors.append({"code": "FINAL_PARTITION_LOCK_INVALID", "message": f"line {line}: SELECTED_FINAL requires sha256:<64 lowercase hex>"})
+            if not row.get("selection_rationale", "").strip():
+                errors.append({"code": "FINAL_PARTITION_RATIONALE_MISSING", "message": f"line {line}: SELECTED_FINAL requires a rationale"})
+            try:
+                date.fromisoformat(row.get("selection_date", ""))
+            except ValueError:
+                errors.append({"code": "FINAL_PARTITION_DATE_INVALID", "message": f"line {line}: SELECTED_FINAL requires YYYY-MM-DD selection_date"})
+
+            if selected_partition is not None:
+                if selected_partition.get("source_scope_eligibility") != "ELIGIBLE":
+                    errors.append({"code": "FINAL_PARTITION_SOURCE_NOT_ELIGIBLE", "message": f"line {line}: final selection requires source_scope_eligibility=ELIGIBLE"})
+                if selected_partition.get("local_research_use_status") != "PERMITTED":
+                    errors.append({"code": "FINAL_PARTITION_LOCAL_USE_NOT_PERMITTED", "message": f"line {line}: final selection requires local_research_use_status=PERMITTED"})
+                if selected_partition.get("report_assessability") != "ASSESSABLE" or selected_partition.get("full_report_review_status") != "COMPLETE":
+                    errors.append({"code": "FINAL_PARTITION_REPORT_NOT_ASSESSABLE", "message": f"line {line}: final selection requires ASSESSABLE and COMPLETE report review"})
+
+            annotator_count = len(annotators_by_report.get(report_id, set()))
+            if role == "SINGLE_ANNOTATOR_FINAL" and annotator_count != 1:
+                errors.append({"code": "SINGLE_ANNOTATOR_FINAL_MISMATCH", "message": f"line {line}: SINGLE_ANNOTATOR_FINAL requires exactly one registered annotator ID"})
+            if role == "CONSENSUS" and annotator_count < 2:
+                errors.append({"code": "CONSENSUS_WITHOUT_MULTIPLE_ANNOTATORS", "message": f"line {line}: CONSENSUS requires at least two registered annotator IDs"})
+            if role == "ADJUDICATED_FINAL" and p not in adjudicated:
+                errors.append({"code": "ADJUDICATED_FINAL_WITHOUT_LOG", "message": f"line {line}: selected partition has no AGREED/ADJUDICATED log record"})
+        else:
+            if row.get("lock_reference", "").strip():
+                errors.append({"code": "NONFINAL_PARTITION_HAS_LOCK", "message": f"line {line}: lock_reference is reserved for SELECTED_FINAL"})
+            if state == "NOT_SELECTED" and not row.get("selection_rationale", "").strip():
+                errors.append({"code": "PARTITION_SELECTION_RATIONALE_MISSING", "message": f"line {line}: NOT_SELECTED requires a rationale"})
+
+    for report_id, count in selected_by_report.items():
+        if count > 1:
+            errors.append({
+                "code": "MULTIPLE_FINAL_PARTITIONS",
+                "message": f"report {report_id!r} has {count} SELECTED_FINAL rows",
+            })
+    return errors, len(selections)
+
+
+def validate_bundle(base_bundle: Path, evidence_file: Path, selection_file: Path | None = None):
     errors = []
     tables = {}
     for name, required in REQUIRED.items():
@@ -150,21 +292,83 @@ def validate_bundle(base_bundle: Path, evidence_file: Path):
         if relation.get("evidence_scope") == "DOCUMENT_CONTEXT" and not context_rows:
             errors.append({"code": "RELATION_CONTEXT_MISSING", "message": f"{rid}: DOCUMENT_CONTEXT requires a contextual span and rationale"})
         if relation.get("relation_basis") == "direct_timestamp":
-            timed = {
-                (r.get("activity_unit_id", ""), r.get("primary_evidence_span_id", ""))
-                for r in tables.get("time_evidence", [])
-                if part(r) == p and r.get("time_type") == "ATTACK_OCCURRENCE"
-                and r.get("normalization_status") == "NORMALIZED"
-                and r.get("normalized_start") and r.get("normalized_end")
-            }
-            if a_rows and not any((relation.get("event_a_id"), r.get("evidence_span_id")) in timed for r in a_rows):
-                errors.append({"code": "EVENT_A_TIMESTAMP_SUPPORT_MISSING", "message": f"{rid}: event A support must link to normalized ATTACK_OCCURRENCE time evidence"})
-            if b_rows and not any((relation.get("event_b_id"), r.get("evidence_span_id")) in timed for r in b_rows):
-                errors.append({"code": "EVENT_B_TIMESTAMP_SUPPORT_MISSING", "message": f"{rid}: event B support must link to normalized ATTACK_OCCURRENCE time evidence"})
+            def endpoint_intervals(endpoint_id, support_rows, prefix):
+                support_spans = {r.get("evidence_span_id", "") for r in support_rows}
+                candidates = [
+                    t for t in tables.get("time_evidence", [])
+                    if part(t) == p
+                    and t.get("activity_unit_id") == endpoint_id
+                    and t.get("time_type") == "ATTACK_OCCURRENCE"
+                    and t.get("primary_evidence_span_id") in support_spans
+                ]
+                intervals = []
+                for time_row in candidates:
+                    if time_row.get("normalization_status") != "NORMALIZED":
+                        continue
+                    if time_row.get("timezone_status") != "EXPLICIT" or not time_row.get("normalized_timezone"):
+                        errors.append({
+                            "code": f"{prefix}_TIMEZONE_NOT_EXPLICIT",
+                            "message": f"{rid}: {endpoint_id} requires explicit timezone status and normalized_timezone",
+                        })
+                        continue
+                    start = _parse_aware_timestamp(time_row.get("normalized_start", ""))
+                    end = _parse_aware_timestamp(time_row.get("normalized_end", ""))
+                    if start is None or end is None:
+                        errors.append({
+                            "code": f"{prefix}_TIMESTAMP_NOT_TIMEZONE_AWARE",
+                            "message": f"{rid}: normalized bounds for {endpoint_id} must be timezone-aware ISO-8601",
+                        })
+                        continue
+                    if start > end:
+                        errors.append({
+                            "code": f"{prefix}_TIMESTAMP_INTERVAL_REVERSED",
+                            "message": f"{rid}: normalized_start is after normalized_end for {endpoint_id}",
+                        })
+                        continue
+                    if start != end and not time_row.get("uncertainty_notes", "").strip():
+                        errors.append({
+                            "code": f"{prefix}_UNCERTAINTY_NOT_DOCUMENTED",
+                            "message": f"{rid}: non-point interval for {endpoint_id} requires uncertainty_notes",
+                        })
+                        continue
+                    intervals.append((start, end))
+                if not intervals:
+                    errors.append({
+                        "code": f"{prefix}_TIMESTAMP_SUPPORT_MISSING",
+                        "message": f"{rid}: {endpoint_id} has no comparable normalized ATTACK_OCCURRENCE interval linked to its endpoint support",
+                    })
+                return intervals
+
+            intervals_a = endpoint_intervals(relation.get("event_a_id", ""), a_rows, "EVENT_A")
+            intervals_b = endpoint_intervals(relation.get("event_b_id", ""), b_rows, "EVENT_B")
+            if relation.get("relation_label") in {"BEFORE", "AFTER"} and intervals_a and intervals_b:
+                if relation.get("relation_label") == "BEFORE":
+                    invariant = all(
+                        a_end < b_start
+                        for a_start, a_end in intervals_a
+                        for b_start, b_end in intervals_b
+                    )
+                else:
+                    invariant = all(
+                        b_end < a_start
+                        for a_start, a_end in intervals_a
+                        for b_start, b_end in intervals_b
+                    )
+                if not invariant:
+                    errors.append({
+                        "code": "STRICT_TIMESTAMP_ORDER_NOT_INVARIANT",
+                        "message": f"{rid}: {relation.get('relation_label')} is not true for every retained interval pair",
+                    })
+
+    selection_count = 0
+    if selection_file is not None:
+        selection_errors, selection_count = validate_analysis_partition_selection(base_bundle, selection_file)
+        errors.extend(selection_errors)
 
     return {
         "ok": not errors, "error_count": len(errors), "errors": errors,
         "relation_count": len(relations), "evidence_link_count": len(links),
+        "analysis_partition_selection_count": selection_count,
         "primary_direct_positive_relation_count": sum(
             1 for r in tables.get("temporal_relations", [])
             if r.get("relation_label") in POSITIVE and r.get("relation_basis") in DIRECT
@@ -176,9 +380,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-bundle", type=Path, required=True)
     parser.add_argument("--evidence-file", type=Path, required=True)
+    parser.add_argument(
+        "--selection-file", type=Path,
+        default=Path(__file__).resolve().parents[1] / "registers" / "analysis_partition_selection.csv",
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
-    result = validate_bundle(args.base_bundle, args.evidence_file)
+    result = validate_bundle(args.base_bundle, args.evidence_file, args.selection_file)
     output = json.dumps(result, indent=2)
     print(output)
     if args.json_out:

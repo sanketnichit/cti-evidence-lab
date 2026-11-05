@@ -14,7 +14,7 @@ Every positive `direct_source` or `direct_timestamp` relation entering the prima
 
 ## Validation and limits
 
-The extension validator checks partition-local references, link identity, roles, endpoint alignment, cue presence/type, A/B completeness, and direct-timestamp support linkage to normalized `ATTACK_OCCURRENCE` time records. It is structural only: it does not judge semantic evidence quality, infer event identity or relation direction, or determine whether timestamp uncertainty permits strict order. Interval-based uncertainty validation remains open. No real-report rows or human annotations are included.
+The extension validator checks partition-local references, link identity, roles, endpoint alignment, cue presence/type, A/B completeness, and direct-timestamp support linkage. Strict `BEFORE`/`AFTER` timestamp relations require timezone-aware ISO-8601 bounds, explicit timezone status, a populated normalized timezone, and documented non-point intervals. The ordering must hold for every retained A/B interval combination; overlapping or uncertain windows cannot create a strict timestamp edge. This remains a structural check, not a semantic judgement that source text entails the relation.
 
 Run tests with `python -m unittest discover -s research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/tests -v`.
 
@@ -23,8 +23,15 @@ Validate the blank extension with the command shown in `SCHEMA_MANIFEST.md`.
 ## Files
 
 - `registers/temporal_relation_evidence.csv`
+- `registers/analysis_partition_selection.csv`
 - `validator/validate_temporal_evidence.py`
 - `tests/test_temporal_evidence.py`
+- `tests/test_analysis_partition_selection.py`
 - `SCHEMA_MANIFEST.md`
 
 This is a testable design candidate, not an operational annotation instruction. Researcher review and protocol approval are still required.
+## Final analysis partition selection
+
+`analysis_partition_selection.csv` records the report-level partition chosen for analysis. It allows at most one `SELECTED_FINAL` partition per report. A final selection must resolve to an existing report/annotator/pass row, and the underlying report must be eligible, permitted for local use, assessable, and fully reviewed. A final selection also records a role, rationale, date, and SHA-256 lock reference. Solo work is labelled `SINGLE_ANNOTATOR_FINAL`; repeated passes are not independent annotators.
+
+The selection register is header-only. The current projection adapter has not yet been migrated to consume the selected-final register and verify its lock against frozen source and partition rows. **Do not use the adapter to create study projection results until that migration is complete.**

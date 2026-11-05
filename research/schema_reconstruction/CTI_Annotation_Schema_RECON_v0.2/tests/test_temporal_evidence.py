@@ -15,7 +15,7 @@ PART = {"report_id": "r1", "annotator_id": "a1", "annotation_pass_id": "p1"}
 REL_H = ["report_id", "annotator_id", "annotation_pass_id", "relation_id", "event_a_id", "event_b_id", "relation_label", "relation_basis", "evidence_scope", "primary_evidence_span_id"]
 SPAN_H = ["report_id", "annotator_id", "annotation_pass_id", "evidence_span_id", "span_kind"]
 UNIT_H = ["report_id", "annotator_id", "annotation_pass_id", "activity_unit_id"]
-TIME_H = ["report_id", "annotator_id", "annotation_pass_id", "time_evidence_id", "activity_unit_id", "time_type", "normalization_status", "normalized_start", "normalized_end", "primary_evidence_span_id"]
+TIME_H = ["report_id", "annotator_id", "annotation_pass_id", "time_evidence_id", "activity_unit_id", "time_type", "normalization_status", "normalized_start", "normalized_end", "normalized_timezone", "timezone_status", "uncertainty_notes", "primary_evidence_span_id"]
 
 
 def write(path, headers, rows):
@@ -110,17 +110,65 @@ class TemporalEvidenceTests(unittest.TestCase):
     def test_direct_timestamp_requires_each_endpoint_time_span(self):
         self.relation["relation_basis"] = "direct_timestamp"
         self.times = [
-            {**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "primary_evidence_span_id": "a"},
-            {**PART, "time_evidence_id": "tB", "activity_unit_id": "evB", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T09:00:00Z", "normalized_end": "2026-01-01T09:00:00Z", "primary_evidence_span_id": "b"},
+            {**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"},
+            {**PART, "time_evidence_id": "tB", "activity_unit_id": "evB", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T09:00:00Z", "normalized_end": "2026-01-01T09:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "b"},
         ]
         self.save()
         self.assertTrue(self.report()["ok"], self.report()["errors"])
 
     def test_direct_timestamp_missing_endpoint_time_support_is_rejected(self):
         self.relation["relation_basis"] = "direct_timestamp"
-        self.times = [{**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "primary_evidence_span_id": "a"}]
+        self.times = [{**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"}]
         self.save()
         self.assertIn("EVENT_B_TIMESTAMP_SUPPORT_MISSING", self.codes())
+
+
+    def timestamp_rows(self, a_start, a_end, b_start, b_end, a_notes="", b_notes=""):
+        self.relation["relation_basis"] = "direct_timestamp"
+        self.times = [
+            {**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": a_start, "normalized_end": a_end, "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": a_notes, "primary_evidence_span_id": "a"},
+            {**PART, "time_evidence_id": "tB", "activity_unit_id": "evB", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": b_start, "normalized_end": b_end, "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": b_notes, "primary_evidence_span_id": "b"},
+        ]
+        self.save()
+
+    def test_overlapping_time_intervals_cannot_support_before(self):
+        self.timestamp_rows(
+            "2026-01-01T00:00:00Z", "2026-01-03T00:00:00Z",
+            "2026-01-02T00:00:00Z", "2026-01-04T00:00:00Z",
+            "broad date interval", "broad date interval",
+        )
+        self.assertIn("STRICT_TIMESTAMP_ORDER_NOT_INVARIANT", self.codes())
+
+    def test_disjoint_uncertainty_intervals_support_before(self):
+        self.timestamp_rows(
+            "2026-01-01T00:00:00Z", "2026-01-01T12:00:00Z",
+            "2026-01-02T00:00:00Z", "2026-01-02T12:00:00Z",
+            "morning interval", "morning interval",
+        )
+        self.assertTrue(self.report()["ok"], self.report()["errors"])
+
+    def test_after_uses_reverse_interval_order(self):
+        self.relation["relation_label"] = "AFTER"
+        self.timestamp_rows(
+            "2026-01-03T00:00:00Z", "2026-01-03T12:00:00Z",
+            "2026-01-01T00:00:00Z", "2026-01-01T12:00:00Z",
+            "morning interval", "morning interval",
+        )
+        self.assertTrue(self.report()["ok"], self.report()["errors"])
+
+    def test_naive_timestamps_do_not_support_strict_order(self):
+        self.timestamp_rows(
+            "2026-01-01T00:00:00", "2026-01-01T00:00:00",
+            "2026-01-02T00:00:00Z", "2026-01-02T00:00:00Z",
+        )
+        self.assertIn("EVENT_A_TIMESTAMP_NOT_TIMEZONE_AWARE", self.codes())
+
+    def test_interval_without_uncertainty_note_is_rejected(self):
+        self.timestamp_rows(
+            "2026-01-01T00:00:00Z", "2026-01-01T12:00:00Z",
+            "2026-01-02T00:00:00Z", "2026-01-02T00:00:00Z",
+        )
+        self.assertIn("EVENT_A_UNCERTAINTY_NOT_DOCUMENTED", self.codes())
 
     def test_rows_from_other_partition_do_not_satisfy_support(self):
         self.links[0]["annotator_id"] = "other"

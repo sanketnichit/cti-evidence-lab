@@ -8,7 +8,7 @@
 - Real report rows: 0
 - Synthetic tests only: yes
 - Semantic evidence review: not performed
-- Strict timestamp uncertainty ordering: not implemented
+- Strict timestamp uncertainty ordering: implemented as a conservative structural gate for direct timestamp BEFORE/AFTER relations
 
 ## Evidence roles
 
@@ -18,3 +18,17 @@
 - `RELATION_CONTEXT`: optional for sentence/cross-sentence claims; required with a non-empty rationale for `DOCUMENT_CONTEXT` claims.
 
 This extension does not replace or alter RECON v0.1 and does not claim equivalence to the missing original v0.4.2 schema.
+## Timestamp gate
+
+- Time evidence must have `timezone_status=EXPLICIT` and a populated `normalized_timezone`.
+- Normalized bounds must be timezone-aware ISO-8601 values and start must not follow end.
+- Non-point intervals require `uncertainty_notes`.
+- For direct timestamp `BEFORE`/`AFTER`, the strict order must hold for every retained A/B interval combination.
+
+## Final analysis partition
+
+- Register: `registers/analysis_partition_selection.csv`.
+- At most one `SELECTED_FINAL` row per report.
+- The selected partition must resolve in `report_registry`, with eligible source scope, permitted local use, assessable report, and complete full-report review.
+- Final rows require a role, rationale, ISO date, and `sha256:<64 lowercase hex>` lock reference.
+- The projection adapter has not yet been migrated to enforce the selection register and verify the selected lock.
