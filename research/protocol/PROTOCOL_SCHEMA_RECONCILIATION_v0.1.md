@@ -38,7 +38,7 @@ The validator now excludes such a partition from `N_assessable` until its exact 
 
 **Implementation:** RECON validator, data-model rules, QA record, manifest and checksum list.  
 **Regression coverage:** source missing → excluded from assessable denominator; source supplied and matching → included.  
-**Verification:** 69 RECON v0.1 synthetic tests pass (41 validator, 16 projection, 12 adapter); 31/31 package checksums match. CI run #125 also passed 70 RECON v0.2 tests and 55 root tests (194 successful test executions total). These remain synthetic checks, not report findings.
+**Verification:** 69 RECON v0.1 synthetic tests pass (41 validator, 16 projection, 12 adapter); 31/31 package checksums match. CI run #144 also passed 72 RECON v0.2 tests and 57 root tests (198 successful test executions total). These remain synthetic checks, not report findings.
 
 ### 3.2 Temporal evidence roles — v0.1 gap, v0.2 extension implemented
 
@@ -140,7 +140,7 @@ Structural checks do not decide source semantics. Human review must still decide
 - Real-report projections: 0.
 - Independent human agreement: not measured.
 - Novelty: not established.
-- The 69-test RECON v0.1 suite is synthetic only (41 validator, 16 projection, 12 adapter). The separate RECON v0.2 suite has 70 synthetic tests. CI run #125 passed 194 total root/v0.1/v0.2 test executions. These do not validate semantic annotation or prove the research question's empirical contribution.
+- The 69-test RECON v0.1 suite is synthetic only (41 validator, 16 projection, 12 adapter). The separate RECON v0.2 suite has 72 synthetic tests. CI run #144 passed 198 total root/v0.1/v0.2 test executions. These do not validate semantic annotation or prove the research question's empirical contribution.
 
 **Freeze decision:** not ready. RECON v0.1 is useful and increasingly testable, but the gaps above must be resolved or explicitly deferred in the protocol before a new schema version can be approved.
 
