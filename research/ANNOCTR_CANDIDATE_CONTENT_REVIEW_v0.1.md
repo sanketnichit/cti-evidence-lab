@@ -33,6 +33,17 @@ The first scanner diagnostic used `linking_mitre_only` to detect cybersecurity-s
 
 The latter two are present in the 120-report split manifest but have zero observed CyNE labels in the released mention-level files. Do not silently remove them from the corpus denominator or describe them as missing files. Record them as split-assigned reports with no observed CyNE mentions, and exclude them from a technique-mention-based candidate pool where appropriate.
 
+## Second-pass source-text review — 5 November 2026
+
+The two split-assigned reports with no observed CyNE labels were re-read from the official AnnoCTR source-text files. This is a source-content assessment, not a formal researcher eligibility decision. Both remain in the 120-report manifest inventory. Their `source_scope_eligibility`, local-use, public-reuse and researcher-review fields in the canonical sample frame remain unchanged pending explicit recording.
+
+| Report | Source identity | Source-grounded content finding | Working source-scope recommendation |
+|---|---|---|---|
+| `proofpoint_2021-05-24_compromised-cloud-accounts-cost-firms` | Official AnnoCTR text blob `57d13668f0269456d384a7fcb13a1965bfaacb57`; frame source-text SHA-256 `3df25b357989da047e8240475771597675c2d1d63221c85d632ca8c863403f34`. | Sponsored summary of a Ponemon Institute survey of 662 IT/security practitioners. It reports aggregate cloud-account-compromise costs, downtime and security practices. It discusses compromise as an industry risk but does not describe a report-local intrusion, actor operation, campaign or source-grounded sequence of cyber activity. | **Recommend INELIGIBLE for the declared CTI-report source scope.** The basis is the article's survey-summary/marketing genre, not the absence of AnnoCTR CyNE or ATT&CK labels. |
+| `quoteintelligence_2020-07-09_what-is-tiber-eu-and` | Official AnnoCTR text blob `87eaa93d19177c90a4a68ca5d3b1c5c78b43c3e5`; frame source-text SHA-256 `3d42974b233e1f0d250b4ff402bccdfb0b85f472334e9660612598541add9e6b`. | Part I of a two-part explainer describing the TIBER-EU ethical red-team testing framework, its objectives and benefits for financial institutions. References to real-life threat scenarios describe the framework's design; the post does not report a specific observed intrusion, threat actor operation or campaign. | **Recommend INELIGIBLE for the declared CTI-report source scope.** The basis is the general framework-explainer genre, not the absence of AnnoCTR CyNE or ATT&CK labels. |
+
+**Sampling consequence:** retain both rows in the official 120-row frame for auditability. If the researcher confirms these recommendations, mark them out of source-scope eligibility and exclude them from `N_eligible`; do not delete them or replace them within the historical frame. The six other no-link reports are unaffected and remain eligible for source-first review if their own gates pass.
+
 ## Evidence and rights notes
 
 The AnnoCTR paper describes 400 reports with general-world entity annotations, of which 120 were also annotated with cybersecurity categories. It reports the donor distribution as Intel471 30, Lab52 23, Proofpoint 28, QuoIntelligence 12 and ZScaler 27. The paper states that the commercial CTI vendors agreed to republication of the blog entries under CC BY-SA 4.0. Keep this corpus licence separate from the proceedings PDF's CC BY-NC 4.0 notice.

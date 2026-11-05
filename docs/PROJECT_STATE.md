@@ -16,7 +16,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 - Official split manifest: 70 train, 16 dev, 34 test, 280 ext. The 120 train/dev/test reports define the GNE+CyNE sampling frame.
 - Donor counts in the 120-report frame: Intel471 30, Lab52/S2 Grupo 23, Proofpoint 28, QuoIntelligence 12, ZScaler 27.
 - 118/120 have cybersecurity-specific records in the full linking export; 112/120 have at least one valid canonical ATT&CK technique link. These are inventory statistics, not sampling filters.
-- Two reports have no observed cybersecurity-specific rows in the inspected full linking export. They remain in the 120-row inventory pending the researcher's content-scope decision.
+- Two reports have no observed cybersecurity-specific rows in the inspected full linking export. A second-pass read of their official source texts now recommends source-scope exclusion: the Proofpoint row is a sponsored Ponemon survey summary, and the QuoIntelligence row is a TIBER-EU framework explainer. Both remain in the 120-row inventory; formal researcher eligibility fields are still pending.
 - Across all 400 TimeML files: 3,324 TIMEX3 tags and zero EVENT, MAKEINSTANCE, TLINK or SIGNAL tags.
 - The raw AnnoCTR corpus and full report text are intentionally not committed. The repository contains only the report-level metadata inventory, aggregate summary, source archive hash and reproducible methodology. Raw data stay local under the corpus licence/provenance constraints.
 
@@ -60,13 +60,12 @@ The current audit is a workbook and selected source-code control-flow audit, not
 
 ## Current blockers / next sequence
 
-1. Verify the integrated crosswalk validator and package checksums through the current CI run; do not expand engineering scope unless a test exposes a real defect.
-2. Resolve the two no-CyNE genre cases through source-content review and complete the remaining evidence-scope, mapping-acceptance and prior-exposure decisions.
-3. Review the reconstructed schema against the missing original v0.4.1/v0.4.2 artifacts if they ever become available; otherwise approve or revise RECON explicitly as a new version.
-4. Make separate researcher eligibility, local research-use and public-reuse decisions for each of the five rank-1 candidates.
-5. Only after protocol/schema freeze, start source-first human annotation. Keep raw sources and long excerpts local.
-6. Add a second human annotator for an overlapping subset if available; otherwise state that IAA was not measured. AI is not a second annotator.
-7. Lock and hash human annotation files before any projection analysis. Only then compute real-report metrics.
+1. Record the formal source-scope disposition for the two no-CyNE reports against the source-based recommendations in `research/ANNOCTR_CANDIDATE_CONTENT_REVIEW_v0.1.md`; keep both rows in the historical 120-report inventory.
+2. Verify canonical source URLs, publication dates and source identity for the five rank-1 candidates; record local research-use and public-reuse decisions separately.
+3. Resolve remaining evidence-scope, mapping-acceptance and prior-exposure protocol choices; keep the original protocol/schema recovery gap explicit.
+4. Freeze a new, clearly versioned protocol/schema package only after the decisions are recorded. RECON v0.1 remains a reconstruction, not the original v0.4.2.
+5. Begin the first source-first human feasibility annotation only after that freeze. Do not replace candidates because of event yield or absence of positive relations.
+6. Add a second human annotator for an overlapping subset if available; otherwise report that IAA was not measured. AI is not a second annotator.
 
 ## Research integrity status
 
