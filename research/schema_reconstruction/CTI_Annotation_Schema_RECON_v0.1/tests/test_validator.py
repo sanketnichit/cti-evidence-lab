@@ -563,7 +563,11 @@ class ValidatorTests(unittest.TestCase):
             self.rows[register].extend([{**row, **second_partition} for row in self.rows[register]])
         for register in self.rows:
             self.save(register)
-        result = self.validate()
+        source_texts = {
+            ("r-test", "annotator-1", "pass-1"): SOURCE_TEXT,
+            ("r-test", "annotator-2", "pass-1"): SOURCE_TEXT,
+        }
+        result = validator.validate_bundle(self.bundle, source_texts)
         self.assertTrue(result.ok, [x for x in result.errors])
         self.assertEqual(result.primary_positive_temporal_edges, 2)
         # One report with two annotation partitions remains one report in the
