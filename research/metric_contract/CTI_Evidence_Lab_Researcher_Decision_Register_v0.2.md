@@ -90,6 +90,19 @@ The following working rules are derived from the recovered Protocol v0.4-draft a
 
 These source-scope dispositions change two eligibility fields in the successor frame v1.0 while preserving both rows in the historical 120-report inventory. The remaining protocol defaults do not create any event-level labels or human annotations. They are working project decisions, not evidence that any report contains a particular event or temporal relation.
 
+
+## 2B. Additional protocol-boundary proposals — 5 November 2026
+
+These are recommendations for the initial feasibility pilot, not adopted researcher decisions. They are recorded here because the current protocol and reconstructed registers must not imply that an unsupported relation type can be annotated in an improvised field.
+
+| Item | Source-grounded position | Current recommendation | Formal status |
+|---|---|---|---|
+| Temporal evidence field representation | RECON v0.2 stores the relation cue as `temporal_relations.primary_evidence_span_id`, exact text/offsets in `evidence_spans`, and endpoint/context support in `temporal_relation_evidence.csv`. Protocol v0.5 previously listed duplicate `cue_text` and `argument_support` fields. | Use linked evidence-span IDs and role-coded support; do not duplicate verbatim source text in separate cue/argument free-text fields. Require A/B support on positive direct relations and the v0.2 scope gates. | **Implemented as a draft protocol/schema reconciliation; researcher approval still required at freeze** |
+| Episode-to-episode temporal relations | Protocol v0.5 previously requested a separate exploratory register, but RECON v0.1/v0.2 has no such register. Episode containers are distinct from atomic event leaves. | Defer episode-to-episode relation records from the initial pilot. Preserve episode containers and their evidence/time information; do not use episode IDs in the primary atomic temporal register. Add a separate register only in a later approved extension. | **Proposed; researcher approval required** |
+| ChronoCTI pair-to-event alignment | Benchmark technique-pair rows have no report-local event IDs or relation-specific source spans. The current RECON package has no dedicated alignment register. | Defer record-level benchmark-to-event-pair labels from the initial pilot. Preserve raw benchmark IDs/labels/provenance separately; do not overload event mappings or candidate-pair assessments. | **Proposed; researcher approval required** |
+
+The deferrals do not prevent the study from annotating source-supported relations between distinct atomic event leaves or measuring how those event edges are transformed by the named technique-pair projection. They do prevent the initial pilot from claiming an event-level gold alignment to ChronoCTI's benchmark pair rows or reporting episode-edge metrics.
+
 ---
 
 ### Permission-chain clarification route — 5 November 2026
