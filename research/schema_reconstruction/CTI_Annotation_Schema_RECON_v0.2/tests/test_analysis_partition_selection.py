@@ -14,7 +14,11 @@ REGISTRY_HEADERS = [
     "report_id", "annotator_id", "annotation_pass_id", "source_scope_eligibility",
     "local_research_use_status", "report_assessability", "full_report_review_status",
 ]
-ADJUDICATION_HEADERS = ["report_id", "annotation_pass_id", "target_annotator_id", "decision_status"]
+ADJUDICATION_HEADERS = [
+    "report_id", "annotation_pass_id", "target_annotator_id", "target_register",
+    "target_record_id", "field_name", "decision_status", "rationale",
+]
+TARGET_HEADERS = ["report_id", "annotator_id", "annotation_pass_id", "mention_id"]
 
 
 def write(path, headers, rows):
@@ -36,6 +40,10 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
             self.registry_row("human-1", "pass-2"),
         ]
         self.adjudications = []
+        self.target_records = [{
+            "report_id": "r1", "annotator_id": "human-1",
+            "annotation_pass_id": "pass-2", "mention_id": "mention-1",
+        }]
         self.rows = []
         self.save()
 
@@ -52,6 +60,7 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
     def save(self):
         write(self.base / "registers" / "report_registry.csv", REGISTRY_HEADERS, self.registry)
         write(self.base / "registers" / "adjudication_log.csv", ADJUDICATION_HEADERS, self.adjudications)
+        write(self.base / "registers" / "event_mentions.csv", TARGET_HEADERS, self.target_records)
         write(self.selection_file, SELECTION_HEADERS, self.rows)
 
     def selection(self, **overrides):
@@ -103,10 +112,21 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.save()
         self.assertIn("SINGLE_ANNOTATOR_FINAL_MISMATCH", self.codes())
 
-    def test_consensus_requires_multiple_annotators(self):
+    def test_consensus_requires_recorded_independent_input_partitions(self):
+        self.registry.append(self.registry_row("human-2", "pass-1"))
         self.rows = [self.selection(partition_role="CONSENSUS")]
         self.save()
-        self.assertIn("CONSENSUS_WITHOUT_MULTIPLE_ANNOTATORS", self.codes())
+        self.assertIn("CONSENSUS_INDEPENDENT_PARTITIONS_MISSING", self.codes())
+
+    def test_consensus_accepts_two_distinct_completed_independent_partitions(self):
+        self.registry.append(self.registry_row("human-2", "pass-1"))
+        self.rows = [
+            self.selection(analysis_partition_id="ind-1", annotation_pass_id="pass-1", partition_role="INDEPENDENT", selection_status="NOT_SELECTED", lock_reference="", selection_rationale="Independent input pass retained."),
+            self.selection(analysis_partition_id="ind-2", annotator_id="human-2", annotation_pass_id="pass-1", partition_role="INDEPENDENT", selection_status="NOT_SELECTED", lock_reference="", selection_rationale="Independent input pass retained."),
+            self.selection(analysis_partition_id="sel-final", partition_role="CONSENSUS"),
+        ]
+        self.save()
+        self.assertEqual(set(), self.codes())
 
     def test_adjudicated_final_requires_adjudication_record(self):
         self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
@@ -116,11 +136,30 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
     def test_adjudicated_final_accepts_matching_adjudication_record(self):
         self.adjudications = [{
             "report_id": "r1", "annotation_pass_id": "pass-2",
-            "target_annotator_id": "human-1", "decision_status": "ADJUDICATED",
+            "target_annotator_id": "human-1", "target_register": "event_mentions",
+            "target_record_id": "mention-1", "field_name": "instance_status",
+            "decision_status": "ADJUDICATED", "rationale": "Synthetic adjudication.",
         }]
         self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
         self.save()
         self.assertEqual(set(), self.codes())
+
+    def test_adjudicated_final_rejects_log_for_unrelated_target_record(self):
+        self.adjudications = [{
+            "report_id": "r1", "annotation_pass_id": "pass-2",
+            "target_annotator_id": "human-1", "target_register": "event_mentions",
+            "target_record_id": "not-a-real-mention", "field_name": "instance_status",
+            "decision_status": "ADJUDICATED", "rationale": "Synthetic adjudication.",
+        }]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        self.assertIn("ADJUDICATED_FINAL_WITHOUT_LOG", self.codes())
+
+    def test_selected_final_is_blocked_by_cross_partition_decision_conflict(self):
+        self.registry[0]["local_research_use_status"] = "UNRESOLVED"
+        self.rows = [self.selection()]
+        self.save()
+        self.assertIn("REPORT_LEVEL_DECISION_CONFLICT", self.codes())
 
     def test_selection_must_resolve_registered_partition(self):
         self.rows = [self.selection(annotation_pass_id="missing")]

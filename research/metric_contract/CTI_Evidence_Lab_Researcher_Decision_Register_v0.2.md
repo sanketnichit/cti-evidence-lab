@@ -129,10 +129,13 @@ Consequently, the following cannot be asserted as exact original v0.4.2 details:
 |---|---|
 | A_120 source provenance | Pinned to ChronoCTI commit and blob; ordered ID-only extraction SHA-256 recorded |
 | RECON schema package | 12 blank proposed registers; not original v0.4.2; not approved/frozen |
-| Structural validator | 36 synthetic tests pass |
-| Projection module | 16 synthetic tests pass |
-| Register-to-projection adapter | 11 synthetic tests pass; requires a matching computed partition/source digest |
-| Combined synthetic suite | 63/63 pass (36 validator, 16 projection, 11 adapter); blank bundle 0 errors + 1 expected empty-bundle warning; CI run #41974194194 passed on 5 November 2026 |
+| RECON v0.1 structural validator | 41 synthetic tests pass |
+| RECON v0.1 projection module | 16 synthetic tests pass |
+| RECON v0.1 register-to-projection adapter | 11 synthetic tests pass; requires a matching computed partition/source digest |
+| RECON v0.1 combined suite | 68/68 pass (41 validator, 16 projection, 11 adapter) |
+| RECON v0.2 extension, selection and aggregation suite | 67/67 synthetic tests pass |
+| Root repository suite | 53/53 synthetic tests pass |
+| Latest combined CI verification | 188 successful test executions in GitHub Actions run #122 on 5 November 2026; blank bundle 0 errors + 1 expected empty-bundle warning |
 | Real AnnoCTR data through RECON | 0 rows |
 | Researcher eligibility decisions | 0/5 |
 | Human annotation locks | 0 |
@@ -170,3 +173,17 @@ Both records remain in the 120-row historical manifest. The successor frame v1.0
 ## 2C. Protocol and schema version boundary
 
 The new `CTI_Event_Instance_Annotation_Protocol_v0.5-draft.md` consolidates the adopted working rules and is a new draft built from the recovered v0.4 draft. It does not claim to recover missing Protocol v0.4.1. `CTI_Annotation_Schema_RECON_v0.1` remains a reconstruction, not the original v0.4.2 schema, and remains unapproved/unfrozen until its fields and validators are reconciled against Protocol v0.5 and approved as a new package.
+
+
+## Technical remediation checkpoint — 5 November 2026
+
+The repository remediation set:
+- blocks selected-final projection when source-scope, local-use, or assessability decisions conflict across report partitions;
+- requires a `CONSENSUS` row to point to at least two distinct, completed independent input partitions;
+- requires an `ADJUDICATED_FINAL` row to have an `ADJUDICATED` log entry that resolves to a real record in the selected report/annotator/pass partition;
+- brings the standalone RECON v0.1 adapter into line with the report-level conflict gate;
+- distinguishes cycle components that merely contain multiple source edges from those that actually require multiple source edges;
+- rejects self-event temporal edges in the legacy root projection function; and
+- points the AnnoCTR source-hash utility and its regression test at the canonical frame v1.0.
+
+These are structural/workflow safeguards. They do not create annotations, select reports, approve the protocol/schema, or establish empirical findings.

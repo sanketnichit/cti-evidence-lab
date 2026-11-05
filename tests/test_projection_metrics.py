@@ -246,5 +246,12 @@ class ProjectionMetricsTests(unittest.TestCase):
             )
 
 
+    def test_self_event_edge_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "endpoints must be distinct"):
+            project_report(
+                {"a": {"T_A"}},
+                [TemporalEdge("r1", "a", "a", "BEFORE")],
+            )
+
 if __name__ == "__main__":
     unittest.main()

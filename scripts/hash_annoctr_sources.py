@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.source_text_integrity import frozen_source_metadata  # noqa: E402
 
-FRAME_DEFAULT = ROOT / "research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.csv"
+FRAME_DEFAULT = ROOT / "research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv"
 
 
 def update_frame(frame_path: Path, corpus_root: Path, *, write: bool = False) -> tuple[int, list[str]]:

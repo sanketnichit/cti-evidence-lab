@@ -167,5 +167,14 @@ class AnnotationProjectionAdapterTests(unittest.TestCase):
             self.run_adapter()
 
 
+    def test_report_level_decision_conflict_blocks_selected_partition_projection(self):
+        conflicting = dict(self.rows["report_registry"][0])
+        conflicting["annotation_pass_id"] = "pass-2"
+        conflicting["local_research_use_status"] = "UNRESOLVED"
+        self.rows["report_registry"].append(conflicting)
+        self.save("report_registry")
+        with self.assertRaisesRegex(AdapterError, "conflicting source eligibility"):
+            self.run_adapter()
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

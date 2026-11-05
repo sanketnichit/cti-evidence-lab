@@ -3,9 +3,9 @@
 **Project:** CTI Evidence Lab  
 **Version:** 0.3-draft  
 **Date:** 2026-11-01  
-**Status:** Pilot protocol for human review; not validated
+**Status:** Historical v0.3 draft; superseded by `research/protocol/CTI_Event_Instance_Annotation_Protocol_v0.5-draft.md`
 
-> This is a feasibility protocol, not a validated benchmark or claim of novelty. Do not annotate a large corpus until the pilot has been reviewed.
+> Retained as a historical protocol artifact. Do not use this v0.3 draft as the current annotation instruction. Protocol v0.5-draft is the current working draft, reconciled against RECON v0.1/v0.2, but neither the protocol nor reconstructed schema is approved/frozen for formal annotation.
 
 ## 1. Keep four levels separate
 

@@ -128,6 +128,22 @@ def build_projection_for_partition(
         name: _read_rows(root, name)
         for name in validate_annotations.HEADERS
     }
+    report_decisions = {
+        (
+            row.get("source_scope_eligibility", ""),
+            row.get("local_research_use_status", ""),
+            row.get("report_assessability", ""),
+        )
+        for row in tables["report_registry"]
+        if row.get("report_id") == report_id
+    }
+    if len(report_decisions) > 1:
+        raise AdapterError(
+            "Report has conflicting source eligibility, local-use or assessability "
+            "decisions across annotator/pass partitions; resolve the report-level "
+            "decision conflict before projection"
+        )
+
     registry = [row for row in tables["report_registry"] if _partition_matches(row, *partition)]
     if len(registry) != 1:
         raise AdapterError(f"Expected exactly one report_registry row for {partition}; found {len(registry)}")

@@ -7,8 +7,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FRAME_PATH = ROOT / "research" / "annoctr_sampling" / "AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.csv"
-METHOD_PATH = ROOT / "research" / "annoctr_sampling" / "AnnoCTR_Fresh_MultiVendor_Sampling_Method_v0.3.2.md"
+FRAME_PATH = ROOT / "research" / "annoctr_sampling" / "AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv"
+METHOD_PATH = ROOT / "research" / "annoctr_sampling" / "AnnoCTR_Fresh_MultiVendor_Sampling_Method_v0.3.3.md"
 PRIORITY_SEED = "CTI-EVIDENCE-LAB-ANNOCTR-PILOT-2026-11-03-v1"
 EXPECTED_DONORS = {
     "Intel471": 30,
@@ -53,7 +53,7 @@ class AnnoCTRSamplingFrameTests(unittest.TestCase):
             self.assertIn(row["source_scope_eligibility"], {"PENDING", "ELIGIBLE", "INELIGIBLE"})
             self.assertIn(row["local_research_use_status"], {"UNRESOLVED", "PERMITTED", "NOT_PERMITTED"})
             self.assertIn(row["public_reuse_status"], {"UNRESOLVED", "PERMITTED", "RESTRICTED", "NOT_PLANNED"})
-            self.assertIn(row["researcher_review_status"], {"NOT_REVIEWED", "IN_REVIEW", "DECIDED"})
+            self.assertIn(row["researcher_review_status"], {"NOT_REVIEWED", "IN_REVIEW", "DECISION_RECORDED"})
 
     def test_frame_has_120_unique_manifest_report_ids_and_expected_donor_counts(self):
         report_ids = [row["report_id"] for row in self.rows]
@@ -86,6 +86,17 @@ class AnnoCTRSamplingFrameTests(unittest.TestCase):
         self.assertTrue(all(row["researcher_review_status"] == "NOT_REVIEWED" for row in rank_one))
         self.assertIn(PRIORITY_SEED, METHOD_PATH.read_text(encoding="utf-8"))
 
+
+    def test_current_frame_records_the_two_source_scope_exclusions(self):
+        statuses = Counter(row["source_scope_eligibility"] for row in self.rows)
+        self.assertEqual(statuses["PENDING"], 118)
+        self.assertEqual(statuses["INELIGIBLE"], 2)
+        decided = [
+            row for row in self.rows
+            if row["source_scope_eligibility"] == "INELIGIBLE"
+        ]
+        self.assertEqual(len(decided), 2)
+        self.assertTrue(all(row["researcher_review_status"] == "DECISION_RECORDED" for row in decided))
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

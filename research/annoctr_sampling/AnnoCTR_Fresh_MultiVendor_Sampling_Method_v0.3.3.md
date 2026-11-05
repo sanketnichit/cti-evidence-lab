@@ -1,4 +1,4 @@
-# AnnoCTR fresh multi-vendor feasibility sample method v0.3.2
+# AnnoCTR fresh multi-vendor feasibility sample method v0.3.3
 
 **Prepared:** 3 November 2026  
 **Status:** Corrected feasibility-sampling rule; corpus screened; five rank-1 candidates reviewed by AI; no human eligibility decision or base report selection is locked. This version clarifies that the 112 link-positive count is an inventory statistic, not the sampling frame.

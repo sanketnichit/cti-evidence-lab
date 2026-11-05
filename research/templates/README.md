@@ -1,6 +1,8 @@
 # Annotation Template Files
 
-These blank CSV files are data-entry templates for the human pilot. They contain no report text or completed annotations.
+> **Historical templates — superseded for new annotation work.** These four CSVs belong to the v0.3 draft workflow. Do not use them to create current pilot annotations. The current working schema is the 12-register RECON v0.1 package plus the v0.2 temporal-evidence and selected-partition extension. Those packages are still drafts and are not approved/frozen for formal annotation; use them only for schema review and synthetic testing until a new version is explicitly approved.
+
+These blank CSV files are retained as historical v0.3 artifacts. They contain no report text or completed annotations.
 
 ## Files and row granularity
 

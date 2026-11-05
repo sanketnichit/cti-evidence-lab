@@ -112,6 +112,7 @@ class ProjectionMetricsReconTests(unittest.TestCase):
         self.assertEqual(component["source_event_edge_count"], 2)
         self.assertEqual(component["single_source_edges_inducing_cycle"], ["r1", "r2"])
         self.assertTrue(component["single_event_edge_mapping_fanout"])
+        self.assertEqual(result["counts"]["projected_cycle_components_with_multiple_source_edges"], 1)
         self.assertEqual(result["counts"]["projected_cycle_components_requiring_multiple_source_edges"], 0)
 
     def test_before_and_inverse_after_are_not_a_label_conflict(self):

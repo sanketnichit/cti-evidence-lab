@@ -136,6 +136,8 @@ def project_report(
         if edge.edge_id in edge_ids:
             raise ValueError(f"Duplicate edge ID: {edge.edge_id}")
         edge_ids.add(edge.edge_id)
+        if edge.source_event == edge.target_event:
+            raise ValueError("Temporal edge endpoints must be distinct event instances.")
         missing = [
             event_id
             for event_id in (edge.source_event, edge.target_event)

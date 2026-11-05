@@ -29,7 +29,7 @@ This is a candidate report-level estimand, not a validated research gap. ChronoC
 ```text
 docs/       research charter, audits, architecture, methodology, decisions, roadmap, project state
 research/   related work, evidence ledger, protocols, sampling, schema reconstruction and metric contracts
-src/        public v0.3-era projection and annotation-validation utilities
+src/        legacy v0.3 projection and annotation-validation utilities (synthetic checks only)
 tests/      synthetic unit tests
 examples/   synthetic examples only
 scripts/    local data-screening utilities
@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest recorded verification on 5 November 2026: **53 root synthetic tests** and **68 RECON synthetic tests** pass (41 validator, 16 projection, 11 adapter); all 31 entries in the RECON checksum manifest match. The projection demo and blank-bundle validation pass (zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning). GitHub Actions run [#41998772656](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41998772656) passed on commit `e0237e9bae2538d42936f888e414cac0ddad3809`. These are synthetic/code-integrity checks only, not real-report findings.
+Latest recorded verification on 5 November 2026: GitHub Actions run [#122](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42013035511) passed on commit `3c29e84af00a0d4b0d2242cdf8f9d081e6aca383`. It executed **53 root tests**, **68 RECON v0.1 tests** (41 validator, 16 projection, 11 adapter), and **67 RECON v0.2 tests** — 188 successful test executions in total. The projection demo and blank-bundle validation also passed (zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning). These are synthetic/code-integrity checks only, not real-report findings.
 
 Run from the repository root:
 

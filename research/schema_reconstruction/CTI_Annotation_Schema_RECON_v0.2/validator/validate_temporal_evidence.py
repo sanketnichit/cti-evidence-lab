@@ -111,7 +111,10 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
         registry = []
     adjudications, error = load(
         base_bundle / "registers" / "adjudication_log.csv",
-        {"report_id", "annotation_pass_id", "target_annotator_id", "decision_status"},
+        {
+            "report_id", "annotation_pass_id", "target_annotator_id",
+            "target_register", "target_record_id", "decision_status",
+        },
     )
     if error:
         errors.append({"code": "PARTITION_SELECTION_BASE_INVALID", "message": error})
@@ -122,15 +125,71 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
     for row in registry:
         if row.get("annotator_id"):
             annotators_by_report.setdefault(row.get("report_id", ""), set()).add(row["annotator_id"])
-    adjudicated = {
-        (
-            row.get("report_id", ""),
-            row.get("target_annotator_id", ""),
-            row.get("annotation_pass_id", ""),
-        )
-        for row in adjudications
-        if row.get("decision_status") in {"AGREED", "ADJUDICATED"}
+    target_id_fields = {
+        "report_registry": "report_id",
+        "report_scopes": "scope_id",
+        "activity_units": "activity_unit_id",
+        "event_mentions": "mention_id",
+        "evidence_spans": "evidence_span_id",
+        "record_evidence_links": "link_id",
+        "event_mappings": "mapping_id",
+        "time_evidence": "time_evidence_id",
+        "temporal_relations": "relation_id",
+        "candidate_pair_assessments": "assessment_id",
+        "non_temporal_relations": "non_temporal_relation_id",
     }
+    target_rows_cache = {}
+    adjudicated = set()
+    for decision in adjudications:
+        if decision.get("decision_status") != "ADJUDICATED":
+            continue
+        register_name = decision.get("target_register", "")
+        target_field = target_id_fields.get(register_name)
+        target_id = decision.get("target_record_id", "")
+        if not target_field or not target_id:
+            continue
+        if register_name not in target_rows_cache:
+            target_rows_cache[register_name], target_error = load(
+                base_bundle / "registers" / f"{register_name}.csv",
+                {"report_id", "annotator_id", "annotation_pass_id", target_field},
+            )
+            if target_error:
+                target_rows_cache[register_name] = []
+        resolved = any(
+            target.get("report_id") == decision.get("report_id")
+            and target.get("annotator_id") == decision.get("target_annotator_id")
+            and target.get("annotation_pass_id") == decision.get("annotation_pass_id")
+            and target.get(target_field) == target_id
+            for target in target_rows_cache[register_name]
+        )
+        if resolved:
+            adjudicated.add((
+                decision.get("report_id", ""),
+                decision.get("target_annotator_id", ""),
+                decision.get("annotation_pass_id", ""),
+            ))
+
+    selected_report_ids = {
+        row.get("report_id", "")
+        for row in selections
+        if row.get("selection_status") == "SELECTED_FINAL" and row.get("report_id")
+    }
+    decisions_by_report = {}
+    for row in registry:
+        decisions_by_report.setdefault(row.get("report_id", ""), set()).add((
+            row.get("source_scope_eligibility", ""),
+            row.get("local_research_use_status", ""),
+            row.get("report_assessability", ""),
+        ))
+    for selected_report_id in sorted(selected_report_ids):
+        if len(decisions_by_report.get(selected_report_id, set())) > 1:
+            errors.append({
+                "code": "REPORT_LEVEL_DECISION_CONFLICT",
+                "message": (
+                    f"report {selected_report_id!r} has conflicting source eligibility, "
+                    "local-use or assessability decisions across registered partitions"
+                ),
+            })
 
     seen_ids = set()
     selected_by_report = {}
@@ -188,10 +247,33 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
             annotator_count = len(annotators_by_report.get(report_id, set()))
             if role == "SINGLE_ANNOTATOR_FINAL" and annotator_count != 1:
                 errors.append({"code": "SINGLE_ANNOTATOR_FINAL_MISMATCH", "message": f"line {line}: SINGLE_ANNOTATOR_FINAL requires exactly one registered annotator ID"})
-            if role == "CONSENSUS" and annotator_count < 2:
-                errors.append({"code": "CONSENSUS_WITHOUT_MULTIPLE_ANNOTATORS", "message": f"line {line}: CONSENSUS requires at least two registered annotator IDs"})
+            if role == "CONSENSUS":
+                if annotator_count < 2:
+                    errors.append({"code": "CONSENSUS_WITHOUT_MULTIPLE_ANNOTATORS", "message": f"line {line}: CONSENSUS requires at least two registered annotator IDs"})
+                independent_annotators = set()
+                for source_row in selections:
+                    if (
+                        source_row.get("report_id") != report_id
+                        or source_row.get("partition_role") != "INDEPENDENT"
+                        or source_row.get("selection_status") != "NOT_SELECTED"
+                    ):
+                        continue
+                    source_partition = registry_by_partition.get(part(source_row))
+                    if source_partition and (
+                        source_partition.get("source_scope_eligibility") == "ELIGIBLE"
+                        and source_partition.get("local_research_use_status") == "PERMITTED"
+                        and source_partition.get("report_assessability") == "ASSESSABLE"
+                        and source_partition.get("full_report_review_status") == "COMPLETE"
+                    ):
+                        independent_annotators.add(source_row.get("annotator_id", ""))
+                independent_annotators.discard("")
+                if len(independent_annotators) < 2:
+                    errors.append({
+                        "code": "CONSENSUS_INDEPENDENT_PARTITIONS_MISSING",
+                        "message": f"line {line}: CONSENSUS requires at least two distinct, registered, completed INDEPENDENT input partitions marked NOT_SELECTED",
+                    })
             if role == "ADJUDICATED_FINAL" and p not in adjudicated:
-                errors.append({"code": "ADJUDICATED_FINAL_WITHOUT_LOG", "message": f"line {line}: selected partition has no AGREED/ADJUDICATED log record"})
+                errors.append({"code": "ADJUDICATED_FINAL_WITHOUT_LOG", "message": f"line {line}: selected partition requires an ADJUDICATED log row resolving a target record in the same report/annotator/pass partition"})
         else:
             if row.get("lock_reference", "").strip():
                 errors.append({"code": "NONFINAL_PARTITION_HAS_LOCK", "message": f"line {line}: lock_reference is reserved for SELECTED_FINAL"})

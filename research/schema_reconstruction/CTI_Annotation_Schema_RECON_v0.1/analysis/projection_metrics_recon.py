@@ -352,7 +352,7 @@ def project_report_recon(
             "distinct_pair_label_conflicts": len(label_conflicts),
             "source_strict_order_cycle_components": len(source_cycles),
             "projected_strict_order_cycle_components": len(technique_cycles),
-            "projected_cycle_components_with_multiple_source_edges": sum(1 for row in cycle_provenance if not row["single_event_edge_mapping_fanout"]),
+            "projected_cycle_components_with_multiple_source_edges": sum(1 for row in cycle_provenance if row["source_event_edge_count"] > 1),
             "projected_cycle_components_requiring_multiple_source_edges": sum(1 for row in cycle_provenance if not row["single_event_edge_mapping_fanout"]),
             "projected_cycle_components_from_single_edge_fanout": sum(1 for row in cycle_provenance if row["single_event_edge_mapping_fanout"]),
         },
