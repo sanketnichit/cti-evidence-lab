@@ -58,6 +58,8 @@
 40. Alternative mapping rows require a valid group with at least two members for one activity unit; target links must stay within that group.
 41. An accepted `source_supported_analyst_candidate` mapping requires a non-empty human rationale and mapping-specific evidence.
 
+Primary relation and candidate-pair comparison scopes must now be shared RESOLVED non-report ancestors from the same provisional scope universe used by opportunity counting. A regression fixture rejects REPORT_AGGREGATE as a comparison scope even when both endpoints descend from it. This remains a structural guard; the scientific scope policy is unapproved and pair-opportunity rates remain withheld.
+
 ## Projection metric tests (42–57)
 
 42. The four event-edge projection statuses are mutually exclusive and exhaustive.
