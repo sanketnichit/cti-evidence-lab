@@ -142,7 +142,7 @@ The report-level aggregator now covers additional contract outputs: per-report r
 
 ## Latest technical remediation — 5 November 2026
 
-The repository's current `main` head is `bf504818c7150ff7699a1c2b2a947952f11f79a9`.
+This checkpoint records the technical remediation completed before the later source-integrity and protocol-reconciliation updates below.
 
 The annotation workflow now blocks selected-final projection when report-level source eligibility, local-use permission or assessability conflicts across passes. Consensus selection requires two distinct completed independent input partitions; an adjudicated-final selection must reference an actual adjudicated record in the selected report/annotator/pass. The standalone v0.1 adapter applies the same report-conflict stop.
 
@@ -151,3 +151,16 @@ Projection safeguards now reject self-event edges in the legacy root API and rep
 **CI run #125 passed:** 55 root tests, 69 RECON v0.1 tests (41 validator, 16 projection, 12 adapter), and 70 RECON v0.2 tests; 194 successful test executions. All 31 v0.1 package checksums and the workflow's validation steps passed.
 
 Research readiness is unchanged: the five rank-one reports remain candidates, researcher eligibility is 0/5, human-locked annotations are 0, IAA is not measured, real-report projections are 0, and novelty is not established. The protocol and reconstructed schema remain drafts, not approved/frozen for formal annotation.
+
+
+## Update — 5 November 2026: frozen-source validation and protocol/schema alignment
+
+The legacy root annotation validator now reads report text through the shared frozen-source reader. This preserves CRLF/LF line endings, removes only the optional leading UTF-8 BOM, and uses the shared canonical SHA-256 function. Its report-row adapter preserves `mention_text` and `evidence_text` exactly instead of trimming evidence-span boundary whitespace. Two regression tests cover CRLF/hash preservation in the CLI and exact source-span matching with leading/trailing whitespace.
+
+The targeted root annotation-validation test module passed 10/10 in local execution. The available older repository backup, with these changes applied, passed its 55-test root suite; that backup predates later commits on current `main`, so it is not a current-head full-suite result. The last recorded successful GitHub Actions verification is run #126 on commit `c4d4a05cf541e2bb78790adce7e0c98122dea9e8` (55 root, 69 RECON v0.1, 70 RECON v0.2 tests; 194 synthetic executions). It predates the updates described here. **Current-head CI verification is pending and is not claimed as passed.**
+
+Protocol v0.5-draft Section 4.3 now represents the relation cue through `temporal_relations.primary_evidence_span_id`, stores exact source text/offsets once in `evidence_spans`, and links Event A, Event B and contextual support through the RECON v0.2 temporal-evidence extension. The v0.1 reconciliation register now distinguishes the v0.1 limitation from the additive v0.2 implementation. The report-level aggregator is implemented and synthetically tested; rates dependent on the provisional scope-pair opportunity rule remain withheld pending approval.
+
+The protocol now proposes deferring episode-to-episode temporal relation records and record-level ChronoCTI pair-to-event alignment from the initial pilot. These are **proposals requiring researcher approval**, not adopted decisions. Episode containers remain represented separately; raw benchmark pair labels/provenance remain in the separate baseline materials. Neither is to be improvised into the atomic temporal relation register.
+
+Research readiness is unchanged: human-locked annotations 0, selected final partitions 0, real-report projections 0, IAA not measured, and novelty not established. Protocol v0.5 and RECON v0.1/v0.2 remain drafts pending researcher approval and freeze.
