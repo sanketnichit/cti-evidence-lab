@@ -160,6 +160,28 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(result.primary_positive_temporal_edges, 1)
         self.assertEqual(result.accepted_a120_mappings, 2)
 
+    def test_candidate_pair_assessment_requires_atomic_resolved_event_leaves(self):
+        self.rows["temporal_relations"] = []
+        unit = next(x for x in self.rows["activity_units"] if x["activity_unit_id"] == "event-b")
+        unit.update(granularity="unresolved", unit_role="unresolved_unit", instance_status="UNRESOLVED")
+        self.rows["event_mentions"] = [x for x in self.rows["event_mentions"] if x["activity_unit_id"] != "event-b"]
+        self.rows["event_mappings"] = [x for x in self.rows["event_mappings"] if x["activity_unit_id"] != "event-b"]
+        self.rows["candidate_pair_assessments"] = [{
+            **PARTITION, "assessment_id": "assessment-a-b", "event_a_id": "event-a",
+            "event_b_id": "event-b", "candidate_rule_id": "local-temporal-cue",
+            "candidate_rule_version": "v1", "comparison_scope_id": "scope-incident",
+            "scope_compatibility": "COMPATIBLE", "assessment_label": "NO_TEMPORAL_CLAIM",
+            "related_relation_id": "", "assessment_reason": "Synthetic assessed pair",
+            "adjudication_status": "UNREVIEWED", "assessment_notes": "synthetic",
+        }]
+        self.save("activity_units")
+        self.save("event_mentions")
+        self.save("event_mappings")
+        self.save("temporal_relations")
+        self.save("candidate_pair_assessments")
+        result = self.validate()
+        self.assertIn("INELIGIBLE_ASSESSMENT_ENDPOINT", {x.code for x in result.errors})
+
     def test_missing_source_text_is_warning_not_false_error(self):
         result = self.validate(source_texts=False)
         self.assertTrue(result.ok)

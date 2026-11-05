@@ -87,6 +87,7 @@ A row enters the primary positive temporal graph only when:
 ## Candidate-pair, non-temporal and time rules
 
 - Candidate pair assessment does not define the positive relation discovery universe; no unassessed pair is negative.
+- Both assessed endpoints must be distinct, resolved atomic `event_leaf` units; containers and unresolved units are not candidate event pairs.
 - Candidate-pair rules must be versioned and scope-aware.
 - Non-temporal relations may connect broader activity units, including containers, but must never enter the temporal projection.
 - Raw time text and precision are always retained. Normalize only when justified. Strict ordering from uncertain timezone data is allowed only if order is invariant under the recorded uncertainty.

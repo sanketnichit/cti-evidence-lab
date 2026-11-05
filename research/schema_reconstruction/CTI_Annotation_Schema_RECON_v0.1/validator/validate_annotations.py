@@ -902,6 +902,18 @@ def validate_bundle(
         a, b = r.get("event_a_id", ""), r.get("event_b_id", "")
         if not _has_ref(units, r, a) or not _has_ref(units, r, b):
             _add(issues, "ERROR", "UNKNOWN_ASSESSMENT_ENDPOINT", "Candidate pair endpoints must resolve to activity units", "candidate_pair_assessments", i)
+        for endpoint_name, endpoint_id in (("event_a_id", a), ("event_b_id", b)):
+            endpoint = units.get((*_partition(r), endpoint_id))
+            if endpoint and (
+                endpoint.get("unit_role") != "event_leaf"
+                or endpoint.get("granularity") != "atomic_event"
+                or endpoint.get("instance_status") != "RESOLVED"
+            ):
+                _add(
+                    issues, "ERROR", "INELIGIBLE_ASSESSMENT_ENDPOINT",
+                    f"{endpoint_name} must be a RESOLVED atomic_event event_leaf",
+                    "candidate_pair_assessments", i,
+                )
         if a and b and a == b:
             _add(issues, "ERROR", "SELF_ASSESSED_PAIR", "Candidate pair endpoints must be distinct", "candidate_pair_assessments", i)
         if not r.get("candidate_rule_id") or not r.get("candidate_rule_version"):
