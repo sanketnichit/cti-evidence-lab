@@ -8,7 +8,7 @@
 
 The research question and the current data/projection architecture are substantially aligned on the primary object: **a direct, source-supported temporal relation between two distinct, resolved atomic event leaves**, with technique mapping applied only after event identity has been established.
 
-The projection implementation already handles the protocol's key information-loss distinctions: directed versus symmetric relation projection, diagonal same-technique combinations, partial versus full omission, unmapped endpoints, many-to-many source-edge provenance, and single-edge fan-out cycles.
+The projection implementation already handles the protocol's key information-loss distinctions: directed versus symmetric relation projection, diagonal same-technique combinations, partial versus full omission, unmapped endpoints, many-to-many source-edge provenance, and single-edge fan-out cycles. The batch report-level aggregator is also implemented and synthetically tested; pair-opportunity rates remain withheld unless the provisional scope-pair rule is explicitly approved.
 
 This audit found two implementation gaps in RECON v0.2 and closes them in the accompanying validator revision:
 
@@ -16,6 +16,8 @@ This audit found two implementation gaps in RECON v0.2 and closes them in the ac
 2. The timestamp validator silently skipped a retained non-normalized time candidate if another normalized candidate existed for the same endpoint.
 
 The new checks improve evidence traceability and fail-closed behaviour. They do not determine whether a source semantically entails a temporal relation.
+
+The protocol representation is now reconciled to the extension architecture: the relation's primary evidence span is the cue; exact text/offsets live once in `evidence_spans`; A/B/context support is linked through the v0.2 extension register. The draft also proposes, pending researcher approval, to defer episode-to-episode relation records and record-level ChronoCTI pair alignment from the initial pilot.
 
 ## 2. Conformance matrix
 
@@ -33,10 +35,11 @@ The new checks improve evidence traceability and fail-closed behaviour. They do 
 | Directed and symmetric technique-pair projection differ | Ordered Cartesian product for `BEFORE`/`AFTER`; unordered canonical dyads for symmetric labels | Implemented in parent projection module |
 | Diagonal technique pairs are separated from distinct technique pairs | Diagonal, distinct, fully omitted, partially represented, and unmapped outcomes are returned separately | Implemented in parent projection module |
 | Projected pair provenance is many-to-many | Source event-edge IDs are retained for each projected pair and SCC | Implemented in parent projection module |
-| Benchmark pair is not assumed to be one source event pair | Baseline alignment is deferred and absent from the current adapter | Correctly deferred |
+| Episode-to-episode temporal relations | No episode-edge register in RECON v0.1/v0.2 | Initial-pilot deferral is proposed in Protocol v0.5; do not place container endpoints in the atomic temporal register | Deferred from initial pilot; researcher approval required |
+| Benchmark pair is not assumed to be one source event pair | Baseline alignment is deferred and absent from the current adapter | Protocol now explicitly proposes deferring record-level alignment and preserving raw benchmark provenance separately | Deferred from initial pilot; researcher approval required |
 | One final analysis partition per report | Selection validator enforces at most one selected-final row and validates the selected partition | Implemented |
 | Selected analysis is locked before projection | v0.2 wrapper layers a digest over the v0.1 partition/source lock, v0.2 evidence rows and selection decision | Implemented; digest is a mutation detector, not a signature |
-| Report-level denominator and study rates | Current adapter projects one report/partition at a time | Not implemented as a batch study aggregator |
+| Report-level denominator and study rates | `analysis/report_level_aggregation.py` aggregates one selected-final partition per assessable report and withholds rates until projection coverage is complete | Implemented and synthetically tested; scope-pair-opportunity-dependent rates remain approval-gated |
 
 ## 3. Changes made in this revision
 
@@ -64,8 +67,8 @@ Synthetic tests now cover all three evidence scopes, missing cross-sentence argu
 2. **Non-strict timestamp label algebra is not fully formalized.** The current direct-timestamp validator checks endpoint time support for all positive labels, but only applies strict interval-order consistency to `BEFORE` and `AFTER`. Operational rules for deriving `OVERLAP`, `SIMULTANEOUS`, and `CONCURRENT_UNSPECIFIED` from timestamp intervals still need explicit approval. Until then, do not infer those labels mechanically from broad/overlapping uncertainty windows.
 3. **Timezone equivalence is not inferred.** The validator requires explicit raw and normalized timezone fields and offset-aware normalized bounds, but it does not prove that a publisher's timezone string and the normalized IANA/UTC offset are equivalent across daylight-saving or ambiguous abbreviations. Preserve the source expression and use manual review where conversion is ambiguous.
 4. **Pair negatives remain optional and rule-bound.** The primary discovery task is full-report positive-relation review. No missing pair row is a negative label. A separate candidate-pair rule/version and its coverage must be frozen before assigning `NO_TEMPORAL_CLAIM`.
-5. **Batch report-level rates remain a later analysis step.** The adapter safely projects one selected report partition. It does not itself calculate `N_eligible`, `N_assessable`, report-level coverage, or the protocol's report-level rates across the sample. Those require a separately tested aggregation layer that consumes exactly one selected final partition per report and does not sum passes.
-6. **Baseline alignment remains deferred.** The adapter does not equate ChronoCTI technique-pair rows to report-local event pairs. Raw benchmark labels and any proposed normalization must remain separately documented.
+5. **Scope-pair opportunity rule remains provisional.** The report-level aggregator withholds pair-opportunity-dependent rates unless the nearest-common-resolved-non-report-aggregate scope rule is explicitly approved. Do not treat a passing synthetic aggregator test as approval of that rule.
+6. **Episode-edge and benchmark-alignment deferrals require researcher approval.** The current protocol draft proposes not to collect episode-to-episode temporal edges or record-level ChronoCTI pair-to-event alignments in the initial pilot. Preserve episode containers and raw benchmark provenance without forcing them into the atomic relation schema.
 7. **Approval is still required.** Protocol v0.5 is a draft, RECON v0.1 is a reconstruction, and RECON v0.2 is an additive draft extension. Synthetic correctness is not semantic validity or researcher approval.
 
 ## 5. Research readiness snapshot
@@ -83,7 +86,8 @@ The five rank-one AnnoCTR reports remain feasibility candidates, not selected re
 
 ## 6. Recommended next sequence
 
-1. Review and approve/revise the v0.5 event identity, relation, evidence-scope and timestamp definitions.
-2. Approve the RECON v0.2 extension as a new project schema version (not as recovered v0.4.2), including its required fields and manual semantic review procedure.
-3. Complete and test the batch aggregation layer for report-level denominators and metrics.
-4. Only then make human source-scope eligibility decisions and run the first controlled source-first annotation pass on the fixed feasibility candidates. Do not select candidates based on event yield or positive-edge presence.
+1. Review and approve/revise the v0.5 event identity, relation, evidence-scope, timestamp and exact span-link representation.
+2. Decide explicitly whether to accept the proposed initial-pilot deferrals for episode-to-episode edges and record-level benchmark alignment.
+3. Approve RECON v0.2 as a new project schema version (not as recovered v0.4.2), including its required fields and manual semantic review procedure.
+4. Validate the existing report-level aggregation layer against the approved metric contract; keep scope-pair-opportunity rates withheld until the rule is approved.
+5. Only then make human source-scope eligibility decisions and run the first controlled source-first annotation pass on the fixed feasibility candidates. Do not select candidates based on event yield or positive-edge presence.
