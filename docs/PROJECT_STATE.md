@@ -23,6 +23,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 ## Sampling and candidate status
 
 - The five rank-1 candidates remain feasibility candidates, one per donor. They are not selected/frozen reports.
+- Their five canonical publisher URLs and publication dates were cross-checked against official publisher pages on 5 November 2026. This is source-identity verification only; researcher eligibility remains 0/5, and local research-use/public-reuse decisions remain separate.
 - Researcher eligibility decisions: 0/5. Human-locked annotations: 0.
 - The five-report batch is for feasibility/protocol debugging only; it cannot estimate vendor or corpus prevalence.
 - Do not replace a candidate because it lacks two resolved event leaves, a same-technique pair opportunity or a positive temporal relation. Replacement is allowed only for predeclared source identity, scope, completeness, provenance/rights or practical local-use failure.
