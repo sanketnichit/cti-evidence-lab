@@ -63,4 +63,4 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 
 ## Research-readiness boundary
 
-The aggregator is structural and arithmetic. It does not decide semantic event identity, temporal entailment, mapping correctness, scope meaning, or reviewer independence. It does not calculate IAA, prevalence confidence intervals, or ChronoCTI event-level alignment. No real annotations, human agreement results, or empirical metrics exist.
+The aggregator is structural and arithmetic. It does not decide semantic event identity, temporal entailment, mapping correctness, scope meaning, or reviewer independence. The current schema has no machine-verifiable annotator-type field; human ownership of annotation partitions remains a documented workflow assumption, not an automated identity check. It does not calculate IAA, prevalence confidence intervals, or ChronoCTI event-level alignment. No real annotations, human agreement results, or empirical metrics exist.

@@ -7,6 +7,12 @@ from pathlib import Path
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PACKAGE_ROOT / "analysis"))
+V0_1_ROOT = PACKAGE_ROOT.parent / "CTI_Annotation_Schema_RECON_v0.1"
+sys.path.insert(0, str(V0_1_ROOT / "tests"))
+from test_validator import PARTITION, SOURCE_TEXT, make_fixture  # noqa: E402
+from selected_partition_projection_adapter import compute_analysis_lock_reference  # noqa: E402
+from validate_temporal_evidence import HEADERS as EVIDENCE_HEADERS, SELECTION_HEADERS  # noqa: E402
+
 from report_level_aggregation import (  # noqa: E402
     _rates,
     compute_event_pair_opportunity,
@@ -48,7 +54,25 @@ class ReportDenominatorTests(unittest.TestCase):
     def test_fully_reviewed_zero_event_report_remains_assessable(self):
         result = summarize_report_denominators([registry_row()], {"r1": SOURCE})
         self.assertEqual(result["N_assessable"], 1)
+        self.assertEqual(result["assessability_coverage"], 1.0)
         # Event absence is an outcome computed later, not a denominator exclusion.
+
+    def test_assessability_coverage_and_status_breakdown_are_explicit(self):
+        rows = [
+            registry_row(report_id="eligible"),
+            registry_row(report_id="pending", report_assessability="PENDING", full_report_review_status="NOT_STARTED"),
+            registry_row(report_id="excluded", source_scope_eligibility="INELIGIBLE"),
+        ]
+        sources = {report_id: SOURCE for report_id in ("eligible", "pending", "excluded")}
+        result = summarize_report_denominators(rows, sources)
+        self.assertEqual(result["inventory_report_count"], 3)
+        self.assertEqual(result["N_eligible"], 2)
+        self.assertEqual(result["N_assessable"], 1)
+        self.assertEqual(result["assessability_coverage"], 0.5)
+        self.assertEqual(result["report_status_counts"]["source_scope_eligibility"]["INELIGIBLE"], 1)
+        self.assertEqual(result["report_assessability_pending_ids"], ["pending"])
+        self.assertEqual(result["eligible_not_assessable_report_ids"], ["pending"])
+        self.assertEqual(result["eligible_not_assessable_reasons"]["pending"], "ASSESSABILITY_PENDING")
 
     def test_incomplete_review_is_eligible_but_not_assessable(self):
         row = registry_row(full_report_review_status="IN_PROGRESS")
@@ -161,6 +185,103 @@ class RateAndBlankBundleTests(unittest.TestCase):
         self.assertEqual(result["status"], "PARTIAL_OR_EMPTY_SELECTED_FINAL_COVERAGE")
         self.assertIsNone(result["report_level_primary_rates"]["same_technique_pair_opportunity_rate"])
         self.assertEqual(result["report_level_primary_rates"]["status"], "NO_ASSESSABLE_REPORTS")
+
+
+
+
+class SelectedFinalAggregationIntegrationTests(unittest.TestCase):
+    def setUp(self):
+        import tempfile
+        self.temp = tempfile.TemporaryDirectory()
+        self.extension = Path(self.temp.name) / "CTI_Annotation_Schema_RECON_v0.2"
+        self.base = self.extension.parent / "CTI_Annotation_Schema_RECON_v0.1"
+        self.rows = make_fixture(self.base)
+        self.source_text = SOURCE_TEXT
+        self.source_texts = {PARTITION["report_id"]: SOURCE_TEXT}
+        self.evidence_rows = [
+            {**PARTITION, "relation_evidence_id": "support-a", "relation_id": "rel-a-b",
+             "evidence_span_id": "span-a", "evidence_role": "EVENT_A_SUPPORT",
+             "supported_event_id": "event-a", "evidence_notes": "Synthetic endpoint A."},
+            {**PARTITION, "relation_evidence_id": "support-b", "relation_id": "rel-a-b",
+             "evidence_span_id": "span-b", "evidence_role": "EVENT_B_SUPPORT",
+             "supported_event_id": "event-b", "evidence_notes": "Synthetic endpoint B."},
+        ]
+        self.selection_rows = [{
+            **PARTITION, "analysis_partition_id": "final-1",
+            "partition_role": "SINGLE_ANNOTATOR_FINAL",
+            "selection_status": "SELECTED_FINAL", "lock_reference": "",
+            "selection_rationale": "Synthetic end-to-end fixture.",
+            "selection_date": "2026-11-05",
+        }]
+        self._save_csv(self.extension / "registers" / "temporal_relation_evidence.csv",
+                       EVIDENCE_HEADERS, self.evidence_rows)
+        self._save_selection()
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def _save_csv(self, path, headers, rows):
+        import csv
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=headers)
+            writer.writeheader()
+            writer.writerows(rows)
+
+    def _save_selection(self):
+        self._save_csv(self.extension / "registers" / "analysis_partition_selection.csv",
+                       SELECTION_HEADERS, self.selection_rows)
+
+    def _create_selection_lock(self):
+        lock = compute_analysis_lock_reference(
+            self.extension, report_id=PARTITION["report_id"], source_text=self.source_text
+        )
+        self.selection_rows[0]["lock_reference"] = lock
+        self._save_selection()
+        return lock
+
+    def test_complete_selected_final_path_aggregates_report_metrics(self):
+        self._create_selection_lock()
+        result = aggregate_selected_report_projections(
+            self.extension,
+            source_texts=self.source_texts,
+            confirm_selected_analysis_locks=True,
+            approve_scope_pair_rule=True,
+        )
+        self.assertEqual(result["denominators"]["N_eligible"], 1)
+        self.assertEqual(result["denominators"]["N_assessable"], 1)
+        self.assertEqual(result["denominators"]["assessability_coverage"], 1.0)
+        self.assertEqual(result["selection"]["projection_coverage"], 1.0)
+        self.assertEqual(result["report_outcome_numerators_in_projected_assessable_subset"]["reports_with_within_technique_temporal_relation"], 1)
+        self.assertEqual(result["report_level_primary_rates"]["within_technique_temporal_relation_report_rate"], 1.0)
+        self.assertEqual(result["report_level_primary_rates"]["same_technique_pair_opportunity_rate"], 1.0)
+        self.assertEqual(result["projection_rates_and_counts"]["counts"]["fully_omitted_edges"], 1)
+        self.assertEqual(len(result["per_report_outcomes"]), 1)
+
+    def test_missing_selected_final_withholds_primary_report_rates(self):
+        self.selection_rows = []
+        self._save_selection()
+        result = aggregate_selected_report_projections(
+            self.extension,
+            source_texts=self.source_texts,
+            confirm_selected_analysis_locks=True,
+            approve_scope_pair_rule=True,
+        )
+        self.assertEqual(result["denominators"]["N_assessable"], 1)
+        self.assertEqual(result["selection"]["projection_coverage"], 0.0)
+        self.assertIsNone(result["report_level_primary_rates"]["within_technique_temporal_relation_report_rate"])
+        self.assertEqual(result["selection"]["missing_or_blocked_report_ids"], [PARTITION["report_id"]])
+
+    def test_scope_pair_rates_remain_withheld_without_approval(self):
+        self._create_selection_lock()
+        result = aggregate_selected_report_projections(
+            self.extension,
+            source_texts=self.source_texts,
+            confirm_selected_analysis_locks=True,
+            approve_scope_pair_rule=False,
+        )
+        self.assertIsNone(result["report_level_primary_rates"]["same_technique_pair_opportunity_rate"])
+        self.assertEqual(result["scope_pair_opportunity_rule"]["status"], "PROVISIONAL_NOT_APPROVED")
 
 
 if __name__ == "__main__":

@@ -82,6 +82,6 @@ Omitting either confirmation keeps the corresponding analysis blocked or its pai
 
 ## Validation limits
 
-The aggregator is a structural and arithmetic layer. It does not decide event identity, whether two scope descriptions are substantively comparable, whether a source entails a relation, whether a mapping is semantically correct, or whether a reviewer was genuinely independent. Those remain human research decisions. It does not calculate inter-annotator agreement, prevalence confidence intervals, or benchmark alignment.
+The aggregator is a structural and arithmetic layer. It does not decide event identity, whether two scope descriptions are substantively comparable, whether a source entails a relation, whether a mapping is semantically correct, or whether a reviewer was genuinely independent. Those remain human research decisions. The current schema has an annotator_id but no machine-verifiable annotator-type field; the pipeline relies on the protocol/workflow convention that registered annotation partitions are human-owned and records AI assistance as prior exposure. It cannot authenticate a human identity or prevent a mislabelled automated partition by itself. It does not calculate inter-annotator agreement, prevalence confidence intervals, or benchmark alignment.
 
 The implementation is currently synthetic-tested only. The selection register remains empty; there are no human annotations, selected final partitions, or real-report projections. A five-report feasibility batch is not a prevalence study.

@@ -88,12 +88,7 @@ def summarize_report_denominators(
     report_registry_rows: list[dict[str, str]],
     source_texts: Mapping[str, str],
 ) -> dict[str, Any]:
-    """Compute denominators without requiring a final partition selection.
-
-    Cross-partition disagreements in eligibility/local-use/assessability exclude
-    a report from both denominators. Source-version disagreement is reported and
-    blocks N_assessable, but does not rewrite source/scope eligibility.
-    """
+    """Compute report-level denominators and coverage without imputing outcomes."""
     grouped: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in report_registry_rows:
         report_id = row.get("report_id", "")
@@ -106,8 +101,33 @@ def summarize_report_denominators(
     source_version_conflicts: set[str] = set()
     source_unverified: set[str] = set()
     no_completed_review: set[str] = set()
+    not_assessable: set[str] = set()
+    assessability_pending: set[str] = set()
+    scope_ineligible: set[str] = set()
+    scope_pending: set[str] = set()
+    local_use_blocked: set[str] = set()
+    eligible_not_assessable_reasons: dict[str, str] = {}
+
+    def single_status(rows: list[dict[str, str]], field: str) -> str:
+        values = {row.get(field, "") or "MISSING" for row in rows}
+        return next(iter(values)) if len(values) == 1 else "MULTIPLE_DECISIONS"
 
     for report_id, rows in grouped.items():
+        eligibility_status = single_status(rows, "source_scope_eligibility")
+        local_use_status = single_status(rows, "local_research_use_status")
+        assessability_status = single_status(rows, "report_assessability")
+
+        if eligibility_status == "INELIGIBLE":
+            scope_ineligible.add(report_id)
+        elif eligibility_status == "PENDING" or eligibility_status == "MISSING":
+            scope_pending.add(report_id)
+        if local_use_status in {"NOT_PERMITTED", "UNRESOLVED", "MISSING"}:
+            local_use_blocked.add(report_id)
+        if assessability_status == "NOT_ASSESSABLE":
+            not_assessable.add(report_id)
+        elif assessability_status == "PENDING" or assessability_status == "MISSING":
+            assessability_pending.add(report_id)
+
         decisions = {
             (
                 row.get("source_scope_eligibility", ""),
@@ -131,6 +151,14 @@ def summarize_report_denominators(
         }
         if len(source_versions) > 1:
             source_version_conflicts.add(report_id)
+            eligible_not_assessable_reasons[report_id] = "SOURCE_VERSION_CONFLICT"
+            continue
+
+        if assessability != "ASSESSABLE":
+            eligible_not_assessable_reasons[report_id] = (
+                "REPORT_NOT_ASSESSABLE" if assessability == "NOT_ASSESSABLE"
+                else "ASSESSABILITY_PENDING"
+            )
             continue
 
         reviewed_rows = [
@@ -141,6 +169,7 @@ def summarize_report_denominators(
         ]
         if not reviewed_rows:
             no_completed_review.add(report_id)
+            eligible_not_assessable_reasons[report_id] = "NO_COMPLETED_FULL_REPORT_REVIEW"
             continue
 
         source_text = source_texts.get(report_id)
@@ -148,20 +177,57 @@ def summarize_report_denominators(
             _source_matches_registry_row(row, source_text) for row in reviewed_rows
         ):
             source_unverified.add(report_id)
+            eligible_not_assessable_reasons[report_id] = "SOURCE_MISSING_OR_HASH_COUNT_MISMATCH"
             continue
         assessable_ids.add(report_id)
 
+    # Report-level status distributions count each report once. A status that
+    # differs across partitions is shown as MULTIPLE_DECISIONS, not duplicated.
+    status_counts: dict[str, dict[str, int]] = {}
+    for output_name, field in (
+        ("source_scope_eligibility", "source_scope_eligibility"),
+        ("local_research_use", "local_research_use_status"),
+        ("report_assessability", "report_assessability"),
+    ):
+        counts = Counter(single_status(rows, field) for rows in grouped.values())
+        status_counts[output_name] = dict(sorted(counts.items()))
+
+    review_counts: Counter[str] = Counter()
+    for rows in grouped.values():
+        states = {row.get("full_report_review_status", "") for row in rows}
+        if "COMPLETE" in states:
+            review_counts["COMPLETE_ON_AT_LEAST_ONE_PARTITION"] += 1
+        elif "IN_PROGRESS" in states:
+            review_counts["IN_PROGRESS_ONLY"] += 1
+        elif states and states <= {"NOT_STARTED", ""}:
+            review_counts["NOT_STARTED"] += 1
+        else:
+            review_counts["UNKNOWN_OR_MISSING"] += 1
+
+    eligible_not_assessable_ids = sorted(eligible_ids - assessable_ids)
+    n_eligible = len(eligible_ids)
+    n_assessable = len(assessable_ids)
     return {
-        "N_eligible": len(eligible_ids),
-        "N_assessable": len(assessable_ids),
+        "inventory_report_count": len(grouped),
+        "N_eligible": n_eligible,
+        "N_assessable": n_assessable,
+        "assessability_coverage": n_assessable / n_eligible if n_eligible else None,
+        "report_status_counts": status_counts,
+        "full_report_review_status_counts": dict(sorted(review_counts.items())),
         "eligible_report_ids": sorted(eligible_ids),
         "assessable_report_ids": sorted(assessable_ids),
+        "eligible_not_assessable_report_ids": eligible_not_assessable_ids,
+        "eligible_not_assessable_reasons": dict(sorted(eligible_not_assessable_reasons.items())),
         "report_level_decision_conflict_ids": sorted(decision_conflicts),
         "source_version_conflict_ids": sorted(source_version_conflicts),
         "source_unverified_ids": sorted(source_unverified),
         "no_completed_full_review_ids": sorted(no_completed_review),
+        "source_scope_ineligible_ids": sorted(scope_ineligible),
+        "source_scope_pending_ids": sorted(scope_pending),
+        "local_research_use_blocked_ids": sorted(local_use_blocked),
+        "report_assessability_not_assessable_ids": sorted(not_assessable),
+        "report_assessability_pending_ids": sorted(assessability_pending),
     }
-
 
 def _eligible_event_units(activity_units: list[dict[str, str]]) -> list[dict[str, str]]:
     return [
