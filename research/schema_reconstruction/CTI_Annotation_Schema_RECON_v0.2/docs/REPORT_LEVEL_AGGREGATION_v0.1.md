@@ -46,9 +46,11 @@ The protocol requires scope-compatible event pairs but the metric contract does 
 
 > Two event leaves are a compatible pair when their nearest common ancestor in the selected partition's scope tree is RESOLVED and is not REPORT_AGGREGATE.
 
-Unresolved/provisional scope paths, no shared scope, and a shared report aggregate alone do not create pair opportunity. This permits two host-scoped activities under one resolved incident scope to be compared while preventing report co-membership from combining separate incidents into one timeline.
+Unresolved/provisional scope paths, no shared scope, and a shared report aggregate alone do not create pair opportunity. This permits two host-scoped activities under one resolved incident scope to be compared. However, the implementation also treats a shared non-report ancestor such as `CAMPAIGN`, `ACTOR_OPERATION`, `VICTIM_ORGANISATION`, or `OTHER` as sufficient. Consequently, events under two distinct incident nodes can still count as a compatible pair when those incident nodes share one of these broader ancestors. That is broader than an incident-bounded comparison and is not proven semantically safe by the current synthetic tests.
 
-This is a **provisional operationalization**, not a researcher-approved scientific decision. The module reports provisional opportunity counts but withholds the compatible-pair and same-technique-pair opportunity rates unless the caller explicitly approves this rule with --approve-scope-pair-rule (or approve_scope_pair_rule=True in Python).
+**Recommended rule for approval:** define the primary pair opportunity as two resolved event leaves that share the same nearest resolved `INCIDENT` ancestor. This keeps cross-host pairs within one incident while excluding pairs that only share a campaign/operation/report-level parent. Where no resolved incident ancestor exists, do not count a primary pair opportunity unless an explicit scope-compatibility decision mechanism is added. Preserve the existing nearest-common-non-report-ancestor rule as a separately labelled sensitivity analysis, not the primary denominator. This recommendation is not yet approved or implemented.
+
+This is a **provisional operationalization**, not a researcher-approved scientific decision. The current module still computes the broad common-ancestor count and withholds compatible-pair and same-technique-pair opportunity rates unless the caller explicitly approves that rule with --approve-scope-pair-rule (or approve_scope_pair_rule=True in Python). Do not pass that approval flag for primary results until the scope rule is decided.
 
 ## Running the aggregator
 
