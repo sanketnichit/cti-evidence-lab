@@ -42,12 +42,12 @@ If the maintainer cannot confirm the rights for all publishers, request the rele
 
 | Intended use | Current status | What must be confirmed |
 |---|---|---|
-| Keep the original AnnoCTR files in a private local research directory | UNRESOLVED for the five rank-one reports in this project | Whether the dataset grant covers local academic review and annotation |
-| Read complete report text for source-first human annotation | UNRESOLVED | Whether the grant covers this research activity |
-| Create new occurrence identities, activity-unit records and temporal labels | UNRESOLVED | Whether annotation/adaptation is permitted and any ShareAlike condition |
-| Store report IDs, publisher URLs, hashes and non-verbatim metadata in project records | UNRESOLVED as part of the project-specific permission review | Confirm any limits on derivative metadata and disclosure |
-| Publish aggregate counts, rates and statistical findings | UNRESOLVED pending confirmation | Whether aggregate outputs may be published; avoid source text |
-| Publish derived annotation tables or graphs without source excerpts | UNRESOLVED pending confirmation | Whether these are shareable derived materials and under what licence |
+| Keep the original AnnoCTR files in a private local research directory | PERMITTED under the AnnoCTR CC BY-SA licence, subject to its terms | Retain source provenance; raw report redistribution is not planned |
+| Read complete report text for source-first human annotation | PERMITTED under the AnnoCTR CC BY-SA licence, based on the maintainer clarification | Keep source text local and preserve its source identity/provenance |
+| Create new occurrence identities, activity-unit records and temporal labels | PERMITTED as derivative annotation work, subject to CC BY-SA 4.0 | Publish adapted annotation material under the same licence and preserve attribution |
+| Store report IDs, publisher URLs, hashes and non-verbatim metadata in project records | PERMITTED for the planned research record | Keep raw report text and extended source excerpts out of Git |
+| Publish aggregate counts, rates and statistical findings | PERMITTED for the planned research outputs | Attribute the dataset and identify the basis of the analysis |
+| Publish derived annotation tables or graphs without source excerpts | PERMITTED as derivative works under CC BY-SA 4.0 | Include attribution and ShareAlike; do not apply the repository MIT licence to these materials |
 | Publish exact or extended source-text spans | NOT PLANNED unless expressly cleared | Obtain explicit permission and observe any quoting restrictions |
 | Redistribute the raw report corpus | NOT PLANNED | No redistribution is proposed by this project |
 
@@ -55,13 +55,7 @@ These are separate use decisions. The maintainer clarification supports local ac
 
 ## 4. Candidate-specific follow-up
 
-The dataset maintainer has now responded that source-material licences were checked and permit redistribution under the dataset licence, and that annotations/adaptations may be published under the same ShareAlike licence. No separate vendor follow-up is currently required by that response. Reopen a report-specific inquiry only if new evidence identifies an exception or inconsistent rights-holder chain.
-
-- **Intel471 / McAfee syndication:** confirm the specific Groove/Babuk report's rights chain and whether the AnnoCTR copy is covered by the dataset licence.
-- **Lab52 / S2 Grupo:** confirm the TokyoX Part 2 contribution is included in the donor permission for the corpus release.
-- **Proofpoint, QuoIntelligence and Zscaler:** confirm their contributed reports are covered by the same corpus-level grant and identify any exceptions.
-
-Do not contact every vendor with a generic request before the maintainer clarifies what was actually granted.
+The dataset maintainer has now responded that source-material licences were checked and permit redistribution under the dataset licence, and that annotations/adaptations may be published under the same ShareAlike licence. No separate vendor follow-up is currently required by that response. The earlier vendor-specific notes below remain a record of website terms, not a reason to hold the AnnoCTR corpus permission fields at UNRESOLVED. Reopen a report-specific inquiry only if new evidence identifies an exception or inconsistent rights-holder chain.
 
 ## 5. Decision rule after the maintainer response
 

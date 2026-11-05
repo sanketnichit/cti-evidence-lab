@@ -118,6 +118,8 @@ Advance to the next hash-ranked candidate only when the current candidate fails 
 
 ## 5. Rights and publication handling
 
+**Historical pre-response assessment:** the item-level website-terms scan below was completed before the AnnoCTR dataset maintainer's written response on 5 November 2026. The later response and current permission disposition are recorded in the `Dataset-maintainer licence clarification addendum` at the end of this document; that addendum supersedes the earlier unresolved local-use/public-reuse status statements.
+
 The AnnoCTR repository README identifies the corpus folder as CC BY-SA 4.0. Keep the attribution and licence evidence. The licence question is separate from whether a report can be annotated locally.
 
 The current item-level scan leaves public text reuse at **AMBER**:
