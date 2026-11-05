@@ -97,6 +97,7 @@ A row enters the primary positive temporal graph only when:
 
 - Source-scope eligibility, local research-use permission, public reuse permission and report assessability are distinct fields.
 - Primary report-level rates use eligible reports with `report_assessability=ASSESSABLE` and at least one completed full-report review; each report is counted once after report-level conflicts are resolved. Assessability coverage is reported against eligible reports. A zero-event-leaf report remains in the denominator when these conditions hold; `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved conflicts are not zero outcomes.
+- `N_assessable` additionally requires the exact frozen source text to be supplied to validation and to pass source-hash and character-count checks. A syntactically valid SHA-256 field without the source bytes does not establish a complete/readable verified source; such a partition remains outside `N_assessable` until verified.
 - An assessable report with zero event leaves remains in the denominator.
 - `NOT_ASSESSABLE` is not a zero-edge report.
 - A report with no resolved event leaves must not be excluded for that reason alone.

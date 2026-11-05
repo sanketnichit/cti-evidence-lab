@@ -186,6 +186,14 @@ class ValidatorTests(unittest.TestCase):
         result = self.validate(source_texts=False)
         self.assertTrue(result.ok)
         self.assertTrue(any(x.code == "SOURCE_TEXT_NOT_SUPPLIED" for x in result.warnings))
+        self.assertTrue(any(x.code == "ASSESSABLE_SOURCE_NOT_VERIFIED" for x in result.warnings))
+        self.assertEqual(result.assessable_reports, 0)
+
+    def test_verified_frozen_source_is_required_for_assessable_denominator(self):
+        result = self.validate(source_texts=True)
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(result.eligible_reports, 1)
+        self.assertEqual(result.assessable_reports, 1)
 
     def test_self_event_relation_rejected(self):
         self.rows["temporal_relations"][0]["event_b_id"] = "event-a"

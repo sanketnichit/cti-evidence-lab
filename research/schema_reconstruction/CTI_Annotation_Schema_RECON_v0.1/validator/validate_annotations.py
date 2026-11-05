@@ -1019,10 +1019,28 @@ def validate_bundle(
     # N_assessable requires an assessable source and at least one completed
     # eligible full-report review partition. Source suitability alone is not
     # enough while the review remains pending or in progress.
-    assessable_partitions = [
+    reviewed_assessable_partitions = [
         r for r in eligible_partitions
         if r.get("report_assessability") == "ASSESSABLE"
         and r.get("full_report_review_status") == "COMPLETE"
+    ]
+    # N_assessable requires the exact frozen source text to be available in
+    # this validation call, so its hash and character count can be checked.
+    # A syntactically valid hash string alone is not evidence that the source
+    # is complete, readable or the same text used for annotation.
+    unverified_assessable_partitions = [
+        r for r in reviewed_assessable_partitions
+        if _partition(r) not in source_texts
+    ]
+    for row in unverified_assessable_partitions:
+        _add(
+            issues, "WARNING", "ASSESSABLE_SOURCE_NOT_VERIFIED",
+            "Partition is excluded from N_assessable until its exact frozen source text is supplied and hash/character-count verified",
+            "report_registry",
+        )
+    assessable_partitions = [
+        r for r in reviewed_assessable_partitions
+        if _partition(r) in source_texts
     ]
 
     # A report may have multiple annotator/pass partitions. Never choose one
