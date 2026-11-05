@@ -33,6 +33,7 @@ from selected_partition_projection_adapter import (  # noqa: E402
 from validate_annotations import (  # noqa: E402
     HEADERS as BASE_HEADERS,
     nearest_common_resolved_comparison_scope,
+    shared_resolved_comparison_scope_ids,
 )
 from validate_temporal_evidence import (  # noqa: E402
     SELECTION_HEADERS,
@@ -44,6 +45,10 @@ POSITIVE_LABELS = {
     "BEFORE", "AFTER", "OVERLAP", "SIMULTANEOUS", "CONCURRENT_UNSPECIFIED"
 }
 DIRECT_BASES = {"direct_source", "direct_timestamp"}
+
+LEGACY_SCOPE_PAIR_RULE_ID = "NEAREST_COMMON_RESOLVED_NON_REPORT_SCOPE_v0.1"
+INCIDENT_SCOPE_PAIR_RULE_ID = "SHARED_RESOLVED_INCIDENT_SCOPE_v0.1"
+EXPLICIT_SCOPE_PAIR_RULE_ID = "EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3"
 def _read_csv(path: Path, expected_headers: Iterable[str] | None = None) -> list[dict[str, str]]:
     if not path.is_file():
         raise FileNotFoundError(f"Required register is missing: {path}")
@@ -237,26 +242,68 @@ def _eligible_event_units(activity_units: list[dict[str, str]]) -> list[dict[str
     ]
 
 
+def _assigned_scope_ids_by_event(
+    comparison_scope_assignments: list[dict[str, str]] | None,
+) -> dict[str, set[str]]:
+    assigned: dict[str, set[str]] = defaultdict(set)
+    for row in comparison_scope_assignments or []:
+        if row.get("assignment_status") == "ASSIGNED":
+            event_id = row.get("activity_unit_id", "")
+            scope_id = row.get("comparison_scope_id", "")
+            if event_id and scope_id:
+                assigned[event_id].add(scope_id)
+    return assigned
+
+
 def compute_event_pair_opportunity(
     activity_units: list[dict[str, str]],
     scope_rows: list[dict[str, str]],
     mapping_sets: Mapping[str, set[str]],
-) -> dict[str, int | bool]:
-    """Count event-pair opportunities using explicit resolved common scopes."""
+    *,
+    comparison_scope_assignments: list[dict[str, str]] | None = None,
+    scope_pair_rule_id: str = LEGACY_SCOPE_PAIR_RULE_ID,
+) -> dict[str, int | bool | str]:
+    """Count pair opportunities under a named comparison-scope rule."""
+    if scope_pair_rule_id not in {
+        LEGACY_SCOPE_PAIR_RULE_ID, INCIDENT_SCOPE_PAIR_RULE_ID, EXPLICIT_SCOPE_PAIR_RULE_ID
+    }:
+        raise ValueError(f"Unknown scope-pair rule: {scope_pair_rule_id}")
+    if scope_pair_rule_id == EXPLICIT_SCOPE_PAIR_RULE_ID and comparison_scope_assignments is None:
+        raise ValueError("The explicit-assignment rule requires v0.3 assignment-register rows")
+
     leaves = _eligible_event_units(activity_units)
     scope_type_by_id = {
         row.get("scope_id", ""): row.get("scope_type", "MISSING")
         for row in scope_rows if row.get("scope_id")
     }
+    assigned_by_event = _assigned_scope_ids_by_event(comparison_scope_assignments)
     compatible_pairs = 0
     shared_technique_pairs = 0
     compatible_by_scope_type: Counter[str] = Counter()
     shared_technique_by_scope_type: Counter[str] = Counter()
     for index, left in enumerate(leaves):
         for right in leaves[index + 1:]:
-            common_scope = nearest_common_resolved_comparison_scope(
+            common_scope_ids = shared_resolved_comparison_scope_ids(
                 left.get("scope_id", ""), right.get("scope_id", ""), scope_rows
             )
+            common_scope: str | None = None
+            if scope_pair_rule_id == LEGACY_SCOPE_PAIR_RULE_ID:
+                common_scope = common_scope_ids[0] if common_scope_ids else None
+            elif scope_pair_rule_id == INCIDENT_SCOPE_PAIR_RULE_ID:
+                common_scope = next(
+                    (scope_id for scope_id in common_scope_ids
+                     if scope_type_by_id.get(scope_id) == "INCIDENT"),
+                    None,
+                )
+            else:
+                shared_assignments = (
+                    assigned_by_event.get(left["activity_unit_id"], set())
+                    & assigned_by_event.get(right["activity_unit_id"], set())
+                )
+                common_scope = next(
+                    (scope_id for scope_id in common_scope_ids if scope_id in shared_assignments),
+                    None,
+                )
             if common_scope is None:
                 continue
             scope_type = scope_type_by_id.get(common_scope, "MISSING")
@@ -268,6 +315,7 @@ def compute_event_pair_opportunity(
                 shared_technique_pairs += 1
                 shared_technique_by_scope_type[scope_type] += 1
     return {
+        "scope_pair_rule_id": scope_pair_rule_id,
         "resolved_atomic_event_leaves": len(leaves),
         "has_event_leaf": bool(leaves),
         "compatible_event_pair_count": compatible_pairs,
@@ -277,7 +325,6 @@ def compute_event_pair_opportunity(
         "same_technique_pair_opportunity_count_by_scope_type": dict(sorted(shared_technique_by_scope_type.items())),
         "has_same_technique_pair_opportunity": shared_technique_pairs > 0,
     }
-
 
 def _conditional_within_technique_opportunity_rate(
     outcomes: list[dict[str, Any]],
@@ -338,6 +385,8 @@ def aggregate_selected_report_projections(
     source_texts: Mapping[str, str],
     confirm_selected_analysis_locks: bool = False,
     approve_scope_pair_rule: bool = False,
+    comparison_scope_assignments: list[dict[str, str]] | None = None,
+    scope_pair_rule_id: str = LEGACY_SCOPE_PAIR_RULE_ID,
 ) -> dict[str, Any]:
     """Aggregate report outcomes after validating selected-final projections.
 
@@ -465,15 +514,33 @@ def aggregate_selected_report_projections(
         a_exact_occurrence_compression = Counter(
             technique for techniques in a_exact_by_event.values() for technique in techniques
         )
+        part_assignment_rows = [
+            row for row in (comparison_scope_assignments or [])
+            if _partition(row) == partition
+        ]
         opportunity = compute_event_pair_opportunity(
-            units, part_rows["report_scopes"], mapping_sets
+            units, part_rows["report_scopes"], mapping_sets,
+            comparison_scope_assignments=(
+                part_assignment_rows if comparison_scope_assignments is not None else None
+            ),
+            scope_pair_rule_id=scope_pair_rule_id,
         )
+        assigned_by_event = _assigned_scope_ids_by_event(part_assignment_rows)
 
         primary_relations = [
             row for row in part_rows["temporal_relations"]
             if row.get("relation_label") in POSITIVE_LABELS
             and row.get("relation_basis") in DIRECT_BASES
             and row.get("scope_compatibility") == "COMPATIBLE"
+            and (
+                scope_pair_rule_id != EXPLICIT_SCOPE_PAIR_RULE_ID
+                or (
+                    row.get("comparison_scope_id", "")
+                    in assigned_by_event.get(row.get("event_a_id", ""), set())
+                    and row.get("comparison_scope_id", "")
+                    in assigned_by_event.get(row.get("event_b_id", ""), set())
+                )
+            )
         ]
         within_relations = [
             row for row in primary_relations
@@ -740,10 +807,15 @@ def aggregate_selected_report_projections(
         "report_outcome_numerators_in_projected_assessable_subset": outcome_numerators,
         "report_outcome_counts_in_projected_assessable_subset": outcome_counts,
         "scope_pair_opportunity_rule": {
-            "rule_id": "NEAREST_COMMON_RESOLVED_NON_REPORT_AGGREGATE_SCOPE_v0.1",
+            "rule_id": scope_pair_rule_id,
             "status": "APPROVED_BY_CALLER" if approve_scope_pair_rule else "PROVISIONAL_NOT_APPROVED",
-            "definition": "Two event leaves are treated as a compatible pair when their nearest common ancestor in the selected partition's scope tree is RESOLVED and is not REPORT_AGGREGATE. No shared scope, unresolved/provisional scope paths, or a shared REPORT_AGGREGATE alone yields no pair opportunity.",
+            "definition": {
+                LEGACY_SCOPE_PAIR_RULE_ID: "Nearest shared RESOLVED non-report scope.",
+                INCIDENT_SCOPE_PAIR_RULE_ID: "Shared RESOLVED INCIDENT ancestor only.",
+                EXPLICIT_SCOPE_PAIR_RULE_ID: "Both endpoints require ASSIGNED rows for the same shared RESOLVED non-report scope; UNCERTAIN or missing assignments do not qualify."
+            }[scope_pair_rule_id],
             "rates_enabled": approve_scope_pair_rule,
+            "assignment_register_supplied": comparison_scope_assignments is not None,
         },
         "projection_rates_and_counts": {
             "counts": dict(sorted(projection_count_totals.items())),
@@ -770,7 +842,7 @@ def aggregate_selected_report_projections(
         "interpretation_limits": [
             "A five-report feasibility batch is not a prevalence estimate.",
             "No unrecorded pair is treated as NO_TEMPORAL_CLAIM.",
-            "Pair opportunity requires a nearest shared RESOLVED scope other than REPORT_AGGREGATE; report co-membership alone is insufficient.",
+            "Pair opportunity is evaluated under the named scope-pair rule; explicit assignment requires two affirmative event-to-scope decisions.",
             "Primary report-level rates are withheld unless every N_assessable report has a valid selected-final projection.",
             "Projection counts aggregate within-report outputs; technique-pair collision keys and cycle components are summed within reports, not merged across reports.",
             "Synthetic validation does not establish semantic validity of human annotations.",

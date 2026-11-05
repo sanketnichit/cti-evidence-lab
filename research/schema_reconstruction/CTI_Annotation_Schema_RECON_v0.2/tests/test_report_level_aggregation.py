@@ -170,6 +170,58 @@ class EventPairOpportunityTests(unittest.TestCase):
         self.assertEqual(result["compatible_event_pair_count_by_scope_type"], {"CAMPAIGN": 1})
         self.assertEqual(result["same_technique_pair_opportunity_count_by_scope_type"], {"CAMPAIGN": 1})
 
+    def test_incident_bounded_rule_excludes_cross_incident_campaign_pairs(self):
+        self.scopes.append({"scope_id": "campaign", "parent_scope_id": "report", "scope_type": "CAMPAIGN", "scope_status": "RESOLVED"})
+        self.scopes[1]["parent_scope_id"] = "campaign"
+        self.scopes[4]["parent_scope_id"] = "campaign"
+        result = compute_event_pair_opportunity(
+            [self.units[0], self.units[2]], self.scopes,
+            {"a": {"T1059"}, "c": {"T1059"}},
+            scope_pair_rule_id="SHARED_RESOLVED_INCIDENT_SCOPE_v0.1",
+        )
+        self.assertEqual(result["compatible_event_pair_count"], 0)
+
+    def test_explicit_assignment_requires_both_event_assignments(self):
+        self.scopes.append({"scope_id": "campaign", "parent_scope_id": "report", "scope_type": "CAMPAIGN", "scope_status": "RESOLVED"})
+        self.scopes[1]["parent_scope_id"] = "campaign"
+        self.scopes[4]["parent_scope_id"] = "campaign"
+        pair = [self.units[0], self.units[2]]
+        mappings = {"a": {"T1059"}, "c": {"T1059"}}
+        one_assignment = [{
+            "activity_unit_id": "a", "comparison_scope_id": "campaign",
+            "assignment_status": "ASSIGNED",
+        }]
+        none = compute_event_pair_opportunity(
+            pair, self.scopes, mappings,
+            comparison_scope_assignments=one_assignment,
+            scope_pair_rule_id="EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3",
+        )
+        self.assertEqual(none["compatible_event_pair_count"], 0)
+        both_assignments = one_assignment + [{
+            "activity_unit_id": "c", "comparison_scope_id": "campaign",
+            "assignment_status": "ASSIGNED",
+        }]
+        both = compute_event_pair_opportunity(
+            pair, self.scopes, mappings,
+            comparison_scope_assignments=both_assignments,
+            scope_pair_rule_id="EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3",
+        )
+        self.assertEqual(both["compatible_event_pair_count"], 1)
+        self.assertEqual(both["compatible_event_pair_count_by_scope_type"], {"CAMPAIGN": 1})
+        self.assertEqual(both["same_technique_pair_opportunity_count"], 1)
+
+    def test_uncertain_or_nonshared_assignments_do_not_create_opportunities(self):
+        rows = [
+            {"activity_unit_id": "a", "comparison_scope_id": "incident", "assignment_status": "ASSIGNED"},
+            {"activity_unit_id": "b", "comparison_scope_id": "incident", "assignment_status": "UNCERTAIN"},
+        ]
+        result = compute_event_pair_opportunity(
+            self.units[:2], self.scopes, {"a": {"T1059"}, "b": {"T1059"}},
+            comparison_scope_assignments=rows,
+            scope_pair_rule_id="EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3",
+        )
+        self.assertEqual(result["compatible_event_pair_count"], 0)
+
     def test_series_container_is_not_an_atomic_event_leaf(self):
         result = compute_event_pair_opportunity(self.units, self.scopes, {})
         self.assertEqual(result["resolved_atomic_event_leaves"], 3)
