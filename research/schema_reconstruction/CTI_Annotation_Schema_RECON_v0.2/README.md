@@ -1,30 +1,30 @@
 # CTI Annotation Schema RECON v0.2 — temporal evidence extension
 
-Status: draft for researcher review; not approved, frozen, or ready for real-report annotation.
-Prepared: 5 November 2026
-Parent: CTI Annotation Schema RECON v0.1.
+Status: draft for researcher review; not approved, frozen, or ready for real-report annotation. Prepared 5 November 2026. Parent: RECON v0.1.
 
 ## Purpose
 
-The parent package records one primary evidence span for a temporal relation and permits generic additional evidence links. It does not distinguish evidence supporting endpoint A, endpoint B, or contextual material. This additive extension makes those roles explicit while leaving the v0.1 reconstruction unchanged. It does not claim to recover the missing original v0.4.2 schema or exact v0.4.1 protocol.
+The parent package stores one primary evidence span for each temporal relation and supports generic additional links. It does not distinguish evidence for endpoint A, endpoint B, and contextual material. This additive extension introduces those distinctions without changing v0.1 or claiming to recover the missing original v0.4.2 schema or exact v0.4.1 protocol.
 
 ## Evidence roles
 
-The primary_evidence_span_id on temporal_relations is the required RELATION_CUE. It is not repeated in the new register. The extension register stores EVENT_A_SUPPORT, EVENT_B_SUPPORT, and optional RELATION_CONTEXT rows. For endpoint-support rows, supported_event_id must equal the corresponding temporal relation endpoint. For context rows, supported_event_id must be empty. A single source span may support multiple functions through separate role rows.
+The parent temporal relation's `primary_evidence_span_id` is the required `RELATION_CUE`; it is not duplicated in the extension register. The new register stores `EVENT_A_SUPPORT`, `EVENT_B_SUPPORT`, and optional `RELATION_CONTEXT` rows. Endpoint support must identify the matching event endpoint. Context rows must leave `supported_event_id` empty. One source span may serve more than one role through separate rows.
 
-Every positive direct_source or direct_timestamp relation eligible for the primary graph requires at least one EVENT_A_SUPPORT and one EVENT_B_SUPPORT. RELATION_CONTEXT is optional.
+Every positive `direct_source` or `direct_timestamp` relation entering the primary graph requires at least one A-support and one B-support row. Context is optional.
 
-## Validation
+## Validation and limits
 
-The validator checks partition-local relation and span references, identifiers, role values, endpoint-role alignment, relation-cue presence and type, A/B completeness, and direct-timestamp linkage to normalized ATTACK_OCCURRENCE time evidence for each endpoint. The parent v0.1 validator continues to handle the existing schema checks.
+The extension validator checks partition-local references, link identity, roles, endpoint alignment, cue presence/type, A/B completeness, and direct-timestamp support linkage to normalized `ATTACK_OCCURRENCE` time records. It is structural only: it does not judge semantic evidence quality, infer event identity or relation direction, or determine whether timestamp uncertainty permits strict order. Interval-based uncertainty validation remains open. No real-report rows or human annotations are included.
 
-This is structural validation only. It does not judge semantic evidence quality, infer event identity or relation direction, or decide whether timestamp uncertainty permits strict ordering. Interval-based uncertainty validation remains open. No real-report rows or human annotations are included.
+Run tests with `python -m unittest discover -s research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/tests -v`.
+
+Validate the blank extension with the command shown in `SCHEMA_MANIFEST.md`.
 
 ## Files
 
-- registers/temporal_relation_evidence.csv
-- validator/validate_temporal_evidence.py
-- tests/test_temporal_evidence.py
-- schema_manifest.json
+- `registers/temporal_relation_evidence.csv`
+- `validator/validate_temporal_evidence.py`
+- `tests/test_temporal_evidence.py`
+- `SCHEMA_MANIFEST.md`
 
-This extension is a testable design candidate, not an operational annotation instruction. Researcher review and protocol approval are still required.
+This is a testable design candidate, not an operational annotation instruction. Researcher review and protocol approval are still required.
