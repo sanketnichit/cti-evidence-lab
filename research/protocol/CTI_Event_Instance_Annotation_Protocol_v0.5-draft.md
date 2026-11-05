@@ -421,6 +421,8 @@ A fully reviewed assessable report with zero resolved event leaves remains in `N
 ### 7.2 Report-level outcomes
 
 1. **Same-technique pair-opportunity report rate:** reports with at least one pair of distinct, scope-compatible resolved atomic event leaves whose accepted baseline mapping sets intersect / `N_assessable`. This is an opportunity measure, not evidence that a temporal relation exists.
+
+**Scope-pair denominator gate:** `scope-compatible` for this opportunity measure must be defined by an approved, versioned rule before the rate is reported. The current implementation's nearest-common-resolved-non-report-ancestor rule can include pairs in distinct incident scopes when they share a campaign/operation ancestor. The current recommended primary rule is a shared nearest resolved `INCIDENT` ancestor, with the broader common-ancestor rule retained as a labelled sensitivity analysis. This recommendation is not yet approved or implemented; the current code's pair-opportunity rates remain withheld.
 2. **Primary within-technique temporal-relation report rate:** reports with at least one directly source/timestamp-supported positive temporal relation between distinct, scope-compatible resolved atomic event leaves whose accepted baseline mapping sets intersect / `N_assessable`. Count each report once, and report numerator, denominator and relation-label breakdown.
 3. **General positive temporal-relation report rate:** reports with at least one qualifying positive temporal relation between distinct compatible resolved atomic event leaves / `N_assessable`.
 4. **Occurrence compression:** number of resolved atomic event leaves per technique before projection, with series/episode/aggregate containers reported separately.
