@@ -56,3 +56,5 @@ analysis/report_level_aggregation.py aggregates one selected-final partition per
 The opportunity measure needs a provisional operational scope-pair rule because the protocol does not yet fully specify how to enumerate every compatible pair in a hierarchical scope tree. The current nearest-common-resolved-non-report-aggregate rule is documented and tested, but its rates remain withheld until researcher approval. See docs/REPORT_LEVEL_AGGREGATION_v0.1.md.
 
 The aggregation layer has synthetic helper tests and an end-to-end selected-final fixture test. There are no human AnnoCTR annotations, selected final partitions, or real-report projections. The current blank package therefore returns zero denominators and null rates, not empirical zero outcomes.
+
+The output also includes count-status-by-granularity, mention and relation missingness, `A_exact` versus `A_120` coverage, occurrence compression by technique, and report-scoped collision/cycle provenance. Conditional rates that depend on the provisional scope-pair rule are withheld until approval. The CLI path is covered by a blank-package smoke test and never writes frozen source text to JSON.

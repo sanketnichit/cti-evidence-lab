@@ -1,7 +1,10 @@
 """Synthetic tests for selected-final report-level aggregation."""
 from __future__ import annotations
 
+import json
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -256,7 +259,18 @@ class SelectedFinalAggregationIntegrationTests(unittest.TestCase):
         self.assertEqual(result["report_level_primary_rates"]["within_technique_temporal_relation_report_rate"], 1.0)
         self.assertEqual(result["report_level_primary_rates"]["same_technique_pair_opportunity_rate"], 1.0)
         self.assertEqual(result["projection_rates_and_counts"]["counts"]["fully_omitted_edges"], 1)
+        self.assertEqual(result["conditional_descriptive_rates_in_projected_subset"]["within_technique_temporal_relation_given_same_technique_pair_opportunity"], 1.0)
         self.assertEqual(len(result["per_report_outcomes"]), 1)
+        outcome = result["per_report_outcomes"][0]
+        self.assertEqual(outcome["mapping_coverage"]["A_exact"]["event_coverage_rate"], 1.0)
+        self.assertEqual(outcome["mapping_coverage"]["A_120"]["event_coverage_rate"], 1.0)
+        self.assertEqual(outcome["occurrence_compression_by_technique"]["A_120_parent_technique"], {"T1059": 2})
+        self.assertEqual(outcome["activity_unit_counts"]["count_status_by_granularity"]["atomic_event|unknown"], 2)
+        self.assertEqual(outcome["mention_instance_status_counts"]["RESOLVED"], 2)
+        self.assertEqual(outcome["primary_positive_relation_label_basis_counts"], {"BEFORE|direct_source": 1})
+        self.assertEqual(outcome["source_scope_eligibility"], "ELIGIBLE")
+        self.assertEqual(outcome["projection_provenance_diagnostics"]["edge_projection_status"]["rel-a-b"], "fully_omitted")
+        self.assertEqual(outcome["projection_provenance_diagnostics"]["edge_to_pairs"]["rel-a-b"], [["T1059", "T1059"]])
 
     def test_missing_selected_final_withholds_primary_report_rates(self):
         self.selection_rows = []
@@ -281,7 +295,38 @@ class SelectedFinalAggregationIntegrationTests(unittest.TestCase):
             approve_scope_pair_rule=False,
         )
         self.assertIsNone(result["report_level_primary_rates"]["same_technique_pair_opportunity_rate"])
+        self.assertIsNone(result["conditional_descriptive_rates_in_projected_subset"]["within_technique_temporal_relation_given_same_technique_pair_opportunity"])
+        self.assertEqual(result["conditional_descriptive_rates_in_projected_subset"]["status"], "WITHHELD_PENDING_APPROVAL_OF_SCOPE_PAIR_OPPORTUNITY_RULE")
         self.assertEqual(result["scope_pair_opportunity_rule"]["status"], "PROVISIONAL_NOT_APPROVED")
+
+
+class AggregatorCliTests(unittest.TestCase):
+    def test_cli_writes_blank_structural_json_without_source_text(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            sources = root / "sources"
+            sources.mkdir()
+            output = root / "result.json"
+            command = [
+                sys.executable,
+                str(PACKAGE_ROOT / "analysis" / "report_level_aggregation.py"),
+                "--extension", str(EXTENSION_ROOT),
+                "--sources-dir", str(sources),
+                "--output", str(output),
+            ]
+            completed = subprocess.run(
+                command,
+                cwd=PACKAGE_ROOT.parents[2],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            result = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(result["denominators"]["N_eligible"], 0)
+            self.assertIsNone(result["denominators"]["assessability_coverage"])
+            self.assertEqual(result["status"], "PARTIAL_OR_EMPTY_SELECTED_FINAL_COVERAGE")
+            self.assertNotIn("Synthetic frozen CTI report text", output.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

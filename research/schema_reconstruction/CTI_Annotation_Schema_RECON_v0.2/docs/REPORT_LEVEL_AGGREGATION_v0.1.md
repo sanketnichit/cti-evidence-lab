@@ -85,3 +85,14 @@ Omitting either confirmation keeps the corresponding analysis blocked or its pai
 The aggregator is a structural and arithmetic layer. It does not decide event identity, whether two scope descriptions are substantively comparable, whether a source entails a relation, whether a mapping is semantically correct, or whether a reviewer was genuinely independent. Those remain human research decisions. The current schema has an annotator_id but no machine-verifiable annotator-type field; the pipeline relies on the protocol/workflow convention that registered annotation partitions are human-owned and records AI assistance as prior exposure. It cannot authenticate a human identity or prevent a mislabelled automated partition by itself. It does not calculate inter-annotator agreement, prevalence confidence intervals, or benchmark alignment.
 
 The implementation is currently synthetic-tested only. The selection register remains empty; there are no human annotations, selected final partitions, or real-report projections. A five-report feasibility batch is not a prevalence study.
+
+
+## Extended metric-contract outputs
+
+Per-report output now also carries source-scope/local-use/public-reuse/assessability/review states and reasons; mention status counts; activity-unit counts by granularity, role and instance status; count-status-by-granularity tables; temporal-relation counts by label and basis (including non-primary/inferred/transitive/ambiguous/not-assessable rows); and optional candidate-pair assessment label counts.
+
+Mapping outputs separate accepted source-supported `A_exact` event coverage from baseline `A_120` coverage. Occurrence compression is reported as resolved event-leaf counts per exact and parent-level technique. The report-level and projected-subset outputs include relation-label breakdowns and the conditional within-technique-temporal-relation / same-technique-opportunity ratio; this conditional ratio is withheld until the scope-pair opportunity rule is approved.
+
+Each per-report output preserves edge status, event-edge-to-technique-pair mappings, diagonal and distinct pairs, distinct-pair provenance, collision keys, excess edge multiplicity, label conflicts, and strict-order cycle provenance. These diagnostics remain nested under report IDs; the aggregator does not merge technique-pair keys or SCCs across reports.
+
+The command-line entry point is exercised by a synthetic CLI test. It accepts a local source directory and writes JSON without copying source text. A custom extension path is supported when its RECON v0.1 base package is the sibling directory expected by the package layout.

@@ -388,7 +388,16 @@ def aggregate_selected_report_projections(
     projection_count_totals: Counter[str] = Counter()
     relation_label_totals: Counter[str] = Counter()
     within_relation_label_totals: Counter[str] = Counter()
-    recurrence_totals: Counter[str] = Counter()
+    primary_relation_label_basis_totals: Counter[str] = Counter()
+    all_relation_label_basis_totals: Counter[str] = Counter()
+    mention_status_totals: Counter[str] = Counter()
+    granularity_totals: Counter[str] = Counter()
+    unit_role_totals: Counter[str] = Counter()
+    instance_status_totals: Counter[str] = Counter()
+    count_status_by_granularity_totals: Counter[str] = Counter()
+    a120_occurrence_compression_totals: Counter[str] = Counter()
+    a_exact_occurrence_compression_totals: Counter[str] = Counter()
+    candidate_pair_label_totals: Counter[str] = Counter()
 
     for report_id in denominators["assessable_report_ids"]:
         candidate_rows = selected_by_report.get(report_id, [])
@@ -443,6 +452,28 @@ def aggregate_selected_report_projections(
         ]
         event_ids = {row["activity_unit_id"] for row in event_leaves}
         mapping_sets, mapping_stats = build_a120_mapping_sets(mapping_rows, a120_ids, event_ids)
+        source_supported_bases = {
+            "report_explicit_subtechnique",
+            "report_explicit_parent",
+            "source_supported_analyst_candidate",
+        }
+        a_exact_by_event: dict[str, set[str]] = {event_id: set() for event_id in event_ids}
+        for mapping_row in part_rows["event_mappings"]:
+            event_id = mapping_row.get("activity_unit_id", "")
+            exact_id = mapping_row.get("exact_technique_id", "")
+            if (
+                event_id in event_ids
+                and mapping_row.get("mapping_decision_status") == "ACCEPTED"
+                and mapping_row.get("mapping_basis") in source_supported_bases
+                and exact_id
+            ):
+                a_exact_by_event[event_id].add(exact_id)
+        a120_occurrence_compression = Counter(
+            technique for techniques in mapping_sets.values() for technique in techniques
+        )
+        a_exact_occurrence_compression = Counter(
+            technique for techniques in a_exact_by_event.values() for technique in techniques
+        )
         opportunity = compute_event_pair_opportunity(
             units, part_rows["report_scopes"], mapping_sets
         )
@@ -460,6 +491,29 @@ def aggregate_selected_report_projections(
             )
         ]
         label_counts = Counter(row.get("relation_label", "") for row in primary_relations)
+        primary_label_basis_counts = Counter(
+            f"{row.get('relation_label', '')}|{row.get('relation_basis', '')}"
+            for row in primary_relations
+        )
+        all_label_basis_counts = Counter(
+            f"{row.get('relation_label', '')}|{row.get('relation_basis', '')}"
+            for row in part_rows["temporal_relations"]
+        )
+        mention_status_counts = Counter(
+            row.get("instance_status", "") or "MISSING"
+            for row in part_rows["event_mentions"]
+        )
+        granularity_counts = Counter(row.get("granularity", "") or "MISSING" for row in units)
+        unit_role_counts = Counter(row.get("unit_role", "") or "MISSING" for row in units)
+        instance_status_counts = Counter(row.get("instance_status", "") or "MISSING" for row in units)
+        count_status_by_granularity = Counter(
+            f"{row.get('granularity', '') or 'MISSING'}|{row.get('count_status', '') or 'MISSING'}"
+            for row in units
+        )
+        candidate_pair_label_counts = Counter(
+            row.get("assessment_label", "") or "MISSING"
+            for row in part_rows["candidate_pair_assessments"]
+        )
         projection = adapter_result["projection"]
         projection_counts = projection.get("counts", {})
         for key, value in projection_counts.items():
@@ -469,13 +523,45 @@ def aggregate_selected_report_projections(
             relation_label_totals[label] += value
         for row in within_relations:
             within_relation_label_totals[row.get("relation_label", "")] += 1
-        for row in units:
-            if row.get("granularity"):
-                recurrence_totals[row["granularity"]] += 1
+        for key, value in primary_label_basis_counts.items():
+            primary_relation_label_basis_totals[key] += value
+        for key, value in all_label_basis_counts.items():
+            all_relation_label_basis_totals[key] += value
+        for key, value in mention_status_counts.items():
+            mention_status_totals[key] += value
+        for key, value in granularity_counts.items():
+            granularity_totals[key] += value
+        for key, value in unit_role_counts.items():
+            unit_role_totals[key] += value
+        for key, value in instance_status_counts.items():
+            instance_status_totals[key] += value
+        for key, value in count_status_by_granularity.items():
+            count_status_by_granularity_totals[key] += value
+        for key, value in a120_occurrence_compression.items():
+            a120_occurrence_compression_totals[key] += value
+        for key, value in a_exact_occurrence_compression.items():
+            a_exact_occurrence_compression_totals[key] += value
+        for key, value in candidate_pair_label_counts.items():
+            candidate_pair_label_totals[key] += value
+
+        distinct_pair_collisions = projection.get("projection", {}).get(
+            "distinct_pair_collisions_by_relation_class", {}
+        )
+        excess_edge_multiplicity = sum(
+            max(0, len(edge_ids) - 1) for edge_ids in distinct_pair_collisions.values()
+        )
+        a_exact_mapped_event_count = sum(bool(values) for values in a_exact_by_event.values())
+        a120_mapped_event_count = sum(bool(values) for values in mapping_sets.values())
 
         outcome = {
             "report_id": report_id,
             "source_vendor": selected_registry.get("source_vendor", ""),
+            "source_scope_eligibility": selected_registry.get("source_scope_eligibility", ""),
+            "source_scope_reason": selected_registry.get("source_scope_reason", ""),
+            "local_research_use_status": selected_registry.get("local_research_use_status", ""),
+            "public_reuse_status": selected_registry.get("public_reuse_status", ""),
+            "report_assessability": selected_registry.get("report_assessability", ""),
+            "full_report_review_status": selected_registry.get("full_report_review_status", ""),
             "prior_exposure_status": selected_registry.get("prior_exposure_status", ""),
             **opportunity,
             "primary_positive_temporal_relation_count": len(primary_relations),
@@ -486,6 +572,48 @@ def aggregate_selected_report_projections(
                 Counter(row.get("relation_label", "") for row in within_relations).items()
             )),
             "positive_relation_label_counts": dict(sorted(label_counts.items())),
+            "primary_positive_relation_label_basis_counts": dict(sorted(primary_label_basis_counts.items())),
+            "all_temporal_relation_label_basis_counts": dict(sorted(all_label_basis_counts.items())),
+            "nonprimary_or_nonpositive_temporal_relation_count": (
+                len(part_rows["temporal_relations"]) - len(primary_relations)
+            ),
+            "mention_instance_status_counts": dict(sorted(mention_status_counts.items())),
+            "activity_unit_counts": {
+                "by_granularity": dict(sorted(granularity_counts.items())),
+                "by_unit_role": dict(sorted(unit_role_counts.items())),
+                "by_instance_status": dict(sorted(instance_status_counts.items())),
+                "count_status_by_granularity": dict(sorted(count_status_by_granularity.items())),
+            },
+            "occurrence_compression_by_technique": {
+                "A_120_parent_technique": dict(sorted(a120_occurrence_compression.items())),
+                "A_exact_technique": dict(sorted(a_exact_occurrence_compression.items())),
+            },
+            "mapping_coverage": {
+                "A_exact": {
+                    "mapped_event_instances": a_exact_mapped_event_count,
+                    "total_resolved_atomic_event_leaves": len(event_leaves),
+                    "event_coverage_rate": (
+                        a_exact_mapped_event_count / len(event_leaves) if event_leaves else None
+                    ),
+                    "accepted_source_supported_exact_techniques": sum(
+                        len(values) for values in a_exact_by_event.values()
+                    ),
+                },
+                "A_120": {
+                    "mapped_event_instances": a120_mapped_event_count,
+                    "total_resolved_atomic_event_leaves": len(event_leaves),
+                    "event_coverage_rate": (
+                        a120_mapped_event_count / len(event_leaves) if event_leaves else None
+                    ),
+                    "accepted_a120_mapping_rows": mapping_stats["accepted_a120_mapping_rows"],
+                },
+            },
+            "candidate_pair_assessment_label_counts": dict(sorted(candidate_pair_label_counts.items())),
+            "evidence_validation": {
+                "error_count": adapter_result.get("validation", {}).get("error_count"),
+                "warning_count": adapter_result.get("validation", {}).get("warning_count"),
+                "evidence_span_count": len(part_rows["evidence_spans"]),
+            },
             "event_mapping_coverage": (
                 projection_counts.get("mapped_event_instances", 0) / len(event_leaves)
                 if event_leaves else None
@@ -495,6 +623,18 @@ def aggregate_selected_report_projections(
                 if primary_relations else None
             ),
             "projection_counts": projection_counts,
+            "projection_provenance_diagnostics": {
+                "edge_projection_status": projection.get("edge_projection_status", {}),
+                "edge_to_pairs": projection.get("projection", {}).get("edge_to_pairs", {}),
+                "edge_to_diagonal_pairs": projection.get("projection", {}).get("edge_to_diagonal_pairs", {}),
+                "edge_to_distinct_pairs": projection.get("projection", {}).get("edge_to_distinct_pairs", {}),
+                "distinct_pair_provenance_by_relation_class": projection.get("projection", {}).get("distinct_pair_provenance_by_relation_class", {}),
+                "distinct_pair_collisions_by_relation_class": distinct_pair_collisions,
+                "distinct_pair_collisions_global": projection.get("projection", {}).get("distinct_pair_collisions_global", {}),
+                "distinct_pair_label_conflicts": projection.get("projection", {}).get("distinct_pair_label_conflicts", {}),
+                "excess_edge_multiplicity": excess_edge_multiplicity,
+                "strict_order_cycle_analysis": projection.get("strict_order_cycle_analysis", {}),
+            },
             "mapping_filter": mapping_stats,
             "analysis_lock_reference": adapter_result.get("analysis_lock_reference"),
             "annotation_lock_reference": adapter_result.get("annotation_lock_reference"),
@@ -532,6 +672,23 @@ def aggregate_selected_report_projections(
     else:
         primary_rates["scope_pair_opportunity_rate_status"] = "APPROVED_BY_CALLER"
         selected_subset_rates["scope_pair_opportunity_rate_status"] = "APPROVED_BY_CALLER"
+
+    if approve_scope_pair_rule:
+        shared_opportunity_reports = sum(
+            bool(x["has_same_technique_pair_opportunity"]) for x in report_outcomes
+        )
+        conditional_descriptive_rates = {
+            "within_technique_temporal_relation_given_same_technique_pair_opportunity": (
+                sum(bool(x["has_within_technique_temporal_relation"]) for x in report_outcomes)
+                / shared_opportunity_reports if shared_opportunity_reports else None
+            ),
+            "status": "DESCRIPTIVE_SELECTED_SUBSET_NOT_POPULATION_ESTIMATE",
+        }
+    else:
+        conditional_descriptive_rates = {
+            "within_technique_temporal_relation_given_same_technique_pair_opportunity": None,
+            "status": "WITHHELD_PENDING_APPROVAL_OF_SCOPE_PAIR_OPPORTUNITY_RULE",
+        }
 
     outcome_numerators = {
         "reports_with_event_leaf": sum(bool(x["has_event_leaf"]) for x in report_outcomes),
@@ -603,9 +760,23 @@ def aggregate_selected_report_projections(
             "counts": dict(sorted(projection_count_totals.items())),
             "rates": projection_rates,
         },
+        "conditional_descriptive_rates_in_projected_subset": conditional_descriptive_rates,
         "positive_relation_label_counts": dict(sorted(relation_label_totals.items())),
         "within_technique_positive_relation_label_counts": dict(sorted(within_relation_label_totals.items())),
-        "granularity_counts_in_projected_partitions": dict(sorted(recurrence_totals.items())),
+        "primary_positive_relation_label_basis_counts": dict(sorted(primary_relation_label_basis_totals.items())),
+        "all_temporal_relation_label_basis_counts": dict(sorted(all_relation_label_basis_totals.items())),
+        "mention_instance_status_counts": dict(sorted(mention_status_totals.items())),
+        "activity_unit_counts": {
+            "by_granularity": dict(sorted(granularity_totals.items())),
+            "by_unit_role": dict(sorted(unit_role_totals.items())),
+            "by_instance_status": dict(sorted(instance_status_totals.items())),
+            "count_status_by_granularity": dict(sorted(count_status_by_granularity_totals.items())),
+        },
+        "occurrence_compression_by_technique": {
+            "A_120_parent_technique": dict(sorted(a120_occurrence_compression_totals.items())),
+            "A_exact_technique": dict(sorted(a_exact_occurrence_compression_totals.items())),
+        },
+        "candidate_pair_assessment_label_counts": dict(sorted(candidate_pair_label_totals.items())),
         "per_report_outcomes": sorted(report_outcomes, key=lambda row: row["report_id"]),
         "interpretation_limits": [
             "A five-report feasibility batch is not a prevalence estimate.",
@@ -621,7 +792,7 @@ def aggregate_selected_report_projections(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Aggregate CTI Evidence Lab report-level metrics")
     parser.add_argument("--extension", type=Path, default=PACKAGE_ROOT,
-                        help="RECON v0.2 extension package directory")
+                        help="RECON v0.2 extension package directory (its v0.1 parent bundle must be a sibling)")
     parser.add_argument("--sources-dir", type=Path, required=True,
                         help="Local directory containing frozen REPORT_ID.txt source files")
     parser.add_argument("--confirm-selected-analysis-locks", action="store_true",
@@ -632,10 +803,6 @@ def main() -> int:
                         help="Optional JSON output path; source text is never written")
     args = parser.parse_args()
 
-    # Keep the extension path configurable while the adapter uses the package
-    # default. A non-default extension is not supported by this version.
-    if args.extension.resolve() != PACKAGE_ROOT.resolve():
-        parser.error("--extension must point to this checked-out RECON v0.2 package")
     sources: dict[str, str] = {}
     for source_path in sorted(args.sources_dir.glob("*.txt")):
         sources[source_path.stem] = read_frozen_source(source_path)

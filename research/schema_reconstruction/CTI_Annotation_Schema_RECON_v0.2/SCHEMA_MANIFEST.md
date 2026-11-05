@@ -64,3 +64,12 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 ## Research-readiness boundary
 
 The aggregator is structural and arithmetic. It does not decide semantic event identity, temporal entailment, mapping correctness, scope meaning, or reviewer independence. The current schema has no machine-verifiable annotator-type field; human ownership of annotation partitions remains a documented workflow assumption, not an automated identity check. It does not calculate IAA, prevalence confidence intervals, or ChronoCTI event-level alignment. No real annotations, human agreement results, or empirical metrics exist.
+
+## Extended metric-contract coverage
+
+- Per-report report-registry status/reason fields, mention states, activity-unit granularity/role/instance status and count status by granularity are included.
+- Temporal relations are counted by label and basis; primary direct-positive labels/bases are broken out from non-primary and non-positive records. Optional candidate-pair labels are summarized separately.
+- `A_exact` and `A_120` mapping coverage and occurrence compression per technique are reported separately.
+- Per-report collision provenance, excess edge multiplicity, diagonal/distinct pair mappings, label conflicts and strict-order cycle provenance are retained without merging pair keys across reports.
+- The conditional within-technique relation given same-technique opportunity is withheld until the provisional scope-pair rule is approved.
+- CLI smoke testing covers JSON output from a blank bundle without emitting source text.
