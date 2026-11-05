@@ -8,10 +8,14 @@ from __future__ import annotations
 
 import argparse
 import csv
-import hashlib
 from collections import defaultdict
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
+
+try:
+    from src.source_text_integrity import frozen_source_sha256, read_frozen_source
+except ModuleNotFoundError:  # Also support direct execution from the src directory.
+    from source_text_integrity import frozen_source_sha256, read_frozen_source
 
 
 INSTANCE_STATUSES = {
@@ -36,11 +40,15 @@ def _populated(row: Mapping[str, str]) -> bool:
 
 def _for_report(rows: Iterable[Mapping[str, str]], report_id: str) -> list[dict[str, str]]:
     selected = []
+    exact_source_text_fields = {"mention_text", "evidence_text"}
     for row in rows:
         if not _populated(row):
             continue
         if (row.get("report_id") or "").strip() == report_id:
-            selected.append({key: (value or "").strip() for key, value in row.items()})
+            selected.append({
+                key: (value or "") if key in exact_source_text_fields else (value or "").strip()
+                for key, value in row.items()
+            })
     return selected
 
 
@@ -324,9 +332,7 @@ def validate_annotation_rows(
     return {
         "report_id": report_id,
         "source_text_characters": len(report_text),
-        "source_text_sha256": hashlib.sha256(
-            report_text.encode("utf-8")
-        ).hexdigest(),
+        "source_text_sha256": frozen_source_sha256(report_text),
         "counts": {
             "mention_rows": len(mentions),
             "resolved_event_instances": len(resolved_events),
@@ -355,7 +361,7 @@ def main() -> int:
     parser.add_argument("--relations", required=True, help="temporal_relations.csv")
     args = parser.parse_args()
 
-    report_text = Path(args.text).read_text(encoding="utf-8")
+    report_text = read_frozen_source(args.text)
     result = validate_annotation_rows(
         report_id=args.report_id,
         report_text=report_text,
