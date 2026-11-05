@@ -15,7 +15,7 @@ HEADERS = [
 REQUIRED = {
     "temporal_relations": {
         "report_id", "annotator_id", "annotation_pass_id", "relation_id",
-        "event_a_id", "event_b_id", "relation_label", "relation_basis",
+        "event_a_id", "event_b_id", "relation_label", "relation_basis", "evidence_scope",
         "primary_evidence_span_id",
     },
     "evidence_spans": {
@@ -112,8 +112,11 @@ def validate_bundle(base_bundle: Path, evidence_file: Path):
                 errors.append({"code": "EVENT_B_SUPPORT_MISMATCH", "message": f"line {line}: supported_event_id must equal event_b_id"})
             if event_id and (*p, event_id) not in units:
                 errors.append({"code": "UNKNOWN_SUPPORTED_EVENT", "message": f"line {line}: supported event does not resolve"})
-        elif role == "RELATION_CONTEXT" and event_id:
-            errors.append({"code": "CONTEXT_EVENT_ID_FORBIDDEN", "message": f"line {line}: context must not set supported_event_id"})
+        elif role == "RELATION_CONTEXT":
+            if event_id:
+                errors.append({"code": "CONTEXT_EVENT_ID_FORBIDDEN", "message": f"line {line}: context must not set supported_event_id"})
+            if not row.get("evidence_notes"):
+                errors.append({"code": "CONTEXT_RATIONALE_MISSING", "message": f"line {line}: context requires an explanatory note"})
         assignment = (*p, row.get("relation_id", ""), span_id, role, event_id)
         if assignment in seen_assignments:
             errors.append({"code": "DUPLICATE_RELATION_EVIDENCE", "message": f"line {line}: duplicate relation/span/role assignment"})
@@ -137,6 +140,15 @@ def validate_bundle(base_bundle: Path, evidence_file: Path):
             errors.append({"code": "EVENT_A_SUPPORT_MISSING", "message": f"{rid}: EVENT_A_SUPPORT is required"})
         if not b_rows:
             errors.append({"code": "EVENT_B_SUPPORT_MISSING", "message": f"{rid}: EVENT_B_SUPPORT is required"})
+        context_rows = [
+            row for row in rows
+            if row.get("evidence_role") == "RELATION_CONTEXT"
+            and not row.get("supported_event_id")
+            and row.get("evidence_notes")
+            and (*p, row.get("evidence_span_id", "")) in spans
+        ]
+        if relation.get("evidence_scope") == "DOCUMENT_CONTEXT" and not context_rows:
+            errors.append({"code": "RELATION_CONTEXT_MISSING", "message": f"{rid}: DOCUMENT_CONTEXT requires a contextual span and rationale"})
         if relation.get("relation_basis") == "direct_timestamp":
             timed = {
                 (r.get("activity_unit_id", ""), r.get("primary_evidence_span_id", ""))
