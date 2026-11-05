@@ -290,8 +290,14 @@ def compute_event_pair_opportunity(
 ) -> dict[str, int | bool]:
     """Count event-pair opportunities using explicit resolved common scopes."""
     leaves = _eligible_event_units(activity_units)
+    scope_type_by_id = {
+        row.get("scope_id", ""): row.get("scope_type", "MISSING")
+        for row in scope_rows if row.get("scope_id")
+    }
     compatible_pairs = 0
     shared_technique_pairs = 0
+    compatible_by_scope_type: Counter[str] = Counter()
+    shared_technique_by_scope_type: Counter[str] = Counter()
     for index, left in enumerate(leaves):
         for right in leaves[index + 1:]:
             common_scope = _lowest_common_comparison_scope(
@@ -299,17 +305,22 @@ def compute_event_pair_opportunity(
             )
             if common_scope is None:
                 continue
+            scope_type = scope_type_by_id.get(common_scope, "MISSING")
             compatible_pairs += 1
+            compatible_by_scope_type[scope_type] += 1
             left_maps = mapping_sets.get(left["activity_unit_id"], set())
             right_maps = mapping_sets.get(right["activity_unit_id"], set())
             if left_maps.intersection(right_maps):
                 shared_technique_pairs += 1
+                shared_technique_by_scope_type[scope_type] += 1
     return {
         "resolved_atomic_event_leaves": len(leaves),
         "has_event_leaf": bool(leaves),
         "compatible_event_pair_count": compatible_pairs,
+        "compatible_event_pair_count_by_scope_type": dict(sorted(compatible_by_scope_type.items())),
         "has_compatible_event_pair": compatible_pairs > 0,
         "same_technique_pair_opportunity_count": shared_technique_pairs,
+        "same_technique_pair_opportunity_count_by_scope_type": dict(sorted(shared_technique_by_scope_type.items())),
         "has_same_technique_pair_opportunity": shared_technique_pairs > 0,
     }
 
