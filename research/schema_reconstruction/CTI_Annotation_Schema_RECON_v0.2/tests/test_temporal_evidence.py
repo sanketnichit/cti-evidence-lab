@@ -12,7 +12,7 @@ from validate_temporal_evidence import HEADERS, validate_bundle
 
 
 PART = {"report_id": "r1", "annotator_id": "a1", "annotation_pass_id": "p1"}
-REL_H = ["report_id", "annotator_id", "annotation_pass_id", "relation_id", "event_a_id", "event_b_id", "relation_label", "relation_basis", "primary_evidence_span_id"]
+REL_H = ["report_id", "annotator_id", "annotation_pass_id", "relation_id", "event_a_id", "event_b_id", "relation_label", "relation_basis", "evidence_scope", "primary_evidence_span_id"]
 SPAN_H = ["report_id", "annotator_id", "annotation_pass_id", "evidence_span_id", "span_kind"]
 UNIT_H = ["report_id", "annotator_id", "annotation_pass_id", "activity_unit_id"]
 TIME_H = ["report_id", "annotator_id", "annotation_pass_id", "time_evidence_id", "activity_unit_id", "time_type", "normalization_status", "normalized_start", "normalized_end", "primary_evidence_span_id"]
@@ -32,7 +32,7 @@ class TemporalEvidenceTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.base = self.root / "base"
         self.ext = self.root / "temporal_relation_evidence.csv"
-        self.relation = {**PART, "relation_id": "rel1", "event_a_id": "evA", "event_b_id": "evB", "relation_label": "BEFORE", "relation_basis": "direct_source", "primary_evidence_span_id": "cue"}
+        self.relation = {**PART, "relation_id": "rel1", "event_a_id": "evA", "event_b_id": "evB", "relation_label": "BEFORE", "relation_basis": "direct_source", "evidence_scope": "SENTENCE", "primary_evidence_span_id": "cue"}
         self.spans = [{**PART, "evidence_span_id": "cue", "span_kind": "RELATION"}, {**PART, "evidence_span_id": "a", "span_kind": "MENTION"}, {**PART, "evidence_span_id": "b", "span_kind": "MENTION"}, {**PART, "evidence_span_id": "ctx", "span_kind": "SCOPE"}]
         self.units = [{**PART, "activity_unit_id": "evA"}, {**PART, "activity_unit_id": "evB"}]
         self.times = []
@@ -126,6 +126,21 @@ class TemporalEvidenceTests(unittest.TestCase):
         self.links[0]["annotator_id"] = "other"
         self.save()
         self.assertIn("EVENT_A_SUPPORT_MISSING", self.codes())
+
+
+    def test_document_context_requires_context_span_and_rationale(self):
+        self.relation["evidence_scope"] = "DOCUMENT_CONTEXT"
+        self.save()
+        self.assertIn("RELATION_CONTEXT_MISSING", self.codes())
+        self.links.append({**PART, "relation_evidence_id": "re3", "relation_id": "rel1", "evidence_span_id": "ctx", "evidence_role": "RELATION_CONTEXT", "supported_event_id": "", "evidence_notes": "antecedent resolved from an earlier paragraph"})
+        self.save()
+        self.assertNotIn("RELATION_CONTEXT_MISSING", self.codes())
+        self.assertTrue(self.report()["ok"], self.report()["errors"])
+
+    def test_relation_context_requires_explanatory_note(self):
+        self.links.append({**PART, "relation_evidence_id": "re3", "relation_id": "rel1", "evidence_span_id": "ctx", "evidence_role": "RELATION_CONTEXT", "supported_event_id": "", "evidence_notes": ""})
+        self.save()
+        self.assertIn("CONTEXT_RATIONALE_MISSING", self.codes())
 
     def test_invalid_role_is_rejected(self):
         self.links[0]["evidence_role"] = "TEMPORAL_RELATION"
