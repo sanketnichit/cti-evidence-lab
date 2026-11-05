@@ -8,6 +8,7 @@
 - Real report rows: 0
 - Synthetic tests only: yes
 - Semantic evidence review: not performed
+- Evidence-scope completeness: implemented as structural locator/role checks for SENTENCE, CROSS_SENTENCE and DOCUMENT_CONTEXT
 - Strict timestamp uncertainty ordering: implemented as a conservative structural gate for direct timestamp BEFORE/AFTER relations
 
 ## Evidence roles
@@ -23,7 +24,16 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 - Time evidence must have `timezone_status=EXPLICIT` and a populated `normalized_timezone`.
 - Normalized bounds must be timezone-aware ISO-8601 values and start must not follow end.
 - Non-point intervals require `uncertainty_notes`.
+- Retained but non-normalized timestamp candidates are rejected rather than ignored.
+- Direct-timestamp evidence must preserve `raw_time_text`, `time_precision`, and explicit `timezone_text`.
 - For direct timestamp `BEFORE`/`AFTER`, the strict order must hold for every retained A/B interval combination.
+
+## Evidence-scope gate
+
+- `SENTENCE`: cue and at least one A- and B-support span must share a non-empty `sentence_id`.
+- `CROSS_SENTENCE`: at least one endpoint-support span must be outside the cue sentence, and every such support link requires an explanatory `evidence_notes` value.
+- `DOCUMENT_CONTEXT`: requires a separate contextual span, a distinct section/paragraph locator from the cue, span-level `evidence_notes`, and relation-level `relation_notes`.
+- These checks establish locator/role completeness only; human review remains responsible for semantic entailment.
 
 ## Final analysis partition
 

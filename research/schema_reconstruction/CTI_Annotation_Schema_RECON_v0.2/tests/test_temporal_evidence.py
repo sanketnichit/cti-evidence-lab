@@ -12,10 +12,10 @@ from validate_temporal_evidence import HEADERS, validate_bundle
 
 
 PART = {"report_id": "r1", "annotator_id": "a1", "annotation_pass_id": "p1"}
-REL_H = ["report_id", "annotator_id", "annotation_pass_id", "relation_id", "event_a_id", "event_b_id", "relation_label", "relation_basis", "evidence_scope", "primary_evidence_span_id"]
-SPAN_H = ["report_id", "annotator_id", "annotation_pass_id", "evidence_span_id", "span_kind"]
+REL_H = ["report_id", "annotator_id", "annotation_pass_id", "relation_id", "event_a_id", "event_b_id", "relation_label", "relation_basis", "evidence_scope", "primary_evidence_span_id", "relation_notes"]
+SPAN_H = ["report_id", "annotator_id", "annotation_pass_id", "evidence_span_id", "span_kind", "sentence_id", "section_locator", "paragraph_locator"]
 UNIT_H = ["report_id", "annotator_id", "annotation_pass_id", "activity_unit_id"]
-TIME_H = ["report_id", "annotator_id", "annotation_pass_id", "time_evidence_id", "activity_unit_id", "time_type", "normalization_status", "normalized_start", "normalized_end", "normalized_timezone", "timezone_status", "uncertainty_notes", "primary_evidence_span_id"]
+TIME_H = ["report_id", "annotator_id", "annotation_pass_id", "time_evidence_id", "activity_unit_id", "raw_time_text", "time_type", "time_precision", "timezone_text", "normalization_status", "normalized_start", "normalized_end", "normalized_timezone", "timezone_status", "uncertainty_notes", "primary_evidence_span_id"]
 
 
 def write(path, headers, rows):
@@ -32,8 +32,13 @@ class TemporalEvidenceTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.base = self.root / "base"
         self.ext = self.root / "temporal_relation_evidence.csv"
-        self.relation = {**PART, "relation_id": "rel1", "event_a_id": "evA", "event_b_id": "evB", "relation_label": "BEFORE", "relation_basis": "direct_source", "evidence_scope": "SENTENCE", "primary_evidence_span_id": "cue"}
-        self.spans = [{**PART, "evidence_span_id": "cue", "span_kind": "RELATION"}, {**PART, "evidence_span_id": "a", "span_kind": "MENTION"}, {**PART, "evidence_span_id": "b", "span_kind": "MENTION"}, {**PART, "evidence_span_id": "ctx", "span_kind": "SCOPE"}]
+        self.relation = {**PART, "relation_id": "rel1", "event_a_id": "evA", "event_b_id": "evB", "relation_label": "BEFORE", "relation_basis": "direct_source", "evidence_scope": "SENTENCE", "primary_evidence_span_id": "cue", "relation_notes": ""}
+        self.spans = [
+            {**PART, "evidence_span_id": "cue", "span_kind": "RELATION", "sentence_id": "s1", "section_locator": "Section 1", "paragraph_locator": "p1"},
+            {**PART, "evidence_span_id": "a", "span_kind": "MENTION", "sentence_id": "s1", "section_locator": "Section 1", "paragraph_locator": "p1"},
+            {**PART, "evidence_span_id": "b", "span_kind": "MENTION", "sentence_id": "s1", "section_locator": "Section 1", "paragraph_locator": "p1"},
+            {**PART, "evidence_span_id": "ctx", "span_kind": "SCOPE", "sentence_id": "s2", "section_locator": "Section 2", "paragraph_locator": "p3"},
+        ]
         self.units = [{**PART, "activity_unit_id": "evA"}, {**PART, "activity_unit_id": "evB"}]
         self.times = []
         self.links = [
@@ -110,15 +115,15 @@ class TemporalEvidenceTests(unittest.TestCase):
     def test_direct_timestamp_requires_each_endpoint_time_span(self):
         self.relation["relation_basis"] = "direct_timestamp"
         self.times = [
-            {**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"},
-            {**PART, "time_evidence_id": "tB", "activity_unit_id": "evB", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T09:00:00Z", "normalized_end": "2026-01-01T09:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "b"},
+            {**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "raw_time_text": "synthetic time interval", "time_type": "ATTACK_OCCURRENCE", "time_precision": "INTERVAL", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"},
+            {**PART, "time_evidence_id": "tB", "activity_unit_id": "evB", "raw_time_text": "synthetic time interval", "time_type": "ATTACK_OCCURRENCE", "time_precision": "INTERVAL", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T09:00:00Z", "normalized_end": "2026-01-01T09:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "b"},
         ]
         self.save()
         self.assertTrue(self.report()["ok"], self.report()["errors"])
 
     def test_direct_timestamp_missing_endpoint_time_support_is_rejected(self):
         self.relation["relation_basis"] = "direct_timestamp"
-        self.times = [{**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"}]
+        self.times = [{**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "raw_time_text": "synthetic time interval", "time_type": "ATTACK_OCCURRENCE", "time_precision": "INTERVAL", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"}]
         self.save()
         self.assertIn("EVENT_B_TIMESTAMP_SUPPORT_MISSING", self.codes())
 
@@ -126,8 +131,8 @@ class TemporalEvidenceTests(unittest.TestCase):
     def timestamp_rows(self, a_start, a_end, b_start, b_end, a_notes="", b_notes=""):
         self.relation["relation_basis"] = "direct_timestamp"
         self.times = [
-            {**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": a_start, "normalized_end": a_end, "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": a_notes, "primary_evidence_span_id": "a"},
-            {**PART, "time_evidence_id": "tB", "activity_unit_id": "evB", "time_type": "ATTACK_OCCURRENCE", "normalization_status": "NORMALIZED", "normalized_start": b_start, "normalized_end": b_end, "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": b_notes, "primary_evidence_span_id": "b"},
+            {**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "raw_time_text": "synthetic time interval", "time_type": "ATTACK_OCCURRENCE", "time_precision": "INTERVAL", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": a_start, "normalized_end": a_end, "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": a_notes, "primary_evidence_span_id": "a"},
+            {**PART, "time_evidence_id": "tB", "activity_unit_id": "evB", "raw_time_text": "synthetic time interval", "time_type": "ATTACK_OCCURRENCE", "time_precision": "INTERVAL", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": b_start, "normalized_end": b_end, "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": b_notes, "primary_evidence_span_id": "b"},
         ]
         self.save()
 
@@ -170,6 +175,35 @@ class TemporalEvidenceTests(unittest.TestCase):
         )
         self.assertIn("EVENT_A_UNCERTAINTY_NOT_DOCUMENTED", self.codes())
 
+    def test_invalid_timezone_status_is_rejected(self):
+        self.timestamp_rows(
+            "2026-01-01T08:00:00Z", "2026-01-01T08:00:00Z",
+            "2026-01-02T08:00:00Z", "2026-01-02T08:00:00Z",
+        )
+        self.times[0]["timezone_status"] = "MAYBE"
+        self.save()
+        self.assertIn("EVENT_A_TIMEZONE_STATUS_INVALID", self.codes())
+
+    def test_invalid_time_precision_is_rejected(self):
+        self.timestamp_rows(
+            "2026-01-01T08:00:00Z", "2026-01-01T08:00:00Z",
+            "2026-01-02T08:00:00Z", "2026-01-02T08:00:00Z",
+        )
+        self.times[0]["time_precision"] = "SOMETIME"
+        self.save()
+        self.assertIn("EVENT_A_TIME_PRECISION_INVALID", self.codes())
+
+    def test_unnormalized_timestamp_candidate_cannot_be_silently_ignored(self):
+        self.timestamp_rows(
+            "2026-01-01T08:00:00Z", "2026-01-01T08:00:00Z",
+            "2026-01-02T08:00:00Z", "2026-01-02T08:00:00Z",
+        )
+        extra = dict(self.times[0])
+        extra.update(time_evidence_id="tA-unresolved", normalization_status="NOT_NORMALIZED")
+        self.times.append(extra)
+        self.save()
+        self.assertIn("EVENT_A_TIMESTAMP_CANDIDATE_NOT_NORMALIZED", self.codes())
+
     def test_rows_from_other_partition_do_not_satisfy_support(self):
         self.links[0]["annotator_id"] = "other"
         self.save()
@@ -178,11 +212,50 @@ class TemporalEvidenceTests(unittest.TestCase):
 
     def test_document_context_requires_context_span_and_rationale(self):
         self.relation["evidence_scope"] = "DOCUMENT_CONTEXT"
+        self.relation["relation_notes"] = "The contextual passage resolves the earlier reference to Event A."
         self.save()
         self.assertIn("RELATION_CONTEXT_MISSING", self.codes())
         self.links.append({**PART, "relation_evidence_id": "re3", "relation_id": "rel1", "evidence_span_id": "ctx", "evidence_role": "RELATION_CONTEXT", "supported_event_id": "", "evidence_notes": "antecedent resolved from an earlier paragraph"})
         self.save()
         self.assertNotIn("RELATION_CONTEXT_MISSING", self.codes())
+        self.assertTrue(self.report()["ok"], self.report()["errors"])
+
+    def test_document_context_requires_a_distinct_passage(self):
+        self.relation["evidence_scope"] = "DOCUMENT_CONTEXT"
+        self.relation["relation_notes"] = "Context from a separate passage resolves the antecedent."
+        self.spans[3]["section_locator"] = "Section 1"
+        self.spans[3]["paragraph_locator"] = "p1"
+        self.links.append({**PART, "relation_evidence_id": "re3", "relation_id": "rel1", "evidence_span_id": "ctx", "evidence_role": "RELATION_CONTEXT", "supported_event_id": "", "evidence_notes": "context"})
+        self.save()
+        self.assertIn("DOCUMENT_CONTEXT_NOT_DISTINCT_PASSAGE", self.codes())
+
+    def test_document_context_requires_relation_level_rationale(self):
+        self.relation["evidence_scope"] = "DOCUMENT_CONTEXT"
+        self.links.append({**PART, "relation_evidence_id": "re3", "relation_id": "rel1", "evidence_span_id": "ctx", "evidence_role": "RELATION_CONTEXT", "supported_event_id": "", "evidence_notes": "context"})
+        self.save()
+        self.assertIn("DOCUMENT_CONTEXT_RATIONALE_MISSING", self.codes())
+
+    def test_invalid_evidence_scope_is_rejected(self):
+        self.relation["evidence_scope"] = "NARRATIVE_ORDER"
+        self.save()
+        self.assertIn("INVALID_EVIDENCE_SCOPE", self.codes())
+
+    def test_sentence_scope_requires_cue_and_both_arguments_in_same_sentence(self):
+        self.spans[2]["sentence_id"] = "s2"
+        self.save()
+        self.assertIn("SENTENCE_SCOPE_ARGUMENTS_NOT_COLOCATED", self.codes())
+
+    def test_cross_sentence_requires_argument_rationale(self):
+        self.relation["evidence_scope"] = "CROSS_SENTENCE"
+        self.spans[2]["sentence_id"] = "s2"
+        self.save()
+        self.assertIn("CROSS_SENTENCE_ARGUMENT_RATIONALE_MISSING", self.codes())
+
+    def test_cross_sentence_passes_with_linked_argument_rationale(self):
+        self.relation["evidence_scope"] = "CROSS_SENTENCE"
+        self.spans[2]["sentence_id"] = "s2"
+        self.links[1]["evidence_notes"] = "This pronoun refers to Event B in the cue sentence."
+        self.save()
         self.assertTrue(self.report()["ok"], self.report()["errors"])
 
     def test_relation_context_requires_explanatory_note(self):

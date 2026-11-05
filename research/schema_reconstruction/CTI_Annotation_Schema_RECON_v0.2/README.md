@@ -14,7 +14,9 @@ Every positive `direct_source` or `direct_timestamp` relation entering the prima
 
 ## Validation and limits
 
-The extension validator checks partition-local references, link identity, roles, endpoint alignment, cue presence/type, A/B completeness, and direct-timestamp support linkage. Strict `BEFORE`/`AFTER` timestamp relations require timezone-aware ISO-8601 bounds, explicit timezone status, a populated normalized timezone, and documented non-point intervals. The ordering must hold for every retained A/B interval combination; overlapping or uncertain windows cannot create a strict timestamp edge. This remains a structural check, not a semantic judgement that source text entails the relation.
+The extension validator checks partition-local references, link identity, roles, endpoint alignment, cue presence/type, and evidence-scope completeness. `SENTENCE` requires cue and both endpoint-support roles to resolve to one sentence; `CROSS_SENTENCE` requires linked support outside the cue sentence with an explanatory argument/coreference note; `DOCUMENT_CONTEXT` requires a contextual span in a distinct section/paragraph passage, span-level evidence notes, and relation-level rationale. These are structural traceability checks, not semantic proof.
+
+For direct-timestamp relations, the validator requires preserved raw time text and precision, explicit timezone status/text, populated normalized timezone, timezone-aware ISO-8601 bounds, and documented non-point intervals. Retained timestamp candidates that are not normalized are errors rather than silently ignored. Strict `BEFORE`/`AFTER` ordering must hold for every retained A/B interval combination; overlapping or uncertain windows cannot create a strict timestamp edge.
 
 Run tests with `python -m unittest discover -s research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/tests -v`.
 
@@ -31,6 +33,8 @@ Validate the blank extension with the command shown in `SCHEMA_MANIFEST.md`.
 - `tests/test_selected_partition_projection_adapter.py`
 - `docs/SELECTED_PARTITION_PROJECTION_ADAPTER_v0.2.md`
 - `SCHEMA_MANIFEST.md`
+
+The protocol-to-schema comparison and remaining implementation limits are recorded in `research/protocol/PROTOCOL_V0_5_RECON_V0_2_CONFORMANCE_AUDIT_v0.1.md`.
 
 This is a testable design candidate, not an operational annotation instruction. Researcher review and protocol approval are still required.
 ## Final analysis partition selection

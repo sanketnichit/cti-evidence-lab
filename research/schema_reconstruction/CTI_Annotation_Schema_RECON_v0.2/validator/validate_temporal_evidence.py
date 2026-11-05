@@ -18,25 +18,28 @@ REQUIRED = {
     "temporal_relations": {
         "report_id", "annotator_id", "annotation_pass_id", "relation_id",
         "event_a_id", "event_b_id", "relation_label", "relation_basis", "evidence_scope",
-        "primary_evidence_span_id",
+        "primary_evidence_span_id", "relation_notes",
     },
     "evidence_spans": {
         "report_id", "annotator_id", "annotation_pass_id", "evidence_span_id",
-        "span_kind",
+        "span_kind", "sentence_id", "section_locator", "paragraph_locator",
     },
     "activity_units": {
         "report_id", "annotator_id", "annotation_pass_id", "activity_unit_id",
     },
     "time_evidence": {
         "report_id", "annotator_id", "annotation_pass_id", "time_evidence_id",
-        "activity_unit_id", "time_type", "normalization_status",
-        "normalized_start", "normalized_end", "normalized_timezone",
-        "timezone_status", "uncertainty_notes", "primary_evidence_span_id",
+        "activity_unit_id", "raw_time_text", "time_type", "time_precision",
+        "timezone_text", "normalization_status", "normalized_start",
+        "normalized_end", "normalized_timezone", "timezone_status",
+        "uncertainty_notes", "primary_evidence_span_id",
     },
 }
 POSITIVE = {"BEFORE", "AFTER", "OVERLAP", "SIMULTANEOUS", "CONCURRENT_UNSPECIFIED"}
 DIRECT = {"direct_source", "direct_timestamp"}
 ROLES = {"EVENT_A_SUPPORT", "EVENT_B_SUPPORT", "RELATION_CONTEXT"}
+TIME_PRECISIONS = {"YEAR", "MONTH", "DAY", "HOUR", "MINUTE", "SECOND", "INTERVAL", "QUALITATIVE", "UNKNOWN"}
+TIMEZONE_STATUSES = {"EXPLICIT", "INFERRED", "UNKNOWN", "NOT_APPLICABLE"}
 
 SELECTION_HEADERS = [
     "report_id", "analysis_partition_id", "annotator_id", "annotation_pass_id",
@@ -282,15 +285,98 @@ def validate_bundle(base_bundle: Path, evidence_file: Path, selection_file: Path
             errors.append({"code": "EVENT_A_SUPPORT_MISSING", "message": f"{rid}: EVENT_A_SUPPORT is required"})
         if not b_rows:
             errors.append({"code": "EVENT_B_SUPPORT_MISSING", "message": f"{rid}: EVENT_B_SUPPORT is required"})
+        evidence_scope = relation.get("evidence_scope", "")
+        if evidence_scope not in {"SENTENCE", "CROSS_SENTENCE", "DOCUMENT_CONTEXT"}:
+            errors.append({
+                "code": "INVALID_EVIDENCE_SCOPE",
+                "message": f"{rid}: unsupported evidence_scope {evidence_scope!r}",
+            })
+
+        a_span_rows = [
+            spans[(*p, row["evidence_span_id"])]
+            for row in a_rows if (*p, row.get("evidence_span_id", "")) in spans
+        ]
+        b_span_rows = [
+            spans[(*p, row["evidence_span_id"])]
+            for row in b_rows if (*p, row.get("evidence_span_id", "")) in spans
+        ]
+        cue_sentence = cue.get("sentence_id", "") if cue else ""
+        a_sentences = {row.get("sentence_id", "") for row in a_span_rows if row.get("sentence_id", "")}
+        b_sentences = {row.get("sentence_id", "") for row in b_span_rows if row.get("sentence_id", "")}
+
+        if evidence_scope == "SENTENCE":
+            if not cue_sentence or cue_sentence not in a_sentences or cue_sentence not in b_sentences:
+                errors.append({
+                    "code": "SENTENCE_SCOPE_ARGUMENTS_NOT_COLOCATED",
+                    "message": f"{rid}: SENTENCE requires the cue and at least one A- and B-support span in the same non-empty sentence_id",
+                })
+
+        elif evidence_scope == "CROSS_SENTENCE":
+            if not cue_sentence:
+                errors.append({
+                    "code": "CROSS_SENTENCE_CUE_LOCATOR_MISSING",
+                    "message": f"{rid}: CROSS_SENTENCE requires a sentence_id for the relation cue",
+                })
+            support_links = [
+                row for row in rows
+                if row.get("evidence_role") in {"EVENT_A_SUPPORT", "EVENT_B_SUPPORT"}
+                and row.get("supported_event_id") in {relation.get("event_a_id"), relation.get("event_b_id")}
+                and (*p, row.get("evidence_span_id", "")) in spans
+            ]
+            cross_sentence_links = [
+                row for row in support_links
+                if spans[(*p, row["evidence_span_id"])].get("sentence_id", "")
+                and spans[(*p, row["evidence_span_id"])].get("sentence_id", "") != cue_sentence
+            ]
+            if len({cue_sentence} | a_sentences | b_sentences) < 2 or not cross_sentence_links:
+                errors.append({
+                    "code": "CROSS_SENTENCE_ARGUMENT_SPAN_MISSING",
+                    "message": f"{rid}: CROSS_SENTENCE requires linked endpoint support from at least one sentence distinct from the cue sentence",
+                })
+            for row in cross_sentence_links:
+                if not row.get("evidence_notes", "").strip():
+                    errors.append({
+                        "code": "CROSS_SENTENCE_ARGUMENT_RATIONALE_MISSING",
+                        "message": f"{rid}: endpoint support outside the cue sentence requires evidence_notes explaining the reference/coreference",
+                    })
+
         context_rows = [
             row for row in rows
             if row.get("evidence_role") == "RELATION_CONTEXT"
             and not row.get("supported_event_id")
-            and row.get("evidence_notes")
+            and row.get("evidence_notes", "").strip()
             and (*p, row.get("evidence_span_id", "")) in spans
         ]
-        if relation.get("evidence_scope") == "DOCUMENT_CONTEXT" and not context_rows:
-            errors.append({"code": "RELATION_CONTEXT_MISSING", "message": f"{rid}: DOCUMENT_CONTEXT requires a contextual span and rationale"})
+        if evidence_scope == "DOCUMENT_CONTEXT":
+            if not context_rows:
+                errors.append({
+                    "code": "RELATION_CONTEXT_MISSING",
+                    "message": f"{rid}: DOCUMENT_CONTEXT requires a contextual span and explanatory evidence_notes",
+                })
+            if not relation.get("relation_notes", "").strip():
+                errors.append({
+                    "code": "DOCUMENT_CONTEXT_RATIONALE_MISSING",
+                    "message": f"{rid}: DOCUMENT_CONTEXT requires relation_notes explaining the connection across passages",
+                })
+            cue_location = (
+                cue.get("section_locator", "") if cue else "",
+                cue.get("paragraph_locator", "") if cue else "",
+            )
+            if not any(cue_location) or not any(
+                (
+                    spans[(*p, row["evidence_span_id"])].get("section_locator", ""),
+                    spans[(*p, row["evidence_span_id"])].get("paragraph_locator", ""),
+                ) != cue_location
+                and any((
+                    spans[(*p, row["evidence_span_id"])].get("section_locator", ""),
+                    spans[(*p, row["evidence_span_id"])].get("paragraph_locator", ""),
+                ))
+                for row in context_rows
+            ):
+                errors.append({
+                    "code": "DOCUMENT_CONTEXT_NOT_DISTINCT_PASSAGE",
+                    "message": f"{rid}: at least one RELATION_CONTEXT span must have a section/paragraph locator distinct from the relation-cue passage",
+                })
         if relation.get("relation_basis") == "direct_timestamp":
             def endpoint_intervals(endpoint_id, support_rows, prefix):
                 support_spans = {r.get("evidence_span_id", "") for r in support_rows}
@@ -304,11 +390,33 @@ def validate_bundle(base_bundle: Path, evidence_file: Path, selection_file: Path
                 intervals = []
                 for time_row in candidates:
                     if time_row.get("normalization_status") != "NORMALIZED":
+                        errors.append({
+                            "code": f"{prefix}_TIMESTAMP_CANDIDATE_NOT_NORMALIZED",
+                            "message": f"{rid}: retained time record {time_row.get('time_evidence_id', '')!r} for {endpoint_id} is not normalized; it cannot be silently ignored for a direct-timestamp relation",
+                        })
                         continue
-                    if time_row.get("timezone_status") != "EXPLICIT" or not time_row.get("normalized_timezone"):
+                    if not time_row.get("raw_time_text", "").strip() or not time_row.get("time_precision", "").strip():
+                        errors.append({
+                            "code": f"{prefix}_RAW_TIME_FIELDS_MISSING",
+                            "message": f"{rid}: direct timestamp evidence for {endpoint_id} must preserve raw_time_text and time_precision",
+                        })
+                        continue
+                    if time_row.get("time_precision") not in TIME_PRECISIONS:
+                        errors.append({
+                            "code": f"{prefix}_TIME_PRECISION_INVALID",
+                            "message": f"{rid}: unsupported time_precision {time_row.get('time_precision')!r} for {endpoint_id}",
+                        })
+                        continue
+                    if time_row.get("timezone_status") not in TIMEZONE_STATUSES:
+                        errors.append({
+                            "code": f"{prefix}_TIMEZONE_STATUS_INVALID",
+                            "message": f"{rid}: unsupported timezone_status {time_row.get('timezone_status')!r} for {endpoint_id}",
+                        })
+                        continue
+                    if time_row.get("timezone_status") != "EXPLICIT" or not time_row.get("timezone_text", "").strip() or not time_row.get("normalized_timezone", "").strip():
                         errors.append({
                             "code": f"{prefix}_TIMEZONE_NOT_EXPLICIT",
-                            "message": f"{rid}: {endpoint_id} requires explicit timezone status and normalized_timezone",
+                            "message": f"{rid}: {endpoint_id} requires timezone_status=EXPLICIT, timezone_text, and normalized_timezone",
                         })
                         continue
                     start = _parse_aware_timestamp(time_row.get("normalized_start", ""))
