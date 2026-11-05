@@ -58,3 +58,8 @@ The opportunity measure needs an approved operational scope-pair rule. The curre
 The aggregation layer has synthetic helper tests and an end-to-end selected-final fixture test. There are no human AnnoCTR annotations, selected final partitions, or real-report projections. The current blank package therefore returns zero denominators and null rates, not empirical zero outcomes.
 
 The output also includes count-status-by-granularity, mention and relation missingness, `A_exact` versus `A_120` coverage, occurrence compression by technique, and report-scoped collision/cycle provenance. Conditional rates that depend on the provisional scope-pair rule are withheld until approval. The CLI path is covered by a blank-package smoke test and never writes frozen source text to JSON.
+
+
+## RECON v0.3 explicit comparison-scope assignment candidate
+
+A sibling RECON v0.3 draft is available at ../CTI_Annotation_Schema_RECON_v0.3/. It adds source-evidence-backed per-event comparison-scope assignments and a lock bound to the v0.2 selected-analysis lock. The v0.2 aggregator can compare the legacy broad rule, a shared-INCIDENT rule, and the v0.3 explicit-assignment candidate. The v0.3 extension remains unapproved and synthetic-only; do not start human annotation until the protocol and scope policy are reviewed and frozen.

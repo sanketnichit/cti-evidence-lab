@@ -73,3 +73,8 @@ The aggregator is structural and arithmetic. It does not decide semantic event i
 - Per-report collision provenance, excess edge multiplicity, diagonal/distinct pair mappings, label conflicts and strict-order cycle provenance are retained without merging pair keys across reports.
 - The conditional within-technique relation given same-technique opportunity is withheld until the provisional scope-pair rule is approved.
 - CLI smoke testing covers JSON output from a blank bundle without emitting source text.
+
+
+## RECON v0.3 explicit comparison-scope assignment candidate
+
+The sibling RECON v0.3 draft adds event-level comparison-scope assignments and assignment locks. The v0.2 aggregator exposes three named scope-pair rule candidates: nearest common resolved non-report scope (legacy), shared resolved INCIDENT scope, and explicit shared event comparison-scope assignment. The v0.3 wrapper uses the explicit candidate only after assignment and lock validation. This does not approve the scientific rule; all scope-pair rate gates remain provisional unless separately approved. See ../CTI_Annotation_Schema_RECON_v0.3/.
