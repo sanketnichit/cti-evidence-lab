@@ -217,3 +217,40 @@ These are candidate definitions, not finalized metrics. Test them on manually co
 ### Current decision and stop rules
 
 Remain at **NARROW**. Do not build a predictive model until the Figshare and AnnoCTR source gates are resolved and a 5–8 report pilot demonstrates (a) enough repeated distinct instances, (b) enough explicit temporal relations, (c) consistent human annotation and (d) usable source rights. A second human annotator is preferred; absent one, state that inter-annotator agreement was not measured. Automated tools may support data screening or schema checks, but must not substitute for human-created gold labels.
+
+
+## 13. Literature boundary refresh — 5 November 2026
+
+A further comparison of recent 2026 work confirms that the gap must be framed at the intersection of occurrence identity, direct temporal evidence and projection to technique pairs, not as a general absence of CTI event or relation extraction.
+
+### APTIE — event extraction plus entity relations, not event-temporal relations
+
+Sun et al., A multi-task information extraction Chinese dataset for APT cyber threat intelligence, Scientific Data, published 25 May 2026, describes 116 Chinese APT reports, 808 sentences, 2,574 entities, 1,506 entity relations and 139 event instances. Its relation module annotates semantic links between entities, with categories including Includes, Related to, Exploits, Located in, Alias and Targets. Event extraction is a separate module. The paper's described schema therefore adds real event-extraction prior art but does not establish a temporal relation graph over pairs of event instances.
+
+Paper: https://doi.org/10.1038/s41597-026-07487-7
+Dataset: https://doi.org/10.5281/zenodo.17129303
+Code: https://github.com/sunllllll/CTI-dataset
+
+### 2026 event-extraction survey — relation extraction remains underdeveloped
+
+Yang et al., A Survey of Cyberspace Security Event Extraction Techniques: Traditional, Machine Learning and Deep Learning Paradigms, IET Communications, first published 21 July 2026, distinguishes event detection, event argument extraction and event relation extraction. It characterises ERE as relatively underdeveloped and reports that, at the time of its review, there was no unified, publicly available and widely adopted benchmark for cybersecurity ERE. It defines ERE in terms of relations between event instances, including temporal, causal, conditional, inclusion and coreference relations.
+
+This is a useful field-level synthesis, not proof that no private, specialised or later resource exists. It must be read alongside the already-published APTIE dataset: APTIE has entity-relation labels and event extraction, but those are not equivalent to an event-instance temporal-link benchmark.
+
+Paper: https://doi.org/10.1049/cmu2.70187
+
+### SMAH-CTI — recent sentence-level CTI benchmark, no event-event temporal task
+
+The SMAH-CTI project describes a human-annotated resource of 100 public CTI reports, 12,304 sentence instances and 15,487 entity annotations. Its four tasks are relevance classification, CTI NER, ATT&CK tactic/technique mapping and grounded procedure descriptions. Each item is sentence-anchored and includes preceding-sentence context where available. The released task description does not include event-coreference chains or event-event temporal relation labels.
+
+Paper: https://aclanthology.org/2026.findings-emnlp.1180/
+Project/schema description: https://seal.cs.ucf.edu/projects/smah-cti.html
+
+### What this changes
+
+1. Generic CTI event extraction and entity-relation annotation cannot be presented as novel.
+2. Temporal relation extraction over CTI reports cannot be presented as novel; ChronoCTI already addresses it over ATT&CK technique pairs.
+3. Sentence-level CTI extraction, ATT&CK mapping and grounded procedure descriptions also have a substantial 2026 benchmark in SMAH-CTI.
+4. The remaining candidate question is narrower: how many directly evidenced temporal relations exist between distinct, resolved report-local activity occurrences whose accepted ATT&CK mappings overlap, and what endpoint identity or relation structure is retained, conflated or omitted by a representation restricted to distinct technique pairs?
+
+This is still only a candidate empirical contribution. A final novelty claim requires exact schema-level comparison with ChronoCTI, the 2026 STIX graph preprint, AttackSeqBench, reachable-attack-chain work and any later resources found by the systematic search. The five-report AnnoCTR pilot can establish feasibility and annotation yield, not novelty or population prevalence.
