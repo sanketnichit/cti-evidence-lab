@@ -51,6 +51,10 @@ jobs:
       - name: Validate blank reconstructed annotation bundle
         working-directory: research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1
         run: python validator/validate_annotations.py --bundle .
+      - name: Run temporal evidence extension synthetic tests
+        run: python -m unittest discover -s research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/tests -v
+      - name: Validate blank temporal evidence extension
+        run: python research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/validator/validate_temporal_evidence.py --base-bundle research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1 --evidence-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/registers/temporal_relation_evidence.csv
       - name: Package the tested source snapshot
         run: git archive --format=zip --prefix=cti-evidence-lab/ HEAD > cti-evidence-lab-main.zip
       - name: Upload source snapshot
@@ -60,4 +64,3 @@ jobs:
           path: cti-evidence-lab-main.zip
           if-no-files-found: error
           retention-days: 14
-
