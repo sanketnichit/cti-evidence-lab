@@ -61,6 +61,7 @@ All annotation rows are partitioned by `(report_id, annotator_id, annotation_pas
 4. `ALTERNATIVE`, `REJECTED`, or `UNRESOLVED` decisions are excluded from primary mapping sets. An `ALTERNATIVE` row requires an `alternative_group_id`; each group contains at least two mapping rows for one activity unit, and any `alternative_to_mapping_id` resolves within that group and unit.
 5. Every `baseline_mapping_status=IN_VOCAB` must have `baseline_parent_technique_id` present in the pinned A_120 list and matching `baseline_vocabulary_sha256`.
 6. Exact technique/sub-technique IDs are retained separately from parent technique IDs.
+7. An accepted `source_supported_analyst_candidate` mapping requires a non-empty human rationale in `mapping_notes` and a mapping-specific evidence link.
 
 ## Evidence-link invariants
 

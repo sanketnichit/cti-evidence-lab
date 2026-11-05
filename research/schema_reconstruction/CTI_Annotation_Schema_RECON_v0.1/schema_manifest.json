@@ -54,7 +54,7 @@
     "path": "validator/validate_annotations.py",
     "status": "SYNTHETICALLY_TESTED_STRUCTURAL_VALIDATOR_WITH_PINNED_ATTACK_V12_1_CROSSWALK",
     "test_path": "tests/test_validator.py",
-    "test_count": 40,
+    "test_count": 41,
     "test_command": "python -m unittest discover -s tests -v",
     "known_limitations": [
       "Does not make semantic judgments about source evidence or event identity",
@@ -103,11 +103,11 @@
     "not_integrated_with_public_github_source": true
   },
   "test_suite": {
-    "total_synthetic_tests": 67,
+    "total_synthetic_tests": 68,
     "test_command": "python -m unittest discover -s tests -v",
     "real_report_rows_used": 0,
     "real_report_runs": 0,
-    "note": "67 synthetic tests: 40 validator, 16 projection, 11 adapter; no real report annotation or projection."
+    "note": "68 synthetic tests: 41 validator, 16 projection, 11 adapter; no real report annotation or projection."
   },
   "annotation_projection_adapter": {
     "path": "analysis/annotation_projection_adapter.py",

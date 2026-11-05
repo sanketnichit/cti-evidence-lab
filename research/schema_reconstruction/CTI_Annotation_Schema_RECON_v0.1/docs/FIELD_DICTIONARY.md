@@ -126,7 +126,7 @@ Primary evidence spans referenced in direct `primary_evidence_span_id` fields mu
 | `baseline_parent_technique_id` | string/blank | conditional | Parent technique ID used in the ChronoCTI 120-term vocabulary. |
 | `baseline_mapping_status` | `IN_VOCAB`, `OUT_OF_VOCAB`, `UNRESOLVED`, `NOT_APPLICABLE` | yes | **RECONSTRUCTION PROPOSAL.** `IN_VOCAB` requires membership in pinned A_120. |
 | `annotator_confidence`, `adjudication_status` | controlled | yes | Confidence and review state. |
-| `mapping_notes` | string | optional | Rationale/alternatives. |
+| `mapping_notes` | string | optional | Rationale/alternatives; required for an accepted `source_supported_analyst_candidate` mapping. |
 
 ## `time_evidence.csv` — one row per typed time observation
 

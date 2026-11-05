@@ -673,6 +673,12 @@ def validate_bundle(
             _add(issues, "ERROR", "INVALID_MAPPING_DECISION", f"Invalid mapping_decision_status {decision!r}", "event_mappings", i)
         if decision == "ACCEPTED" and basis in {"workbook_only", "unresolved"}:
             _add(issues, "ERROR", "UNSUPPORTED_ACCEPTED_MAPPING", f"Accepted mapping cannot use mapping_basis={basis}", "event_mappings", i)
+        if decision == "ACCEPTED" and basis == "source_supported_analyst_candidate" and not r.get("mapping_notes", "").strip():
+            _add(
+                issues, "ERROR", "ANALYST_CANDIDATE_RATIONALE_MISSING",
+                "An accepted source-supported analyst candidate requires a human mapping rationale in mapping_notes",
+                "event_mappings", i,
+            )
         if decision == "ACCEPTED" and not r.get("exact_technique_id"):
             _add(issues, "ERROR", "ACCEPTED_MAPPING_NO_TECHNIQUE", "Accepted mapping requires exact_technique_id", "event_mappings", i)
 

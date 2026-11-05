@@ -226,6 +226,14 @@ class ValidatorTests(unittest.TestCase):
             & {x.code for x in result.errors}
         )
 
+    def test_accepted_analyst_candidate_requires_human_rationale(self):
+        mapping = self.rows["event_mappings"][0]
+        mapping["mapping_basis"] = "source_supported_analyst_candidate"
+        mapping["mapping_notes"] = ""
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("ANALYST_CANDIDATE_RATIONALE_MISSING", {x.code for x in result.errors})
+
     def test_missing_source_text_is_warning_not_false_error(self):
         result = self.validate(source_texts=False)
         self.assertTrue(result.ok)
