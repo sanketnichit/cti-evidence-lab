@@ -157,3 +157,44 @@ Continue local analysis with provenance. For public outputs, prefer report ID, t
 5. Report both the full report denominator and the narrower event/edge denominators. Keep the pilot explicitly feasibility-oriented.
 
 **Bottom line:** the five candidates are still useful and should not be discarded for failing to produce the desired structure. The research outcome is not “find five reports with same-technique temporal pairs”; it is to measure what the source reports actually support, including when they do not resolve event identities or temporal relations.
+## Rights/source-terms verification addendum — 5 November 2026
+
+**Purpose:** record current primary-source terms that affect two of the fixed rank-1 candidates. This is a provenance and permissions checkpoint, not legal advice and not a final legal determination.
+
+### Corpus-level licence evidence
+
+The AnnoCTR repository README states that the `AnnoCTR` corpus is licensed under **CC BY-SA 4.0** and identifies Intel471 and Lab52/S2 Grupo among the report donors. The repository was archived on 19 February 2026. This is the licence statement attached to the distributed corpus; it does not by itself resolve any conflict with a donor's separate website terms or establish the exact scope of permissions granted for every downstream annotation/reuse scenario.
+
+Source: https://github.com/boschresearch/anno-ctr-lrec-coling-2024
+
+### Intel471 — current terms require clarification
+
+The current Intel471 Terms of Service state that website content is owned or licensed by Intel471, that use of the website does not grant content rights, and that copying, reproducing, downloading or distributing content requires prior written authorization unless expressly provided by the terms. The AnnoCTR report itself says it also ran on McAfee Enterprise ATR, which adds a syndication/rights-chain question.
+
+Sources:
+- https://www.intel471.com/legal/terms-of-service
+- https://www.intel471.com/blog/groove-gang-ransomware-babuk-revil-blackmatter
+
+**Disposition:** do not infer that the corpus-level CC BY-SA statement is invalid, and do not infer that it resolves all present uses. Record the report-level rights state as **UNRESOLVED** for local research use and public reuse pending clarification of the donor authorization and any applicable McAfee rights. Do not publish raw text or extended spans.
+
+### Lab52 / S2 Grupo — direct reproduction restriction requires clarification
+
+The current Lab52 legal notice states that a user may download one copy of a page for offline viewing for personal, non-commercial purposes. It separately prohibits reproducing all or part of the site and prohibits reproduction, distribution, copying or transformation of site content without prior written authorization.
+
+Source: https://lab52.io/legal_note
+
+**Disposition:** this is a material conflict to reconcile with the AnnoCTR corpus-level CC BY-SA 4.0 statement and the repository's acknowledgement that Lab52/S2 Grupo donated reports. Do not conclude that local research annotation is either permitted or prohibited solely from these two records. Keep both local research use and public reuse **UNRESOLVED** pending written clarification of the donation/licence scope. Do not publish raw text or extended spans.
+
+### Other three rank-1 candidates
+
+This focused update did not establish new article-specific rights grants for Proofpoint, QuoIntelligence or Zscaler. Their rights state remains unchanged: corpus-level CC BY-SA evidence is recorded, but local-use and public-reuse status remain unresolved pending item-level review.
+
+### Operational rule pending clarification
+
+- Keep raw report text outside Git.
+- Keep exact/extended source spans out of public project files.
+- Continue to record report IDs, source URLs, source hashes and concise source-grounded paraphrases.
+- Do not convert `rights_review_status` prose into `local_research_use_status=PERMITTED` or `public_reuse_status=PERMITTED`.
+- Keep these permissions separate from source-scope eligibility and from the scientific question of whether a report contains resolvable event instances.
+
+This addendum does not alter the five-report candidate order, the 120-row sampling frame, source-scope eligibility decisions, local-use decisions, public-reuse decisions or human annotation status.

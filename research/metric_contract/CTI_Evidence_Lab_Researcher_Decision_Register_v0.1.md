@@ -34,6 +34,15 @@ The current executable package is `CTI_Annotation_Schema_RECON_v0.1`. It is a re
 | 13 | Rights and outputs | AnnoCTR corpus license is CC BY-SA 4.0, but report-specific publisher provenance/redistribution cautions remain AMBER. Local research use and public reuse are separate. | Keep raw reports and long source spans local. Record source-scope eligibility, local-use permission and public-reuse status separately. Clarify Lab52/S2 Grupo and Intel471 first. | **Open; no legal conclusion** |
 | 14 | Novelty claim | Audit v1.4 documents substantial adjacent work and says novelty remains unproven. | Position the candidate niche around the human evidence standard plus explicit measurement of occurrence-level information under a named distinct-technique-pair projection. Do not claim general CTI event extraction, ATT&CK mapping, or attack sequencing as novel. | **Not approved; systematic comparison still needed** |
 
+### Rights review update — 5 November 2026
+
+A focused check of current primary-source terms found that the AnnoCTR repository README states CC BY-SA 4.0 for the corpus and acknowledges Intel471 and Lab52/S2 Grupo as donors. However, the current Intel471 Terms of Service reserve copying/reproduction/download/distribution rights absent written authorization unless otherwise permitted; the current Lab52 legal notice allows one offline personal/non-commercial copy but separately restricts reproduction and transformation without prior written authorization. The five-report audit and canonical frame now record these issues against the relevant candidates. This does **not** decide the validity or scope of the corpus-level licence. Keep Intel471 and Lab52 local research use and public reuse UNRESOLVED until the donor/dataset permission chain is clarified. The remaining three candidates' item-level terms were not newly established in this check and remain unresolved.
+
+Sources:
+- https://github.com/boschresearch/anno-ctr-lrec-coling-2024
+- https://www.intel471.com/legal/terms-of-service
+- https://www.lab52.io/legal_note
+
 ## 3. Missing-original dependencies
 
 The exact `CTI_Event_Instance_Annotation_Protocol_v0.4.1-draft.md` and original `CTI_Annotation_Schema_v0.4.2-draft.zip` remain unrecovered. Available materials include Protocol v0.4-draft, its migration note, the v0.4.2 conformance audit, project-wide audit v1.4, five-report re-audit v0.1, sampling method v0.3.2, and the public v0.3 repository templates/validator.
