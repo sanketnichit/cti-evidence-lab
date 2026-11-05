@@ -87,6 +87,83 @@ CONFIDENCE = {"HIGH", "MEDIUM", "LOW"}
 ADJUDICATION_STATUSES = {"UNREVIEWED", "AGREED", "ADJUDICATED"}
 NON_TEMPORAL_LABELS = {"CAUSES_OR_ENABLES", "DEPENDS_ON", "PRECONDITION_OF", "NARRATIVE_ORDER_ONLY"}
 SCOPE_COMPATIBILITY = {"COMPATIBLE", "INCOMPATIBLE", "UNCERTAIN"}
+
+# These scope types form the provisional comparison universe used by both
+# primary relation validation and report-level pair-opportunity counting.
+# This is a structural compatibility set, not a claim that every broad scope
+# is scientifically appropriate for every report.
+COMPARABLE_SCOPE_TYPES = {
+    "INCIDENT", "CAMPAIGN", "ACTOR_OPERATION",
+    "VICTIM_ORGANISATION", "HOST", "OTHER",
+}
+
+
+def resolved_scope_ancestor_chain(
+    scope_id: str,
+    scope_rows: Iterable[Mapping[str, str]],
+) -> list[Mapping[str, str]]:
+    """Return the resolved scope chain from a leaf scope toward its ancestors.
+
+    Traversal fails closed at a missing, provisional, unresolved, or repeated
+    scope. Callers pass rows from one report/annotator/pass partition.
+    """
+    by_id = {
+        row.get("scope_id", ""): row
+        for row in scope_rows
+        if row.get("scope_id", "")
+    }
+    chain: list[Mapping[str, str]] = []
+    visited: set[str] = set()
+    current = scope_id
+    while current and current not in visited:
+        visited.add(current)
+        row = by_id.get(current)
+        if row is None or row.get("scope_status") != "RESOLVED":
+            break
+        chain.append(row)
+        current = row.get("parent_scope_id", "")
+    return chain
+
+
+def shared_resolved_comparison_scope_ids(
+    scope_a: str,
+    scope_b: str,
+    scope_rows: Iterable[Mapping[str, str]],
+) -> list[str]:
+    """List shared resolved, non-report comparison scopes, nearest first."""
+    chain_a = resolved_scope_ancestor_chain(scope_a, scope_rows)
+    chain_b = resolved_scope_ancestor_chain(scope_b, scope_rows)
+    positions_b = {
+        row["scope_id"]: index
+        for index, row in enumerate(chain_b)
+    }
+    common: list[tuple[int, int, str]] = []
+    for index_a, row in enumerate(chain_a):
+        scope_id = row["scope_id"]
+        if scope_id not in positions_b:
+            continue
+        other = chain_b[positions_b[scope_id]]
+        scope_type = row.get("scope_type", "")
+        if (
+            scope_type == other.get("scope_type")
+            and scope_type in COMPARABLE_SCOPE_TYPES
+        ):
+            index_b = positions_b[scope_id]
+            common.append((max(index_a, index_b), index_a + index_b, scope_id))
+    common.sort()
+    return [scope_id for _, _, scope_id in common]
+
+
+def nearest_common_resolved_comparison_scope(
+    scope_a: str,
+    scope_b: str,
+    scope_rows: Iterable[Mapping[str, str]],
+) -> str | None:
+    """Return the nearest shared scope eligible under the provisional rule."""
+    candidates = shared_resolved_comparison_scope_ids(scope_a, scope_b, scope_rows)
+    return candidates[0] if candidates else None
+
+
 ASSESSABILITY = {"ASSESSABLE", "NOT_ASSESSABLE", "PENDING"}
 ELIGIBILITY = {"ELIGIBLE", "INELIGIBLE", "PENDING"}
 LOCAL_USE = {"PERMITTED", "NOT_PERMITTED", "UNRESOLVED"}
@@ -918,6 +995,21 @@ def validate_bundle(
                 for endpoint_name, unit in (("event_a_id", ua), ("event_b_id", ub)):
                     if unit and not _scope_within_partition(_partition(r), unit.get("scope_id", ""), comparison_scope):
                         _add(issues, "ERROR", "ENDPOINT_OUTSIDE_COMPARISON_SCOPE", f"{endpoint_name} scope is not within comparison_scope_id", "temporal_relations", i)
+            if ua and ub and comparison_scope:
+                partition_scopes = [
+                    row for row in tables["report_scopes"]
+                    if _partition(row) == _partition(r)
+                ]
+                common_scope_ids = shared_resolved_comparison_scope_ids(
+                    ua.get("scope_id", ""), ub.get("scope_id", ""), partition_scopes
+                )
+                if comparison_scope not in common_scope_ids:
+                    _add(
+                        issues, "ERROR", "PRIMARY_RELATION_SCOPE_NOT_COMPARABLE",
+                        "comparison_scope_id must be a shared RESOLVED non-report scope "
+                        "from the same provisional comparison universe used by pair-opportunity counting",
+                        "temporal_relations", i,
+                    )
             if ua and ub and ua.get("unit_role") == "event_leaf" and ub.get("unit_role") == "event_leaf" and ua.get("granularity") == "atomic_event" and ub.get("granularity") == "atomic_event" and ua.get("instance_status") == "RESOLVED" and ub.get("instance_status") == "RESOLVED" and r.get("scope_compatibility") == "COMPATIBLE" and comparison_scope and _scope_within_partition(_partition(r), ua.get("scope_id", ""), comparison_scope) and _scope_within_partition(_partition(r), ub.get("scope_id", ""), comparison_scope):
                 primary_edges += 1
         elif label in POSITIVE_TEMPORAL_LABELS:
@@ -958,6 +1050,25 @@ def validate_bundle(
                     endpoint = units.get((*_partition(r), endpoint_id))
                     if endpoint and not _scope_within_partition(_partition(r), endpoint.get("scope_id", ""), r["comparison_scope_id"]):
                         _add(issues, "ERROR", "ASSESSMENT_ENDPOINT_OUTSIDE_SCOPE", f"{endpoint_name} scope is not within comparison_scope_id", "candidate_pair_assessments", i)
+            endpoint_a = units.get((*_partition(r), a))
+            endpoint_b = units.get((*_partition(r), b))
+            if endpoint_a and endpoint_b:
+                partition_scopes = [
+                    row for row in tables["report_scopes"]
+                    if _partition(row) == _partition(r)
+                ]
+                common_scope_ids = shared_resolved_comparison_scope_ids(
+                    endpoint_a.get("scope_id", ""),
+                    endpoint_b.get("scope_id", ""),
+                    partition_scopes,
+                )
+                if r.get("comparison_scope_id") and r["comparison_scope_id"] not in common_scope_ids:
+                    _add(
+                        issues, "ERROR", "ASSESSMENT_SCOPE_NOT_COMPARABLE",
+                        "comparison_scope_id must be a shared RESOLVED non-report scope "
+                        "from the same provisional comparison universe used by pair-opportunity counting",
+                        "candidate_pair_assessments", i,
+                    )
         if r.get("assessment_label") in {"NO_TEMPORAL_CLAIM", "VAGUE_OR_AMBIGUOUS", "NOT_ASSESSABLE"} and not r.get("assessment_reason"):
             _add(issues, "ERROR", "ASSESSMENT_REASON_MISSING", f"{r.get('assessment_label')} requires assessment_reason", "candidate_pair_assessments", i)
         if r.get("assessment_label") in POSITIVE_TEMPORAL_LABELS:
