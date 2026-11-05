@@ -101,7 +101,9 @@ Also record a `unit_role`:
 - `aggregate_container` — a report-level grouping; not an atomic event;
 - `unresolved_unit` — a unit whose identity/granularity remains unresolved.
 
-**Primary graph rule:** only resolved `event_leaf` units with `atomic_event` granularity enter the primary event-instance graph. `series_container`, `episode_container`, and `aggregate_container` units are retained and analysed separately. They must not be pooled with atomic event instances in a primary occurrence count or edge denominator. Episode-level analyses may be reported as a clearly separate exploratory/sensitivity view.
+**Primary graph rule:** only resolved `event_leaf` units with `atomic_event` granularity enter the primary event-instance graph. `series_container`, `episode_container`, and `aggregate_container` units are retained and analysed separately. They must not be pooled with atomic event instances in a primary occurrence count or edge denominator.
+
+**Initial-pilot boundary (proposed; researcher approval required):** retain episode containers, their parent/child structure, and any directly supported time evidence, but defer episode-to-episode temporal relation annotation. Do not put episode-container IDs in `temporal_relations`, do not create synthetic event leaves to make an episode pair, and do not include episode-level relations in primary counts or projection metrics. If a future study needs episode-to-episode edges, add a separately versioned register and protocol rule before collecting them. A relation between two resolved atomic event leaves inside or across episodes remains eligible only when it independently meets every primary event-edge rule.
 
 If a repeated series can be decomposed into separately identifiable occurrences, create event-leaf children and keep a series container as their parent. If the report does not distinguish the executions, retain one series container and do not invent child event IDs.
 
@@ -225,20 +227,30 @@ Only `direct_source` and `direct_timestamp` relations with resolved event-leaf e
 
 A sentence that merely mentions both endpoints is insufficient. The evidence span(s) must support the relation between them. Sentence order alone does not establish physical chronology. A source may assert causality or dependency without asserting temporal precedence.
 
-### 4.3 Required relation evidence fields
+### 4.3 Required relation evidence fields and span representation
 
-- `relation_id`
-- `report_id`
-- `event_a_id`, `event_b_id`
-- `relation_label`
-- `relation_basis`
-- `evidence_start`, `evidence_end` (zero-based, half-open offsets into the frozen source)
-- `evidence_text`
-- `cue_text`
-- `argument_support`
-- `evidence_scope` (`SENTENCE`, `CROSS_SENTENCE`, `DOCUMENT_CONTEXT`)
-- `annotator_confidence` (`HIGH`, `MEDIUM`, `LOW`)
-- `adjudication_status` (`UNREVIEWED`, `AGREED`, `ADJUDICATED`, as applicable)
+The relation record and linked evidence spans jointly represent the evidence. Do not copy source text into duplicate `cue_text` or `argument_support` fields.
+
+**In `temporal_relations.csv`, record:**
+
+- `relation_id`, `report_id`, `annotator_id`, and `annotation_pass_id`;
+- `event_a_id` and `event_b_id`;
+- `relation_label` and `relation_basis`;
+- `evidence_scope` (`SENTENCE`, `CROSS_SENTENCE`, `DOCUMENT_CONTEXT`);
+- `primary_evidence_span_id`, which identifies the relation-cue span and must resolve to an `evidence_spans.csv` row with `span_kind=RELATION` for a positive direct relation;
+- `annotator_confidence`, `adjudication_status`, and optional `relation_notes`.
+
+**In `evidence_spans.csv`, store the source span once:** `evidence_span_id`, `char_start`, `char_end`, exact `evidence_text`, `source_text_sha256`, and available sentence/section/paragraph locators. Offsets are zero-based and half-open into the exact frozen source. The span referenced by `primary_evidence_span_id` is the `RELATION_CUE`; its exact text and offsets are not repeated in the relation row.
+
+**In the RECON v0.2 `temporal_relation_evidence.csv` extension, link argument/context support:**
+
+- At least one `EVENT_A_SUPPORT` link must identify a span supporting `event_a_id`; `supported_event_id` must equal that endpoint.
+- At least one `EVENT_B_SUPPORT` link must identify a span supporting `event_b_id`; `supported_event_id` must equal that endpoint.
+- `RELATION_CONTEXT` is optional for `SENTENCE` and `CROSS_SENTENCE`; it must leave `supported_event_id` empty and include `evidence_notes` explaining its contextual role.
+- `DOCUMENT_CONTEXT` requires at least one `RELATION_CONTEXT` link in a distinct section/paragraph passage, non-empty span-level `evidence_notes`, and non-empty relation-level `relation_notes` connecting the passages.
+- `CROSS_SENTENCE` requires endpoint-support spans outside the cue sentence to have an explanatory `evidence_notes` value identifying the source-supported reference/coreference. `SENTENCE` requires the cue and at least one support span for each endpoint to share a non-empty `sentence_id`.
+
+For `direct_timestamp`, preserve each endpoint's raw time expression, precision, timezone and normalization/uncertainty fields in `time_evidence.csv`; link the endpoint's time evidence span through the matching A/B support role. The v0.2 validator checks structural completeness and strict BEFORE/AFTER interval invariance. It does not decide whether a time expression semantically identifies an attack occurrence or whether passages entail the relation; those remain human judgments.
 
 **Evidence-scope rules adopted for the pilot:**
 
@@ -312,7 +324,7 @@ MITRE Attack Flow dependency arrows are not temporal BEFORE labels.
 3. Attach relation-specific evidence and scope compatibility.
 4. Record directness/basis. Do not infer order from narrative position alone.
 5. Do not create every possible event pair and mark all unlabelled pairs negative.
-6. Keep episode-to-episode relations in a separate episode-level exploratory register; do not pool them with atomic event-instance edges.
+6. Apply the proposed initial-pilot boundary in Section 2.5: do not create episode-to-episode temporal relation records in the current pilot. Keep episode containers distinct from atomic event leaves. Any later episode-edge study requires a separately versioned register and an explicit protocol amendment.
 
 ### Pass 6 — Optional candidate-pair assessment
 
@@ -386,9 +398,13 @@ A shared technique at the endpoints does not mean the whole edge is lost when an
 - Retain source-event-edge provenance for each projected SCC.
 - Distinguish cycles generated by mapping fan-out from a single source event edge from cycles requiring two or more distinct source event edges. A single-edge fan-out cycle is not evidence of repeated occurrences.
 
-### 6.3 Baseline alignment constraint
+### 6.3 Baseline pair-to-event alignment — deferred from the initial pilot
 
-ChronoCTI's released pair data has no report-local event IDs or relation-specific source spans. A benchmark technique edge therefore cannot be assigned one-to-one to an event pair without additional evidence. Record baseline alignment as `supported`, `multiple_candidate_pairs`, `ambiguous`, `unmapped`, or `not_assessable` only after the event-level candidate set has been reviewed. Do not infer the cause of a benchmark cycle from topology alone.
+ChronoCTI's released pair data has no report-local event IDs or relation-specific source spans. A benchmark technique edge therefore cannot be assigned one-to-one to a source event pair without additional evidence. The current RECON package has no baseline-alignment register, and the initial pilot's primary estimand is the source-grounded event-to-technique projection—not a benchmark event-pair gold alignment.
+
+**Proposed initial-pilot boundary (researcher approval required):** defer record-level alignment between ChronoCTI technique-pair rows and report-local event pairs. Do not assign `supported`, `multiple_candidate_pairs`, `ambiguous`, `unmapped`, or `not_assessable` labels in an improvised field or repurpose `event_mappings` / `candidate_pair_assessments` for this purpose. Preserve the literal benchmark pair IDs, raw relation labels and benchmark provenance in the separate baseline reproduction materials. Do not infer the cause of a benchmark cycle from topology alone, and do not treat a benchmark edge as source evidence for a report-local event relation.
+
+A later benchmark-alignment study would need a dedicated register, explicit candidate-generation rules, source-evidence requirements, and a separate validation/analysis plan. This deferral does not block the project's own source-grounded event-to-technique projection or its distinct-technique-pair information-loss analysis.
 
 ---
 
