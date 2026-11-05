@@ -6,10 +6,10 @@
 ## Overall result
 
 - Python compilation of all package Python modules: **PASS**
-- `python -m unittest discover -s tests -v`: **68 tests**
+- `python -m unittest discover -s tests -v`: **69 tests**
   - Schema validator: 41
   - Projection metrics: 16
-  - Annotation-to-projection adapter: 11
+  - Annotation-to-projection adapter: 12
 - ATT&CK v12.1 crosswalk: 737 unique exact IDs; 333 top-level; 404 sub-techniques; all 404 resolve to valid explicit parent rows; 120/120 A_120 members are top-level self-mappings. Independent CSV SHA-256 recomputation matched the manifest.
 - Header-only blank-bundle check: 0 errors and 1 expected `EMPTY_ANNOTATION_BUNDLE` warning.
 - Pinned derived A_120 vocabulary: 120 unique identifiers loaded and checked.
@@ -77,7 +77,7 @@
 56. A strict-order claim and `OVERLAP` remain a pair-level label conflict.
 57. Adding a redundant source edge does not hide a cycle induced by one source edge's mapping fan-out.
 
-## Annotation-to-projection adapter tests (58–68)
+## Annotation-to-projection adapter tests (58–69)
 
 58. A valid exact report/annotator/pass partition projects only eligible primary rows.
 59. Mixed annotator rows do not leak across partitions.
@@ -89,7 +89,8 @@
 65. Ineligible or locally unpermitted reports are blocked.
 66. Explicit annotation-lock confirmation and a non-empty lock reference are required.
 67. Arbitrary or stale lock references are rejected against the computed partition digest.
-68. Prior-exposure status and the associated caution flag are exposed in projection output.
+68. Prior-exposure status and the associated caution flag are exposed in projection output
+69. A report-level eligibility/local-use/assessability conflict blocks direct selected-partition projection.
 
 ## Lifecycle flags in Enterprise ATT&CK v12.1
 
