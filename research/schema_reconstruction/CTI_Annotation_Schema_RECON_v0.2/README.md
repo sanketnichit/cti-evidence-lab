@@ -27,6 +27,9 @@ Validate the blank extension with the command shown in `SCHEMA_MANIFEST.md`.
 - `validator/validate_temporal_evidence.py`
 - `tests/test_temporal_evidence.py`
 - `tests/test_analysis_partition_selection.py`
+- `analysis/selected_partition_projection_adapter.py`
+- `tests/test_selected_partition_projection_adapter.py`
+- `docs/SELECTED_PARTITION_PROJECTION_ADAPTER_v0.2.md`
 - `SCHEMA_MANIFEST.md`
 
 This is a testable design candidate, not an operational annotation instruction. Researcher review and protocol approval are still required.
@@ -34,4 +37,4 @@ This is a testable design candidate, not an operational annotation instruction. 
 
 `analysis_partition_selection.csv` records the report-level partition chosen for analysis. It allows at most one `SELECTED_FINAL` partition per report. A final selection must resolve to an existing report/annotator/pass row, and the underlying report must be eligible, permitted for local use, assessable, and fully reviewed. A final selection also records a role, rationale, date, and SHA-256 lock reference. Solo work is labelled `SINGLE_ANNOTATOR_FINAL`; repeated passes are not independent annotators.
 
-The selection register is header-only. The current projection adapter has not yet been migrated to consume the selected-final register and verify its lock against frozen source and partition rows. **Do not use the adapter to create study projection results until that migration is complete.**
+The selection register remains header-only. A v0.2 projection wrapper is now implemented and synthetic-tested. It resolves exactly one selected-final row, validates the temporal evidence register, and verifies a lock that covers the v0.1 source/register lock, v0.2 temporal-evidence rows, and final-selection decision. It delegates only after those checks to the unchanged v0.1 adapter. No real report is selected, and no study projection can yet be run from this empty register.

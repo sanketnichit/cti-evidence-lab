@@ -31,4 +31,6 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 - At most one `SELECTED_FINAL` row per report.
 - The selected partition must resolve in `report_registry`, with eligible source scope, permitted local use, assessable report, and complete full-report review.
 - Final rows require a role, rationale, ISO date, and `sha256:<64 lowercase hex>` lock reference.
-- The projection adapter has not yet been migrated to enforce the selection register and verify the selected lock.
+- The v0.2 selected-partition projection wrapper is implemented and covered by synthetic tests.
+- The wrapper verifies a second lock over the v0.1 source/register lock, v0.2 temporal-evidence rows, and final-selection decision; it delegates to the unchanged v0.1 adapter only after both v0.2 and v0.1 validation pass.
+- The selection register remains header-only; there is no selected report and no real-report projection.
