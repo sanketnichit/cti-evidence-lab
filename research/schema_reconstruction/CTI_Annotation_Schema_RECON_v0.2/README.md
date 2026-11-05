@@ -10,7 +10,7 @@ The parent package stores one primary evidence span for each temporal relation a
 
 The parent temporal relation's `primary_evidence_span_id` is the required `RELATION_CUE`; it is not duplicated in the extension register. The new register stores `EVENT_A_SUPPORT`, `EVENT_B_SUPPORT`, and optional `RELATION_CONTEXT` rows. Endpoint support must identify the matching event endpoint. Context rows must leave `supported_event_id` empty. One source span may serve more than one role through separate rows.
 
-Every positive `direct_source` or `direct_timestamp` relation entering the primary graph requires at least one A-support and one B-support row. Context is optional.
+Every positive `direct_source` or `direct_timestamp` relation entering the primary graph requires at least one A-support and one B-support row. A separate context span is optional for sentence and cross-sentence claims, but required with a non-empty rationale for `DOCUMENT_CONTEXT` claims. Section order alone is not temporal evidence.
 
 ## Validation and limits
 
