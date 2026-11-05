@@ -185,9 +185,40 @@ Source: https://lab52.io/legal_note
 
 **Disposition:** this is a material conflict to reconcile with the AnnoCTR corpus-level CC BY-SA 4.0 statement and the repository's acknowledgement that Lab52/S2 Grupo donated reports. Do not conclude that local research annotation is either permitted or prohibited solely from these two records. Keep both local research use and public reuse **UNRESOLVED** pending written clarification of the donation/licence scope. Do not publish raw text or extended spans.
 
-### Other three rank-1 candidates
+### Proofpoint — no public-blog reuse grant established
 
-This focused update did not establish new article-specific rights grants for Proofpoint, QuoIntelligence or Zscaler. Their rights state remains unchanged: corpus-level CC BY-SA evidence is recorded, but local-use and public-reuse status remain unresolved pending item-level review.
+The public threat-intelligence article carries a current copyright footer. Its linked Proofpoint Terms and Conditions page is a directory for customer agreements, product/API terms and support-service terms; it does not state a general licence for public blog content. A separate login.portal End User Terms page last modified in 2014 governs Proofpoint Services and registered-user contexts, so it was not treated as the governing rights instrument for this public article. No article-specific reuse grant was verified.
+
+Sources:
+- https://www.proofpoint.com/us/blog/threat-insight/malware-masquerades-privacy-tool
+- https://www.proofpoint.com/us/legal/license
+- https://login.proofpoint.com/termsconditions/
+
+**Disposition:** the absence of a located article-specific grant is not a legal conclusion that research use is prohibited. Keep local research use and public reuse **UNRESOLVED** pending confirmation of the corpus/donor permission chain.
+
+### QuoIntelligence — portal terms do not cover the public article
+
+The public Winnti article footer links to Terms and Conditions expressly scoped to the Mercury client portal and registered users. Those portal terms do not establish the licence for the public blog article. The current QuoIntelligence privacy policy concerns personal-data processing, not content reuse. A similarly named Quintel Intelligence Ltd terms page on a different domain and legal entity was not treated as applicable to this QuoIntelligence GmbH article. No article-specific reuse grant was verified.
+
+Sources:
+- https://quointelligence.eu/2020/04/winnti-group-insights-from-the-past/
+- https://quointelligence.eu/terms-conditions/
+- https://quointelligence.eu/privacy-policy/
+- https://www.quintelintelligence.com/terms-of-use/
+
+**Disposition:** the portal terms and privacy policy do not settle article-reuse permission. Keep local research use and public reuse **UNRESOLVED** pending confirmation of the corpus/donor permission chain.
+
+### Zscaler — blog disclaimer but no content reuse grant
+
+The public Netwire article contains an informational/as-is disclaimer and says content may change, but the page does not state a reuse licence. Zscaler's current Legal Overview points to an End User Subscription Agreement for purchased Zscaler products; that customer-product agreement is not a general licence for blog content. The article carries a Zscaler copyright footer. No article-specific reuse grant was verified.
+
+Sources:
+- https://www.zscaler.com/blogs/security-research/targeted-attack-government-organizations-delivers-netwire-rat
+- https://www.zscaler.com/legal/overview
+- https://www.zscaler.com/legal/end-user-subscription-agreement
+
+**Disposition:** the absence of a located article-specific grant is not a legal conclusion that research use is prohibited. Keep local research use and public reuse **UNRESOLVED** pending confirmation of the corpus/donor permission chain.
+
 
 ### Operational rule pending clarification
 

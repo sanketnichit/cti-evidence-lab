@@ -36,12 +36,20 @@ The current executable package is `CTI_Annotation_Schema_RECON_v0.1`. It is a re
 
 ### Rights review update — 5 November 2026
 
-A focused check of current primary-source terms found that the AnnoCTR repository README states CC BY-SA 4.0 for the corpus and acknowledges Intel471 and Lab52/S2 Grupo as donors. However, the current Intel471 Terms of Service reserve copying/reproduction/download/distribution rights absent written authorization unless otherwise permitted; the current Lab52 legal notice allows one offline personal/non-commercial copy but separately restricts reproduction and transformation without prior written authorization. The five-report audit and canonical frame now record these issues against the relevant candidates. This does **not** decide the validity or scope of the corpus-level licence. Keep Intel471 and Lab52 local research use and public reuse UNRESOLVED until the donor/dataset permission chain is clarified. The remaining three candidates' item-level terms were not newly established in this check and remain unresolved.
+A focused check of primary-source terms found that the AnnoCTR repository README states CC BY-SA 4.0 for the corpus and acknowledges Intel471 and Lab52/S2 Grupo as donors. Intel471's current Terms of Service reserve copying/reproduction/download/distribution rights absent written authorization unless otherwise permitted; the Lab52 legal notice allows one offline personal/non-commercial copy but separately restricts reproduction and transformation without prior written authorization. For Proofpoint, the public blog article carries a copyright footer, while its linked terms directory covers customer/product/service terms rather than a general blog-content licence; a separate 2014 login-portal terms page was not treated as governing the public article. QuoIntelligence's linked Terms and Conditions are expressly for the Mercury client portal, and its privacy policy is not a content licence; terms for a similarly named but distinct legal entity were not applied. Zscaler's blog disclaimer provides no reuse licence, while its Legal Overview points to a customer-product subscription agreement rather than a general blog-content licence. No article-specific reuse grant was verified for these three publishers. These checks do **not** decide the validity or scope of the corpus-level licence, and absence of a located grant is not a legal conclusion that use is prohibited. Keep local research use and public reuse UNRESOLVED for all five candidates until the donor/dataset permission chain is clarified.
 
 Sources:
 - https://github.com/boschresearch/anno-ctr-lrec-coling-2024
 - https://www.intel471.com/legal/terms-of-service
 - https://www.lab52.io/legal_note
+- https://www.proofpoint.com/us/blog/threat-insight/malware-masquerades-privacy-tool
+- https://www.proofpoint.com/us/legal/license
+- https://login.proofpoint.com/termsconditions/
+- https://quointelligence.eu/2020/04/winnti-group-insights-from-the-past/
+- https://quointelligence.eu/terms-conditions/
+- https://quointelligence.eu/privacy-policy/
+- https://www.zscaler.com/blogs/security-research/targeted-attack-government-organizations-delivers-netwire-rat
+- https://www.zscaler.com/legal/overview
 
 ## 3. Missing-original dependencies
 
