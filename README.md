@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest recorded verification on 5 November 2026: GitHub Actions run [#125](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42049025391) passed on commit `bf504818c7150ff7699a1c2b2a947952f11f79a9`. It executed **55 root tests**, **69 RECON v0.1 tests** (41 validator, 16 projection, 12 adapter), and **70 RECON v0.2 tests** — **194 successful test executions**. All 31 RECON v0.1 checksums, both blank-bundle validators, the temporal-evidence extension tests and the selected-final partition validation passed. These are synthetic/code-integrity checks only, not real-report findings.
+Latest successful CI verification recorded on 5 November 2026: GitHub Actions run [#126](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42049563332) passed on commit `c4d4a05cf541e2bb78790adce7e0c98122dea9e8`. It executed **55 root tests**, **69 RECON v0.1 tests** (41 validator, 16 projection, 12 adapter), and **70 RECON v0.2 tests** — **194 successful synthetic test executions**. All workflow validation steps passed. This successful run predates the subsequent source-integrity and protocol-reconciliation commits now on `main`; current-head CI verification is pending. These checks are synthetic/code-integrity checks only, not real-report findings.
 
 Run from the repository root:
 
