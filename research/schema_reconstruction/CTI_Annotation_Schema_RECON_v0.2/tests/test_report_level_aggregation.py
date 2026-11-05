@@ -151,6 +151,20 @@ class EventPairOpportunityTests(unittest.TestCase):
         self.assertEqual(result["compatible_event_pair_count"], 0)
         self.assertEqual(result["same_technique_pair_opportunity_count"], 0)
 
+    def test_distinct_incidents_under_shared_campaign_count_under_current_broad_rule(self):
+        self.scopes.append({"scope_id": "campaign", "parent_scope_id": "report", "scope_type": "CAMPAIGN", "scope_status": "RESOLVED"})
+        self.scopes[1]["parent_scope_id"] = "campaign"
+        self.scopes[4]["parent_scope_id"] = "campaign"
+        result = compute_event_pair_opportunity(
+            [self.units[0], self.units[2]], self.scopes,
+            {"a": {"T1059"}, "c": {"T1059"}},
+        )
+        # This pins the current broad provisional behaviour for review: a
+        # shared campaign ancestor currently makes separate incident leaves
+        # count as an opportunity pair. The primary rule is still unapproved.
+        self.assertEqual(result["compatible_event_pair_count"], 1)
+        self.assertEqual(result["same_technique_pair_opportunity_count"], 1)
+
     def test_series_container_is_not_an_atomic_event_leaf(self):
         result = compute_event_pair_opportunity(self.units, self.scopes, {})
         self.assertEqual(result["resolved_atomic_event_leaves"], 3)
