@@ -132,10 +132,10 @@ Consequently, the following cannot be asserted as exact original v0.4.2 details:
 | RECON v0.1 structural validator | 41 synthetic tests pass |
 | RECON v0.1 projection module | 16 synthetic tests pass |
 | RECON v0.1 register-to-projection adapter | 11 synthetic tests pass; requires a matching computed partition/source digest |
-| RECON v0.1 combined suite | 68/68 pass (41 validator, 16 projection, 11 adapter) |
-| RECON v0.2 extension, selection and aggregation suite | 67/67 synthetic tests pass |
-| Root repository suite | 53/53 synthetic tests pass |
-| Latest combined CI verification | 188 successful test executions in GitHub Actions run #122 on 5 November 2026; blank bundle 0 errors + 1 expected empty-bundle warning |
+| RECON v0.1 combined suite | 69/69 pass (41 validator, 16 projection, 12 adapter) |
+| RECON v0.2 extension, selection and aggregation suite | 70/70 synthetic tests pass |
+| Root repository suite | 55/55 synthetic tests pass |
+| Latest combined CI verification | 194 successful test executions in GitHub Actions run #125 on 5 November 2026; all 31 RECON v0.1 checksums and both blank-bundle validators passed |
 | Real AnnoCTR data through RECON | 0 rows |
 | Researcher eligibility decisions | 0/5 |
 | Human annotation locks | 0 |
@@ -145,13 +145,13 @@ Consequently, the following cannot be asserted as exact original v0.4.2 details:
 
 ## 5. Approval boundary and next sequence
 
-1. **Complete — crosswalk technical gate.** The 737-row v12.1 exact-to-parent artifact is generated, independently inspected and hash-verified; the RECON validator checks accepted exact IDs, canonical names, explicit parents, vocabulary status and lifecycle flags. The 63-test suite and root CI passed in run #41974194194. This is a working technical default, not a researcher protocol/schema freeze.
+1. **Complete — crosswalk technical gate.** The 737-row v12.1 exact-to-parent artifact is generated, independently inspected and hash-verified; the RECON validator checks accepted exact IDs, canonical names, explicit parents, vocabulary status and lifecycle flags. The current RECON v0.1/v0.2 and root synthetic suites passed in CI run #125: 194 successful test executions across the three suites. This is a working technical default, not a researcher protocol/schema freeze.
 2. Resolve the two no-CyNE source-scope recommendations and the remaining evidence-scope, mapping-acceptance and prior-exposure choices. Keep researcher-owned decisions visibly pending until explicitly disposed.
 3. **Complete — dataset-level permission gate.** The 5 November maintainer response supports local research annotation and derivative publication under the AnnoCTR CC BY-SA licence. Maintain attribution/ShareAlike, keep raw reports out of Git, and reopen only for a report-specific exception. Source-scope and researcher eligibility are separate.
 4. Reconcile the working defaults against the exact protocol and schema originals if recovered; otherwise explicitly approve or revise RECON as a new schema version, never as v0.4.2.
 5. Freeze protocol/schema/version/pass identity and hash the approved package before source-first annotation. An exposed human pass is not blind; projection requires explicit confirmation and a computed digest matching the selected human-approved source/partition registers.
 
-**No formal annotation should begin solely because the 63 synthetic tests pass.** These tests show that the proposed structure behaves as coded on synthetic fixtures; they do not establish semantic validity, protocol approval, source eligibility, human agreement, or research findings.
+**No formal annotation should begin solely because the 194 synthetic test executions pass.** These tests show that the proposed structure behaves as coded on synthetic fixtures; they do not establish semantic validity, protocol approval, source eligibility, human agreement, or research findings.
 
 
 ### Maintainer response disposition — 5 November 2026

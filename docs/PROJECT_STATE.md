@@ -43,11 +43,11 @@ This remains a candidate empirical question, not an established novelty claim. T
 
 ## Implementation verification
 
-- Root synthetic tests: 53/53 passed. RECON synthetic tests: 68/68 passed (41 validator, 16 projection, 11 adapter). GitHub Actions run [#41998772656](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41998772656) passed on commit `e0237e9bae2538d42936f888e414cac0ddad3809` on 5 November 2026; all steps passed, including root tests, the projection demo, all 31 RECON checksums, all 68 RECON tests and blank-bundle validation.
+- Latest verification on 5 November 2026: GitHub Actions run [#125](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42049025391) passed on commit `bf504818c7150ff7699a1c2b2a947952f11f79a9`. It ran 55 root tests, 69 RECON v0.1 tests (41 validator, 16 projection, 12 adapter), and 70 RECON v0.2 tests: 194 successful synthetic test executions in total. All 31 RECON v0.1 checksum entries, the projection demo, blank v0.1/v0.2 bundle validations, temporal-evidence tests and selected-final partition validation passed.
 - Internal SHA256SUMS checks: 31/31 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
 - The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags report-level eligibility/local-use/assessability conflicts across annotator/pass partitions and excludes conflicting reports from denominator summaries until adjudicated. It also validates prior-exposure values, requires normalized evidence-linked time records at both endpoints of `direct_timestamp`, rejects duplicate/contradictory direct temporal-pair claims, checks positive candidate assessments against their linked relation, and requires top-level exact techniques to map to themselves. The validator now checks accepted exact IDs and sub-technique parents against the pinned v12.1 crosswalk. The validator's synthetic checks do not establish semantic annotation correctness.
-- The public v0.3-era CSV schema and root annotation validator remain unchanged. `src/projection_metrics.py` has received separate mechanical corrections for normalized strict-order pair orientation and single-edge cycle-fan-out attribution. RECON remains isolated pending protocol/schema approval.
+- The public v0.3-era CSV schema and root annotation validator remain unchanged. The legacy `src/projection_metrics.py` now also rejects self-event temporal edges; RECON's projection metric separately distinguishes cycle components that contain multiple source edges from those that require multiple edges. These remain synthetic safeguards. RECON is isolated pending protocol/schema approval.
 
 Source text convention: strict UTF-8; an optional leading UTF-8 BOM is removed; CRLF/LF are preserved; no Unicode normalization is applied; `source_text_sha256` is SHA-256 over the UTF-8 bytes of the exact decoded annotation text; offsets are zero-based, end-exclusive Python Unicode code-point indices. On 4 November 2026, all 120 `source_text_sha256` values in the frame were independently recomputed from the official AnnoCTR repository text files at pinned commit `d510b6949e1938d47c93a43eedd562dc538439dc` and matched 120/120. This verifies the frame hashes against that source revision; it does not recompute the separate downloaded-archive SHA-256. `scripts/hash_annoctr_sources.py` reproduces the check against a local `AnnoCTR/all` directory and can update the frame only with explicit `--write`. Raw report text remains outside this repository.
 
@@ -138,3 +138,16 @@ End-to-end synthetic fixtures exercise source verification, analysis-lock creati
 ## Update — 5 November 2026: metric-contract coverage expanded
 
 The report-level aggregator now covers additional contract outputs: per-report registry status/reasons, mention-state counts, activity-unit counts by granularity/role/instance status, count-status-by-granularity, temporal relation counts by label and basis, optional candidate-pair label counts, separate `A_exact` and `A_120` mapping coverage, occurrence compression by technique, and per-report collision/cycle provenance. Excess edge multiplicity is counted only for collisions in the retained distinct-technique-pair graph. Conditional within-technique-temporal-relation given same-technique opportunity is withheld until the scope-pair opportunity rule is approved. The CLI entry point is now covered by a synthetic blank-package test and never writes source text into output JSON.
+
+
+## Latest technical remediation — 5 November 2026
+
+The repository's current `main` head is `bf504818c7150ff7699a1c2b2a947952f11f79a9`.
+
+The annotation workflow now blocks selected-final projection when report-level source eligibility, local-use permission or assessability conflicts across passes. Consensus selection requires two distinct completed independent input partitions; an adjudicated-final selection must reference an actual adjudicated record in the selected report/annotator/pass. The standalone v0.1 adapter applies the same report-conflict stop.
+
+Projection safeguards now reject self-event edges in the legacy root API and report separately (a) cycle components containing multiple source event edges and (b) cycle components that require multiple source edges. The AnnoCTR source-hash utility and its test use the canonical v1.0 frame; old v0.3 annotation templates/protocol are explicitly marked historical.
+
+**CI run #125 passed:** 55 root tests, 69 RECON v0.1 tests (41 validator, 16 projection, 12 adapter), and 70 RECON v0.2 tests; 194 successful test executions. All 31 v0.1 package checksums and the workflow's validation steps passed.
+
+Research readiness is unchanged: the five rank-one reports remain candidates, researcher eligibility is 0/5, human-locked annotations are 0, IAA is not measured, real-report projections are 0, and novelty is not established. The protocol and reconstructed schema remain drafts, not approved/frozen for formal annotation.

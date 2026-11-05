@@ -38,7 +38,7 @@ The validator now excludes such a partition from `N_assessable` until its exact 
 
 **Implementation:** RECON validator, data-model rules, QA record, manifest and checksum list.  
 **Regression coverage:** source missing → excluded from assessable denominator; source supplied and matching → included.  
-**Verification:** 68 RECON synthetic tests pass (41 validator, 16 projection, 11 adapter); 31/31 package checksums match. These remain synthetic checks, not report findings.
+**Verification:** 69 RECON v0.1 synthetic tests pass (41 validator, 16 projection, 12 adapter); 31/31 package checksums match. CI run #125 also passed 70 RECON v0.2 tests and 55 root tests (194 successful test executions total). These remain synthetic checks, not report findings.
 
 ### 3.2 Temporal evidence roles — partial representation
 
@@ -140,6 +140,15 @@ Structural checks do not decide source semantics. Human review must still decide
 - Real-report projections: 0.
 - Independent human agreement: not measured.
 - Novelty: not established.
-- The 68-test suite is synthetic only (41 validator, 16 projection, 11 adapter). It does not validate semantic annotation or prove the research question's empirical contribution.
+- The 69-test RECON v0.1 suite is synthetic only (41 validator, 16 projection, 12 adapter). The separate RECON v0.2 suite has 70 synthetic tests. CI run #125 passed 194 total root/v0.1/v0.2 test executions. These do not validate semantic annotation or prove the research question's empirical contribution.
 
 **Freeze decision:** not ready. RECON v0.1 is useful and increasingly testable, but the gaps above must be resolved or explicitly deferred in the protocol before a new schema version can be approved.
+
+
+## RECON v0.2 selected-analysis gate addendum — 5 November 2026
+
+The v0.2 extension now provides a durable `analysis_partition_selection` register and selected-final adapter gate. A selected-final partition is blocked when report-level eligibility, local-use or assessability decisions conflict across any registered annotator/pass partitions. A `CONSENSUS` selection requires two distinct completed `INDEPENDENT` input partitions recorded as not themselves selected-final. An `ADJUDICATED_FINAL` selection requires an `ADJUDICATED` log row whose target register and record ID resolve to an actual record in the selected report/annotator/pass partition.
+
+The v0.1 standalone adapter also blocks report-level eligibility/local-use/assessability conflicts, rather than allowing a warning from the parent validator to be bypassed by a direct projection call. These controls are structurally tested only; they do not authenticate annotator identity, prove semantic agreement, or replace human adjudication.
+
+The RECON v0.1 projection metric now distinguishes cycle components that contain multiple source event edges from those that require multiple source event edges. The legacy root projector rejects self-event edges. CI run #125 passed after refreshing the 31-entry v0.1 package checksum manifest.
