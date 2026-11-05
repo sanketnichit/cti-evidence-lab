@@ -57,7 +57,7 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 - Outcomes are calculated only from the selected-final partition. Passes and annotators are never summed.
 - Primary report-level rates are withheld until every N_assessable report has a successful selected-final projection.
 - Projection counts are summed within reports; technique-pair collision keys and SCCs are never merged across different reports.
-- Compatible event-pair opportunity currently uses the nearest common RESOLVED non-report scope. This can include a shared CAMPAIGN/ACTOR_OPERATION ancestor above distinct INCIDENT nodes; a synthetic regression test records this current behaviour. The recommended primary rule is a shared nearest resolved INCIDENT ancestor, with the broader rule retained only as sensitivity analysis. This recommendation is not yet implemented or approved; pair-opportunity rates remain withheld.
+- Compatible event-pair opportunity currently uses the nearest common RESOLVED non-report scope. This can include a shared CAMPAIGN/ACTOR_OPERATION ancestor above distinct INCIDENT nodes; a synthetic regression test records this current behaviour. Candidate resolutions are incident-bounded comparison or an explicit comparison-scope assignment per event. The selected rule must also align relation eligibility and the conditional-rate numerator/denominator. Neither candidate is implemented or approved; pair-opportunity rates remain withheld.
 - Raw source text is loaded from a local source directory at runtime and is never written to the result JSON.
 - The blank package has no annotations or selected partitions. A blank aggregation result is structural output, not empirical zero-outcome data.
 
