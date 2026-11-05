@@ -145,6 +145,8 @@ class EventPairOpportunityTests(unittest.TestCase):
         self.assertEqual(result["resolved_atomic_event_leaves"], 3)
         self.assertEqual(result["compatible_event_pair_count"], 1)
         self.assertEqual(result["same_technique_pair_opportunity_count"], 1)
+        self.assertEqual(result["compatible_event_pair_count_by_scope_type"], {"INCIDENT": 1})
+        self.assertEqual(result["same_technique_pair_opportunity_count_by_scope_type"], {"INCIDENT": 1})
 
     def test_report_aggregate_alone_does_not_make_pair_compatible(self):
         units = [self.units[0], self.units[2]]
@@ -165,6 +167,8 @@ class EventPairOpportunityTests(unittest.TestCase):
         # count as an opportunity pair. The primary rule is still unapproved.
         self.assertEqual(result["compatible_event_pair_count"], 1)
         self.assertEqual(result["same_technique_pair_opportunity_count"], 1)
+        self.assertEqual(result["compatible_event_pair_count_by_scope_type"], {"CAMPAIGN": 1})
+        self.assertEqual(result["same_technique_pair_opportunity_count_by_scope_type"], {"CAMPAIGN": 1})
 
     def test_series_container_is_not_an_atomic_event_leaf(self):
         result = compute_event_pair_opportunity(self.units, self.scopes, {})
