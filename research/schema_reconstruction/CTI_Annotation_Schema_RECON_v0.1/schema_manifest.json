@@ -69,7 +69,7 @@
       "source text hash and offsets",
       "distinct event endpoints",
       "atomic event-leaf eligibility",
-      "comparison-scope ancestry",
+      "shared RESOLVED non-report comparison-scope eligibility across temporal relations, candidate pairs and pair-opportunity counting",
       "A_120 membership",
       "source mapping basis and mapping evidence",
       "evidence-link composite uniqueness",
