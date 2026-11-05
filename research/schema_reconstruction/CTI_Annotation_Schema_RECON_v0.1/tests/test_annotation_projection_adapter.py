@@ -87,6 +87,7 @@ class AnnotationProjectionAdapterTests(unittest.TestCase):
         for mapping in self.rows["event_mappings"]:
             if mapping["annotator_id"] == "annotator-2":
                 mapping["exact_technique_id"] = "T1105"
+                mapping["exact_technique_name"] = "Ingress Tool Transfer"
                 mapping["baseline_parent_technique_id"] = "T1105"
         for register in self.rows:
             self.save(register)
@@ -105,7 +106,7 @@ class AnnotationProjectionAdapterTests(unittest.TestCase):
         })
         self.rows["event_mappings"].append({
             **PARTITION, "mapping_id": "map-series", "activity_unit_id": "series-unit", "event_instance_id": "",
-            "exact_technique_id": "T1105", "exact_technique_name": "Ingress Tool Transfer", "attack_version": "synthetic",
+            "exact_technique_id": "T1105", "exact_technique_name": "Ingress Tool Transfer", "attack_version": "Enterprise ATT&CK v12.1",
             "mapping_basis": "report_explicit_parent", "mapping_decision_status": "ACCEPTED", "alternative_group_id": "",
             "alternative_to_mapping_id": "", "baseline_vocabulary_id": "CTI Evidence Lab A_120 selected-technique identifier vocabulary",
             "baseline_vocabulary_sha256": "97b599ffdcfcc5864a9352cf1467de0f6cac92f9141053a76098e4f2d33fb1bc",
