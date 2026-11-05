@@ -2,7 +2,7 @@
 
 A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
-**Status (5 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The dataset maintainer has clarified that source-material use and publication of derivatives are permitted under the corpus CC BY-SA licence, subject to attribution and ShareAlike. Two non-CTI source documents are excluded from the declared study scope but retained in the inventory. The new protocol and reconstructed schema remain drafts; no human annotations or real-report projection results exist. No novel contribution is claimed as established.
+**Status (5 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The dataset maintainer has clarified that source-material use and publication of derivatives are permitted under the corpus CC BY-SA licence, subject to attribution and ShareAlike. Two non-CTI source documents are excluded from the declared study scope but retained in the inventory. The new protocol and reconstructed schema remain drafts; the additive RECON v0.3 explicit comparison-scope assignment candidate is synthetic-only and unapproved; no human annotations or real-report projection results exist. No novel contribution is claimed as established.
 
 ## Provisional primary research question
 
@@ -39,7 +39,7 @@ data/processed/annoctr_screening/  three allow-listed, text-free screening metad
 
 ## Current phase
 
-With the dataset-maintainer permission clarification recorded, the next phase is to settle the remaining researcher-owned source-scope and protocol decisions, approve a new versioned annotation protocol/schema, and begin a source-first human feasibility pilot before building a model. The current source of truth is `docs/PROJECT_STATE.md`, with the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
+With the dataset-maintainer permission clarification recorded, the next phase is to settle the remaining researcher-owned source-scope and protocol decisions, approve a new versioned annotation protocol/schema, and begin a source-first human feasibility pilot before building a model. The current source of truth is `docs/PROJECT_STATE.md`; RECON v0.3 compares the legacy, incident-bounded and explicit-assignment scope-pair rules, but none is researcher-approved. Formal annotation remains blocked pending protocol/schema approval. The latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
 
 ## Citation and author name
 
@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest successful CI verification on 5 November 2026: GitHub Actions run [#144](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42056473178) passed on the current `main` head `b9e4d71d31b2f24e9ecef0566d8c6f924060d185`. It executed **57 root tests**, **69 RECON v0.1 tests** (41 validator, 16 projection, 12 adapter), and **72 RECON v0.2 tests** — **198 successful synthetic test executions**. All 31 RECON v0.1 checksum entries, both blank-bundle validators, the temporal-evidence and selected-final partition tests, and the projection demo passed. These are synthetic/code-integrity checks only, not real-report findings.
+Latest successful CI verification on 5 November 2026: GitHub Actions run [#159](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42069718811) passed on the current `main` head `fbcb62ac20dd340566990ad738b1a05f9ec93fdb`. It executed **57 root tests**, **69 RECON v0.1 tests** (41 validator, 16 projection, 12 adapter), **75 RECON v0.2 tests**, and **10 RECON v0.3 tests** — **211 successful synthetic test executions**. The v0.3 assignment/lock tests, blank assignment-register validation, v0.1 package checksums, both blank-bundle validators, selected-final partition tests, and projection demo passed. These are synthetic/code-integrity checks only, not real-report findings.
 
 Run from the repository root:
 

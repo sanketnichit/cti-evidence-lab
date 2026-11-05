@@ -148,7 +148,7 @@ The annotation workflow now blocks selected-final projection when report-level s
 
 Projection safeguards now reject self-event edges in the legacy root API and report separately (a) cycle components containing multiple source event edges and (b) cycle components that require multiple source edges. The AnnoCTR source-hash utility and its test use the canonical v1.0 frame; old v0.3 annotation templates/protocol are explicitly marked historical.
 
-**CI run #144 passed:** 57 root tests, 69 RECON v0.1 tests (41 validator, 16 projection, 12 adapter), and 72 RECON v0.2 tests; 198 successful test executions. All 31 v0.1 package checksums and the workflow's validation steps passed.
+**At this checkpoint, CI run #144 passed:** 57 root tests, 69 RECON v0.1 tests (41 validator, 16 projection, 12 adapter), and 72 RECON v0.2 tests; 198 successful test executions. All 31 v0.1 package checksums and the workflow's validation steps passed.
 
 Research readiness is unchanged: the five rank-one reports remain candidates, researcher eligibility is 0/5, human-locked annotations are 0, IAA is not measured, real-report projections are 0, and novelty is not established. The protocol and reconstructed schema remain drafts, not approved/frozen for formal annotation.
 
@@ -159,13 +159,13 @@ The legacy root annotation validator now reads report text through the shared fr
 
 The legacy annotation validator now preserves frozen-source line endings and evidence-span whitespace. The report-level conditional metric now explicitly intersects reports with both same-technique pair opportunity and a within-technique temporal relation, and emits its numerator/denominator. Regression tests cover the cross-incident scope-pair behaviour and conditional-rate subset logic.
 
-**Current-head verification:** GitHub Actions run [#144](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42056473178) passed on `b9e4d71d31b2f24e9ecef0566d8c6f924060d185`: 57 root tests, 69 RECON v0.1 tests, and 72 RECON v0.2 tests (198 total); all workflow steps passed. Current main is CI-verified. These are synthetic/code-integrity checks only, not human-annotation results.
+**Current-head verification:** GitHub Actions run [#159](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42069718811) passed on `fbcb62ac20dd340566990ad738b1a05f9ec93fdb`: 57 root tests, 69 RECON v0.1 tests, 75 RECON v0.2 tests, and 10 RECON v0.3 tests (211 total); all workflow steps passed, including v0.3 assignment/lock tests and blank-register validation. Current main is CI-verified. These are synthetic/code-integrity checks only, not human-annotation results.
 
 Protocol v0.5-draft Section 4.3 now represents the relation cue through `temporal_relations.primary_evidence_span_id`, stores exact source text/offsets once in `evidence_spans`, and links Event A, Event B and contextual support through the RECON v0.2 temporal-evidence extension. The v0.1 reconciliation register now distinguishes the v0.1 limitation from the additive v0.2 implementation. The report-level aggregator is implemented and synthetically tested; rates dependent on the provisional scope-pair opportunity rule remain withheld pending approval. The current broad common-ancestor implementation's cross-incident behavior and the recommended incident-bounded primary alternative are documented in the v0.2 aggregation rule note and researcher decision register; a synthetic regression test now makes the current cross-incident inclusion explicit.
 
 The protocol now proposes deferring episode-to-episode temporal relation records and record-level ChronoCTI pair-to-event alignment from the initial pilot. These are **proposals requiring researcher approval**, not adopted decisions. Episode containers remain represented separately; raw benchmark pair labels/provenance remain in the separate baseline materials. Neither is to be improvised into the atomic temporal relation register.
 
-Research readiness is unchanged: human-locked annotations 0, selected final partitions 0, real-report projections 0, IAA not measured, and novelty not established. Protocol v0.5 and RECON v0.1/v0.2 remain drafts pending researcher approval and freeze.
+Research readiness is unchanged: human-locked annotations 0, selected final partitions 0, real-report projections 0, IAA not measured, and novelty not established. Protocol v0.5 and RECON v0.1/v0.2/v0.3 remain drafts pending researcher approval and freeze.
 
 
 ## Update — 5 November 2026: scope-comparability validator parity
@@ -179,4 +179,4 @@ An additive RECON v0.3 draft now implements an explicit event-to-comparison-scop
 
 The v0.2 aggregator now evaluates three named rules: the existing nearest-common-resolved-non-report rule, a shared-resolved-INCIDENT sensitivity rule, and the v0.3 explicit-assignment rule. Under the explicit rule, both event endpoints must have ASSIGNED rows for the same scope; positive temporal relations and compatible candidate-pair assessments are restricted to that same assigned-scope universe. A separate v0.3 lock binds assignment rows to the v0.2 selected-analysis lock, and the v0.3 aggregation wrapper requires explicit confirmation of both lock layers.
 
-This is a draft technical candidate, not a researcher-approved scope definition. The assignment and lock registers are header-only; no human assignment, annotation, selected final partition, real-report projection, IAA result, or empirical rate was created. The next gate is synthetic validation, protocol review, and researcher approval before any annotation workflow adopts the rule.
+This is a draft technical candidate, not a researcher-approved scope definition. The assignment and lock registers are header-only; no human assignment, annotation, selected final partition, real-report projection, IAA result, or empirical rate was created. CI run #159 passed all 211 synthetic test executions and the blank v0.3 assignment/lock validation. The next gate is researcher review of the three scope rules and approval of the protocol/schema before any annotation workflow adopts one.
