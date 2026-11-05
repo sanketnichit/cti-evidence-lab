@@ -1,74 +1,62 @@
-# Human Pilot Starter — Report 01
+# Feasibility Dry-Run — Candidate 01
 
-**Purpose:** test whether the event-instance annotation protocol is understandable and usable on one real report before committing to the 5–8 report feasibility pilot.
+**Status:** rank-one candidate only; not formally selected or approved for annotation. This is a protocol-debugging dry-run, not a result or prevalence observation.
+**Working protocol:** `research/protocol/CTI_Event_Instance_Annotation_Protocol_v0.5-draft.md`.
+**Working schema:** `research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/` (reconstruction only; not frozen or approved).
 
-**Do not treat this as a result.** No event identities or temporal relations have been annotated yet.
+## Source identity
 
-## Source report
+- **Report ID:** `intel471_2021-09-09_groove-gang-ransomware-babuk-revil`
+- **Title:** *How Groove Gang is shaking up the Ransomware-as-a-Service market to empower affiliates*
+- **Publisher/date:** Intel471, 9 September 2021
+- **Canonical publisher page:** https://www.intel471.com/blog/groove-gang-ransomware-babuk-revil-blackmatter
+- **AnnoCTR source revision:** `d510b6949e1938d47c93a43eedd562dc538439dc`
+- **Source-text SHA-256:** `87e1e45070dffc9ae446013754ae6466c28cc5910c56501c4d8f1dcb573e7d56`
 
-Candidate: `intel471_2020-03-26_analysis-of-an-attempted-attack`
+Source files at the pinned AnnoCTR revision:
+- [Full report text](https://github.com/boschresearch/anno-ctr-lrec-coling-2024/blob/d510b6949e1938d47c93a43eedd562dc538439dc/AnnoCTR/all/text/intel471_2021-09-09_groove-gang-ransomware-babuk-revil.txt)
+- [MITRE-only linking records](https://github.com/boschresearch/anno-ctr-lrec-coling-2024/blob/d510b6949e1938d47c93a43eedd562dc538439dc/AnnoCTR/all/linking_mitre_only/intel471_2021-09-09_groove-gang-ransomware-babuk-revil.json)
+- [TimeML file](https://github.com/boschresearch/anno-ctr-lrec-coling-2024/blob/d510b6949e1938d47c93a43eedd562dc538439dc/AnnoCTR/all/time/intel471_2021-09-09_groove-gang-ransomware-babuk-revil.tml)
 
-- [Open the full report text](https://github.com/boschresearch/anno-ctr-lrec-coling-2024/blob/main/AnnoCTR/all/text/intel471_2020-03-26_analysis-of-an-attempted-attack.txt)
-- [Open its MITRE-only technique-link records](https://github.com/boschresearch/anno-ctr-lrec-coling-2024/blob/main/AnnoCTR/all/linking_mitre_only/intel471_2020-03-26_analysis-of-an-attempted-attack.json)
-- [Open its TimeML file](https://github.com/boschresearch/anno-ctr-lrec-coling-2024/blob/main/AnnoCTR/all/time/intel471_2020-03-26_analysis-of-an-attempted-attack.tml)
-- [Open the AnnoCTR corpus README and licensing statement](https://github.com/boschresearch/anno-ctr-lrec-coling-2024)
+The source identifies that the article also ran on McAfee Enterprise ATR. Treat that as a syndication/source-family note, not a second independent report. Review the original source and report identity before any derived material is published.
 
-The repository describes the corpus as CC BY-SA 4.0 and says that it includes 400 reports from commercial CTI providers. Per-report provenance and original source terms still need checking before using report text in a publication or redistributing excerpts. Do not add raw report text to this project's repository.
+## Eligibility and rights are separate
 
-## Why this report was shortlisted
+- The frame records local research use and derivative-publication reuse as `PERMITTED` based on the AnnoCTR maintainer's qualified 5 November 2026 clarification; attribution and ShareAlike conditions apply.
+- `source_scope_eligibility` remains `PENDING` and `researcher_review_status` remains `NOT_REVIEWED` in the canonical frame. This starter does not approve the report.
+- The report remains one of five rank-one candidates, not a selected final sample member.
+- Do not commit raw report text or extended verbatim spans. The repository MIT licence does not relicense AnnoCTR material.
 
-A mechanical source-file screen found:
-- 15,211 characters in the source text;
-- 64 MITRE-link records in total;
-- 32 technique-link records across five unique technique IDs;
-- 24 technique-link mention records mapped to T1059;
-- 31 TIMEX3 tags in its TimeML file;
-- zero TimeML EVENT, MAKEINSTANCE or TLINK tags.
+## Exposure warning
 
-The 24 T1059 records are **not 24 events**. They may include repeated references to one action, separate actions, generic descriptions, artefacts, or context. The human reader has to determine which, if any, are specific event instances. Similarly, TIMEX3 tags are temporal expressions, not event-to-event relations.
+This candidate has already been the subject of a source-first feasibility review. The researcher’s pass must therefore be recorded as `AI_EXPOSED`, not blind. A later reread or washout does not remove that exposure. The existing feasibility draft is a locator for protocol issues only; it is not an annotation, a gold label, or a source of event IDs to copy.
 
-## Your first task: read, do not label by guess
+## What this report is useful for testing
 
-1. Read the complete report from beginning to end.
-2. Identify every passage that appears to describe a specific action performed in the reported operation. Do not annotate generic capability descriptions as specific events.
-3. For each candidate action mention, record its exact character offsets in the original text. Offsets are zero-based and end-exclusive.
-4. Decide whether it describes a specific report-local occurrence, a generic behaviour statement, a non-event, or an unresolved instance.
-5. Where two mentions appear to describe the same occurrence, propose a shared event-instance ID and explain the textual evidence. Where separate occurrences are proposed, explain the distinction.
-6. Assign one or more ATT&CK mappings only where the report itself supports them. The pre-existing mapping file is a candidate locator, not an instruction to accept every label.
-7. Only after event identity is decided, look for explicit temporal relations between distinct event instances. Record the exact evidence that connects both arguments and supports the relation. Do not infer order from sentence position.
+The article combines RaaS ecosystem history, forum communications, Babuk/Groove background, victim references, and generalized actor-level TTP descriptions. Do not collapse those contexts into one incident or one timeline. In particular:
 
-## Files to use
+1. Separate contextual actor/forum communications from intrusion activity.
+2. Keep the different victim references in distinct scopes unless the source explicitly connects them.
+3. Distinguish actor-profile behaviour, repeated series, episode containers, and particular resolved occurrences.
+4. Do not assign every technique in the report-level TTP list to every candidate activity unit.
+5. Do not infer a positive temporal edge from the order of sections or from the order of a generalized attack-phase description.
 
-Fill the blank templates:
-- `research/templates/report_registry.csv`
-- `research/templates/event_mentions.csv`
-- `research/templates/event_mappings.csv`
-- `research/templates/temporal_relations.csv`
+The preliminary feasibility draft currently identifies no clearly resolved pair of intrusion event leaves in a shared scope. Re-open the source and decide independently; do not force a positive edge. A zero-event-leaf or zero-edge outcome is acceptable if supported by the complete source review.
 
-Use `research/ANNOTATION_PROTOCOL_v0.3.md` and follow `research/PILOT_SAMPLING_PLAN_v0.1.md` before freezing the pilot sample. Keep one report ID consistent across all files. It is fine for a report to produce zero positive temporal relations; do not invent them to make the experiment look successful.
+## Dry-run procedure
+
+1. Save the exact pinned source locally and verify that its decoded text hash matches the value above. Preserve its original line endings and do not normalize Unicode.
+2. Record source provenance, hash, extraction method, scope boundaries and `prior_exposure_status=AI_EXPOSED` in the RECON report registry.
+3. Read the complete source. Record candidate action mentions as exact zero-based, end-exclusive source spans.
+4. Assign mention status, then create activity units. Only `RESOLVED` atomic `event_leaf` units may enter the primary event graph.
+5. Record ATT&CK mappings only when the report supports them for the specific activity unit. Treat the AnnoCTR linking export as a candidate locator, not ground truth.
+6. Search for explicit temporal relations only after event identity and scope are resolved. Every positive relation needs relation-specific evidence and a direct source/timestamp basis.
+7. Record uncertainty rather than inventing execution counts, host identity, attribution, event identity or chronology.
+
+Use the 12 blank registers under `research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/registers/`. Do not use the older v0.3 CSV templates with the RECON validator.
 
 ## Stop point
 
-After Report 01, review the annotation guide before doing the other four reports. Record:
-- time taken;
-- number of candidate event mentions;
-- resolved / unresolved / generic behaviour / not-an-event counts;
-- event instances with multiple technique mappings;
-- explicit temporal relation count by label;
-- difficult decisions and why;
-- whether the current categories were understandable.
+This is protocol debugging only. Do not lock the annotation partition or run projection metrics until Protocol v0.5 and a new schema version have been explicitly approved and frozen. If another human is available, an independent overlapping review is needed to measure IAA; AI is not a second annotator.
 
-A second human should independently annotate this report or an overlapping subset if possible. If no second human is available, we will not report inter-annotator agreement.
-
-**Pilot inclusion status:** shortlisted only. Confirm report provenance and source-text rights in the AnnoCTR provenance file before freezing it into a formal pilot sample.
-
-
-## Preliminary source-file screening note — review only after your first pass
-
-To reduce anchoring, read the source report and make your own first-pass event-mention notes before relying on this locator. This is **not an annotation** and must not be copied into the gold CSVs without independent human verification.
-
-A direct inspection of the linked technique file found 64 newline-delimited JSON records: 32 technique, 28 malware and 4 tactic records. Of the technique rows, 24 are linked to T1059. Their mention spans mix macro-related wording with references to an Excel document builder, documents, sample files and repeated descriptions. They are not 24 event mentions, 24 executions, or automatically valid event-to-technique mappings.
-
-The report prose also contains an explicit local ordering cue describing a file as retrieved/saved **before being executed** (around character offset 4,009 in the current source text). Treat this only as a candidate relation cue. A human must identify the two action arguments, decide whether they are separate resolved event instances, verify any ATT&CK mappings independently, and record the exact evidence offsets. No relation has been pre-annotated.
-
-**Interpretation:** this candidate is promising for testing the protocol because it contains both repeated technique-link annotations and at least one explicit temporal cue. It is not yet confirmed as suitable for the formal pilot, and it says nothing about prevalence across AnnoCTR.
+**Current status:** no human annotations, no accepted event instances, no accepted mappings, no temporal relations, and no projection results have been produced for this candidate.
