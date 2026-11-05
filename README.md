@@ -2,7 +2,7 @@
 
 A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
-**Status (5 November 2026):** AnnoCTR screening and the 120-report feasibility frame are prepared. The dataset maintainer has clarified that source-material use and publication of derivatives are permitted under the corpus CC BY-SA licence, subject to attribution and ShareAlike. The reconstructed annotation schema remains a draft; no human annotations or real-report projection results exist. No novel contribution is claimed as established.
+**Status (5 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The dataset maintainer has clarified that source-material use and publication of derivatives are permitted under the corpus CC BY-SA licence, subject to attribution and ShareAlike. Two non-CTI source documents are excluded from the declared study scope but retained in the inventory. The new protocol and reconstructed schema remain drafts; no human annotations or real-report projection results exist. No novel contribution is claimed as established.
 
 ## Provisional primary research question
 
@@ -39,7 +39,7 @@ data/processed/annoctr_screening/  three allow-listed, text-free screening metad
 
 ## Current phase
 
-With the dataset-maintainer permission clarification recorded, the next phase is to settle the remaining researcher-owned source-scope and protocol decisions, approve a new versioned annotation protocol/schema, and begin a source-first human feasibility pilot before building a model. The current source of truth is `docs/PROJECT_STATE.md`, with the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.1.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
+With the dataset-maintainer permission clarification recorded, the next phase is to settle the remaining researcher-owned source-scope and protocol decisions, approve a new versioned annotation protocol/schema, and begin a source-first human feasibility pilot before building a model. The current source of truth is `docs/PROJECT_STATE.md`, with the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
 
 ## Citation and author name
 
@@ -128,9 +128,16 @@ adapter, and 56 synthetic tests (29 validator, 16 projection, 11 adapter). None 
 - Novelty: not established.
 - The five-report design is a feasibility/protocol-debugging pilot, not a prevalence sample.
 
-The 120-row sampling frame is versioned at `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.csv`. Automated triage and prior exposure are recorded separately from human source-scope, local research-use and public-reuse decisions. The five candidates have not received human eligibility approval. See `docs/PROJECT_STATE.md`, the project-wide audit v1.4 and the researcher decision register for current status. The RECON package remains a reconstruction, not the missing original v0.4.2 schema, and has not been approved for formal annotation.
+The 120-row sampling frame is versioned at `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv`. Automated triage and prior exposure are recorded separately from human source-scope, local research-use and public-reuse decisions. The five candidates have not received human eligibility approval. See `docs/PROJECT_STATE.md`, the project-wide audit v1.4 and the researcher decision register for current status. The RECON package remains a reconstruction, not the missing original v0.4.2 schema, and has not been approved for formal annotation.
 
 
 ## AnnoCTR source use and derivative data
 
 The AnnoCTR dataset maintainer replied on 5 November 2026 that source-material licences had been checked and permit redistribution under the dataset licence, and that researchers may add annotations/change reports and publish derivative works under the same CC BY-SA licence. This is a qualified maintainer clarification, not legal advice; it did not enumerate report-level exceptions. Any adapted annotation material must retain attribution and ShareAlike. The MIT licence in this repository applies to the project's original software/documentation only; it does not relicense source reports or derivative annotation datasets. Raw AnnoCTR reports and extended verbatim excerpts are not committed. See `research/rights/AnnoCTR_Research_Use_Permission_Clarification_v0.1.md`.
+
+
+## Sampling and annotation protocol update — 5 November 2026
+
+Two no-CyNE reports—a sponsored Ponemon survey summary and a TIBER-EU framework explainer—have been dispositioned INELIGIBLE for the declared CTI-report scope based on their source content. Both remain in the historical 120-report inventory; their absence of CyNE/ATT&CK annotations was not the exclusion basis. The current text-free frame is `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv`, with the updated method in `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sampling_Method_v0.3.3.md`.
+
+The annotation working rules are consolidated in `research/protocol/CTI_Event_Instance_Annotation_Protocol_v0.5-draft.md` and `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. These remain drafts pending reconciliation with the reconstructed register schema. The five rank-one reports remain candidates, not selected reports; human-locked annotations remain at zero.

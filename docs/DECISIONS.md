@@ -40,3 +40,22 @@
 - Does AnnoCTR contain full texts and usable span/time annotations for the candidate reports?
 - Can SMAH-CTI Action spans be paired with underlying full reports under its CC BY-NC licence?
 - Is a second independent annotator available for the pilot?
+
+
+## 2026-11-05 — AnnoCTR source permissions and derivative material
+
+**Decision:** Use the five fixed rank-one AnnoCTR candidates for local research annotation and derivative publication under the dataset's CC BY-SA licence, subject to attribution and ShareAlike, on the basis of the dataset maintainer's written clarification received 5 November 2026.
+
+**Boundary:** The response was qualified by the maintainer's recollection and was not legal advice; it did not provide a report-level exception list. Keep raw reports and extended verbatim excerpts out of Git. The repository MIT licence applies to project software, not source reports or adapted annotation material. See `research/rights/AnnoCTR_Research_Use_Permission_Clarification_v0.1.md`.
+
+## 2026-11-05 — Two no-CyNE documents outside the CTI-report scope
+
+**Decision:** Mark `proofpoint_2021-05-24_compromised-cloud-accounts-cost-firms` and `quoteintelligence_2020-07-09_what-is-tiber-eu-and` as `INELIGIBLE` for the declared CTI-report source scope. Retain both in the historical 120-report manifest and exclude them from `N_eligible`.
+
+**Reasoning:** The first is a sponsored survey summary; the second is a framework explainer. Neither reports a report-local observed intrusion, actor operation, campaign or activity sequence. Missing CyNE/ATT&CK rows are not the exclusion rationale. The six other no-link reports are not excluded on this basis.
+
+## 2026-11-05 — Adopted annotation controls for the AnnoCTR feasibility draft
+
+**Decision:** Adopt explicit evidence-scope criteria, source-evidence-based mapping acceptance and alternative handling, prior-exposure coding, and a non-exhaustive candidate-pair negative protocol. The researcher's future pass on the five previously reviewed rank-one candidates is `AI_EXPOSED`; an independent second human reviewer is the only route to an unexposed overlapping pass, provided they have not seen prior per-report interpretations.
+
+**Boundary:** These are annotation controls, not annotations. Protocol v0.5-draft is a new draft, not recovered v0.4.1; RECON v0.1 is not the original v0.4.2 schema and remains unapproved.
