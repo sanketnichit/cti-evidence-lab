@@ -69,12 +69,12 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         return {x["code"] for x in validate_analysis_partition_selection(self.base, self.selection_file)[0]}
 
     def test_header_only_register_is_valid(self):
-        self.assertEqual([], self.codes())
+        self.assertEqual(set(), self.codes())
 
     def test_single_annotator_final_is_valid_across_repeat_passes(self):
         self.rows = [self.selection()]
         self.save()
-        self.assertEqual([], self.codes())
+        self.assertEqual(set(), self.codes())
 
     def test_only_one_final_partition_per_report(self):
         self.rows = [
@@ -120,7 +120,7 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         }]
         self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
         self.save()
-        self.assertEqual([], self.codes())
+        self.assertEqual(set(), self.codes())
 
     def test_selection_must_resolve_registered_partition(self):
         self.rows = [self.selection(annotation_pass_id="missing")]
