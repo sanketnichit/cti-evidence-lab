@@ -58,7 +58,7 @@ All annotation rows are partitioned by `(report_id, annotator_id, annotation_pas
 1. `event_mappings.activity_unit_id` must resolve within the same partition.
 2. Only `mapping_decision_status=ACCEPTED` with source-supported `mapping_basis` may enter primary mapping sets.
 3. `mapping_basis=workbook_only` must never be accepted into `A_exact` or `A_120`.
-4. `ALTERNATIVE`, `REJECTED`, or `UNRESOLVED` decisions are excluded from primary mapping sets.
+4. `ALTERNATIVE`, `REJECTED`, or `UNRESOLVED` decisions are excluded from primary mapping sets. An `ALTERNATIVE` row requires an `alternative_group_id`; each group contains at least two mapping rows for one activity unit, and any `alternative_to_mapping_id` resolves within that group and unit.
 5. Every `baseline_mapping_status=IN_VOCAB` must have `baseline_parent_technique_id` present in the pinned A_120 list and matching `baseline_vocabulary_sha256`.
 6. Exact technique/sub-technique IDs are retained separately from parent technique IDs.
 
@@ -87,6 +87,7 @@ A row enters the primary positive temporal graph only when:
 ## Candidate-pair, non-temporal and time rules
 
 - Candidate pair assessment does not define the positive relation discovery universe; no unassessed pair is negative.
+- `NO_TEMPORAL_CLAIM`, `VAGUE_OR_AMBIGUOUS`, and `NOT_ASSESSABLE` assessments require a non-empty `assessment_reason`; unassessed pairs are not inserted as negatives.
 - Both assessed endpoints must be distinct, resolved atomic `event_leaf` units; containers and unresolved units are not candidate event pairs.
 - Candidate-pair rules must be versioned and scope-aware.
 - Non-temporal relations may connect broader activity units, including containers, but must never enter the temporal projection.

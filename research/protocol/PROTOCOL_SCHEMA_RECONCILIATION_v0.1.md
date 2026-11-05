@@ -22,7 +22,7 @@ RECON v0.1 remains a reconstruction. It is not the missing original Schema v0.4.
 | Time evidence | `time_evidence` | Partially covered. Raw text and normalized bounds are represented, but ISO/timezone/precision consistency and uncertainty-invariant ordering are not fully executable. |
 | Temporal relations | `temporal_relations`, evidence spans and additional evidence links | Partially covered. Evidence-scope values exist, but cue and endpoint-support roles are not sufficiently distinguished for cross-sentence/document-context evidence. |
 | Episode-level exploratory relations | No dedicated register | Missing. Protocol currently asks for a separate episode-level exploratory register, but RECON has no such register. |
-| Optional candidate-pair assessment | `candidate_pair_assessments` | Mostly covered. Endpoint and rule/version checks exist; reasons are not required for every ambiguous/not-assessable outcome. |
+| Optional candidate-pair assessment | `candidate_pair_assessments` | Covered structurally. Endpoint eligibility, rule/version pinning, and reasons for all three non-positive outcomes are validated; the candidate universe itself remains a researcher-frozen rule. |
 | Lock and benchmark reveal | Adapter computes and checks a partition lock digest | Partially covered. A specific partition can be verified, but no durable register designates the final analysis partition when multiple passes/annotators exist or records the reveal event. |
 | Projection and cycle diagnostics | Projection adapter and `projection_metrics_recon.py` | Core event-edge projection, omission, collision and cycle-provenance logic is represented and synthetically tested. |
 | Full metric contract | Per-report edge projection metrics | Partially implemented. Same-technique pair opportunity, per-technique occurrence compression, and cross-report report-level aggregation are not implemented in this module. |
@@ -38,7 +38,7 @@ The validator now excludes such a partition from `N_assessable` until its exact 
 
 **Implementation:** RECON validator, data-model rules, QA record, manifest and checksum list.  
 **Regression coverage:** source missing → excluded from assessable denominator; source supplied and matching → included.  
-**Verification:** 65 RECON synthetic tests pass (38 validator, 16 projection, 11 adapter); 31/31 package checksums match. These remain synthetic checks, not report findings.
+**Verification:** 67 RECON synthetic tests pass (40 validator, 16 projection, 11 adapter); 31/31 package checksums match. These remain synthetic checks, not report findings.
 
 ### 3.2 Temporal evidence roles — partial representation
 
@@ -56,7 +56,7 @@ Protocol Pass 5 says episode-to-episode relations may be retained in a separate 
 
 ### 3.4 Alternative mapping constraints — incomplete executable gate
 
-The mapping table includes `alternative_group_id` and `alternative_to_mapping_id`, and the projection function excludes any mapping whose decision is not `ACCEPTED`. However, the validator does not yet enforce the Protocol Section 3.1 rule that alternatives are mutually exclusive interpretations of one decision. It does not require an alternative group ID for `ALTERNATIVE`, check that referenced alternatives resolve within the same group and activity unit, or reject an accepted mapping still present in an unresolved alternative group.
+The validator now requires an `alternative_group_id` for `ALTERNATIVE` rows, at least two mapping rows per group, one activity unit per group, and any `alternative_to_mapping_id` to resolve within the same group and activity unit. The projection function continues to exclude non-`ACCEPTED` rows. The validator does not decide whether the alternatives are semantically mutually exclusive, nor does it resolve a group on behalf of the annotator; those remain human mapping decisions. A further release rule for an `ACCEPTED` row retained inside an unresolved alternative group remains to be specified before freeze.
 
 **Proposed repair:** require group membership for alternative rows; validate group membership and target consistency; prevent an unresolved alternative group from contributing an accepted mapping. Preserve multiple independently supported accepted techniques as separate accepted rows without an alternative group.
 
@@ -66,11 +66,9 @@ Protocol Section 3.1 requires a human rationale and mapping-specific evidence be
 
 **Proposed repair:** make a non-empty rationale mandatory for accepted `source_supported_analyst_candidate` rows, either by requiring `mapping_notes` conditionally or by introducing a named rationale field. The evidence link must remain mapping-specific. This is a structural check only; semantic mapping fit remains the human annotator's responsibility.
 
-### 3.6 Candidate-pair assessment reason — incomplete conditional requirement
+### 3.6 Candidate-pair assessment reason — corrected
 
-Protocol Section 6 distinguishes `NO_TEMPORAL_CLAIM`, `VAGUE_OR_AMBIGUOUS`, and `NOT_ASSESSABLE`. The field dictionary describes `assessment_reason` as conditional for negative, ambiguous and not-assessable outcomes. The validator currently requires a reason for `NO_TEMPORAL_CLAIM`, but not for `VAGUE_OR_AMBIGUOUS` or `NOT_ASSESSABLE`.
-
-**Proposed repair:** require `assessment_reason` for all three non-positive assessed outcomes. Do not require or create an assessment row for an unassessed pair.
+The validator now requires a non-empty `assessment_reason` for each of `NO_TEMPORAL_CLAIM`, `VAGUE_OR_AMBIGUOUS`, and `NOT_ASSESSABLE`. An unassessed pair still receives no assessment row and is not treated as a negative.
 
 ### 3.7 Final analysis partition designation — incomplete
 
@@ -129,7 +127,7 @@ Structural checks do not decide source semantics. Human review must still decide
 
 ## 5. Recommended resolution order
 
-1. Close the validator-level omissions with unambiguous protocol support: alternative-group constraints, required mapping rationale for analyst candidates, and assessment reasons for vague/not-assessable outcomes.
+1. Close remaining validator-level omissions: require rationale for accepted analyst-candidate mappings and specify how a resolved versus unresolved alternative group is represented. Alternative-group structure and non-positive pair reasons are now validated.
 2. Decide whether episode-level relations and baseline pair alignment are included in the initial pilot. Add dedicated registers only if they are genuinely in scope; otherwise narrow the protocol before freeze.
 3. Add multi-partition final-analysis designation before any repeated-pass or second-annotator results are aggregated.
 4. Finalize the temporal evidence-link roles and requirements for sentence, cross-sentence and document-context support.
@@ -144,6 +142,6 @@ Structural checks do not decide source semantics. Human review must still decide
 - Real-report projections: 0.
 - Independent human agreement: not measured.
 - Novelty: not established.
-- The 65-test suite is synthetic only (38 validator, 16 projection, 11 adapter). It does not validate semantic annotation or prove the research question's empirical contribution.
+- The 67-test suite is synthetic only (40 validator, 16 projection, 11 adapter). It does not validate semantic annotation or prove the research question's empirical contribution.
 
 **Freeze decision:** not ready. RECON v0.1 is useful and increasingly testable, but the gaps above must be resolved or explicitly deferred in the protocol before a new schema version can be approved.
