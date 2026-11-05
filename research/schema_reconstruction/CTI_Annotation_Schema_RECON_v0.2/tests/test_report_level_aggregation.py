@@ -18,6 +18,7 @@ from validate_temporal_evidence import HEADERS as EVIDENCE_HEADERS, SELECTION_HE
 
 from report_level_aggregation import (  # noqa: E402
     _rates,
+    _conditional_within_technique_opportunity_rate,
     compute_event_pair_opportunity,
     summarize_report_denominators,
     PACKAGE_ROOT as EXTENSION_ROOT,
@@ -178,6 +179,29 @@ class EventPairOpportunityTests(unittest.TestCase):
 
 
 class RateAndBlankBundleTests(unittest.TestCase):
+    def test_conditional_rate_counts_only_reports_with_opportunity(self):
+        rows = [
+            {
+                "has_same_technique_pair_opportunity": True,
+                "has_within_technique_temporal_relation": True,
+            },
+            {
+                "has_same_technique_pair_opportunity": True,
+                "has_within_technique_temporal_relation": False,
+            },
+            {
+                "has_same_technique_pair_opportunity": False,
+                "has_within_technique_temporal_relation": True,
+            },
+        ]
+        result = _conditional_within_technique_opportunity_rate(rows)
+        self.assertEqual(
+            result["within_technique_temporal_relation_given_same_technique_pair_opportunity"],
+            0.5,
+        )
+        self.assertEqual(result["numerator_reports_with_both"], 1)
+        self.assertEqual(result["denominator_reports_with_same_technique_pair_opportunity"], 2)
+
     def test_rates_use_distinct_report_outcomes(self):
         rows = [
             {"has_event_leaf": True, "has_compatible_event_pair": True,
