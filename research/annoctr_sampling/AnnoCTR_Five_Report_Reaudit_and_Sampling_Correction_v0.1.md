@@ -229,3 +229,11 @@ Sources:
 - Keep these permissions separate from source-scope eligibility and from the scientific question of whether a report contains resolvable event instances.
 
 This addendum does not alter the five-report candidate order, the 120-row sampling frame, source-scope eligibility decisions, local-use decisions, public-reuse decisions or human annotation status.
+
+## Dataset-maintainer licence clarification addendum — 5 November 2026
+
+The rights/source-terms review above records what was found on individual publisher sites before the dataset maintainer's response. A written reply from the AnnoCTR dataset contact was received on 5 November 2026. He stated, to the best of his recollection, that the source-material licences had been carefully checked and permit redistribution under the dataset licence; he also said researchers may add annotations or change reports and publish derivative works under the same CC BY-SA licence. He expressly noted that this was not legal advice.
+
+This response changes the project-level permission decision: for the five rank-one reports included in AnnoCTR, the sampling frame now records `local_research_use_status=PERMITTED` and `public_reuse_status=PERMITTED`, subject to the AnnoCTR CC BY-SA 4.0 attribution and ShareAlike conditions. The reply did not enumerate individual reports or provide an exception list. The earlier publisher-site findings remain factual descriptions of those sites' terms, but they do not override the dataset maintainer's clarification about the corpus contribution/licence chain. Reopen only if later evidence identifies a specific exception or different rights holder.
+
+The permission clarification does **not** select any report, resolve source-scope eligibility, validate event identities, or approve human annotations. The five researcher/source-scope eligibility decisions remain pending (0/5); human-locked annotations remain 0. Keep raw corpus files and extended verbatim excerpts out of Git. The project MIT licence applies to its original software/documentation, not source reports or adapted annotation material; publish derivatives under the same CC BY-SA licence with attribution and ShareAlike.

@@ -2,7 +2,7 @@
 
 A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
-**Status (4 November 2026):** AnnoCTR corpus screening and the 120-report feasibility frame are prepared; the reconstructed annotation schema and synthetic validator/projection tooling remain drafts. No human annotations or real-report projection results exist. No novel contribution is claimed as established.
+**Status (5 November 2026):** AnnoCTR screening and the 120-report feasibility frame are prepared. The dataset maintainer has clarified that source-material use and publication of derivatives are permitted under the corpus CC BY-SA licence, subject to attribution and ShareAlike. The reconstructed annotation schema remains a draft; no human annotations or real-report projection results exist. No novel contribution is claimed as established.
 
 ## Provisional primary research question
 
@@ -18,7 +18,7 @@ This is a candidate report-level estimand, not a validated research gap. ChronoC
 - Keep `NO_TEMPORAL_CLAIM`, `UNRESOLVED`, and model `ABSTAIN` distinct.
 - Every positive temporal edge must link to source evidence that supports the relation, not merely mention both endpoints.
 - Preserve source offsets, report versions, dataset versions, ATT&CK release, model revisions, splits, and experiment configs.
-- Do not redistribute raw reports, annotations, or model weights until their licences and underlying content rights are confirmed.
+- Keep raw AnnoCTR reports and extended verbatim excerpts out of Git. Adapted annotation material derived from AnnoCTR must retain source attribution and be published under the same CC BY-SA licence; the repository MIT licence applies to project software, not source reports or adapted annotation data.
 - Group report families, syndicated copies, and near-duplicates across train/test splits.
 - Report coverage and errors together; abstention must not hide poor recall.
 - Gold evaluation labels must be created and adjudicated by human annotators against the original source evidence; automated suggestions are not ground truth.
@@ -39,7 +39,7 @@ data/processed/annoctr_screening/  three allow-listed, text-free screening metad
 
 ## Current phase
 
-Validate the research question, legal data access, annotation feasibility, and fair baseline comparison before building a full pipeline or model. The current source of truth is `docs/PROJECT_STATE.md`, with the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.1.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
+With the dataset-maintainer permission clarification recorded, the next phase is to settle the remaining researcher-owned source-scope and protocol decisions, approve a new versioned annotation protocol/schema, and begin a source-first human feasibility pilot before building a model. The current source of truth is `docs/PROJECT_STATE.md`, with the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.1.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
 
 ## Citation and author name
 
@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest local verification on the 4 November working tree: **43 root tests** and **56 RECON synthetic tests** pass, including the expanded validator and projection regressions. Python compilation and the toy projection demo pass; blank-bundle validation reports zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning. These are synthetic/code-integrity checks only, not real-report findings. GitHub Actions for the current changes must be checked separately.
+Latest recorded verification on 5 November 2026: **53 root synthetic tests** and **63 RECON synthetic tests** pass (36 validator, 16 projection, 11 adapter); all 29 entries in the RECON checksum manifest match. The projection demo and blank-bundle validation pass (zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning). These are synthetic/code-integrity checks only, not real-report findings. Confirm the newest GitHub Actions run for any later repository changes.
 
 Run from the repository root:
 
@@ -129,3 +129,8 @@ adapter, and 56 synthetic tests (29 validator, 16 projection, 11 adapter). None 
 - The five-report design is a feasibility/protocol-debugging pilot, not a prevalence sample.
 
 The 120-row sampling frame is versioned at `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v0.9.csv`. Automated triage and prior exposure are recorded separately from human source-scope, local research-use and public-reuse decisions. The five candidates have not received human eligibility approval. See `docs/PROJECT_STATE.md`, the project-wide audit v1.4 and the researcher decision register for current status. The RECON package remains a reconstruction, not the missing original v0.4.2 schema, and has not been approved for formal annotation.
+
+
+## AnnoCTR source use and derivative data
+
+The AnnoCTR dataset maintainer replied on 5 November 2026 that source-material licences had been checked and permit redistribution under the dataset licence, and that researchers may add annotations/change reports and publish derivative works under the same CC BY-SA licence. This is a qualified maintainer clarification, not legal advice; it did not enumerate report-level exceptions. Any adapted annotation material must retain attribution and ShareAlike. The MIT licence in this repository applies to the project's original software/documentation only; it does not relicense source reports or derivative annotation datasets. Raw AnnoCTR reports and extended verbatim excerpts are not committed. See `research/rights/AnnoCTR_Research_Use_Permission_Clarification_v0.1.md`.

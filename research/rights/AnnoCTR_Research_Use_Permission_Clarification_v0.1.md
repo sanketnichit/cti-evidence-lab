@@ -1,7 +1,7 @@
 # AnnoCTR research-use permission clarification v0.1
 
 **Prepared:** 5 November 2026  
-**Status:** Request checklist prepared; no request has been sent and no permission response has been received.  
+**Status:** Written dataset-maintainer clarification received 5 November 2026; current working decision and limits are recorded in Section 6.  
 **Purpose:** Identify the exact rights questions that must be resolved before using AnnoCTR report text for new source annotation or publishing derived research outputs.
 
 ## 1. What the public record currently says
@@ -51,11 +51,11 @@ If the maintainer cannot confirm the rights for all publishers, request the rele
 | Publish exact or extended source-text spans | NOT PLANNED unless expressly cleared | Obtain explicit permission and observe any quoting restrictions |
 | Redistribute the raw report corpus | NOT PLANNED | No redistribution is proposed by this project |
 
-These are separate use decisions. Permission to conduct local research does not automatically establish permission to reproduce source excerpts or redistribute new annotations.
+These are separate use decisions. The maintainer clarification supports local academic annotation and publication of derivative works under the dataset licence. The project still does not plan to redistribute the raw corpus or publish extended verbatim source spans.
 
 ## 4. Candidate-specific follow-up
 
-The initial request should go to the dataset maintainer because the central question is the scope of the published AnnoCTR licence and the donor permissions behind it. Follow-up with individual vendors only where the maintainer identifies a missing grant, exception or uncertainty.
+The dataset maintainer has now responded that source-material licences were checked and permit redistribution under the dataset licence, and that annotations/adaptations may be published under the same ShareAlike licence. No separate vendor follow-up is currently required by that response. Reopen a report-specific inquiry only if new evidence identifies an exception or inconsistent rights-holder chain.
 
 - **Intel471 / McAfee syndication:** confirm the specific Groove/Babuk report's rights chain and whether the AnnoCTR copy is covered by the dataset licence.
 - **Lab52 / S2 Grupo:** confirm the TokyoX Part 2 contribution is included in the donor permission for the corpus release.
@@ -63,13 +63,31 @@ The initial request should go to the dataset maintainer because the central ques
 
 Do not contact every vendor with a generic request before the maintainer clarifies what was actually granted.
 
-## 5. Decision rule pending response
+## 5. Decision rule after the maintainer response
 
-- Keep local_research_use_status=UNRESOLVED and public_reuse_status=UNRESOLVED for all five rank-one candidates until adequate written clarification is obtained and reviewed.
-- Do not begin formal source annotation merely because the corpus is publicly downloadable or labelled CC BY-SA 4.0.
-- Do not infer that use is prohibited merely because current vendor website terms restrict copying of website content; the relationship between those terms and the dataset-specific donation/licence is precisely what needs clarification.
-- Keep raw report text and extended source spans outside Git.
-- Record the response, date, responding rights-holder, report/vendor coverage, permitted uses, exclusions and attribution conditions before changing any permission field.
-- If the response remains ambiguous for one report, keep that report unresolved and assess another fixed candidate only under the already-declared source/rights failure rule. Do not replace it because of event yield.
+- For the five rank-one AnnoCTR candidates, set `local_research_use_status=PERMITTED` and `public_reuse_status=PERMITTED`, with the dated response recorded as the basis.
+- Treat public reuse as permission to publish derivative works under the same AnnoCTR CC BY-SA licence, not as permission to remove attribution, ignore ShareAlike or relicense adapted report material under MIT.
+- Attribute AnnoCTR and each original report/publisher, identify modifications, and apply CC BY-SA 4.0 to adapted annotation material where the licence applies.
+- Keep raw report files and extended verbatim source spans outside Git. This project does not plan to republish the raw corpus.
+- Keep source-scope eligibility, researcher review, report assessability and annotation readiness separate from the rights fields. Permission does not make a report substantively eligible or annotatable.
+- Reopen a candidate-specific rights question only if new evidence identifies a report exception, a different rights-holder chain or a rights-holder objection. Do not replace a candidate because of event yield.
 
-**Current outcome:** no permission decision has changed. This document prepares a precise clarification request; it does not itself grant permission, record approval or constitute legal advice.
+**Current outcome:** the maintainer clarification supports local research annotation and publication of derivative works under the dataset's CC BY-SA licence. This is a working decision based on the maintainer's qualified recollection, not a legal opinion or a separately executed grant from each vendor.
+
+## 6. Written dataset-maintainer clarification — 5 November 2026
+
+A written email response was received from the AnnoCTR dataset contact on 5 November 2026. The response stated, in substance, that the source-material licences had been carefully checked and allow redistribution under the dataset licence; that researchers may add annotations or change reports; and that derivative works may be published provided they remain under the same CC BY-SA licence. The maintainer qualified this with “if I remember correctly” and stated that it was not legal advice.
+
+### Working interpretation
+
+- The clarification supports private local academic source review and manual annotation of reports included in AnnoCTR, including the five fixed rank-one candidates, subject to any later-identified exception.
+- It supports publication of derivative annotation material under the same CC BY-SA licence (the AnnoCTR repository identifies this as CC BY-SA 4.0).
+- The reply did not list each report or vendor individually and did not provide an exception schedule. No report-specific exception is currently known from the response; if one is later identified, revisit only the affected report.
+- Continue to attribute AnnoCTR and each original report/publisher, identify modifications, and apply ShareAlike to adapted material. The repository's MIT software licence does not relicense source reports or derivative annotation datasets.
+- This project will not commit the raw AnnoCTR corpus or extended verbatim report excerpts. Exact internal evidence spans remain in local annotation materials unless a later publication plan separately verifies the appropriate attribution and reuse treatment.
+
+### Candidate status update
+
+For the five fixed rank-one candidates, the working permissions fields are now `local_research_use_status=PERMITTED` and `public_reuse_status=PERMITTED`, with this dated response as the basis. `source_scope_eligibility` and `researcher_review_status` remain pending; no candidate is thereby selected or formally approved for annotation.
+
+**Limitations:** this records the substance of the email, not the email itself. It is not legal advice, a legal opinion, or independent confirmation from each vendor/rightsholder.
