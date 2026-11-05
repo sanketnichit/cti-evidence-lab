@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest recorded verification on 5 November 2026: **53 root synthetic tests** and **63 RECON synthetic tests** pass (36 validator, 16 projection, 11 adapter); all 29 entries in the RECON checksum manifest match. The projection demo and blank-bundle validation pass (zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning). GitHub Actions run [#41991072107](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41991072107) passed on commit `26f40958950b553b033844e690260500daf67802`. These are synthetic/code-integrity checks only, not real-report findings.
+Latest recorded verification on 5 November 2026: **53 root synthetic tests** and **64 RECON synthetic tests** pass (37 validator, 16 projection, 11 adapter); all 31 entries in the RECON checksum manifest match. The projection demo and blank-bundle validation pass (zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning). GitHub Actions run [#41996095666](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41996095666) passed on commit `5db1f34a8d6ecb279cd8f6882b24a334084e6ac7`. These are synthetic/code-integrity checks only, not real-report findings.
 
 Run from the repository root:
 

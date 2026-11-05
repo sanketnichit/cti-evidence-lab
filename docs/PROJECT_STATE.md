@@ -43,8 +43,8 @@ This remains a candidate empirical question, not an established novelty claim. T
 
 ## Implementation verification
 
-- Root synthetic tests: 53/53 passed. RECON synthetic tests: 63/63 passed (36 validator, 16 projection, 11 adapter). The source snapshot at commit `26f40958950b553b033844e690260500daf67802` was verified by GitHub Actions run [#41991072107](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41991072107) on 5 November 2026; all steps passed, including root tests, the projection demo, all 29 RECON checksums, all 63 RECON tests and blank-bundle validation.
-- Internal SHA256SUMS checks: 29/29 entries matched.
+- Root synthetic tests: 53/53 passed. RECON synthetic tests: 64/64 passed (37 validator, 16 projection, 11 adapter). GitHub Actions run [#41996095666](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41996095666) passed on commit `5db1f34a8d6ecb279cd8f6882b24a334084e6ac7` on 5 November 2026; all steps passed, including root tests, the projection demo, all 31 RECON checksums, all 64 RECON tests and blank-bundle validation.
+- Internal SHA256SUMS checks: 31/31 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
 - The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags report-level eligibility/local-use/assessability conflicts across annotator/pass partitions and excludes conflicting reports from denominator summaries until adjudicated. It also validates prior-exposure values, requires normalized evidence-linked time records at both endpoints of `direct_timestamp`, rejects duplicate/contradictory direct temporal-pair claims, checks positive candidate assessments against their linked relation, and requires top-level exact techniques to map to themselves. The validator now checks accepted exact IDs and sub-technique parents against the pinned v12.1 crosswalk. The validator's synthetic checks do not establish semantic annotation correctness.
 - The public v0.3-era CSV schema and root annotation validator remain unchanged. `src/projection_metrics.py` has received separate mechanical corrections for normalized strict-order pair orientation and single-edge cycle-fan-out attribution. RECON remains isolated pending protocol/schema approval.
@@ -102,6 +102,12 @@ The dataset maintainer replied in writing that, to the best of his recollection,
 
 This clarification does not select the five reports, resolve the two source-scope dispositions, approve/freeze the reconstructed schema, produce human annotations, or create real-report projection results. Those gates remain open.
 
+
+## Update — 5 November 2026: candidate-pair validation gate
+
+The RECON validator now requires both endpoints of a candidate-pair assessment to be distinct, resolved atomic `event_leaf` units. Unresolved units and series/episode/aggregate containers cannot be assessed as event pairs. A synthetic regression test covers this condition. The change is implemented in RECON v0.1 and its data-model documentation, package manifest, QA record and SHA256SUMS file. It does not establish semantic correctness of any report annotation.
+
+The updated package has 64 synthetic tests (37 validator, 16 projection, 11 adapter) and 31/31 package checksum entries. GitHub Actions run #41996095666 passed on commit `5db1f34a8d6ecb279cd8f6882b24a334084e6ac7`. The five-rank-one Intel471 pilot starter now points to the actual rank-one Groove/Babuk report in the 120-row frame; the source pass remains explicitly AI-exposed. No candidate eligibility decision, human annotation or real-report projection has been created by these changes.
 
 ## Update — 5 November 2026: source-scope and annotation controls
 
