@@ -767,6 +767,26 @@ def validate_bundle(
             ):
                 accepted_a120 += 1
 
+    # Alternative mappings must remain an explicit, within-unit group.
+    alternative_groups: dict[tuple[tuple[str, str, str], str], list[dict[str, str]]] = {}
+    for i, mapping in enumerate(tables["event_mappings"], 2):
+        group_id = mapping.get("alternative_group_id", "")
+        decision = mapping.get("mapping_decision_status", "")
+        if decision == "ALTERNATIVE" and not group_id:
+            _add(issues, "ERROR", "ALTERNATIVE_GROUP_MISSING", "An ALTERNATIVE mapping requires alternative_group_id", "event_mappings", i)
+        if group_id:
+            alternative_groups.setdefault((_partition(mapping), group_id), []).append(mapping)
+        target_id = mapping.get("alternative_to_mapping_id", "")
+        if target_id:
+            target = indexes["event_mappings"].get((*_partition(mapping), target_id))
+            if target is None or target.get("alternative_group_id") != group_id or target.get("activity_unit_id") != mapping.get("activity_unit_id"):
+                _add(issues, "ERROR", "ALTERNATIVE_TARGET_MISMATCH", "alternative_to_mapping_id must resolve to a mapping for the same activity unit and alternative group", "event_mappings", i)
+    for (partition, group_id), members in alternative_groups.items():
+        if len(members) < 2:
+            _add(issues, "ERROR", "ALTERNATIVE_GROUP_SINGLETON", f"Alternative group {group_id!r} must contain at least two mapping rows", "event_mappings")
+        if len({row.get("activity_unit_id", "") for row in members}) != 1:
+            _add(issues, "ERROR", "ALTERNATIVE_GROUP_CROSSES_UNITS", f"Alternative group {group_id!r} must refer to one activity unit", "event_mappings")
+
     # Time evidence.
     time_types = {"ATTACK_OCCURRENCE", "ATTACK_PERIOD", "DETECTION", "DISCOVERY", "SAMPLE_UPLOAD", "SAMPLE_COMPILATION", "PUBLICATION", "REPORT_RETRIEVAL", "OTHER", "UNKNOWN"}
     time_precisions = {"YEAR", "MONTH", "DAY", "HOUR", "MINUTE", "SECOND", "INTERVAL", "QUALITATIVE", "UNKNOWN"}
@@ -932,8 +952,8 @@ def validate_bundle(
                     endpoint = units.get((*_partition(r), endpoint_id))
                     if endpoint and not _scope_within_partition(_partition(r), endpoint.get("scope_id", ""), r["comparison_scope_id"]):
                         _add(issues, "ERROR", "ASSESSMENT_ENDPOINT_OUTSIDE_SCOPE", f"{endpoint_name} scope is not within comparison_scope_id", "candidate_pair_assessments", i)
-        if r.get("assessment_label") == "NO_TEMPORAL_CLAIM" and not r.get("assessment_reason"):
-            _add(issues, "ERROR", "NO_CLAIM_REASON_MISSING", "NO_TEMPORAL_CLAIM requires assessment_reason", "candidate_pair_assessments", i)
+        if r.get("assessment_label") in {"NO_TEMPORAL_CLAIM", "VAGUE_OR_AMBIGUOUS", "NOT_ASSESSABLE"} and not r.get("assessment_reason"):
+            _add(issues, "ERROR", "ASSESSMENT_REASON_MISSING", f"{r.get('assessment_label')} requires assessment_reason", "candidate_pair_assessments", i)
         if r.get("assessment_label") in POSITIVE_TEMPORAL_LABELS:
             if not r.get("related_relation_id") or not _has_ref(indexes["temporal_relations"], r, r.get("related_relation_id")):
                 _add(issues, "ERROR", "POSITIVE_ASSESSMENT_NO_RELATION", "Positive candidate assessment must link to temporal_relations row", "candidate_pair_assessments", i)

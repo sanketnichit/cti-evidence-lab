@@ -182,6 +182,50 @@ class ValidatorTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("INELIGIBLE_ASSESSMENT_ENDPOINT", {x.code for x in result.errors})
 
+    def test_nonpositive_candidate_assessments_require_reason(self):
+        base = {
+            **PARTITION, "assessment_id": "assessment-a-b", "event_a_id": "event-a",
+            "event_b_id": "event-b", "candidate_rule_id": "local-temporal-cue",
+            "candidate_rule_version": "v1", "comparison_scope_id": "scope-incident",
+            "scope_compatibility": "COMPATIBLE", "related_relation_id": "",
+            "assessment_reason": "", "adjudication_status": "UNREVIEWED", "assessment_notes": "",
+        }
+        for label in ("NO_TEMPORAL_CLAIM", "VAGUE_OR_AMBIGUOUS", "NOT_ASSESSABLE"):
+            self.rows["candidate_pair_assessments"] = [{**base, "assessment_label": label}]
+            self.save("candidate_pair_assessments")
+            result = self.validate()
+            self.assertIn("ASSESSMENT_REASON_MISSING", {x.code for x in result.errors}, label)
+
+    def test_alternative_mapping_group_requires_two_same_unit_members(self):
+        def alternative(mapping_id, group_id):
+            row = dict(self.rows["event_mappings"][0])
+            row.update(
+                mapping_id=mapping_id, activity_unit_id="event-a", event_instance_id="event-a",
+                mapping_decision_status="ALTERNATIVE", mapping_basis="source_supported_analyst_candidate",
+                alternative_group_id=group_id, alternative_to_mapping_id="",
+                baseline_mapping_status="UNRESOLVED", baseline_parent_technique_id="",
+                baseline_vocabulary_id="", baseline_vocabulary_sha256="", mapping_notes="",
+            )
+            return row
+
+        self.rows["event_mappings"] = [alternative("alt-a", "")]
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("ALTERNATIVE_GROUP_MISSING", {x.code for x in result.errors})
+
+        self.rows["event_mappings"] = [alternative("alt-a", "choice-a")]
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("ALTERNATIVE_GROUP_SINGLETON", {x.code for x in result.errors})
+
+        self.rows["event_mappings"] = [alternative("alt-a", "choice-a"), alternative("alt-b", "choice-a")]
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertFalse(
+            {"ALTERNATIVE_GROUP_MISSING", "ALTERNATIVE_GROUP_SINGLETON", "ALTERNATIVE_GROUP_CROSSES_UNITS"}
+            & {x.code for x in result.errors}
+        )
+
     def test_missing_source_text_is_warning_not_false_error(self):
         result = self.validate(source_texts=False)
         self.assertTrue(result.ok)
