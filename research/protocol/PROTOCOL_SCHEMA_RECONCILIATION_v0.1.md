@@ -40,19 +40,19 @@ The validator now excludes such a partition from `N_assessable` until its exact 
 **Regression coverage:** source missing → excluded from assessable denominator; source supplied and matching → included.  
 **Verification:** 69 RECON v0.1 synthetic tests pass (41 validator, 16 projection, 12 adapter); 31/31 package checksums match. CI run #125 also passed 70 RECON v0.2 tests and 55 root tests (194 successful test executions total). These remain synthetic checks, not report findings.
 
-### 3.2 Temporal evidence roles — partial representation
+### 3.2 Temporal evidence roles — v0.1 gap, v0.2 extension implemented
 
-Protocol Section 4.3 requires evidence that connects the relation cue to both event arguments. It explicitly names `cue_text` and `argument_support`; Sections 4.3 and Pass 5 also require every sentence/passage needed for cross-sentence and document-context support.
+RECON v0.1 has a primary relation evidence span and generic `record_evidence_links`, but its broad `TEMPORAL_RELATION` role cannot reliably distinguish a relation cue from Event A support, Event B support, or wider context. The v0.1 package alone also does not enforce the multi-span requirements for cross-sentence/document-context evidence.
 
-RECON has one primary evidence span plus additional spans in `record_evidence_links`, but the current `evidence_role` vocabulary uses only broad values such as `TEMPORAL_RELATION`. It cannot reliably distinguish a cue span from Event A support, Event B support, or wider context. A single span can still support a sentence-level relation, but the schema does not structurally enforce the multi-span evidence requirements for `CROSS_SENTENCE` and `DOCUMENT_CONTEXT`.
+The additive RECON v0.2 extension supplies `temporal_relation_evidence.csv` with `EVENT_A_SUPPORT`, `EVENT_B_SUPPORT`, and `RELATION_CONTEXT` roles. The relation's `primary_evidence_span_id` is the `RELATION_CUE`; exact source text and offsets remain stored once in `evidence_spans`. The extension validator checks endpoint alignment and the structural locator/note requirements for `SENTENCE`, `CROSS_SENTENCE`, and `DOCUMENT_CONTEXT`. Protocol v0.5-draft Section 4.3 has now been reconciled to this representation and no longer requires duplicate `cue_text` or `argument_support` fields.
 
-**Proposed repair:** retain the canonical evidence-span/link architecture, add precise temporal evidence-link roles (at minimum relation cue, Event A argument support, Event B argument support, and relation context), and document when multiple spans are mandatory. Avoid duplicating raw source text into free-text cue fields when exact evidence spans already preserve it. The protocol's `cue_text` and `argument_support` wording should then be reconciled to this evidence-link representation.
+These checks establish traceability and structural completeness only. They do not establish semantic entailment. The v0.2 extension remains a draft and requires researcher approval before annotation.
 
-### 3.3 Episode-level exploratory relations — unresolved scope decision
+### 3.3 Episode-level exploratory relations — proposed initial-pilot deferral
 
-Protocol Pass 5 says episode-to-episode relations may be retained in a separate exploratory register and must not be pooled with atomic event-instance edges. RECON has only the atomic-positive `temporal_relations` register and a non-temporal relation register. The atomic validator correctly rejects containers as primary positive endpoints, but there is no separate place to store episode-level temporal observations.
+RECON v0.1 and v0.2 have no dedicated episode-to-episode temporal relation register. Their primary temporal relation path is for distinct resolved atomic event leaves; containers are not primary graph endpoints.
 
-**Decision needed before freeze:** either (a) add a separate episode-temporal register with explicitly non-primary status and its own tests, or (b) narrow the initial pilot protocol to defer episode-level temporal annotation and retain only a note that such a relation was observed. Do not place episode relations in `temporal_relations` and weaken the atomic event gate.
+Protocol v0.5-draft now proposes deferring episode-to-episode relation records from the initial pilot while retaining episode containers and any supported unit/time evidence. This is the recommended way to keep the initial schema bounded without weakening the atomic event gate. The deferral is not yet an adopted researcher decision: explicit approval is required before freeze. If episode-edge analysis is retained instead, it needs a separately versioned register and distinct tests; do not place episode edges in `temporal_relations`.
 
 ### 3.4 Alternative mapping constraints — incomplete executable gate
 
@@ -76,11 +76,11 @@ The present report registry has no field that designates a partition's analysis 
 
 **Proposed repair:** add a minimal report-partition designation mechanism before multi-pass or multi-annotator data are analysed. It must distinguish development/repeat/independent/consensus/adjudicated-final partitions and ensure at most one selected final analysis partition per report. Do not sum per-partition edges or events to create report-level outcomes.
 
-### 3.8 Baseline pair alignment — missing from schema
+### 3.8 Baseline pair alignment — proposed initial-pilot deferral
 
-Protocol Section 6.3 requires explicit alignment labels (`supported`, `multiple_candidate_pairs`, `ambiguous`, `unmapped`, `not_assessable`) after the event-level candidate set is reviewed. RECON has no dedicated baseline pair/alignment register. These labels should not be forced into `event_mappings` or `candidate_pair_assessments`; they describe correspondence between a benchmark technique-pair item and one or more report-local event pairs.
+Protocol v0.5-draft previously required explicit alignment labels (`supported`, `multiple_candidate_pairs`, `ambiguous`, `unmapped`, `not_assessable`) after the event-level candidate set was reviewed. RECON v0.1/v0.2 has no dedicated register for correspondence between benchmark technique-pair items and report-local event pairs. Those labels must not be forced into `event_mappings` or `candidate_pair_assessments`.
 
-**Proposed repair:** decide whether baseline alignment is in scope for the initial five-report feasibility pilot. If it is, add a separate register with raw benchmark IDs/labels, candidate event-pair references, alignment status, and evidence/rationale. Keep raw `NEXT` provenance and any normalization hypothesis separate. Otherwise defer alignment metrics and amend the protocol accordingly.
+Protocol v0.5-draft Section 6.3 now proposes deferring record-level ChronoCTI pair-to-event alignment from the initial pilot. Preserve raw benchmark pair IDs, labels, and provenance in the separate baseline reproduction materials. The proposed deferral requires researcher approval. If alignment is later brought into scope, add a dedicated register, candidate-generation rules, evidence requirements, and separate validation; do not treat benchmark edges as source evidence.
 
 ### 3.9 Metric coverage — per-report core implemented, report-level analyses incomplete
 
@@ -91,7 +91,7 @@ The protocol's metric list also includes:
 - occurrence compression / event-leaf count per technique;
 - report-level numerator/denominator aggregation across `N_assessable`.
 
-Those are not currently emitted by the projection module. The first is not an edge-projection metric and needs a separately defined event-pair universe. The second needs per-technique event counts. The third needs the selected final partition rule above.
+The projection module itself is not the report-level aggregator. RECON v0.2 now supplies `analysis/report_level_aggregation.py` with synthetic coverage for report eligibility/assessability, selected-final projection outcomes, occurrence compression and per-report projection diagnostics. Pair-opportunity-dependent rates remain withheld until the provisional scope-pair opportunity rule is explicitly approved. The aggregator does not decide source semantics or scope compatibility.
 
 **Proposed repair:** define the pair universe and aggregation rules in the metric contract before implementation. Keep this work separate from the annotation validator and do not report rates until real locked partitions exist.
 
@@ -126,10 +126,10 @@ Structural checks do not decide source semantics. Human review must still decide
 ## 5. Recommended resolution order
 
 1. Close remaining validator-level omissions: require rationale for accepted analyst-candidate mappings and specify how a resolved versus unresolved alternative group is represented. Alternative-group structure and non-positive pair reasons are now validated.
-2. Decide whether episode-level relations and baseline pair alignment are included in the initial pilot. Add dedicated registers only if they are genuinely in scope; otherwise narrow the protocol before freeze.
-3. Add multi-partition final-analysis designation before any repeated-pass or second-annotator results are aggregated.
-4. Finalize the temporal evidence-link roles and requirements for sentence, cross-sentence and document-context support.
-5. Complete the metric contract for pair opportunity, occurrence compression and cross-report aggregation.
+2. Review and explicitly approve/revise the proposed initial-pilot deferrals for episode-to-episode relations and record-level baseline alignment.
+3. Add/approve multi-partition final-analysis designation before any repeated-pass or second-annotator results are aggregated.
+4. Review and approve the RECON v0.2 temporal evidence roles and structural scope gates; semantic entailment remains a human decision.
+5. Approve the metric contract and scope-pair opportunity rule; retain rate withholding until that rule is approved. The v0.2 report-level aggregation implementation is already synthetically tested.
 6. Reconcile timestamp normalization and uncertainty rules.
 7. Issue a new schema version, tests, manifest and checksum list; perform a clean CI run; then obtain explicit researcher approval before annotation.
 
