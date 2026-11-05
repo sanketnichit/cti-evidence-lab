@@ -1,7 +1,14 @@
 """Tests for structural and offset validation of human annotation CSV rows."""
 
+import hashlib
+import io
+import tempfile
 import unittest
+from contextlib import redirect_stdout
+from pathlib import Path
+from unittest.mock import patch
 
+from src.annotation_validation import main as run_annotation_validation
 from src.annotation_validation import validate_annotation_rows
 
 
@@ -68,6 +75,47 @@ class AnnotationValidationTests(unittest.TestCase):
         result = self.validate()
         self.assertFalse(result["valid"])
         self.assertTrue(any("does not equal" in e for e in result["errors"]))
+
+    def test_source_span_text_preserves_boundary_whitespace(self):
+        self.mentions[0]["char_start"] = "12"
+        self.mentions[0]["mention_text"] = " ran a script before"
+        self.mappings[0]["evidence_end"] = "26"
+        self.mappings[0]["evidence_text"] = "ran a script "
+        self.relations[0]["evidence_start"] = "12"
+        self.relations[0]["evidence_text"] = " ran a script before"
+
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+    def test_cli_preserves_crlf_source_text_for_offsets_and_hash(self):
+        raw_source = b"alpha\r\nbeta\r\n"
+        expected_hash = hashlib.sha256(raw_source).hexdigest()
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            text_path = root / "report.txt"
+            text_path.write_bytes(raw_source)
+            mentions_path = root / "mentions.csv"
+            mappings_path = root / "mappings.csv"
+            relations_path = root / "relations.csv"
+            for path in (mentions_path, mappings_path, relations_path):
+                path.write_text("report_id\n", encoding="utf-8")
+
+            argv = [
+                "annotation_validation.py",
+                "--report-id", "r1",
+                "--text", str(text_path),
+                "--mentions", str(mentions_path),
+                "--mappings", str(mappings_path),
+                "--relations", str(relations_path),
+            ]
+            output = io.StringIO()
+            with patch("sys.argv", argv), redirect_stdout(output):
+                exit_code = run_annotation_validation()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Characters: 13", output.getvalue())
+        self.assertIn(f"SHA-256: {expected_hash}", output.getvalue())
 
     def test_unresolved_mention_cannot_have_event_id(self):
         self.mentions[0]["instance_status"] = "UNRESOLVED"
