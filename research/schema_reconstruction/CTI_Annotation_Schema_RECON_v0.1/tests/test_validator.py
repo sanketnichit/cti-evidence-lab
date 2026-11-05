@@ -109,7 +109,7 @@ def make_fixture(root: Path) -> dict[str, list[dict[str, str]]]:
         rows["event_mappings"].append({
             **PARTITION, "mapping_id": map_id, "activity_unit_id": unit_id,
             "event_instance_id": unit_id, "exact_technique_id": technique,
-            "exact_technique_name": "Command and Scripting Interpreter", "attack_version": "synthetic",
+            "exact_technique_name": "Command and Scripting Interpreter", "attack_version": "Enterprise ATT&CK v12.1",
             "mapping_basis": "report_explicit_parent", "mapping_decision_status": "ACCEPTED",
             "alternative_group_id": "", "alternative_to_mapping_id": "",
             "baseline_vocabulary_id": "CTI Evidence Lab A_120 selected-technique identifier vocabulary",
@@ -224,14 +224,66 @@ class ValidatorTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("TOP_LEVEL_PARENT_MISMATCH", {x.code for x in result.errors})
 
-    def test_subtechnique_requires_verified_parent_crosswalk_before_a120_classification(self):
+    def test_subtechnique_parent_is_verified_against_pinned_crosswalk(self):
         mapping = self.rows["event_mappings"][0]
-        mapping.update(exact_technique_id="T1059.001", baseline_parent_technique_id="T1059")
+        mapping.update(
+            exact_technique_id="T1059.001",
+            exact_technique_name="PowerShell",
+            attack_version="Enterprise ATT&CK v12.1",
+            mapping_basis="report_explicit_subtechnique",
+            baseline_parent_technique_id="T1059",
+        )
         self.save("event_mappings")
         result = self.validate()
-        self.assertIn("EXACT_PARENT_CROSSWALK_UNVERIFIED", {x.code for x in result.errors})
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(result.accepted_a120_mappings, 2)
+        self.assertEqual(result.attack_crosswalk_count, 737)
 
-    def test_crosswalk_file_presence_does_not_bypass_crosswalk_validation(self):
+    def test_subtechnique_wrong_but_valid_a120_parent_is_rejected(self):
+        mapping = self.rows["event_mappings"][0]
+        mapping.update(
+            exact_technique_id="T1059.001",
+            exact_technique_name="PowerShell",
+            attack_version="Enterprise ATT&CK v12.1",
+            mapping_basis="report_explicit_subtechnique",
+            baseline_parent_technique_id="T1105",
+        )
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("EXACT_PARENT_MISMATCH", {x.code for x in result.errors})
+
+    def test_unknown_exact_technique_cannot_be_promoted_using_a_valid_parent(self):
+        mapping = self.rows["event_mappings"][0]
+        mapping.update(
+            exact_technique_id="T9999",
+            baseline_parent_technique_id="T1059",
+            attack_version="Enterprise ATT&CK v12.1",
+        )
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("EXACT_TECHNIQUE_NOT_IN_PINNED_RELEASE", {x.code for x in result.errors})
+
+    def test_accepted_mapping_requires_the_pinned_attack_release(self):
+        mapping = self.rows["event_mappings"][0]
+        mapping["attack_version"] = "Enterprise ATT&CK v14.1"
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("ATTACK_VERSION_MISMATCH", {x.code for x in result.errors})
+
+    def test_revoked_subtechnique_is_not_counted_in_primary_a120(self):
+        mapping = self.rows["event_mappings"][0]
+        mapping.update(
+            exact_technique_id="T1053.001",
+            exact_technique_name="At (Linux)",
+            attack_version="Enterprise ATT&CK v12.1",
+            mapping_basis="report_explicit_subtechnique",
+            baseline_parent_technique_id="T1053",
+        )
+        self.save("event_mappings")
+        result = self.validate()
+        self.assertIn("LIFECYCLE_FLAGGED_PRIMARY_MAPPING", {x.code for x in result.errors})
+
+    def test_crosswalk_file_presence_does_not_bypass_hash_validation(self):
         mapping = self.rows["event_mappings"][0]
         mapping.update(exact_technique_id="T1059.001", baseline_parent_technique_id="T1059")
         self.save("event_mappings")
@@ -239,7 +291,16 @@ class ValidatorTests(unittest.TestCase):
             "not,a,verified,crosswalk\n", encoding="utf-8"
         )
         result = self.validate()
-        self.assertIn("EXACT_PARENT_CROSSWALK_UNVERIFIED", {x.code for x in result.errors})
+        self.assertIn("ATTACK_CROSSWALK_HASH_MISMATCH", {x.code for x in result.errors})
+
+    def test_crosswalk_manifest_must_pin_the_verified_source_hash(self):
+        manifest_path = self.bundle / "vocabulary" / "A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json"
+        import json
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["source"]["sha256"] = "0" * 64
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        result = self.validate()
+        self.assertIn("ATTACK_CROSSWALK_SOURCE_PIN_MISMATCH", {x.code for x in result.errors})
 
     def test_prior_exposure_status_is_controlled(self):
         self.rows["report_registry"][0]["prior_exposure_status"] = "MAYBE"

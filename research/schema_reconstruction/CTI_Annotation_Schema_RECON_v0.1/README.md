@@ -14,6 +14,7 @@ The original `CTI_Annotation_Schema_v0.4.2-draft.zip` and exact `CTI_Event_Insta
 
 - `registers/` — 12 blank CSV templates (header rows only; no annotations).
 - `vocabulary/A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json` — ordered, identifier-only extraction from the ChronoCTI temporal learner's selected-120 source file.
+- `vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv` and its `.manifest.json` — hash-pinned 737-row Enterprise ATT&CK v12.1 exact-to-parent mapping; upstream STIX source stays outside Git.
 - `docs/FIELD_DICTIONARY.md` — field definitions, requiredness, types, and evidence status.
 - `docs/CONTROLLED_VOCABULARIES.md` — confirmed v0.4 vocabularies and explicitly provisional reconstruction enums.
 - `docs/DATA_MODEL_AND_VALIDATION_RULES.md` — keys, foreign keys, eligibility gates, and cross-register invariants.
@@ -53,13 +54,13 @@ Only resolved `event_leaf` activity units with `atomic_event` granularity may en
 
 ## Validator and synthetic tests
 
-Run the synthetic test suite from this directory with Python 3.10 or later (58 tests across the validator, projection module, and fail-closed adapter: 31 validator, 16 projection, 11 adapter):
+Run the synthetic test suite from this directory with Python 3.10 or later (63 tests across the validator, projection module, and fail-closed adapter: 36 validator, 16 projection, 11 adapter):
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-The suite covers the schema validator, provisional projection module and annotation-to-projection adapter; it currently contains 58 synthetic tests. None are real report annotations. The projection module is not the public GitHub implementation and has not been run on real annotations.
+The suite covers the schema validator, provisional projection module and annotation-to-projection adapter; it currently contains 63 synthetic tests. None are real report annotations. The projection module is not the public GitHub implementation and has not been run on real annotations.
 
 Run the validator against the blank package (this should report an empty-bundle warning, not an annotation success):
 
@@ -73,7 +74,7 @@ For a populated copy, place frozen UTF-8 source files at `sources/REPORT_ID.txt`
 python validator/validate_annotations.py --bundle . --sources-dir sources --json-out validation_report.json
 ```
 
-The validator checks structure, identifiers, cross-register references, report/annotator/pass isolation, source hashes and exact offsets (when text is supplied), A_120 membership, activity-unit eligibility, evidence links, temporal relation eligibility, and denominator bookkeeping. It does **not** judge semantic correctness or whether a human interpretation is genuinely supported by the report. Synthetic tests do not validate real annotations.
+The validator checks structure, identifiers, cross-register references, report/annotator/pass isolation, source hashes and exact offsets (when text is supplied), A_120 membership, the pinned v12.1 release and crosswalk hashes, exact-ID existence, canonical names, explicit sub-technique parents, lifecycle flags, activity-unit eligibility, evidence links, temporal relation eligibility, and denominator bookkeeping. It does **not** judge semantic correctness or whether a human interpretation is genuinely supported by the report. Synthetic tests do not validate real annotations.
 
 ## Not yet approved
 

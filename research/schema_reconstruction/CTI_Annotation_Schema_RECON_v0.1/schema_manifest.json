@@ -26,7 +26,16 @@
     "source_repository": "https://github.com/rayhanur-rahman/ChronoCTI",
     "source_commit": "4906a0a5e399b6e2aa10435fd6e3894e041e4549",
     "source_path": "temporal-learner-code/selected_techniquesWName.json",
-    "source_git_blob_sha": "ca14535ad0b67af4c8297707b4c134c9de2d577f"
+    "source_git_blob_sha": "ca14535ad0b67af4c8297707b4c134c9de2d577f",
+    "exact_to_parent_crosswalk": {
+      "artifact": "A_120_Exact_to_Parent_Crosswalk_v0.1.csv",
+      "manifest": "A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json",
+      "attack_release": "Enterprise ATT&CK v12.1",
+      "record_count": 737,
+      "sha256": "f449ff8bd1551b6d6656d2f25a82b7c55a0b134bbecd4215f0f10330ec85be29",
+      "source_sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+      "source_git_blob_sha1": "7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee"
+    }
   },
   "source_inputs": [
     "CTI_Event_Instance_Annotation_Protocol_v0.4-draft.md",
@@ -43,16 +52,16 @@
   ],
   "validator": {
     "path": "validator/validate_annotations.py",
-    "status": "SYNTHETICALLY_TESTED_STRUCTURAL_VALIDATOR_FOR_RECONSTRUCTION_ONLY",
+    "status": "SYNTHETICALLY_TESTED_STRUCTURAL_VALIDATOR_WITH_PINNED_ATTACK_V12_1_CROSSWALK",
     "test_path": "tests/test_validator.py",
-    "test_count": 31,
+    "test_count": 36,
     "test_command": "python -m unittest discover -s tests -v",
     "known_limitations": [
       "Does not make semantic judgments about source evidence or event identity",
       "Does not approve protocol or schema decisions",
       "Does not make this reconstruction equivalent to original Schema v0.4.2",
       "Source substring/hash verification requires the exact frozen source text",
-      "Sub-technique parent classification remains fail-closed until a verified, version-pinned ATT&CK crosswalk is integrated"
+      "No human annotations or real report projection results have been validated"
     ],
     "qa_result_path": "QA/SYNTHETIC_VALIDATION_RESULTS.md",
     "tested_invariants": [
@@ -76,7 +85,12 @@
       "sub-technique parent classification fails closed without a verified crosswalk",
       "direct-timestamp endpoints require normalized evidence-linked time records",
       "duplicate and contradictory direct temporal relations are rejected",
-      "positive candidate-pair assessments match their linked temporal relation pair and label"
+      "positive candidate-pair assessments match their linked temporal relation pair and label",
+      "pinned Enterprise ATT&CK v12.1 source and crosswalk hash validation",
+      "exact technique ID and canonical name existence in the pinned release",
+      "sub-technique parent verified through explicit STIX subtechnique-of relationship",
+      "wrong but valid A_120 parent is rejected",
+      "revoked/deprecated exact IDs are excluded from primary A_120"
     ]
   },
   "projection_metrics": {
@@ -89,11 +103,11 @@
     "not_integrated_with_public_github_source": true
   },
   "test_suite": {
-    "total_synthetic_tests": 58,
+    "total_synthetic_tests": 63,
     "test_command": "python -m unittest discover -s tests -v",
     "real_report_rows_used": 0,
     "real_report_runs": 0,
-    "note": "All tests use synthetic fixtures. No AnnoCTR candidate or prior DFIR report has been passed through this package."
+    "note": "63 synthetic tests: 36 validator, 16 projection, 11 adapter; no real report annotation or projection."
   },
   "annotation_projection_adapter": {
     "path": "analysis/annotation_projection_adapter.py",

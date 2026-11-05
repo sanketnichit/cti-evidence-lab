@@ -25,6 +25,36 @@ from src.source_text_integrity import frozen_source_sha256, read_frozen_source  
 
 REGISTER_DIR = PACKAGE_ROOT / "registers"
 VOCAB_PATH = PACKAGE_ROOT / "vocabulary" / "A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json"
+ATTACK_RELEASE = "Enterprise ATT&CK v12.1"
+ATTACK_CROSSWALK_RELATIVE_PATH = (
+    "vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv"
+)
+ATTACK_CROSSWALK_MANIFEST_RELATIVE_PATH = (
+    "vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json"
+)
+ATTACK_CROSSWALK_SHA256 = (
+    "f449ff8bd1551b6d6656d2f25a82b7c55a0b134bbecd4215f0f10330ec85be29"
+)
+ATTACK_SOURCE_SHA256 = (
+    "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1"
+)
+ATTACK_SOURCE_GIT_BLOB_SHA1 = "7a99efb3a8c89b06dd9db1a9a17e4201160ac4ee"
+ATTACK_SOURCE_SIZE_BYTES = 38207821
+ATTACK_CROSSWALK_HEADERS = [
+    "attack_release",
+    "exact_technique_id",
+    "exact_technique_name",
+    "stix_object_id",
+    "is_subtechnique",
+    "parent_technique_id",
+    "parent_technique_name",
+    "parent_in_A_120",
+    "revoked",
+    "deprecated",
+    "relationship_type",
+    "relationship_source_object_id",
+    "relationship_target_object_id",
+]
 
 HEADERS = {
     "report_registry": ["report_id","annotator_id","annotation_pass_id","protocol_version","schema_version","source_title","source_vendor","source_url","source_path","retrieval_date","publication_date","corpus_name","corpus_release","split","language","source_text_sha256","source_text_char_count","extraction_method","transformation_notes","source_scope_eligibility","source_scope_reason","local_research_use_status","local_research_use_basis","public_reuse_status","rights_notes","report_assessability","assessability_reason","full_report_review_status","prior_exposure_status","annotator_notes"],
@@ -88,6 +118,9 @@ class ValidationReport:
     report_level_decision_conflicts: int
     vocabulary_count: int
     vocabulary_sha256: str
+    attack_release: str
+    attack_crosswalk_count: int
+    attack_crosswalk_sha256: str
 
     @property
     def errors(self) -> list[Issue]:
@@ -116,6 +149,9 @@ class ValidationReport:
             "report_level_decision_conflicts": self.report_level_decision_conflicts,
             "a120_vocabulary_count": self.vocabulary_count,
             "a120_vocabulary_sha256": self.vocabulary_sha256,
+            "attack_release": self.attack_release,
+            "attack_crosswalk_count": self.attack_crosswalk_count,
+            "attack_crosswalk_sha256": self.attack_crosswalk_sha256,
             "issues": [asdict(x) for x in self.issues],
         }
 
@@ -210,6 +246,219 @@ def _load_a120(root: Path, issues: list[Issue]) -> tuple[set[str], str, str]:
         return set(), digest, ""
 
 
+def _load_attack_crosswalk(
+    root: Path,
+    a120: set[str],
+    a120_sha: str,
+    issues: list[Issue],
+) -> tuple[dict[str, dict[str, str]], str]:
+    """Load and structurally verify the immutable Enterprise ATT&CK v12.1 crosswalk."""
+    csv_path = root / "vocabulary" / "A_120_Exact_to_Parent_Crosswalk_v0.1.csv"
+    manifest_path = root / "vocabulary" / "A_120_Exact_to_Parent_Crosswalk_v0.1.manifest.json"
+    before = len(issues)
+
+    if not csv_path.is_file():
+        _add(issues, "ERROR", "MISSING_ATTACK_CROSSWALK", "Pinned A_120 exact-to-parent crosswalk CSV is missing", "event_mappings")
+        return {}, ""
+    if not manifest_path.is_file():
+        _add(issues, "ERROR", "MISSING_ATTACK_CROSSWALK_MANIFEST", "Pinned ATT&CK crosswalk source manifest is missing", "event_mappings")
+        return {}, ""
+
+    try:
+        csv_raw = csv_path.read_bytes()
+        csv_sha = hashlib.sha256(csv_raw).hexdigest()
+        if csv_sha != ATTACK_CROSSWALK_SHA256:
+            _add(
+                issues,
+                "ERROR",
+                "ATTACK_CROSSWALK_HASH_MISMATCH",
+                f"Crosswalk SHA-256 mismatch: expected {ATTACK_CROSSWALK_SHA256}, got {csv_sha}",
+                "event_mappings",
+            )
+
+        manifest_raw = manifest_path.read_bytes()
+        manifest = json.loads(manifest_raw.decode("utf-8"))
+        if not isinstance(manifest, dict):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_MANIFEST_INVALID", "Crosswalk manifest root must be a JSON object", "event_mappings")
+            return {}, csv_sha
+        if manifest.get("artifact_version") != "v0.1":
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_VERSION_MISMATCH", "Crosswalk artifact version must be v0.1", "event_mappings")
+        if manifest.get("status") != "GENERATED_FROM_HASH_VERIFIED_ENTERPRISE_ATTACK_V12_1":
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_STATUS_INVALID", "Crosswalk manifest does not record a hash-verified Enterprise ATT&CK v12.1 source", "event_mappings")
+        if manifest.get("attack_release") != ATTACK_RELEASE:
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_RELEASE_MISMATCH", f"Crosswalk release must be {ATTACK_RELEASE!r}", "event_mappings")
+
+        source = manifest.get("source") or {}
+        if not isinstance(source, dict):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_MANIFEST_INVALID", "Crosswalk source metadata must be a JSON object", "event_mappings")
+            return {}, csv_sha
+        expected_source = {
+            "repository": "https://github.com/mitre-attack/attack-stix-data",
+            "path": "enterprise-attack/enterprise-attack-12.1.json",
+            "git_blob_sha1": ATTACK_SOURCE_GIT_BLOB_SHA1,
+            "sha256": ATTACK_SOURCE_SHA256,
+            "size_bytes": ATTACK_SOURCE_SIZE_BYTES,
+        }
+        for field, expected in expected_source.items():
+            if source.get(field) != expected:
+                _add(
+                    issues,
+                    "ERROR",
+                    "ATTACK_CROSSWALK_SOURCE_PIN_MISMATCH",
+                    f"Crosswalk source {field} must equal {expected!r}; got {source.get(field)!r}",
+                    "event_mappings",
+                )
+
+        a120_meta = manifest.get("a120") or {}
+        if not isinstance(a120_meta, dict):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_MANIFEST_INVALID", "Crosswalk A_120 metadata must be a JSON object", "event_mappings")
+            return {}, csv_sha
+        if (
+            a120_meta.get("path")
+            != "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/"
+            "vocabulary/A_120_ChronoCTI_Selected_Technique_IDs_derived_v0.1.json"
+            or a120_meta.get("sha256") != a120_sha
+            or a120_meta.get("record_count") != 120
+        ):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_A120_PIN_MISMATCH", "Crosswalk manifest does not identify the pinned 120-ID A_120 artifact", "event_mappings")
+
+        output_meta = manifest.get("output") or {}
+        if not isinstance(output_meta, dict):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_MANIFEST_INVALID", "Crosswalk output metadata must be a JSON object", "event_mappings")
+            return {}, csv_sha
+        expected_output_path = (
+            "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/"
+            "vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv"
+        )
+        if (
+            output_meta.get("path") != expected_output_path
+            or output_meta.get("sha256") != csv_sha
+            or output_meta.get("sha256") != ATTACK_CROSSWALK_SHA256
+        ):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_OUTPUT_MANIFEST_MISMATCH", "Crosswalk output path or SHA-256 does not match its pinned artifact", "event_mappings")
+
+        generation = manifest.get("generation") or {}
+        if not isinstance(generation, dict):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_MANIFEST_INVALID", "Crosswalk generation metadata must be a JSON object", "event_mappings")
+            return {}, csv_sha
+        if generation.get("script") != "scripts/build_attack_crosswalk.py":
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_GENERATOR_MISMATCH", "Crosswalk generation script path is not the pinned builder", "event_mappings")
+        if generation.get("record_count") != 737:
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_MANIFEST_COUNT_MISMATCH", "Crosswalk manifest must record 737 exact technique rows", "event_mappings")
+
+        import io
+
+        reader = csv.DictReader(io.StringIO(csv_raw.decode("utf-8"), newline=""))
+        if reader.fieldnames != ATTACK_CROSSWALK_HEADERS:
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_HEADER_MISMATCH", "Crosswalk CSV header does not match the pinned schema", "event_mappings")
+            return {}, csv_sha
+        rows = list(reader)
+    except (OSError, UnicodeError, csv.Error, json.JSONDecodeError, TypeError) as exc:
+        _add(issues, "ERROR", "ATTACK_CROSSWALK_READ_ERROR", str(exc), "event_mappings")
+        return {}, ""
+
+    by_exact: dict[str, dict[str, str]] = {}
+    by_stix: dict[str, dict[str, str]] = {}
+    for row_no, row in enumerate(rows, start=2):
+        exact_id = row.get("exact_technique_id", "")
+        stix_id = row.get("stix_object_id", "")
+        if not re.fullmatch(r"T\d{4}(?:\.\d{3})?", exact_id):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_INVALID_EXACT_ID", f"Invalid exact technique ID {exact_id!r}", "event_mappings", row_no)
+            continue
+        if exact_id in by_exact:
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_DUPLICATE_EXACT_ID", f"Duplicate exact technique ID {exact_id!r}", "event_mappings", row_no)
+            continue
+        if not stix_id.startswith("attack-pattern--") or stix_id in by_stix:
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_DUPLICATE_OR_INVALID_STIX_ID", f"Duplicate or invalid STIX attack-pattern ID {stix_id!r}", "event_mappings", row_no)
+            continue
+        if row.get("attack_release") != ATTACK_RELEASE:
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_ROW_RELEASE_MISMATCH", f"Row release for {exact_id} is not {ATTACK_RELEASE!r}", "event_mappings", row_no)
+        if row.get("is_subtechnique") not in {"true", "false"}:
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_INVALID_SUBTECHNIQUE_FLAG", f"Invalid is_subtechnique for {exact_id}", "event_mappings", row_no)
+        for field in ("parent_in_A_120", "revoked", "deprecated"):
+            if row.get(field) not in {"true", "false"}:
+                _add(issues, "ERROR", "ATTACK_CROSSWALK_INVALID_BOOLEAN", f"Invalid {field} flag for {exact_id}", "event_mappings", row_no)
+        if not row.get("exact_technique_name") or not row.get("parent_technique_id") or not row.get("parent_technique_name"):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_INCOMPLETE_ROW", f"Crosswalk row for {exact_id} is missing a name or parent identifier", "event_mappings", row_no)
+        by_exact[exact_id] = row
+        by_stix[stix_id] = row
+
+    top_level_count = sum(row.get("is_subtechnique") == "false" for row in by_exact.values())
+    subtechnique_count = sum(row.get("is_subtechnique") == "true" for row in by_exact.values())
+    relationship_count = sum(row.get("relationship_type") == "subtechnique-of" for row in by_exact.values())
+    a120_found = sum(exact_id in by_exact for exact_id in a120)
+    a120_top_level = sum(
+        exact_id in by_exact and by_exact[exact_id].get("is_subtechnique") == "false"
+        for exact_id in a120
+    )
+
+    for exact_id, row in by_exact.items():
+        parent_id = row.get("parent_technique_id", "")
+        parent_in_a120 = parent_id in a120
+        if row.get("parent_in_A_120") != str(parent_in_a120).lower():
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_A120_FLAG_MISMATCH", f"parent_in_A_120 is inconsistent for {exact_id}", "event_mappings")
+        if row.get("is_subtechnique") == "false":
+            if (
+                parent_id != exact_id
+                or row.get("parent_technique_name") != row.get("exact_technique_name")
+                or row.get("relationship_type") != "self"
+                or row.get("relationship_source_object_id") != row.get("stix_object_id")
+                or row.get("relationship_target_object_id") != row.get("stix_object_id")
+            ):
+                _add(issues, "ERROR", "ATTACK_CROSSWALK_TOP_LEVEL_PARENT_MISMATCH", f"Top-level technique {exact_id} does not map to itself", "event_mappings")
+        elif row.get("is_subtechnique") == "true":
+            parent_stix = row.get("relationship_target_object_id", "")
+            parent_row = by_stix.get(parent_stix)
+            if (
+                row.get("relationship_type") != "subtechnique-of"
+                or row.get("relationship_source_object_id") != row.get("stix_object_id")
+                or parent_row is None
+                or parent_row.get("is_subtechnique") != "false"
+                or parent_row.get("exact_technique_id") != parent_id
+                or parent_row.get("exact_technique_name") != row.get("parent_technique_name")
+            ):
+                _add(issues, "ERROR", "ATTACK_CROSSWALK_EXPLICIT_PARENT_MISMATCH", f"Sub-technique {exact_id} does not resolve to its explicit top-level STIX parent", "event_mappings")
+
+    actual_counts = {
+        "attack_pattern_objects": len(by_exact),
+        "unique_exact_technique_ids": len(by_exact),
+        "top_level_techniques": top_level_count,
+        "sub_techniques": subtechnique_count,
+        "subtechnique_of_relationships": relationship_count,
+        "A_120_ids_found": a120_found,
+        "A_120_ids_top_level": a120_top_level,
+    }
+    expected_counts = {
+        "attack_pattern_objects": 737,
+        "unique_exact_technique_ids": 737,
+        "top_level_techniques": 333,
+        "sub_techniques": 404,
+        "subtechnique_of_relationships": 404,
+        "A_120_ids_found": 120,
+        "A_120_ids_top_level": 120,
+    }
+    manifest_counts = (manifest.get("generation") or {}).get("counts") or {}
+    if not isinstance(manifest_counts, dict):
+        _add(issues, "ERROR", "ATTACK_CROSSWALK_MANIFEST_INVALID", "Crosswalk generation counts must be a JSON object", "event_mappings")
+        return {}, csv_sha
+    if actual_counts != expected_counts or any(manifest_counts.get(k) != v for k, v in expected_counts.items()):
+        _add(issues, "ERROR", "ATTACK_CROSSWALK_COUNT_MISMATCH", f"Crosswalk counts differ from pinned release expectations: {actual_counts}", "event_mappings")
+
+    for exact_id in a120:
+        row = by_exact.get(exact_id)
+        if (
+            row is None
+            or row.get("is_subtechnique") != "false"
+            or row.get("revoked") != "false"
+            or row.get("deprecated") != "false"
+        ):
+            _add(issues, "ERROR", "ATTACK_CROSSWALK_A120_INVALID_MEMBER", f"A_120 member {exact_id} is missing, sub-technique, revoked or deprecated in the pinned release", "event_mappings")
+
+    if any(item.severity == "ERROR" for item in issues[before:]):
+        return {}, csv_sha
+    return by_exact, csv_sha
+
+
 def validate_bundle(
     bundle_root: str | Path,
     source_texts: dict[tuple[str, str, str], str] | None = None,
@@ -220,6 +469,7 @@ def validate_bundle(
     tables = {name: _read_table(root, name, issues) for name in HEADERS}
     rows_by_register = {k: len(v) for k, v in tables.items()}
     a120, a120_sha, a120_name = _load_a120(root, issues)
+    attack_crosswalk, attack_crosswalk_sha = _load_attack_crosswalk(root, a120, a120_sha, issues)
 
     # Partition and primary-key checks.
     if tables["report_registry"]:
@@ -410,7 +660,7 @@ def validate_bundle(
         if unit and r.get("instance_status") != unit.get("instance_status") and not r.get("mention_unit_status_note"):
             _add(issues, "ERROR", "MENTION_UNIT_STATUS_MISMATCH", "Mention/unit instance_status differs; provide mention_unit_status_note", "event_mentions", i)
 
-    # Event mappings and A_120 membership.
+    # Event mappings: exact-to-parent mapping is checked against the pinned v12.1 STIX crosswalk.
     accepted_a120 = 0
     for i, r in enumerate(tables["event_mappings"], 2):
         unit_id = r.get("activity_unit_id", "")
@@ -425,23 +675,76 @@ def validate_bundle(
             _add(issues, "ERROR", "UNSUPPORTED_ACCEPTED_MAPPING", f"Accepted mapping cannot use mapping_basis={basis}", "event_mappings", i)
         if decision == "ACCEPTED" and not r.get("exact_technique_id"):
             _add(issues, "ERROR", "ACCEPTED_MAPPING_NO_TECHNIQUE", "Accepted mapping requires exact_technique_id", "event_mappings", i)
-        if decision == "ACCEPTED" and not r.get("attack_version"):
-            _add(issues, "ERROR", "ACCEPTED_MAPPING_NO_ATTACK_VERSION", "Accepted mapping requires a pinned ATT&CK version", "event_mappings", i)
+
         exact_id = r.get("exact_technique_id", "")
         parent_id = r.get("baseline_parent_technique_id", "")
-        if decision == "ACCEPTED" and exact_id and not re.fullmatch(r"T\d{4}(?:\.\d{3})?", exact_id):
-            _add(issues, "ERROR", "INVALID_EXACT_TECHNIQUE_ID", f"Invalid exact ATT&CK technique ID {exact_id!r}", "event_mappings", i)
-        if decision == "ACCEPTED" and exact_id and "." not in exact_id and parent_id and parent_id != exact_id:
-            _add(issues, "ERROR", "TOP_LEVEL_PARENT_MISMATCH", "A top-level technique must map to itself as its parent; exact technique and baseline parent differ", "event_mappings", i)
-        if decision == "ACCEPTED" and exact_id and "." in exact_id and r.get("baseline_mapping_status") in {"IN_VOCAB", "OUT_OF_VOCAB"}:
-            _add(issues, "ERROR", "EXACT_PARENT_CROSSWALK_UNVERIFIED", "Accepted sub-technique mapping cannot be classified IN_VOCAB or OUT_OF_VOCAB until the pinned ATT&CK release crosswalk is generated and validated", "event_mappings", i)
+        status = r.get("baseline_mapping_status")
+        exact_row = attack_crosswalk.get(exact_id)
+
+        if decision == "ACCEPTED":
+            if r.get("attack_version") != ATTACK_RELEASE:
+                _add(issues, "ERROR", "ATTACK_VERSION_MISMATCH", f"Accepted primary mapping must use {ATTACK_RELEASE!r}", "event_mappings", i)
+            if not re.fullmatch(r"T\d{4}(?:\.\d{3})?", exact_id):
+                _add(issues, "ERROR", "INVALID_EXACT_TECHNIQUE_ID", f"Invalid exact ATT&CK technique ID {exact_id!r}", "event_mappings", i)
+            if exact_row is None:
+                _add(issues, "ERROR", "EXACT_TECHNIQUE_NOT_IN_PINNED_RELEASE", f"Exact technique {exact_id!r} is not present in the pinned {ATTACK_RELEASE} crosswalk", "event_mappings", i)
+            else:
+                if r.get("exact_technique_name") != exact_row.get("exact_technique_name"):
+                    _add(
+                        issues,
+                        "ERROR",
+                        "EXACT_TECHNIQUE_NAME_MISMATCH",
+                        f"Exact technique name for {exact_id} does not match the pinned {ATTACK_RELEASE} name",
+                        "event_mappings",
+                        i,
+                    )
+                if (
+                    exact_row.get("is_subtechnique") == "false"
+                    and parent_id != exact_id
+                ):
+                    _add(
+                        issues,
+                        "ERROR",
+                        "TOP_LEVEL_PARENT_MISMATCH",
+                        "A top-level technique must map to itself as its parent",
+                        "event_mappings",
+                        i,
+                    )
+                elif parent_id != exact_row.get("parent_technique_id"):
+                    _add(
+                        issues,
+                        "ERROR",
+                        "EXACT_PARENT_MISMATCH",
+                        f"Exact technique {exact_id} maps to {exact_row.get('parent_technique_id')!r} in the pinned STIX crosswalk, not {parent_id!r}",
+                        "event_mappings",
+                        i,
+                    )
+                if exact_row.get("revoked") == "true" or exact_row.get("deprecated") == "true":
+                    if status == "IN_VOCAB":
+                        _add(
+                            issues,
+                            "ERROR",
+                            "LIFECYCLE_FLAGGED_PRIMARY_MAPPING",
+                            f"Exact technique {exact_id} is revoked or deprecated in {ATTACK_RELEASE}; retain it in A_exact but do not count it in primary A_120 without separate resolution",
+                            "event_mappings",
+                            i,
+                        )
+                if status == "IN_VOCAB" and exact_row.get("parent_in_A_120") != "true":
+                    _add(issues, "ERROR", "A120_STATUS_CONTRADICTION", f"Exact technique {exact_id} resolves outside A_120 but is marked IN_VOCAB", "event_mappings", i)
+                if status == "OUT_OF_VOCAB" and exact_row.get("parent_in_A_120") == "true":
+                    _add(issues, "ERROR", "A120_STATUS_CONTRADICTION", f"Exact technique {exact_id} resolves inside A_120 but is marked OUT_OF_VOCAB", "event_mappings", i)
+                if status == "IN_VOCAB" and parent_id not in a120:
+                    _add(issues, "ERROR", "A120_MEMBERSHIP_FAILURE", f"baseline_parent_technique_id {parent_id!r} is not in pinned A_120", "event_mappings", i)
+                if status == "OUT_OF_VOCAB" and parent_id in a120:
+                    _add(issues, "ERROR", "A120_STATUS_CONTRADICTION", "Technique is in A_120 but baseline_mapping_status says OUT_OF_VOCAB", "event_mappings", i)
+
         if r.get("event_instance_id") and r.get("event_instance_id") != unit_id:
             _add(issues, "ERROR", "MAPPING_EVENT_ID_NOT_UNIT_ID", "event_instance_id must equal activity_unit_id for resolved event leaves", "event_mappings", i)
-        status = r.get("baseline_mapping_status")
         if status not in BASELINE_MAPPING_STATUSES:
             _add(issues, "ERROR", "INVALID_BASELINE_MAPPING_STATUS", f"Invalid baseline_mapping_status {status!r}", "event_mappings", i)
+
         if status == "IN_VOCAB":
-            technique = r.get("baseline_parent_technique_id", "")
+            technique = parent_id
             if not technique or technique not in a120:
                 _add(issues, "ERROR", "A120_MEMBERSHIP_FAILURE", f"baseline_parent_technique_id {technique!r} is not in pinned A_120", "event_mappings", i)
             if r.get("baseline_vocabulary_sha256", "").lower() != a120_sha:
@@ -452,6 +755,10 @@ def validate_bundle(
             if (
                 decision == "ACCEPTED"
                 and basis not in {"workbook_only", "unresolved"}
+                and exact_row is not None
+                and exact_row.get("parent_in_A_120") == "true"
+                and exact_row.get("revoked") == "false"
+                and exact_row.get("deprecated") == "false"
                 and technique in a120
                 and mapped_unit
                 and mapped_unit.get("unit_role") == "event_leaf"
@@ -459,8 +766,6 @@ def validate_bundle(
                 and mapped_unit.get("instance_status") == "RESOLVED"
             ):
                 accepted_a120 += 1
-        elif status == "OUT_OF_VOCAB" and r.get("baseline_parent_technique_id") in a120:
-            _add(issues, "ERROR", "A120_STATUS_CONTRADICTION", "Technique is in A_120 but baseline_mapping_status says OUT_OF_VOCAB", "event_mappings", i)
 
     # Time evidence.
     time_types = {"ATTACK_OCCURRENCE", "ATTACK_PERIOD", "DETECTION", "DISCOVERY", "SAMPLE_UPLOAD", "SAMPLE_COMPILATION", "PUBLICATION", "REPORT_RETRIEVAL", "OTHER", "UNKNOWN"}
@@ -755,6 +1060,9 @@ def validate_bundle(
         report_level_decision_conflicts=len(conflicted_report_ids),
         vocabulary_count=len(a120),
         vocabulary_sha256=a120_sha,
+        attack_release=ATTACK_RELEASE,
+        attack_crosswalk_count=len(attack_crosswalk),
+        attack_crosswalk_sha256=attack_crosswalk_sha,
     )
 
 
