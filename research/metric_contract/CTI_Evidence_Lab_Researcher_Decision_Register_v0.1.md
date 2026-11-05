@@ -92,6 +92,16 @@ These recommendations do not change the sampling frame, candidate order, eligibi
 
 ---
 
+### Permission-chain clarification route — 5 November 2026
+
+The official AnnoCTR README both identifies a dataset maintainer contact for questions and states that the corpus located in the AnnoCTR folder is licensed CC BY-SA 4.0. The standard CC BY-SA 4.0 legal code limits the licensed grant to rights the licensor has authority to license. The correct next step is therefore to request confirmation of the report-text scope, donor authority, local academic annotation rights, treatment of derived annotations, aggregate publication, source excerpts, ShareAlike and attribution, plus any vendor/report exceptions. The detailed request checklist is research/rights/AnnoCTR_Research_Use_Permission_Clarification_v0.1.md.
+
+No permission request has been sent and no permissions are inferred. Keep all five local research-use and public-reuse fields UNRESOLVED until written clarification is reviewed.
+
+Sources:
+- https://github.com/boschresearch/anno-ctr-lrec-coling-2024/blob/main/README.md
+- https://github.com/boschresearch/anno-ctr-lrec-coling-2024/blob/main/LICENSE.txt
+- https://creativecommons.org/licenses/by-sa/4.0/
 ### Rights review update — 5 November 2026
 
 A focused check of primary-source terms found that the AnnoCTR repository README states CC BY-SA 4.0 for the corpus and acknowledges Intel471 and Lab52/S2 Grupo as donors. Intel471's current Terms of Service reserve copying/reproduction/download/distribution rights absent written authorization unless otherwise permitted; the Lab52 legal notice allows one offline personal/non-commercial copy but separately restricts reproduction and transformation without prior written authorization. For Proofpoint, the public blog article carries a copyright footer, while its linked terms directory covers customer/product/service terms rather than a general blog-content licence; a separate 2014 login-portal terms page was not treated as governing the public article. QuoIntelligence's linked Terms and Conditions are expressly for the Mercury client portal, and its privacy policy is not a content licence; terms for a similarly named but distinct legal entity were not applied. Zscaler's blog disclaimer provides no reuse licence, while its Legal Overview points to a customer-product subscription agreement rather than a general blog-content licence. No article-specific reuse grant was verified for these three publishers. These checks do **not** decide the validity or scope of the corpus-level licence, and absence of a located grant is not a legal conclusion that use is prohibited. Keep local research use and public reuse UNRESOLVED for all five candidates until the donor/dataset permission chain is clarified.

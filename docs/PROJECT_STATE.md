@@ -69,7 +69,7 @@ The current audit is a workbook and selected source-code control-flow audit, not
 ## Current blockers / next sequence
 
 1. Record the formal source-scope disposition for the two no-CyNE reports against the source-based recommendations in `research/ANNOCTR_CANDIDATE_CONTENT_REVIEW_v0.1.md`; keep both rows in the historical 120-report inventory.
-2. Obtain/confirm local research-use permission for the five rank-1 reports through the AnnoCTR/donor permission chain. Source identity (canonical URLs, titles and dates) is verified 5/5; local research-use and public-reuse remain UNRESOLVED for all five.
+2. **Permission clarification route identified.** The AnnoCTR README names the dataset maintainer contact and states that the corpus folder is CC BY-SA 4.0; the licence only grants rights the licensor has authority to license. A precise clarification checklist is recorded at research/rights/AnnoCTR_Research_Use_Permission_Clarification_v0.1.md. The request has not been sent and all five local-use/public-reuse fields remain UNRESOLVED.
 3. Review the operational rules proposed in Section 2A of the researcher decision register: evidence-scope thresholds, mapping acceptance/alternatives, prior-exposure coding and candidate-pair negative labels. Formal approval remains pending; keep the two no-CyNE source-scope dispositions pending and retain the original protocol/schema recovery gap.
 4. Freeze a new, clearly versioned protocol/schema package only after the decisions are recorded. RECON v0.1 remains a reconstruction, not the original v0.4.2.
 5. Begin the first source-first human feasibility annotation only after that freeze. Do not replace candidates because of event yield or absence of positive relations.
