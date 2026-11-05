@@ -54,13 +54,13 @@ Only resolved `event_leaf` activity units with `atomic_event` granularity may en
 
 ## Validator and synthetic tests
 
-Run the synthetic test suite from this directory with Python 3.10 or later (67 tests across the validator, projection module, and fail-closed adapter: 40 validator, 16 projection, 11 adapter):
+Run the synthetic test suite from this directory with Python 3.10 or later (68 tests across the validator, projection module, and fail-closed adapter: 41 validator, 16 projection, 11 adapter):
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-The suite covers the schema validator, provisional projection module and annotation-to-projection adapter; it currently contains 67 synthetic tests. None are real report annotations. The projection module is not the public GitHub implementation and has not been run on real annotations.
+The suite covers the schema validator, provisional projection module and annotation-to-projection adapter; it currently contains 68 synthetic tests. None are real report annotations. The projection module is not the public GitHub implementation and has not been run on real annotations.
 
 Run the validator against the blank package (this should report an empty-bundle warning, not an annotation success):
 

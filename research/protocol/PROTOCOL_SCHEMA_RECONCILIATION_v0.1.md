@@ -38,7 +38,7 @@ The validator now excludes such a partition from `N_assessable` until its exact 
 
 **Implementation:** RECON validator, data-model rules, QA record, manifest and checksum list.  
 **Regression coverage:** source missing → excluded from assessable denominator; source supplied and matching → included.  
-**Verification:** 67 RECON synthetic tests pass (40 validator, 16 projection, 11 adapter); 31/31 package checksums match. These remain synthetic checks, not report findings.
+**Verification:** 68 RECON synthetic tests pass (41 validator, 16 projection, 11 adapter); 31/31 package checksums match. These remain synthetic checks, not report findings.
 
 ### 3.2 Temporal evidence roles — partial representation
 
@@ -56,15 +56,13 @@ Protocol Pass 5 says episode-to-episode relations may be retained in a separate 
 
 ### 3.4 Alternative mapping constraints — incomplete executable gate
 
-The validator now requires an `alternative_group_id` for `ALTERNATIVE` rows, at least two mapping rows per group, one activity unit per group, and any `alternative_to_mapping_id` to resolve within the same group and activity unit. The projection function continues to exclude non-`ACCEPTED` rows. The validator does not decide whether the alternatives are semantically mutually exclusive, nor does it resolve a group on behalf of the annotator; those remain human mapping decisions. A further release rule for an `ACCEPTED` row retained inside an unresolved alternative group remains to be specified before freeze.
+The validator now requires an `alternative_group_id` for `ALTERNATIVE` rows, at least two mapping rows per group, one activity unit per group, and any `alternative_to_mapping_id` to resolve within the same group and activity unit. The projection function continues to exclude non-`ACCEPTED` rows. The validator does not decide whether alternatives are semantically mutually exclusive or resolve a group on behalf of the annotator; those remain human mapping decisions. The protocol/schema owner must still specify how a group is marked resolved and whether an `ACCEPTED` row may retain the former group ID after resolution.
 
 **Proposed repair:** require group membership for alternative rows; validate group membership and target consistency; prevent an unresolved alternative group from contributing an accepted mapping. Preserve multiple independently supported accepted techniques as separate accepted rows without an alternative group.
 
-### 3.5 Analyst-candidate mapping rationale — partial representation
+### 3.5 Analyst-candidate mapping rationale — corrected
 
-Protocol Section 3.1 requires a human rationale and mapping-specific evidence before a `source_supported_analyst_candidate` is accepted. RECON has `mapping_notes` and a required mapping evidence link for accepted source-supported mappings, but `mapping_notes` is optional and the validator does not require the rationale when this basis is used.
-
-**Proposed repair:** make a non-empty rationale mandatory for accepted `source_supported_analyst_candidate` rows, either by requiring `mapping_notes` conditionally or by introducing a named rationale field. The evidence link must remain mapping-specific. This is a structural check only; semantic mapping fit remains the human annotator's responsibility.
+The validator now requires non-empty `mapping_notes` for every accepted `source_supported_analyst_candidate` mapping. Accepted source-supported mappings also require a mapping-specific evidence link. This records the human rationale without duplicating the exact source span in another free-text field. The structural gate cannot decide whether the proposed technique is semantically appropriate; that remains the annotator's responsibility.
 
 ### 3.6 Candidate-pair assessment reason — corrected
 
@@ -114,7 +112,7 @@ The following protocol concepts have a clear representation and synthetic struct
 - atomic leaves versus series/episode/aggregate containers;
 - count-status consistency and non-negative bounds;
 - pinned ATT&CK v12.1 exact-to-parent crosswalk and A_120 membership;
-- accepted mapping evidence, mapping-level ATT&CK release and lifecycle checks;
+- accepted mapping evidence, mapping-level ATT&CK release and lifecycle checks; accepted analyst-candidate rationale; alternative-group structure; accepted analyst-candidate rationale and mapping evidence; alternative-group structure;
 - direct timestamp evidence on both endpoints;
 - distinct, scope-compatible primary temporal endpoints;
 - separate non-temporal relations;
@@ -142,6 +140,6 @@ Structural checks do not decide source semantics. Human review must still decide
 - Real-report projections: 0.
 - Independent human agreement: not measured.
 - Novelty: not established.
-- The 67-test suite is synthetic only (40 validator, 16 projection, 11 adapter). It does not validate semantic annotation or prove the research question's empirical contribution.
+- The 68-test suite is synthetic only (41 validator, 16 projection, 11 adapter). It does not validate semantic annotation or prove the research question's empirical contribution.
 
 **Freeze decision:** not ready. RECON v0.1 is useful and increasingly testable, but the gaps above must be resolved or explicitly deferred in the protocol before a new schema version can be approved.

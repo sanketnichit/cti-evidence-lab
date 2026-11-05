@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest recorded verification on 5 November 2026: **53 root synthetic tests** and **67 RECON synthetic tests** pass (40 validator, 16 projection, 11 adapter); all 31 entries in the RECON checksum manifest match. The projection demo and blank-bundle validation pass (zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning). GitHub Actions run [#41998301083](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41998301083) passed on commit `514056fa3f2e784d827c4246b8350088a5956bdb`. These are synthetic/code-integrity checks only, not real-report findings.
+Latest recorded verification on 5 November 2026: **53 root synthetic tests** and **68 RECON synthetic tests** pass (41 validator, 16 projection, 11 adapter); all 31 entries in the RECON checksum manifest match. The projection demo and blank-bundle validation pass (zero errors and one expected `EMPTY_ANNOTATION_BUNDLE` warning). GitHub Actions run [#41998772656](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/41998772656) passed on commit `e0237e9bae2538d42936f888e414cac0ddad3809`. These are synthetic/code-integrity checks only, not real-report findings.
 
 Run from the repository root:
 
@@ -117,7 +117,7 @@ original `CTI_Annotation_Schema_v0.4.2-draft.zip`, and it is not approved or fro
 for formal annotation. The exact v0.4.1 protocol and original v0.4.2 ZIP were not
 recovered. The package contains 12 blank registers, a field dictionary, controlled
 vocabularies, a structural validator, a projection module, an annotation-to-projection
-adapter, and 67 synthetic tests (40 validator, 16 projection, 11 adapter). None of these tests are results on real CTI reports.
+adapter, and 68 synthetic tests (41 validator, 16 projection, 11 adapter). None of these tests are results on real CTI reports.
 
 ### Current evidence boundary
 
