@@ -53,22 +53,22 @@ The report does not explicitly state an ATT&CK technique ID for either candidate
 
 | Candidate event | Exact ID candidate | v12.1 technique name | Parent / A_120 status | Mapping disposition |
 |---|---|---|---|---|
-| `PT-E01` | `T1105` | Ingress Tool Transfer | Top-level; parent `T1105`; present in pinned `A_120`. | `source_supported_analyst_candidate`; `UNRESOLVED` pending reviewer acceptance. |
+| `PT-E01` | No accepted ID yet. `T1189` (Drive-by Compromise) and `T1204` (User Execution) are possible concepts to check, but the source describes a user downloading a fake privacy tool; it does not explicitly describe browser exploitation on site visit or the user opening/executing the downloaded file. | — | Both parent IDs occur in A_120, but membership does not establish that either mapping applies. | `UNRESOLVED`; do not promote either candidate without source support. |
 | `PT-E02` | `T1105` | Ingress Tool Transfer | Top-level; parent `T1105`; present in pinned `A_120`. | `source_supported_analyst_candidate`; `UNRESOLVED` pending reviewer acceptance. |
 
-The v12.1 crosswalk maps top-level `T1105` to itself, and the derived ChronoCTI `A_120` vocabulary includes it. That establishes vocabulary compatibility, not semantic correctness of the proposed mapping. The source-grounded mapping judgment still requires review.
+The v12.1 crosswalk maps top-level `T1105`, `T1189` and `T1204` to themselves, and all three parent IDs are in `A_120`. This establishes vocabulary compatibility only. It does not establish semantic correctness of any candidate mapping. The source-grounded mapping judgment still requires review.
 
 ## 6. What this could show — and what it cannot show yet
 
-If both candidate units are accepted as distinct atomic occurrences and both mappings are accepted, the pair would be a same-technique pair opportunity with a directly supported `BEFORE` relation. Its technique-pair image would include the diagonal pair `(T1105, T1105)`, which the distinct-technique-pair target cannot retain.
+The source provides a candidate `BEFORE` relation between the initial Smoke Loader delivery and the later follow-on malware download. It does **not** currently establish a same-technique pair: `PT-E01` has no accepted mapping, while `T1105` is only a candidate for `PT-E02`. Do not claim within-technique temporal incidence or a projection omission from this draft.
 
-Do **not** classify this edge as fully omitted at this stage. Other accepted mappings on either endpoint could create distinct technique pairs and make the final edge status partially represented. Complete mapping sets and a locked annotation partition are required before any projection classification.
+If a reviewer later accepts a source-supported parent mapping for `PT-E01`, recompute the shared-technique opportunity from the complete accepted mapping sets. Even then, do not classify the edge as fully omitted until all accepted mappings for both endpoints are known; distinct technique pairs may still be retained.
 
 ## 7. Reviewer decisions to resolve
 
 1. Does this report support two distinct report-local atomic event occurrences, or should the two stages remain descriptions within one broader activity episode?
 2. Is the campaign scope sufficiently explicit and compatible for the two candidate endpoints?
-3. Is `T1105` supportable for both stages from the source description, or should either mapping remain unresolved / use a different candidate?
+3. Is there enough source evidence to map the initial lure-site download to an ATT&CK technique at all? Does the follow-on malware transfer support `T1105` under the pinned v12.1 mapping rules?
 4. Are RedLine and Raccoon alternative examples of follow-on payloads for this chain, rather than two separately evidenced event instances? The current source wording supports keeping them together as unresolved payload identities.
 5. Keep attack-event timestamps unknown; publication date is not event time.
 
