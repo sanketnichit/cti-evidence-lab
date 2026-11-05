@@ -15,6 +15,6 @@
 - `RELATION_CUE`: required; stored in `temporal_relations.primary_evidence_span_id`.
 - `EVENT_A_SUPPORT`: required; stored in `temporal_relation_evidence.csv`.
 - `EVENT_B_SUPPORT`: required; stored in `temporal_relation_evidence.csv`.
-- `RELATION_CONTEXT`: optional; stored in `temporal_relation_evidence.csv`.
+- `RELATION_CONTEXT`: optional for sentence/cross-sentence claims; required with a non-empty rationale for `DOCUMENT_CONTEXT` claims.
 
 This extension does not replace or alter RECON v0.1 and does not claim equivalence to the missing original v0.4.2 schema.
