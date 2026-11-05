@@ -30,7 +30,10 @@ from annotation_projection_adapter import (  # noqa: E402
 from selected_partition_projection_adapter import (  # noqa: E402
     build_projection_for_selected_report,
 )
-from validate_annotations import HEADERS as BASE_HEADERS  # noqa: E402
+from validate_annotations import (  # noqa: E402
+    HEADERS as BASE_HEADERS,
+    nearest_common_resolved_comparison_scope,
+)
 from validate_temporal_evidence import (  # noqa: E402
     SELECTION_HEADERS,
     validate_analysis_partition_selection,
@@ -41,11 +44,6 @@ POSITIVE_LABELS = {
     "BEFORE", "AFTER", "OVERLAP", "SIMULTANEOUS", "CONCURRENT_UNSPECIFIED"
 }
 DIRECT_BASES = {"direct_source", "direct_timestamp"}
-COMPARABLE_SCOPE_TYPES = {
-    "INCIDENT", "CAMPAIGN", "ACTOR_OPERATION", "VICTIM_ORGANISATION", "HOST", "OTHER"
-}
-
-
 def _read_csv(path: Path, expected_headers: Iterable[str] | None = None) -> list[dict[str, str]]:
     if not path.is_file():
         raise FileNotFoundError(f"Required register is missing: {path}")
@@ -239,50 +237,6 @@ def _eligible_event_units(activity_units: list[dict[str, str]]) -> list[dict[str
     ]
 
 
-def _scope_ancestor_chain(scope_id: str, scope_rows: list[dict[str, str]]) -> list[dict[str, str]]:
-    by_id = {row.get("scope_id", ""): row for row in scope_rows if row.get("scope_id")}
-    chain: list[dict[str, str]] = []
-    visited: set[str] = set()
-    current = scope_id
-    while current and current not in visited:
-        visited.add(current)
-        row = by_id.get(current)
-        if row is None or row.get("scope_status") != "RESOLVED":
-            break
-        chain.append(row)
-        current = row.get("parent_scope_id", "")
-    return chain
-
-
-def _lowest_common_comparison_scope(
-    scope_a: str,
-    scope_b: str,
-    scope_rows: list[dict[str, str]],
-) -> str | None:
-    """Return the nearest shared, resolved, non-report-aggregate scope.
-
-    A shared REPORT_AGGREGATE is deliberately insufficient: report co-membership
-    alone cannot make activities from separate incidents timeline-comparable.
-    """
-    chain_a = _scope_ancestor_chain(scope_a, scope_rows)
-    chain_b = _scope_ancestor_chain(scope_b, scope_rows)
-    positions_b = {row["scope_id"]: i for i, row in enumerate(chain_b)}
-    common = []
-    for i, row in enumerate(chain_a):
-        scope_id = row["scope_id"]
-        if scope_id in positions_b:
-            other = chain_b[positions_b[scope_id]]
-            scope_type = row.get("scope_type", "")
-            if (
-                scope_type == other.get("scope_type")
-                and scope_type in COMPARABLE_SCOPE_TYPES
-            ):
-                common.append((max(i, positions_b[scope_id]), i + positions_b[scope_id], scope_id))
-    if not common:
-        return None
-    return min(common)[2]
-
-
 def compute_event_pair_opportunity(
     activity_units: list[dict[str, str]],
     scope_rows: list[dict[str, str]],
@@ -300,7 +254,7 @@ def compute_event_pair_opportunity(
     shared_technique_by_scope_type: Counter[str] = Counter()
     for index, left in enumerate(leaves):
         for right in leaves[index + 1:]:
-            common_scope = _lowest_common_comparison_scope(
+            common_scope = nearest_common_resolved_comparison_scope(
                 left.get("scope_id", ""), right.get("scope_id", ""), scope_rows
             )
             if common_scope is None:
