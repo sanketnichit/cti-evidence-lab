@@ -34,6 +34,64 @@ The current executable package is `CTI_Annotation_Schema_RECON_v0.1`. It is a re
 | 13 | Rights and outputs | AnnoCTR corpus license is CC BY-SA 4.0, but report-specific publisher provenance/redistribution cautions remain AMBER. Local research use and public reuse are separate. | Keep raw reports and long source spans local. Record source-scope eligibility, local-use permission and public-reuse status separately. Clarify Lab52/S2 Grupo and Intel471 first. | **Open; no legal conclusion** |
 | 14 | Novelty claim | Audit v1.4 documents substantial adjacent work and says novelty remains unproven. | Position the candidate niche around the human evidence standard plus explicit measurement of occurrence-level information under a named distinct-technique-pair projection. Do not claim general CTI event extraction, ATT&CK mapping, or attack sequencing as novel. | **Not approved; systematic comparison still needed** |
 
+## 2A. Operational rules proposed for the remaining protocol decisions
+
+The following are concrete working rules derived from the recovered Protocol v0.4-draft and the current RECON data model. They are **recommendations for researcher review**, not approved labels, a protocol freeze, or human annotations.
+
+### Evidence scope on temporal relations
+
+| Value | Proposed operational meaning | What qualifies | What does not qualify |
+|---|---|---|---|
+| `SENTENCE` | The relation and the endpoint references are supported within one sentence. | One sentence contains the temporal cue or timestamp relation and enough argument support to identify both event leaves. | A sentence merely naming two events without relating them. |
+| `CROSS_SENTENCE` | The relation is supported across two or more linked sentences. | A temporal cue in one sentence and an explicit, unambiguous reference/coreference to one or both endpoints in another; record every necessary span. | Ordering sentences in the report and assuming that the described actions happened in that order. |
+| `DOCUMENT_CONTEXT` | Relation support requires multiple passages or wider report context. | The source still contains a direct temporal assertion or explicit timestamp evidence; link the relation-specific cue and the endpoint-supporting passages, and state the argument connection in notes. | Inferring chronology from headings, section order, analyst knowledge, campaign narrative, or the fact that both events appear in the same report. |
+
+**Proposed gate:** `DOCUMENT_CONTEXT` describes where the evidence is distributed; it does not weaken the direct-evidence requirement. A positive primary edge still requires `direct_source` or `direct_timestamp`, two distinct resolved atomic event leaves, compatible comparison scope, and relation-specific evidence. If the connection between passages requires an analyst inference rather than a source-supported reference, retain it as unresolved/inference outside the primary graph.
+
+### Mapping decision and acceptance
+
+1. Preserve the exact ATT&CK technique/sub-technique ID supported by the report and validate its name and parent through the pinned Enterprise ATT&CK v12.1 crosswalk. Do not map from a malware family, tool name, threat actor label, or a workbook occurrence alone.
+2. `report_explicit_subtechnique` and `report_explicit_parent` mean the report itself explicitly supplies the corresponding ATT&CK mapping. Retain a source span showing that explicit mapping.
+3. `source_supported_analyst_candidate` means the report describes a specific activity and a human annotator proposes a technique based on the ATT&CK definition. It is a candidate until the annotator records a rationale and mapping-specific evidence span and a human review accepts it. The basis is permitted for an accepted mapping only after that review; the validator cannot decide semantic fit.
+4. `workbook_only` and `unresolved` must never be accepted into primary `A_exact` or `A_120`.
+5. `ALTERNATIVE` is for mutually exclusive competing interpretations of one mapping decision. Put them in a shared alternative group and exclude them from the accepted set until resolved. Do not mark two independently supported techniques as alternatives merely because one event has multiple mappings.
+6. Multiple independently supported `ACCEPTED` mappings may coexist on one activity unit. Each requires its own evidence and confidence. Multiple mapping rows never create additional event instances.
+7. A technique can enter primary `A_120` only when the mapping decision is `ACCEPTED`, the basis is source-supported, the exact ID resolves through the pinned crosswalk, the parent is in `A_120`, and the lifecycle rule is satisfied. This is a human mapping decision plus a mechanical taxonomy check—not an automatic ATT&CK suggestion.
+
+### Prior exposure and independent review
+
+| Value | Proposed recording rule |
+|---|---|
+| `UNEXPOSED` | The annotator has not seen earlier annotation decisions, candidate spans, mapping suggestions, or feasibility interpretations for that report. |
+| `AI_EXPOSED` | The annotator has seen machine-generated triage, candidate event/mapping suggestions, or prior automated interpretations for that report. |
+| `HUMAN_EXPOSED` | The annotator has seen another human's annotation decisions for that report before completing their own pass. |
+| `MIXED` | Both machine-generated and other-human annotation material were seen before the pass. |
+| `UNKNOWN` | Exposure history cannot be established with confidence. |
+
+**Proposed application:** the researcher's eventual annotation pass on the five rank-1 reports should be recorded as `AI_EXPOSED`, because the source-first feasibility interpretations have already been reviewed. A washout interval may support a repeatability check, but it does not erase exposure or turn that pass into a blind pass. A genuinely independent second annotator may be recorded as `UNEXPOSED` only if they have not seen the earlier report-specific interpretations or labels. Keep independent passes separate until both are locked; measure intra-annotator consistency for a repeat pass and inter-annotator agreement only across independent human passes.
+
+### Candidate-pair assessment and negative labels
+
+- Positive temporal-relation discovery remains a full-report source-review task; it must not be restricted to pairs found by a candidate generator.
+- `NO_TEMPORAL_CLAIM` may be assigned only to an actual pair that was reviewed under a frozen `candidate_rule_id` and `candidate_rule_version`.
+- `VAGUE_OR_AMBIGUOUS` means the source appears to relate the pair temporally but the relation cannot be resolved.
+- `NOT_ASSESSABLE` means the available evidence/context does not permit a defensible pair judgment.
+- A missing row or blank cell means not assessed. It is not a negative temporal label.
+- Do not generate an exhaustive all-pairs negative matrix merely to fill the register. Report the candidate-pair rule and its coverage separately from full-report positive-edge discovery.
+
+### Researcher-owned dispositions still required
+
+| Item | Current recommendation | Formal status |
+|---|---|---|
+| Proofpoint sponsored Ponemon survey summary with no CyNE rows | Exclude from the CTI threat-report source-scope eligible population; retain its historical row in the 120-report manifest. The reason is source genre/scope, not missing ATT&CK links. | Pending researcher disposition |
+| QuoIntelligence TIBER-EU framework explainer with no CyNE rows | Exclude from the CTI threat-report source-scope eligible population; retain its historical row in the 120-report manifest. The reason is source genre/scope, not missing ATT&CK links. | Pending researcher disposition |
+| Five rank-1 report local research use | Do not begin source annotation until the dataset/donor permission chain supports the intended local use. Keep each report's status `UNRESOLVED` until verified. | Pending; all five unresolved |
+| Public reuse | Keep separate from local annotation; exclude raw text and extended spans from publication unless specific rights are established. | Pending; all five unresolved |
+
+These recommendations do not change the sampling frame, candidate order, eligibility fields, rights fields, or any annotation register. They are not an approval record.
+
+---
+
 ### Rights review update — 5 November 2026
 
 A focused check of primary-source terms found that the AnnoCTR repository README states CC BY-SA 4.0 for the corpus and acknowledges Intel471 and Lab52/S2 Grupo as donors. Intel471's current Terms of Service reserve copying/reproduction/download/distribution rights absent written authorization unless otherwise permitted; the Lab52 legal notice allows one offline personal/non-commercial copy but separately restricts reproduction and transformation without prior written authorization. For Proofpoint, the public blog article carries a copyright footer, while its linked terms directory covers customer/product/service terms rather than a general blog-content licence; a separate 2014 login-portal terms page was not treated as governing the public article. QuoIntelligence's linked Terms and Conditions are expressly for the Mercury client portal, and its privacy policy is not a content licence; terms for a similarly named but distinct legal entity were not applied. Zscaler's blog disclaimer provides no reuse licence, while its Legal Overview points to a customer-product subscription agreement rather than a general blog-content licence. No article-specific reuse grant was verified for these three publishers. These checks do **not** decide the validity or scope of the corpus-level licence, and absence of a located grant is not a legal conclusion that use is prohibited. Keep local research use and public reuse UNRESOLVED for all five candidates until the donor/dataset permission chain is clarified.
