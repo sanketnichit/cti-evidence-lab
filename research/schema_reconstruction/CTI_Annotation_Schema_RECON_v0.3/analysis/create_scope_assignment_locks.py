@@ -15,6 +15,7 @@ from validate_comparison_scope_assignments import LOCK_HEADERS, build_scope_assi
 def main() -> int:
     parser = argparse.ArgumentParser(description="Create comparison-scope assignment locks for SELECTED_FINAL partitions")
     parser.add_argument("--v2-extension", type=Path, required=True)
+    parser.add_argument("--base-bundle", type=Path, default=PACKAGE_ROOT.parent / "CTI_Annotation_Schema_RECON_v0.1")
     parser.add_argument("--assignment-file", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--locked-by", required=True)

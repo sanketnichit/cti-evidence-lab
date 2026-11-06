@@ -56,8 +56,8 @@ def aggregate_with_explicit_scope_assignments(
     assignment_file = v3_root / "registers" / "event_comparison_scope_assignments.csv"
     lock_file = v3_root / "registers" / "comparison_scope_assignment_locks.csv"
 
-    assignment_validation = validate_assignment_register(V1_ROOT, assignment_file)
-    lock_validation = validate_scope_assignment_locks(v2_root, assignment_file, lock_file)
+    assignment_validation = validate_assignment_register(V1_ROOT, assignment_file, source_texts=dict(source_texts))
+    lock_validation = validate_scope_assignment_locks(v2_root, assignment_file, lock_file, V1_ROOT, source_texts=dict(source_texts))
     if not assignment_validation["ok"] or not lock_validation["ok"]:
         return {
             "status": "BLOCKED_SCOPE_ASSIGNMENT_VALIDATION",

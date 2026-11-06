@@ -20,7 +20,10 @@ sys.path.insert(0, str(V2_ROOT / "validator"))
 sys.path.insert(0, str(REPO_ROOT))
 
 import validate_annotations as base_validator  # noqa: E402
-from validate_temporal_evidence import SELECTION_HEADERS  # noqa: E402
+from validate_temporal_evidence import (  # noqa: E402
+    SELECTION_HEADERS,
+    validate_analysis_partition_selection,
+)
 
 ASSIGNMENT_HEADERS = [
     "report_id", "annotator_id", "annotation_pass_id", "assignment_id",
@@ -34,10 +37,11 @@ LOCK_HEADERS = [
     "lock_format", "locked_by", "lock_date", "lock_notes",
 ]
 LOCK_FORMAT = "CTI-EVIDENCE-LAB-COMPARISON-SCOPE-LOCK-v0.3"
-ASSIGNMENT_STATUSES = {"ASSIGNED", "UNCERTAIN"}
+ASSIGNMENT_STATUSES = {"ASSIGNED", "NOT_ASSIGNED", "UNCERTAIN"}
 ASSIGNMENT_BASES = {
     "REPORT_EXPLICIT", "SOURCE_SUPPORTED_HUMAN_JUDGMENT", "UNRESOLVED"
 }
+ASSIGNMENT_ADJUDICATION_STATUSES = {"UNREVIEWED"}
 ASSIGNMENT_COMPARABLE_SCOPE_TYPES = set(base_validator.COMPARABLE_SCOPE_TYPES)
 
 
@@ -104,6 +108,8 @@ def _read_base_tables(base_bundle: Path) -> tuple[dict[str, list[dict[str, str]]
 def validate_assignment_register(
     base_bundle: str | Path,
     assignment_file: str | Path,
+    *,
+    source_texts: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Validate event-to-comparison-scope decisions and their downstream use."""
     assignments, read_error = _load_exact(assignment_file, ASSIGNMENT_HEADERS)
@@ -115,6 +121,17 @@ def validate_assignment_register(
     tables, base_errors = _read_base_tables(Path(base_bundle))
     for message in base_errors:
         errors.append({"code": "BASE_REGISTER_INVALID", "message": message})
+    partition_sources = {}
+    for registry_row in tables["report_registry"]:
+        report_id = registry_row.get("report_id", "")
+        if source_texts and report_id in source_texts:
+            partition_sources[_partition(registry_row)] = source_texts[report_id]
+    base_validation = base_validator.validate_bundle(base_bundle, partition_sources)
+    for issue in base_validation.errors:
+        errors.append({
+            "code": "BASE_SCHEMA_VALIDATION_FAILED",
+            "message": f"{issue.register or 'bundle'}:{issue.row}: {issue.code}: {issue.message}",
+        })
     registry_partitions = {_partition(row) for row in tables["report_registry"]}
     units = {
         (*_partition(row), row.get("activity_unit_id", "")): row
@@ -165,41 +182,75 @@ def validate_assignment_register(
         if not scope:
             errors.append({"code": "ASSIGNMENT_SCOPE_UNKNOWN", "message": f"row {line_number}: comparison_scope_id does not resolve in the same partition"})
         if status not in ASSIGNMENT_STATUSES:
-            errors.append({"code": "INVALID_ASSIGNMENT_STATUS", "message": f"row {line_number}: assignment_status must be ASSIGNED or UNCERTAIN"})
+            errors.append({"code": "INVALID_ASSIGNMENT_STATUS", "message": f"row {line_number}: assignment_status must be ASSIGNED, NOT_ASSIGNED or UNCERTAIN"})
         if basis not in ASSIGNMENT_BASES:
             errors.append({"code": "INVALID_ASSIGNMENT_BASIS", "message": f"row {line_number}: assignment_basis is not controlled"})
         if not row.get("assignment_rationale"):
             errors.append({"code": "ASSIGNMENT_RATIONALE_MISSING", "message": f"row {line_number}: assignment_rationale is required"})
         if row.get("annotator_confidence") not in base_validator.CONFIDENCE:
             errors.append({"code": "INVALID_ASSIGNMENT_CONFIDENCE", "message": f"row {line_number}: annotator_confidence is invalid"})
-        if row.get("adjudication_status") not in base_validator.ADJUDICATION_STATUSES:
-            errors.append({"code": "INVALID_ASSIGNMENT_ADJUDICATION_STATUS", "message": f"row {line_number}: adjudication_status is invalid"})
+        if row.get("adjudication_status") not in ASSIGNMENT_ADJUDICATION_STATUSES:
+            errors.append({"code": "INVALID_ASSIGNMENT_ADJUDICATION_STATUS", "message": f"row {line_number}: v0.3 records independent decisions only; adjudication is not implemented"})
         span_id = row.get("evidence_span_id", "")
         if span_id and (*partition, span_id) not in evidence:
             errors.append({"code": "ASSIGNMENT_EVIDENCE_UNKNOWN", "message": f"row {line_number}: evidence_span_id does not resolve in the same partition"})
 
-        if status == "ASSIGNED":
+        if status in {"ASSIGNED", "NOT_ASSIGNED"}:
             if basis not in {"REPORT_EXPLICIT", "SOURCE_SUPPORTED_HUMAN_JUDGMENT"}:
-                errors.append({"code": "ASSIGNED_SCOPE_BASIS_INVALID", "message": f"row {line_number}: ASSIGNED requires report-explicit or source-supported human judgment"})
+                errors.append({"code": "SCOPE_DECISION_BASIS_INVALID", "message": f"row {line_number}: ASSIGNED and NOT_ASSIGNED require report-explicit or source-supported human judgment"})
             if not span_id:
-                errors.append({"code": "ASSIGNED_SCOPE_EVIDENCE_MISSING", "message": f"row {line_number}: ASSIGNED requires an evidence span"})
-            if scope:
-                if scope.get("scope_status") != "RESOLVED":
-                    errors.append({"code": "ASSIGNED_SCOPE_NOT_RESOLVED", "message": f"row {line_number}: ASSIGNED scope must be RESOLVED"})
-                if scope.get("scope_type") not in ASSIGNMENT_COMPARABLE_SCOPE_TYPES:
-                    errors.append({"code": "ASSIGNED_SCOPE_TYPE_INELIGIBLE", "message": f"row {line_number}: report aggregate/unresolved scope types cannot be comparison scopes"})
-            if unit and scope:
-                ancestors = {
-                    item.get("scope_id", "")
-                    for item in base_validator.resolved_scope_ancestor_chain(
-                        unit.get("scope_id", ""),
-                        [candidate for candidate in tables["report_scopes"] if _partition(candidate) == partition],
-                    )
-                }
-                if scope_id not in ancestors:
-                    errors.append({"code": "ASSIGNED_SCOPE_NOT_EVENT_ANCESTOR", "message": f"row {line_number}: assigned comparison scope must be in the event's resolved scope ancestry"})
+                errors.append({"code": "SCOPE_DECISION_EVIDENCE_MISSING", "message": f"row {line_number}: ASSIGNED and NOT_ASSIGNED require an evidence span"})
         elif status == "UNCERTAIN" and basis != "UNRESOLVED":
             errors.append({"code": "UNCERTAIN_SCOPE_BASIS_INVALID", "message": f"row {line_number}: UNCERTAIN requires assignment_basis=UNRESOLVED"})
+
+        if scope:
+            if scope.get("scope_status") != "RESOLVED":
+                errors.append({"code": "CANDIDATE_SCOPE_NOT_RESOLVED", "message": f"row {line_number}: candidate comparison scope must be RESOLVED"})
+            if scope.get("scope_type") not in ASSIGNMENT_COMPARABLE_SCOPE_TYPES:
+                errors.append({"code": "CANDIDATE_SCOPE_TYPE_INELIGIBLE", "message": f"row {line_number}: report aggregate/unresolved scope types cannot be candidate comparison scopes"})
+        if unit and scope:
+            ancestors = {
+                item.get("scope_id", "")
+                for item in base_validator.resolved_scope_ancestor_chain(
+                    unit.get("scope_id", ""),
+                    [candidate for candidate in tables["report_scopes"] if _partition(candidate) == partition],
+                )
+            }
+            if scope_id not in ancestors:
+                errors.append({"code": "CANDIDATE_SCOPE_NOT_EVENT_ANCESTOR", "message": f"row {line_number}: candidate scope must be in the event's resolved scope ancestry"})
+
+    # Every resolved atomic event leaf must carry one explicit decision for
+    # every eligible resolved non-report scope in its ancestry. Missing rows
+    # are incomplete review, never an implicit NOT_ASSIGNED decision.
+    expected_scope_ids_by_event = {}
+    for unit in tables["activity_units"]:
+        if (
+            unit.get("unit_role") != "event_leaf"
+            or unit.get("granularity") != "atomic_event"
+            or unit.get("instance_status") != "RESOLVED"
+        ):
+            continue
+        partition = _partition(unit)
+        chain = base_validator.resolved_scope_ancestor_chain(
+            unit.get("scope_id", ""),
+            [candidate for candidate in tables["report_scopes"] if _partition(candidate) == partition],
+        )
+        expected_scope_ids = {
+            item.get("scope_id", "")
+            for item in chain
+            if item.get("scope_type") in ASSIGNMENT_COMPARABLE_SCOPE_TYPES
+        }
+        expected_scope_ids_by_event[(partition, unit.get("activity_unit_id", ""))] = expected_scope_ids
+    for (partition, event_id), expected_scope_ids in expected_scope_ids_by_event.items():
+        for scope_id in sorted(expected_scope_ids):
+            if (partition, event_id, scope_id) not in seen_decisions:
+                errors.append({
+                    "code": "ASSIGNMENT_REVIEW_INCOMPLETE",
+                    "message": (
+                        f"{partition[0]}/{partition[1]}/{partition[2]} event {event_id!r} "
+                        f"has no explicit decision for candidate scope {scope_id!r}"
+                    ),
+                })
 
     assigned_by_event: dict[tuple[tuple[str, str, str], str], set[str]] = {}
     for row in assignments:
@@ -259,6 +310,7 @@ def build_scope_assignment_lock_rows(
     selection_file: str | Path,
     assignment_file: str | Path,
     *,
+    base_bundle: str | Path,
     locked_by: str,
     lock_date: str,
     lock_notes: str = "",
@@ -269,6 +321,14 @@ def build_scope_assignment_lock_rows(
     assignments, error = _load_exact(assignment_file, ASSIGNMENT_HEADERS)
     if error:
         raise ValueError(error)
+    selection_errors, _ = validate_analysis_partition_selection(
+        Path(base_bundle), Path(selection_file)
+    )
+    if selection_errors:
+        raise ValueError(f"selected analysis partition register is invalid: {selection_errors}")
+    assignment_validation = validate_assignment_register(base_bundle, assignment_file)
+    if not assignment_validation["ok"]:
+        raise ValueError(f"comparison-scope assignment register is invalid: {assignment_validation['errors']}")
     if not locked_by.strip():
         raise ValueError("locked_by is required")
     try:
@@ -312,12 +372,31 @@ def validate_scope_assignment_locks(
     v2_extension_root: str | Path,
     assignment_file: str | Path,
     lock_file: str | Path,
+    base_bundle: str | Path,
+    *,
+    source_texts: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     selection_file = Path(v2_extension_root) / "registers" / "analysis_partition_selection.csv"
     selections, selection_error = _load_exact(selection_file, SELECTION_HEADERS)
     assignments, assignment_error = _load_exact(assignment_file, ASSIGNMENT_HEADERS)
     locks, lock_error = _load_exact(lock_file, LOCK_HEADERS)
     errors = []
+    selection_validation_errors, _ = validate_analysis_partition_selection(
+        Path(base_bundle), selection_file
+    )
+    if selection_validation_errors:
+        errors.append({
+            "code": "SELECTION_REGISTER_VALIDATION_FAILED",
+            "message": str(selection_validation_errors),
+        })
+    assignment_validation = validate_assignment_register(
+        base_bundle, assignment_file, source_texts=source_texts
+    )
+    if not assignment_validation["ok"]:
+        errors.append({
+            "code": "ASSIGNMENT_REGISTER_VALIDATION_FAILED",
+            "message": str(assignment_validation["errors"]),
+        })
     for code, message in (
         ("SELECTION_REGISTER_INVALID", selection_error),
         ("ASSIGNMENT_REGISTER_INVALID", assignment_error),
@@ -380,9 +459,22 @@ def main() -> int:
     parser.add_argument("--v2-extension", type=Path, required=True)
     parser.add_argument("--assignment-file", type=Path, required=True)
     parser.add_argument("--lock-file", type=Path, required=True)
+    parser.add_argument("--sources-dir", type=Path, help="Optional frozen source directory with REPORT_ID.txt files")
     args = parser.parse_args()
-    assignments = validate_assignment_register(args.base_bundle, args.assignment_file)
-    locks = validate_scope_assignment_locks(args.v2_extension, args.assignment_file, args.lock_file)
+    source_texts = {}
+    if args.sources_dir:
+        from src.source_text_integrity import read_frozen_source
+        source_texts = {
+            path.stem: read_frozen_source(path)
+            for path in sorted(args.sources_dir.glob("*.txt"))
+        }
+    assignments = validate_assignment_register(
+        args.base_bundle, args.assignment_file, source_texts=source_texts
+    )
+    locks = validate_scope_assignment_locks(
+        args.v2_extension, args.assignment_file, args.lock_file,
+        args.base_bundle, source_texts=source_texts
+    )
     result = {
         "ok": assignments["ok"] and locks["ok"],
         "assignment_validation": assignments,
