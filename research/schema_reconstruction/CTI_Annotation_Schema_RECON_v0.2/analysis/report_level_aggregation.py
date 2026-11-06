@@ -32,7 +32,6 @@ from selected_partition_projection_adapter import (  # noqa: E402
 )
 from validate_annotations import (  # noqa: E402
     HEADERS as BASE_HEADERS,
-    nearest_common_resolved_comparison_scope,
     shared_resolved_comparison_scope_ids,
 )
 from validate_temporal_evidence import (  # noqa: E402
@@ -527,21 +526,55 @@ def aggregate_selected_report_projections(
         )
         assigned_by_event = _assigned_scope_ids_by_event(part_assignment_rows)
 
-        primary_relations = [
-            row for row in part_rows["temporal_relations"]
-            if row.get("relation_label") in POSITIVE_LABELS
-            and row.get("relation_basis") in DIRECT_BASES
-            and row.get("scope_compatibility") == "COMPATIBLE"
-            and (
-                scope_pair_rule_id != EXPLICIT_SCOPE_PAIR_RULE_ID
-                or (
-                    row.get("comparison_scope_id", "")
-                    in assigned_by_event.get(row.get("event_a_id", ""), set())
-                    and row.get("comparison_scope_id", "")
-                    in assigned_by_event.get(row.get("event_b_id", ""), set())
+        primary_relations = []
+        event_units_by_id = {
+            unit.get("activity_unit_id", ""): unit
+            for unit in units
+        }
+        for row in part_rows["temporal_relations"]:
+            if not (
+                row.get("relation_label") in POSITIVE_LABELS
+                and row.get("relation_basis") in DIRECT_BASES
+                and row.get("scope_compatibility") == "COMPATIBLE"
+            ):
+                continue
+            event_a_id = row.get("event_a_id", "")
+            event_b_id = row.get("event_b_id", "")
+            comparison_scope_id = row.get("comparison_scope_id", "")
+            if scope_pair_rule_id == EXPLICIT_SCOPE_PAIR_RULE_ID:
+                if (
+                    comparison_scope_id not in assigned_by_event.get(event_a_id, set())
+                    or comparison_scope_id not in assigned_by_event.get(event_b_id, set())
+                ):
+                    continue
+            elif scope_pair_rule_id == INCIDENT_SCOPE_PAIR_RULE_ID:
+                # The relation numerator must use the same incident-bounded
+                # pair universe as compute_event_pair_opportunity(). A broader
+                # campaign/operation scope cannot make a cross-incident edge
+                # primary under an incident-only opportunity rule.
+                unit_a = event_units_by_id.get(event_a_id)
+                unit_b = event_units_by_id.get(event_b_id)
+                if unit_a is None or unit_b is None:
+                    continue
+                shared_scopes = shared_resolved_comparison_scope_ids(
+                    unit_a.get("scope_id", ""),
+                    unit_b.get("scope_id", ""),
+                    part_rows["report_scopes"],
                 )
-            )
-        ]
+                shared_incident_scopes = {
+                    scope.get("scope_id", "")
+                    for scope in part_rows["report_scopes"]
+                    if scope.get("scope_type") == "INCIDENT"
+                    and scope.get("scope_status") == "RESOLVED"
+                    and scope.get("scope_id") in shared_scopes
+                }
+                if comparison_scope_id not in shared_incident_scopes:
+                    continue
+            # For the legacy rule, opportunity is defined using the nearest
+            # shared resolved non-report ancestor, while the protocol permits
+            # a relation to cite any shared eligible ancestor for that pair.
+            # Do not narrow the legacy edge scope further.
+            primary_relations.append(row)
         within_relations = [
             row for row in primary_relations
             if set(mapping_sets.get(row.get("event_a_id", ""), set())).intersection(

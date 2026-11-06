@@ -379,6 +379,92 @@ class SelectedFinalAggregationIntegrationTests(unittest.TestCase):
         self.assertEqual(outcome["projection_provenance_diagnostics"]["edge_projection_status"]["rel-a-b"], "fully_omitted")
         self.assertEqual(outcome["projection_provenance_diagnostics"]["edge_to_pairs"]["rel-a-b"], [["T1059", "T1059"]])
 
+    def test_incident_rule_excludes_relation_recorded_only_at_broader_campaign_scope(self):
+        """The positive relation numerator must match the incident-only opportunity universe."""
+        import csv
+        import validate_annotations
+
+        rows = self.rows
+        scopes = rows["report_scopes"]
+        scopes[0].update(
+            scope_id="campaign", parent_scope_id="", scope_type="CAMPAIGN",
+            scope_label="Synthetic campaign", scope_description="Shared campaign",
+        )
+        scopes.extend([
+            {**scopes[0], "scope_id": "incident-a", "parent_scope_id": "campaign",
+             "scope_type": "INCIDENT", "scope_label": "Incident A"},
+            {**scopes[0], "scope_id": "incident-b", "parent_scope_id": "campaign",
+             "scope_type": "INCIDENT", "scope_label": "Incident B"},
+        ])
+        rows["activity_units"][0]["scope_id"] = "incident-a"
+        rows["activity_units"][1]["scope_id"] = "incident-b"
+        # This relation is structurally supported at campaign level but does
+        # not belong in an incident-bounded numerator.
+        rows["temporal_relations"][0]["comparison_scope_id"] = "campaign"
+        for name, table_rows in rows.items():
+            with (self.base / "registers" / f"{name}.csv").open(
+                "w", encoding="utf-8", newline=""
+            ) as handle:
+                writer = csv.DictWriter(handle, fieldnames=validate_annotations.HEADERS[name])
+                writer.writeheader()
+                writer.writerows(table_rows)
+
+        self._create_selection_lock()
+        result = aggregate_selected_report_projections(
+            self.extension,
+            source_texts=self.source_texts,
+            confirm_selected_analysis_locks=True,
+            approve_scope_pair_rule=True,
+            scope_pair_rule_id="SHARED_RESOLVED_INCIDENT_SCOPE_v0.1",
+        )
+        outcome = result["per_report_outcomes"][0]
+        self.assertEqual(outcome["compatible_event_pair_count"], 0)
+        self.assertEqual(outcome["same_technique_pair_opportunity_count"], 0)
+        self.assertEqual(outcome["primary_positive_temporal_relation_count"], 0)
+        self.assertEqual(outcome["within_technique_temporal_relation_count"], 0)
+        self.assertEqual(
+            result["report_level_primary_rates"]["within_technique_temporal_relation_report_rate"],
+            0.0,
+        )
+
+    def test_legacy_rule_retains_relation_recorded_at_shared_broader_ancestor(self):
+        """Legacy scope permits an edge to cite any shared eligible ancestor."""
+        import csv
+        import validate_annotations
+
+        rows = self.rows
+        scopes = rows["report_scopes"]
+        scopes[0].update(
+            scope_id="campaign", parent_scope_id="", scope_type="CAMPAIGN",
+            scope_label="Synthetic campaign", scope_description="Shared campaign",
+        )
+        scopes.append({
+            **scopes[0], "scope_id": "incident", "parent_scope_id": "campaign",
+            "scope_type": "INCIDENT", "scope_label": "Incident",
+        })
+        rows["activity_units"][0]["scope_id"] = "incident"
+        rows["activity_units"][1]["scope_id"] = "incident"
+        rows["temporal_relations"][0]["comparison_scope_id"] = "campaign"
+        for name, table_rows in rows.items():
+            with (self.base / "registers" / f"{name}.csv").open(
+                "w", encoding="utf-8", newline=""
+            ) as handle:
+                writer = csv.DictWriter(handle, fieldnames=validate_annotations.HEADERS[name])
+                writer.writeheader()
+                writer.writerows(table_rows)
+
+        self._create_selection_lock()
+        result = aggregate_selected_report_projections(
+            self.extension,
+            source_texts=self.source_texts,
+            confirm_selected_analysis_locks=True,
+            approve_scope_pair_rule=True,
+        )
+        outcome = result["per_report_outcomes"][0]
+        self.assertEqual(outcome["compatible_event_pair_count"], 1)
+        self.assertEqual(outcome["primary_positive_temporal_relation_count"], 1)
+        self.assertEqual(outcome["within_technique_temporal_relation_count"], 1)
+
     def test_missing_selected_final_withholds_primary_report_rates(self):
         self.selection_rows = []
         self._save_selection()

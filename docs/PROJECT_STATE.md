@@ -1,6 +1,6 @@
 # CTI Evidence Lab — Project State
 
-**Snapshot date:** 5 November 2026  
+**Snapshot date:** 6 November 2026  
 **Status:** Research design and tooling preparation; no human-locked AnnoCTR annotations or real-report projection results exist.
 
 ## Research question
@@ -43,7 +43,7 @@ This remains a candidate empirical question, not an established novelty claim. T
 
 ## Implementation verification
 
-- Latest verification on 5 November 2026: GitHub Actions run [#144](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42056473178) passed on current `main` commit `b9e4d71d31b2f24e9ecef0566d8c6f924060d185`. It ran 57 root tests, 69 RECON v0.1 tests (41 validator, 16 projection, 12 adapter), and 72 RECON v0.2 tests: **198 successful synthetic test executions** in total. All 31 RECON v0.1 checksum entries, the projection demo, blank v0.1/v0.2 bundle validations, temporal-evidence tests and selected-final partition validation passed.
+- Latest verification on 6 November 2026: GitHub Actions run [#176](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42175976588) passed on current `main` commit `02baf2d8d657b206fa09b49c69578c8b9a24a6a1`. It ran 60 root tests, 73 RECON v0.1 tests, 76 RECON v0.2 tests and 15 RECON v0.3 tests: **224 successful synthetic test executions**. All workflow steps passed, including checksum verification, synthetic projection/validator suites, blank-bundle validation, temporal-evidence validation, selected-final partition validation, explicit comparison-scope extension validation and tested source-snapshot packaging. The 5 November run #144/198-test result remains historical and is not the current executable-code status.
 - Internal SHA256SUMS checks: 31/31 entries matched.
 - Blank-bundle validation returns zero errors and an `EMPTY_ANNOTATION_BUNDLE` warning; it validates package structure only, not research annotations.
 - The RECON code has not been run on human annotations or real AnnoCTR event graphs. The validator flags report-level eligibility/local-use/assessability conflicts across annotator/pass partitions and excludes conflicting reports from denominator summaries until adjudicated. It also validates prior-exposure values, requires normalized evidence-linked time records at both endpoints of `direct_timestamp`, rejects duplicate/contradictory direct temporal-pair claims, checks positive candidate assessments against their linked relation, and requires top-level exact techniques to map to themselves. The validator now checks accepted exact IDs and sub-technique parents against the pinned v12.1 crosswalk. The validator's synthetic checks do not establish semantic annotation correctness.
@@ -201,3 +201,10 @@ The draft recommends source-scope eligibility for all five reports but leaves al
 This is a source-review/pre-annotation artifact, not a canonical annotation partition, human annotation, adjudication, projection, or empirical result. The project's human annotation count remains 0; selected final partitions 0; real-report projections 0; IAA not measured; empirical findings none. The user's prior exposure remains `AI_EXPOSED` as already specified in the project decision record.
 
 The latest executable-code CI run remains [#168](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42164908914), which passed 217 synthetic test executions on code commit `9c11e146bb06acd15f92c9e19562052d38d5239b`. The subsequent annotation-draft commits modify only Markdown/CSV research materials; no new projection-test workflow was triggered for them.
+
+
+## Update — 6 November 2026: scope-rule numerator/denominator parity
+
+A targeted selected-final integration test found that the v0.2 aggregator could count a positive relation at a broad campaign scope while evaluating pair opportunity under the incident-bounded rule, which excludes cross-incident pairs. The aggregator now filters primary relations to the selected incident universe when the incident-bounded rule is used: a positive relation recorded only at a broader campaign/operation scope cannot enter the numerator if its endpoints have no shared resolved INCIDENT ancestor. Under the legacy rule, the protocol continues to permit a relation to cite any shared eligible ancestor for an event pair whose nearest shared eligible ancestor establishes pair opportunity. The explicit v0.3 rule continues to require the same comparison scope to be ASSIGNED to both endpoints. A synthetic integration test reproduces the incident-bounded mismatch, and another protects the documented legacy behaviour.
+
+This is a technical parity correction; all three scope rules remain researcher-review candidates and none is approved. The latest pre-correction CI run #176 passed 224 synthetic tests on commit `02baf2d`; the two new integration tests and code change require a subsequent CI run before this correction can be treated as accepted. No annotations or empirical results were created.
