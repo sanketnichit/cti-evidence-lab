@@ -1,0 +1,5 @@
+chronocti_label,project_label_mapping,status,rationale
+BEFORE,"BEFORE or AFTER, with direction normalized",PROPOSED_NOT_APPROVED,ChronoCTI groups BEFORE/AFTER and immediate variants into one BEFORE class; retain source direction and immediacy separately if used.
+SIMULTANEOUS-OVERLAP (SIM-OV),OVERLAP; SIMULTANEOUS requires semantic reconciliation,REQUIRES_RESEARCHER_REVIEW,ChronoCTI defines SIM-OV as simultaneous actions whose implementations overlap. The project's OVERLAP is close; SIMULTANEOUS may require a narrower interval interpretation.
+CONCURRENT,CONCURRENT_UNSPECIFIED only where independent simultaneous actions are source-supported,PROPOSED_NOT_APPROVED,ChronoCTI distinguishes concurrent but independent actions; do not equate this with an unresolved/vague claim.
+NULL,NO_TEMPORAL_CLAIM only for a pair actually assessed under a frozen candidate-pair rule,PROPOSED_NOT_APPROVED,Missing or unassessed pairs are not negative labels.
