@@ -45,8 +45,10 @@ class TemporalEdge:
     source_event: str
     target_event: str
     relation: str
-    relation_basis: str = "direct_source"
-    scope_compatibility: str = "COMPATIBLE"
+    # Missing values must fail closed in project_report_recon; callers must
+    # explicitly supply the relation evidence basis and scope decision.
+    relation_basis: str | None = None
+    scope_compatibility: str | None = None
 
 
 def build_a120_mapping_sets(
@@ -180,9 +182,16 @@ def project_report_recon(
             raise ValueError("Event IDs must be non-empty strings.")
         if isinstance(values, (str, bytes)):
             raise TypeError("Technique mappings must be an iterable of IDs, not a string.")
-        techniques = {value for value in values if value}
-        if any(not isinstance(value, str) for value in techniques):
-            raise TypeError(f"Technique IDs for {event_id!r} must be strings.")
+        try:
+            raw_values = list(values)
+        except TypeError as exc:
+            raise TypeError(f"Technique IDs for {event_id!r} must be iterable.") from exc
+        if any(not isinstance(value, str) or not value.strip() for value in raw_values):
+            raise ValueError(
+                f"Technique IDs for {event_id!r} must be non-empty strings; "
+                "None and empty values are not silently discarded."
+            )
+        techniques = set(raw_values)
         normalized[event_id] = tuple(sorted(techniques))
 
     edge_ids: set[str] = set()
@@ -268,7 +277,7 @@ def project_report_recon(
                 continue
             relation_class_pairs[(rclass, pair)].add(edge.edge_id)
             global_pair_edges[pair].add(edge.edge_id)
-            global_pair_labels[pair].add(_relation_class(edge))
+            global_pair_labels[tuple(sorted(pair))].add(_relation_class(edge))
 
     mapped_count = len(mapped_edge_ids)
     total_edges = len(temporal_edges)
