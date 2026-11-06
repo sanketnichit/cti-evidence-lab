@@ -20,10 +20,10 @@ class ProjectionMetricsReconTests(unittest.TestCase):
             "e7": {"T1005"}, "e8": set(),            # unmapped endpoint
         }
         edges = [
-            TemporalEdge("full", "e1", "e2", "BEFORE"),
-            TemporalEdge("partial", "e3", "e4", "BEFORE"),
-            TemporalEdge("no-diagonal", "e5", "e6", "BEFORE"),
-            TemporalEdge("unmapped", "e7", "e8", "BEFORE"),
+            TemporalEdge("full", "e1", "e2", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+            TemporalEdge("partial", "e3", "e4", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+            TemporalEdge("no-diagonal", "e5", "e6", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+            TemporalEdge("unmapped", "e7", "e8", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
         ]
         result = project_report_recon(mapping_sets, edges)
         self.assertEqual(result["edge_projection_status"], {
@@ -40,10 +40,10 @@ class ProjectionMetricsReconTests(unittest.TestCase):
 
     def test_self_event_edge_rejected_in_projection_function(self):
         with self.assertRaisesRegex(ValueError, "Self-event edge"):
-            project_report_recon({"e1": {"T1059"}}, [TemporalEdge("loop", "e1", "e1", "BEFORE")])
+            project_report_recon({"e1": {"T1059"}}, [TemporalEdge("loop", "e1", "e1", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")])
 
     def test_unmapped_endpoint_not_counted_as_full_omission(self):
-        result = project_report_recon({"e1": {"T1059"}, "e2": set()}, [TemporalEdge("u", "e1", "e2", "BEFORE")])
+        result = project_report_recon({"e1": {"T1059"}, "e2": set()}, [TemporalEdge("u", "e1", "e2", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")])
         self.assertEqual(result["edge_projection_status"]["u"], "unmapped_endpoint")
         self.assertEqual(result["counts"]["fully_omitted_edges"], 0)
         self.assertEqual(result["counts"]["unmapped_endpoint_edges"], 1)
@@ -51,7 +51,7 @@ class ProjectionMetricsReconTests(unittest.TestCase):
     def test_after_is_reversed_for_strict_order_projection(self):
         result = project_report_recon(
             {"e1": {"T1059"}, "e2": {"T1105"}},
-            [TemporalEdge("after", "e1", "e2", "AFTER")],
+            [TemporalEdge("after", "e1", "e2", "AFTER", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
         )
         pairs = result["projection"]["distinct_pair_provenance_by_relation_class"]
         self.assertIn("STRICT_ORDER|T1105->T1059", pairs)
@@ -59,7 +59,7 @@ class ProjectionMetricsReconTests(unittest.TestCase):
     def test_symmetric_relations_use_unordered_pairs(self):
         result = project_report_recon(
             {"e1": {"T1105"}, "e2": {"T1059"}},
-            [TemporalEdge("overlap", "e1", "e2", "OVERLAP")],
+            [TemporalEdge("overlap", "e1", "e2", "OVERLAP", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
         )
         self.assertIn("OVERLAP|T1059->T1105", result["projection"]["distinct_pair_provenance_by_relation_class"])
 
@@ -67,9 +67,9 @@ class ProjectionMetricsReconTests(unittest.TestCase):
         result = project_report_recon(
             {"a": {"T1059"}, "b": {"T1105"}, "c": {"T1059"}, "d": {"T1105"}},
             [
-                TemporalEdge("r1", "a", "b", "BEFORE"),
-                TemporalEdge("r2", "c", "d", "BEFORE"),
-                TemporalEdge("r3", "a", "b", "OVERLAP"),
+                TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r2", "c", "d", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r3", "a", "b", "OVERLAP", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
             ],
         )
         self.assertEqual(result["counts"]["distinct_pair_collision_keys_global"], 1)
@@ -80,9 +80,9 @@ class ProjectionMetricsReconTests(unittest.TestCase):
         result = project_report_recon(
             {"a": {"T1059"}, "b": {"T1105"}, "c": {"T1059"}, "d": {"T1105"}},
             [
-                TemporalEdge("r1", "a", "b", "BEFORE"),
-                TemporalEdge("r2", "c", "d", "BEFORE"),
-                TemporalEdge("r3", "b", "c", "BEFORE"),
+                TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r2", "c", "d", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r3", "b", "c", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
             ],
         )
         # The technique projection has T1059 -> T1105 and T1105 -> T1059.
@@ -94,7 +94,7 @@ class ProjectionMetricsReconTests(unittest.TestCase):
     def test_cycle_from_single_event_edge_mapping_fanout_is_flagged(self):
         result = project_report_recon(
             {"a": {"T1059", "T1105"}, "b": {"T1059", "T1105"}},
-            [TemporalEdge("r1", "a", "b", "BEFORE")],
+            [TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
         )
         # Cartesian expansion of a single relation can create reciprocal pair edges.
         fanout = [x for x in result["strict_order_cycle_analysis"]["projected_cycle_provenance"] if x["single_event_edge_mapping_fanout"]]
@@ -104,8 +104,8 @@ class ProjectionMetricsReconTests(unittest.TestCase):
         result = project_report_recon(
             {"a": {"T1059", "T1105"}, "b": {"T1059", "T1105"}},
             [
-                TemporalEdge("r1", "a", "b", "BEFORE"),
-                TemporalEdge("r2", "a", "b", "BEFORE"),
+                TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r2", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
             ],
         )
         component = result["strict_order_cycle_analysis"]["projected_cycle_provenance"][0]
@@ -119,8 +119,8 @@ class ProjectionMetricsReconTests(unittest.TestCase):
         result = project_report_recon(
             {"a": {"T1059"}, "b": {"T1105"}},
             [
-                TemporalEdge("r1", "a", "b", "BEFORE"),
-                TemporalEdge("r2", "b", "a", "AFTER"),
+                TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r2", "b", "a", "AFTER", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
             ],
         )
         self.assertEqual(result["counts"]["distinct_pair_label_conflicts"], 0)
@@ -130,8 +130,8 @@ class ProjectionMetricsReconTests(unittest.TestCase):
         result = project_report_recon(
             {"a": {"T1059"}, "b": {"T1105"}},
             [
-                TemporalEdge("r1", "a", "b", "BEFORE"),
-                TemporalEdge("r2", "a", "b", "OVERLAP"),
+                TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r2", "a", "b", "OVERLAP", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
             ],
         )
         self.assertEqual(result["counts"]["distinct_pair_label_conflicts"], 1)
@@ -139,18 +139,18 @@ class ProjectionMetricsReconTests(unittest.TestCase):
     def test_source_event_cycle_makes_projection_cycle_diagnostic_invalid(self):
         result = project_report_recon(
             {"a": {"T1059"}, "b": {"T1105"}},
-            [TemporalEdge("r1", "a", "b", "BEFORE"), TemporalEdge("r2", "b", "a", "BEFORE")],
+            [TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"), TemporalEdge("r2", "b", "a", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
         )
         self.assertFalse(result["strict_order_cycle_analysis"]["source_event_graph_is_acyclic"])
         self.assertFalse(result["strict_order_cycle_analysis"]["projection_cycle_analysis_valid"])
 
     def test_nonpositive_and_non_direct_edges_rejected(self):
         with self.assertRaises(ValueError):
-            project_report_recon({"a": {"T1059"}, "b": {"T1105"}}, [TemporalEdge("x", "a", "b", "NO_TEMPORAL_CLAIM")])
+            project_report_recon({"a": {"T1059"}, "b": {"T1105"}}, [TemporalEdge("x", "a", "b", "NO_TEMPORAL_CLAIM", relation_basis="direct_source", scope_compatibility="COMPATIBLE")])
         with self.assertRaises(ValueError):
-            project_report_recon({"a": {"T1059"}, "b": {"T1105"}}, [TemporalEdge("x", "a", "b", "BEFORE", relation_basis="inference")])
+            project_report_recon({"a": {"T1059"}, "b": {"T1105"}}, [TemporalEdge("x", "a", "b", "BEFORE", relation_basis="inference", scope_compatibility="COMPATIBLE")])
         with self.assertRaises(ValueError):
-            project_report_recon({"a": {"T1059"}, "b": {"T1105"}}, [TemporalEdge("x", "a", "b", "BEFORE", scope_compatibility="UNCERTAIN")])
+            project_report_recon({"a": {"T1059"}, "b": {"T1105"}}, [TemporalEdge("x", "a", "b", "BEFORE", scope_compatibility="UNCERTAIN", relation_basis="direct_source")])
 
     def test_mapping_adapter_excludes_alternative_workbook_and_out_of_vocab(self):
         rows = [
@@ -178,6 +178,39 @@ class ProjectionMetricsReconTests(unittest.TestCase):
         self.assertEqual(result["counts"]["positive_temporal_edges"], 0)
         self.assertIsNone(result["rates"]["full_omission_rate_mapped_edges"])
 
+
+
+    def test_before_overlap_label_conflict_is_direction_invariant(self):
+        result = project_report_recon(
+            {"a": {"T1105"}, "b": {"T1059"}, "c": {"T1059"}, "d": {"T1105"}},
+            [
+                TemporalEdge("before", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("overlap", "c", "d", "OVERLAP", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+            ],
+        )
+        self.assertEqual(result["counts"]["distinct_pair_label_conflicts"], 1)
+        self.assertEqual(
+            result["projection"]["distinct_pair_label_conflicts"],
+            {"T1059->T1105": ["OVERLAP", "STRICT_ORDER"]},
+        )
+
+    def test_missing_relation_basis_or_scope_fails_closed(self):
+        with self.assertRaises(ValueError):
+            project_report_recon(
+                {"a": {"T1059"}, "b": {"T1105"}},
+                [TemporalEdge("missing-basis", "a", "b", "BEFORE", scope_compatibility="COMPATIBLE")],
+            )
+        with self.assertRaises(ValueError):
+            project_report_recon(
+                {"a": {"T1059"}, "b": {"T1105"}},
+                [TemporalEdge("missing-scope", "a", "b", "BEFORE", relation_basis="direct_source")],
+            )
+
+    def test_none_or_empty_technique_ids_are_rejected(self):
+        with self.assertRaises(ValueError):
+            project_report_recon({"a": {"T1059", None}}, [])
+        with self.assertRaises(ValueError):
+            project_report_recon({"a": {"T1059", ""}}, [])
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
