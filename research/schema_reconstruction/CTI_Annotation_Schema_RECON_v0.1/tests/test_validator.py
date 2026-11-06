@@ -659,5 +659,33 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(result.assessable_report_partitions, 2)
 
 
+
+    def test_mobile_attack_id_can_be_retained_as_rejected_non_primary_record(self):
+        mobile = dict(self.rows["event_mappings"][0])
+        mobile.update(
+            mapping_id="mobile-non-primary",
+            activity_unit_id="event-a",
+            event_instance_id="event-a",
+            exact_technique_id="T1437",
+            exact_technique_name="Mobile ATT&CK source label (preserved as supplied)",
+            attack_version="Mobile ATT&CK",
+            mapping_basis="report_explicit_parent",
+            mapping_decision_status="REJECTED",
+            alternative_group_id="",
+            alternative_to_mapping_id="",
+            baseline_vocabulary_id="",
+            baseline_vocabulary_sha256="",
+            baseline_parent_technique_id="",
+            baseline_mapping_status="NOT_APPLICABLE",
+            mapping_notes="Retained as a non-primary source taxonomy record; not an Enterprise v12.1/A_120 mapping.",
+        )
+        self.rows["event_mappings"] = [mobile]
+        self.rows["record_evidence_links"] = []
+        self.save("event_mappings")
+        self.save("record_evidence_links")
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.issues if x.severity == "ERROR"])
+        self.assertEqual(result.accepted_a120_mappings, 0)
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
