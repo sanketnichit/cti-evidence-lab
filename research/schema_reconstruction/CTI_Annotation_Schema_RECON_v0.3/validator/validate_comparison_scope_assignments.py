@@ -326,6 +326,17 @@ def build_scope_assignment_lock_rows(
     )
     if selection_errors:
         raise ValueError(f"selected analysis partition register is invalid: {selection_errors}")
+    unsupported_roles = [
+        row.get("partition_role", "")
+        for row in selections
+        if row.get("selection_status") == "SELECTED_FINAL"
+        and row.get("partition_role") != "SINGLE_ANNOTATOR_FINAL"
+    ]
+    if unsupported_roles:
+        raise ValueError(
+            "RECON v0.3 assignment adjudication is not implemented; only "
+            "SINGLE_ANNOTATOR_FINAL selections can be locked"
+        )
     assignment_validation = validate_assignment_register(base_bundle, assignment_file)
     if not assignment_validation["ok"]:
         raise ValueError(f"comparison-scope assignment register is invalid: {assignment_validation['errors']}")
@@ -411,6 +422,15 @@ def validate_scope_assignment_locks(
         _partition(row): row for row in selections
         if row.get("selection_status") == "SELECTED_FINAL"
     }
+    for partition, selection in selected.items():
+        if selection.get("partition_role") != "SINGLE_ANNOTATOR_FINAL":
+            errors.append({
+                "code": "SCOPE_ASSIGNMENT_FINAL_ROLE_UNSUPPORTED",
+                "message": (
+                    f"selected partition {partition} uses role "
+                    f"{selection.get('partition_role')!r}; v0.3 assignment adjudication is not implemented"
+                ),
+            })
     locks_by_partition = {}
     lock_ids = set()
     for line_number, row in enumerate(locks, 2):

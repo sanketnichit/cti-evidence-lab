@@ -183,6 +183,14 @@ class ScopeAssignmentLockTests(unittest.TestCase):
         )
         self.assertIn("SELECTION_REGISTER_VALIDATION_FAILED", {item["code"] for item in result["errors"]})
 
+    def test_consensus_final_is_blocked_without_scope_adjudication_support(self):
+        self.selection["partition_role"] = "CONSENSUS"
+        write_rows(self.v2_selection, SELECTION_HEADERS, [self.selection])
+        result = validate_scope_assignment_locks(
+            self.v2, self.assignments_file, self.locks_file, self.base
+        )
+        self.assertIn("SCOPE_ASSIGNMENT_FINAL_ROLE_UNSUPPORTED", {item["code"] for item in result["errors"]})
+
 
 class ThreeRuleComparisonTests(unittest.TestCase):
     def test_cross_incident_pair_needs_explicit_campaign_assignment(self):
