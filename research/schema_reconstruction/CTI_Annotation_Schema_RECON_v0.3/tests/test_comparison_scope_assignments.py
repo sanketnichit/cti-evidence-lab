@@ -75,6 +75,20 @@ class ComparisonScopeAssignmentTests(unittest.TestCase):
         result = validate_assignment_register(self.base, self.assignment_file)
         self.assertTrue(result["ok"], result["errors"])
 
+    def test_missing_candidate_scope_decision_fails_closed(self):
+        self.assignments = self.assignments[:1]
+        self.save_assignments()
+        result = validate_assignment_register(self.base, self.assignment_file)
+        self.assertIn("ASSIGNMENT_REVIEW_INCOMPLETE", {item["code"] for item in result["errors"]})
+
+    def test_not_assigned_is_a_valid_explicit_review_decision(self):
+        self.assignments[1]["assignment_status"] = "NOT_ASSIGNED"
+        self.save_assignments()
+        result = validate_assignment_register(self.base, self.assignment_file)
+        codes = {item["code"] for item in result["errors"]}
+        self.assertNotIn("INVALID_ASSIGNMENT_STATUS", codes)
+        self.assertIn("RELATION_SCOPE_NOT_ASSIGNED_TO_BOTH_ENDPOINTS", codes)
+
     def test_primary_relation_requires_both_endpoint_assignments(self):
         self.assignments = self.assignments[:1]
         self.save_assignments()
@@ -113,20 +127,28 @@ class ScopeAssignmentLockTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.v2 = self.root / "v2"
+        self.base = self.root / "CTI_Annotation_Schema_RECON_v0.1"
+        make_fixture(self.base)
         self.v2_selection = self.v2 / "registers" / "analysis_partition_selection.csv"
         self.assignments_file = self.root / "assignments.csv"
         self.locks_file = self.root / "locks.csv"
         self.selection = {key: "" for key in SELECTION_HEADERS}
         self.selection.update({
-            "report_id": "r-test", "annotator_id": "annotator-1",
-            "annotation_pass_id": "pass-1", "selection_status": "SELECTED_FINAL",
+            "report_id": PARTITION["report_id"],
+            "analysis_partition_id": "analysis-final",
+            "annotator_id": PARTITION["annotator_id"],
+            "annotation_pass_id": PARTITION["annotation_pass_id"],
+            "partition_role": "SINGLE_ANNOTATOR_FINAL",
+            "selection_status": "SELECTED_FINAL",
             "lock_reference": "sha256:" + "a" * 64,
+            "selection_rationale": "Synthetic selected final partition",
+            "selection_date": "2026-11-05",
         })
         write_rows(self.v2_selection, SELECTION_HEADERS, [self.selection])
         self.assignments = [assignment_row("event-a"), assignment_row("event-b", span_id="span-b")]
         write_rows(self.assignments_file, ASSIGNMENT_HEADERS, self.assignments)
         lock_rows = build_scope_assignment_lock_rows(
-            self.v2_selection, self.assignments_file,
+            self.v2_selection, self.assignments_file, base_bundle=self.base,
             locked_by="researcher-1", lock_date="2026-11-05",
         )
         write_rows(self.locks_file, LOCK_HEADERS, lock_rows)
@@ -135,7 +157,7 @@ class ScopeAssignmentLockTests(unittest.TestCase):
         self.temp.cleanup()
 
     def test_valid_scope_assignment_lock_passes(self):
-        result = validate_scope_assignment_locks(self.v2, self.assignments_file, self.locks_file)
+        result = validate_scope_assignment_locks(self.v2, self.assignments_file, self.locks_file, self.base)
         self.assertTrue(result["ok"], result["errors"])
 
     def test_assignment_change_after_lock_is_rejected(self):
@@ -144,6 +166,22 @@ class ScopeAssignmentLockTests(unittest.TestCase):
         write_rows(self.assignments_file, ASSIGNMENT_HEADERS, changed)
         result = validate_scope_assignment_locks(self.v2, self.assignments_file, self.locks_file)
         self.assertIn("SCOPE_ASSIGNMENT_LOCK_MISMATCH", {item["code"] for item in result["errors"]})
+
+    def test_lock_builder_rejects_incomplete_scope_review(self):
+        write_rows(self.assignments_file, ASSIGNMENT_HEADERS, self.assignments[:1])
+        with self.assertRaises(ValueError):
+            build_scope_assignment_lock_rows(
+                self.v2_selection, self.assignments_file, base_bundle=self.base,
+                locked_by="researcher-1", lock_date="2026-11-05",
+            )
+
+    def test_lock_validation_rejects_invalid_selected_partition_register(self):
+        self.selection["selection_rationale"] = ""
+        write_rows(self.v2_selection, SELECTION_HEADERS, [self.selection])
+        result = validate_scope_assignment_locks(
+            self.v2, self.assignments_file, self.locks_file, self.base
+        )
+        self.assertIn("SELECTION_REGISTER_VALIDATION_FAILED", {item["code"] for item in result["errors"]})
 
 
 class ThreeRuleComparisonTests(unittest.TestCase):

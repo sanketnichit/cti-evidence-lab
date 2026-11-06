@@ -13,9 +13,9 @@
 
 - registers/event_comparison_scope_assignments.csv
   - Grain: one activity unit × candidate comparison scope × report/annotator/pass.
-  - Decisions: ASSIGNED or UNCERTAIN.
+  - Decisions: ASSIGNED, NOT_ASSIGNED or UNCERTAIN.
   - ASSIGNED rows require a source evidence span, rationale, confidence, a supported basis, a RESOLVED comparable non-report scope, and the scope to be in the event's resolved ancestry.
-  - Missing rows are unrecorded decisions, not negative assessments.
+  - Every eligible resolved non-report ancestor scope requires one explicit row per event; missing decisions block validation. NOT_ASSIGNED is explicit and distinct from missing or UNCERTAIN.
 - registers/comparison_scope_assignment_locks.csv
   - Grain: one selected-final report/annotator/pass.
   - Binds the exact v0.3 assignment rows to the v0.2 selected-analysis lock reference.
@@ -34,7 +34,7 @@ The v0.3 rule does not automatically fall back to either older rule. UNCERTAIN o
 - Assignment references remain partition-local.
 - Only resolved atomic event_leaf units receive assignments.
 - ASSIGNED scope must be RESOLVED, non-report, in the provisional comparable-scope type set and present in the event's resolved ancestry.
-- ASSIGNED requires evidence and rationale; UNCERTAIN requires an unresolved basis and rationale.
+- ASSIGNED and NOT_ASSIGNED require evidence and rationale; UNCERTAIN requires an unresolved basis and rationale.
 - Positive direct temporal relations and COMPATIBLE candidate-pair assessments must use a scope explicitly ASSIGNED to both endpoints.
 - A dedicated lock covers the assignment register and the v0.2 analysis lock reference.
 
@@ -45,3 +45,8 @@ The v0.2 report-level aggregator accepts a named scope-pair rule and optional as
 ## Limitations
 
 The validator cannot decide semantic scope membership or whether a source supports the analyst's assignment rationale. The explicit-assignment candidate depends on human consistency and complete recording of considered scope assignments. No real data has been entered, and the extension has not been approved or frozen.
+
+
+## Additional validation correction
+
+The v0.3 validator delegates structural validation to RECON v0.1 and can optionally verify frozen source texts. The v0.3 lock builder and lock validator now validate the v0.2 selected-final partition register before creating or accepting an assignment lock. This draft permits only UNREVIEWED assignment adjudication status; a v0.3 adjudication log is not implemented.

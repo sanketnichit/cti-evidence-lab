@@ -22,13 +22,13 @@ A row is attached to one resolved atomic event_leaf and one report-local candida
 
 - ASSIGNED means the annotator affirmatively assigns that event to the comparison scope.
 - UNCERTAIN preserves a considered but unresolved candidate. It never creates pair opportunity.
-- No row means no explicit assignment was recorded; it is not a reviewed negative or proof of non-membership.
+- Every eligible resolved non-report ancestor scope in an event's scope chain requires one explicit decision. A missing row is incomplete review and blocks validation; it is never interpreted as NOT_ASSIGNED.
 - An event may have multiple assignments, but at most one decision per event × comparison scope × report/annotator/pass partition.
-- ASSIGNED requires a RESOLVED scope of a non-report comparable type, a source evidence span, a rationale, confidence and an allowed basis.
+- ASSIGNED and NOT_ASSIGNED require a RESOLVED scope of a non-report comparable type, a source evidence span, a rationale, confidence and an allowed basis. NOT_ASSIGNED is an explicit human negative decision and never creates pair opportunity.
 - The assigned scope must be in the event's resolved scope ancestry. This lets events in separate incident branches share an explicitly assigned campaign or operation ancestor, but does not permit arbitrary cross-links to unrelated scopes.
 - A primary direct-positive temporal relation and a COMPATIBLE candidate-pair assessment must name a comparison scope that is ASSIGNED to both endpoints.
 
-Assignment basis values are REPORT_EXPLICIT, SOURCE_SUPPORTED_HUMAN_JUDGMENT and UNRESOLVED. An ASSIGNED row must use one of the first two. An UNCERTAIN row must use UNRESOLVED. The structural validator checks references and decision consistency; it does not determine whether the report semantically supports the assignment.
+Assignment basis values are REPORT_EXPLICIT, SOURCE_SUPPORTED_HUMAN_JUDGMENT and UNRESOLVED. ASSIGNED and NOT_ASSIGNED rows must use one of the first two. UNCERTAIN rows must use UNRESOLVED. The structural validator checks references and decision consistency; it does not determine whether the report semantically supports the assignment.
 
 ## Three candidate rules
 
@@ -42,9 +42,9 @@ The explicit-assignment rule is the recommended candidate for researcher review,
 
 ## Locking
 
-The v0.3 lock hashes all assignment decisions for a selected report partition and binds them to the v0.2 analysis lock reference. Create the lock only after the assignment register is complete for that selected pass:
+The v0.3 lock hashes all assignment decisions for a selected report partition and binds them to the v0.2 analysis lock reference. The lock builder first validates the base bundle, v0.2 selected-final register and complete assignment review. Create the lock only after the assignment register is complete for that selected pass:
 
-    python analysis/create_scope_assignment_locks.py --v2-extension ../CTI_Annotation_Schema_RECON_v0.2 --assignment-file registers/event_comparison_scope_assignments.csv --output registers/comparison_scope_assignment_locks.csv --locked-by YOUR_RESEARCHER_ID --lock-date YYYY-MM-DD
+    python analysis/create_scope_assignment_locks.py --base-bundle ../CTI_Annotation_Schema_RECON_v0.1 --v2-extension ../CTI_Annotation_Schema_RECON_v0.2 --assignment-file registers/event_comparison_scope_assignments.csv --output registers/comparison_scope_assignment_locks.csv --locked-by YOUR_RESEARCHER_ID --lock-date YYYY-MM-DD
 
 Validate the extension:
 
