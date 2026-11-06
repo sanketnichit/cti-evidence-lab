@@ -20,7 +20,15 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--locked-by", required=True)
     parser.add_argument("--lock-date", required=True, help="ISO date, YYYY-MM-DD")
+    parser.add_argument("--sources-dir", type=Path, help="Optional frozen source directory with REPORT_ID.txt files")
     args = parser.parse_args()
+    source_texts = {}
+    if args.sources_dir:
+        from src.source_text_integrity import read_frozen_source
+        source_texts = {
+            path.stem: read_frozen_source(path)
+            for path in sorted(args.sources_dir.glob("*.txt"))
+        }
     rows = build_scope_assignment_lock_rows(
         args.v2_extension / "registers" / "analysis_partition_selection.csv",
         args.assignment_file,

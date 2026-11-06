@@ -27,7 +27,7 @@
 2. SHARED_RESOLVED_INCIDENT_SCOPE_v0.1 — conservative incident-bounded sensitivity rule.
 3. EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3 — recommended candidate; both endpoints must have ASSIGNED rows for the same shared scope.
 
-The v0.3 rule does not automatically fall back to either older rule. UNCERTAIN or missing assignments do not qualify. The selected rule must govern the opportunity denominator and primary relation numerator consistently.
+The v0.3 rule does not automatically fall back to either older rule. NOT_ASSIGNED and UNCERTAIN do not qualify; missing decisions block the register as incomplete. The selected rule must govern the opportunity denominator and primary relation numerator consistently.
 
 ## Validation
 
@@ -50,3 +50,8 @@ The validator cannot decide semantic scope membership or whether a source suppor
 ## Additional validation correction
 
 The v0.3 validator delegates structural validation to RECON v0.1 and can optionally verify frozen source texts. The v0.3 lock builder and lock validator now validate the v0.2 selected-final partition register before creating or accepting an assignment lock. This draft permits only UNREVIEWED assignment adjudication status; a v0.3 adjudication log is not implemented.
+
+
+## Adjudication boundary
+
+This draft accepts only assignment rows with adjudication_status=UNREVIEWED. Its lock path currently permits only SINGLE_ANNOTATOR_FINAL partitions. CONSENSUS and ADJUDICATED_FINAL selection roles are blocked until a dedicated scope-assignment adjudication register and validator are designed. The base v0.1 adjudication log does not target the v0.3 register.

@@ -222,6 +222,19 @@ class EventPairOpportunityTests(unittest.TestCase):
         )
         self.assertEqual(result["compatible_event_pair_count"], 0)
 
+    def test_not_assigned_endpoint_does_not_create_explicit_scope_opportunity(self):
+        rows = [
+            {"activity_unit_id": "a", "comparison_scope_id": "incident", "assignment_status": "ASSIGNED"},
+            {"activity_unit_id": "b", "comparison_scope_id": "incident", "assignment_status": "NOT_ASSIGNED"},
+        ]
+        result = compute_event_pair_opportunity(
+            self.units[:2], self.scopes, {"a": {"T1059"}, "b": {"T1059"}},
+            comparison_scope_assignments=rows,
+            scope_pair_rule_id="EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3",
+        )
+        self.assertEqual(result["compatible_event_pair_count"], 0)
+        self.assertEqual(result["same_technique_pair_opportunity_count"], 0)
+
     def test_series_container_is_not_an_atomic_event_leaf(self):
         result = compute_event_pair_opportunity(self.units, self.scopes, {})
         self.assertEqual(result["resolved_atomic_event_leaves"], 3)

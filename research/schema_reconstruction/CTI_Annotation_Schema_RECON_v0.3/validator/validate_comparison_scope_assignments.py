@@ -314,6 +314,7 @@ def build_scope_assignment_lock_rows(
     locked_by: str,
     lock_date: str,
     lock_notes: str = "",
+    source_texts: dict[str, str] | None = None,
 ) -> list[dict[str, str]]:
     selections, error = _load_exact(selection_file, SELECTION_HEADERS)
     if error:
@@ -337,7 +338,7 @@ def build_scope_assignment_lock_rows(
             "RECON v0.3 assignment adjudication is not implemented; only "
             "SINGLE_ANNOTATOR_FINAL selections can be locked"
         )
-    assignment_validation = validate_assignment_register(base_bundle, assignment_file)
+    assignment_validation = validate_assignment_register(base_bundle, assignment_file, source_texts=source_texts)
     if not assignment_validation["ok"]:
         raise ValueError(f"comparison-scope assignment register is invalid: {assignment_validation['errors']}")
     if not locked_by.strip():

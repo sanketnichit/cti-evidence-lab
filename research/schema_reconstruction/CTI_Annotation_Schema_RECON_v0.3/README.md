@@ -21,9 +21,9 @@ The v0.1 reconstructed schema remains unchanged. The extension does not claim to
 A row is attached to one resolved atomic event_leaf and one report-local candidate comparison scope.
 
 - ASSIGNED means the annotator affirmatively assigns that event to the comparison scope.
-- UNCERTAIN preserves a considered but unresolved candidate. It never creates pair opportunity.
+- NOT_ASSIGNED is an explicit reviewed negative decision. UNCERTAIN preserves a considered but unresolved candidate. Neither creates pair opportunity. Missing decisions block validation.
 - Every eligible resolved non-report ancestor scope in an event's scope chain requires one explicit decision. A missing row is incomplete review and blocks validation; it is never interpreted as NOT_ASSIGNED.
-- An event may have multiple assignments, but at most one decision per event × comparison scope × report/annotator/pass partition.
+- An event may have multiple scope decisions, but at most one decision per event × comparison scope × report/annotator/pass partition. Every eligible resolved comparable ancestor scope must be reviewed.
 - ASSIGNED and NOT_ASSIGNED require a RESOLVED scope of a non-report comparable type, a source evidence span, a rationale, confidence and an allowed basis. NOT_ASSIGNED is an explicit human negative decision and never creates pair opportunity.
 - The assigned scope must be in the event's resolved scope ancestry. This lets events in separate incident branches share an explicitly assigned campaign or operation ancestor, but does not permit arbitrary cross-links to unrelated scopes.
 - A primary direct-positive temporal relation and a COMPATIBLE candidate-pair assessment must name a comparison scope that is ASSIGNED to both endpoints.
@@ -42,7 +42,7 @@ The explicit-assignment rule is the recommended candidate for researcher review,
 
 ## Locking
 
-The v0.3 lock hashes all assignment decisions for a selected report partition and binds them to the v0.2 analysis lock reference. The lock builder first validates the base bundle, v0.2 selected-final register and complete assignment review. Create the lock only after the assignment register is complete for that selected pass:
+The v0.3 lock hashes all assignment decisions for a selected report partition and binds them to the v0.2 analysis lock reference. The current draft supports only SINGLE_ANNOTATOR_FINAL; CONSENSUS and ADJUDICATED_FINAL are blocked because v0.3 has no scope-assignment adjudication log. The lock builder first validates the base bundle, v0.2 selected-final register and complete assignment review. Create the lock only after the assignment register is complete for that selected pass:
 
     python analysis/create_scope_assignment_locks.py --base-bundle ../CTI_Annotation_Schema_RECON_v0.1 --v2-extension ../CTI_Annotation_Schema_RECON_v0.2 --assignment-file registers/event_comparison_scope_assignments.csv --output registers/comparison_scope_assignment_locks.csv --locked-by YOUR_RESEARCHER_ID --lock-date YYYY-MM-DD
 
