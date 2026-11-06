@@ -119,7 +119,7 @@ class ComparisonScopeAssignmentTests(unittest.TestCase):
         self.assignments[0]["evidence_span_id"] = ""
         self.save_assignments()
         result = validate_assignment_register(self.base, self.assignment_file)
-        self.assertIn("ASSIGNED_SCOPE_EVIDENCE_MISSING", {item["code"] for item in result["errors"]})
+        self.assertIn("SCOPE_DECISION_EVIDENCE_MISSING", {item["code"] for item in result["errors"]})
 
 
 class ScopeAssignmentLockTests(unittest.TestCase):
@@ -164,7 +164,7 @@ class ScopeAssignmentLockTests(unittest.TestCase):
         changed = [dict(row) for row in self.assignments]
         changed[0]["assignment_rationale"] = "edited after lock"
         write_rows(self.assignments_file, ASSIGNMENT_HEADERS, changed)
-        result = validate_scope_assignment_locks(self.v2, self.assignments_file, self.locks_file)
+        result = validate_scope_assignment_locks(self.v2, self.assignments_file, self.locks_file, self.base)
         self.assertIn("SCOPE_ASSIGNMENT_LOCK_MISMATCH", {item["code"] for item in result["errors"]})
 
     def test_lock_builder_rejects_incomplete_scope_review(self):
