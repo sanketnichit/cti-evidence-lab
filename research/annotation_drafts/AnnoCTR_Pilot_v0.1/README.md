@@ -1,4 +1,4 @@
-# AnnoCTR five-report pilot — annotation draft v0.1
+# AnnoCTR five-report pilot — annotation draft v0.2
 
 **Prepared:** 6 November 2026  
 **Status:** Pre-annotation proposal only. Not human-reviewed, not adjudicated, not locked, and not a real-report projection.  
@@ -12,17 +12,44 @@ This package structures candidate scopes, activity units, source anchors, ATT&CK
 
 - `report_assessment_draft.csv`: report-level eligibility recommendations and outstanding gates.
 - `scope_candidates_draft.csv`: proposed scope hierarchy.
-- `activity_unit_candidates_draft.csv`: candidate units, granularity, parent containers and primary-graph treatment.
+- `activity_unit_candidates_draft.csv`: candidate units, granularity, stratum and primary-graph treatment.
 - `source_anchor_index_draft.csv`: exact zero-based, end-exclusive source offsets and hashes. Source quotations are not reproduced; inspect each pinned source using its offsets.
 - `mapping_triage_draft.csv`: report-level ATT&CK material and event-mapping restrictions.
-- `mapping_source_label_audit_draft.csv`: source ID/name discrepancies against the pinned Enterprise ATT&CK v12.1 crosswalk.
-- `temporal_triage_draft.csv`: report-level review; no positive primary relation is proposed in this pass.
+- `mapping_source_label_audit_draft.csv`: source ID/name and lifecycle audit against the pinned Enterprise ATT&CK v12.1 crosswalk.
+- `report_level_mapping_detail_draft.csv`: the seven publisher-explicit QuoIntelligence technique IDs and their lifecycle states.
+- `temporal_triage_draft.csv`: report-level review, separating communication-relation candidates from attack-action candidates.
+- `temporal_relation_candidates_draft.csv`: Intel471's dated-communication pair candidate; not accepted.
+- `chronoCTI_label_crosswalk_draft.csv`: proposed label mapping to the ChronoCTI baseline; not approved.
+- `EVENT_UNIVERSE_AND_CHRONOCTI_BOUNDARY_v0.1.md`: rationale and unresolved researcher decisions.
 
 ## Source integrity and attribution
 
-All offsets refer to AnnoCTR source text at corpus revision `d510b6949e1938d47c93a43eedd562dc538439dc`. The source SHA-256 is carried in the report and anchor registers. Source files are not copied into this package.
+All offsets refer to AnnoCTR source text at corpus revision `d510b6949e1938d47c93a43eedd562dc538439dc`. The source SHA-256 is carried in the report and anchor registers. The Proofpoint SHA-256 is corrected to the independently recomputed 64-character digest `b3653c517baef27621db962ef305875e6d71ee44e40403d0892e22fe5e76e517`; the historical sample frame already contains this correct value.
 
-The source material is distributed by AnnoCTR under CC BY-SA 4.0. Report title, publisher and original source URL are recorded for attribution. Adapted annotation material intended for public distribution must retain attribution and ShareAlike. This package does not relicense source reports. The repository MIT software licence does not replace source-material terms.
+The 5 November 2026 AnnoCTR dataset-maintainer response is the current project-level permission basis for local research and derivative publication by the five rank-one candidates, subject to attribution and ShareAlike. The earlier Lab52 legal-notice conflict remains documented as historical website-terms evidence; the later maintainer clarification supersedes the earlier unresolved project permission fields for the AnnoCTR-contributed corpus material. The response was qualified by the maintainer's recollection and supplied no report-level exception schedule. Do not publish raw reports or extended verbatim spans. The repository MIT software licence does not replace source-material terms.
+
+## Event-universe boundary — unresolved researcher decision
+
+Do not add an undocumented rule that only victim-side intrusions can be event leaves. Protocol v0.5 defines an event instance as a distinguishable report-local occurrence and restricts the primary event graph to resolved atomic event leaves; it does not itself state a victim-side-only restriction.
+
+For a fair comparison with ChronoCTI, the draft proposes reporting separate strata:
+1. **Operational attack-action occurrences** — source-described adversary actions in an attack narrative; baseline-comparable stratum.
+2. **Threat-actor communications and disclosures** — report-local communications/publications that may be resolved occurrences, but are not automatically ATT&CK attack actions.
+3. **Analyst/sample observations** — detections, sample submissions and reverse-engineering observations; not automatically adversary activity events.
+4. **Generic capabilities and malware behaviour** — retain as generic/unresolved behaviour, not fabricated event leaves.
+
+ChronoCTI's published inclusion rules focus on sequential cyberattack incidents and exclude social-media posts, generic malware features/capabilities, and non-attack content. Its temporal relation labels are BEFORE, SIMULTANEOUS-OVERLAP, CONCURRENT and NULL. The proposed mapping to this project's labels is recorded separately in `chronoCTI_label_crosswalk_draft.csv`; it is not silently applied. This stratification is a recommendation pending researcher approval.
+
+### Intel471 communication candidate
+
+The article dates a dyadka0220 source-code post to 3 September 2021 and a Groove response blog to 7 September 2021. These are two distinct communication occurrences. A candidate direct-timestamp BEFORE relation is recorded in `temporal_relation_candidates_draft.csv`. It is not accepted as a primary attack-action edge and should not be counted in ChronoCTI-comparable outputs unless the communication stratum is explicitly approved. This corrects the earlier overly narrow statement that no relation exists anywhere in the report.
+
+## ATT&CK mapping cautions
+
+- Intel471's closing list is expressly drawn from older Babuk and recent Groove-linked cases; preserve it at report level unless a technique is tied to a specific resolved activity unit. Preserve source token `T1021:002`; normalisation to `T1021.002` must remain explicit.
+- Zscaler's table has three ID/name mismatches against v12.1: T1055 vs Process Hollowing (v12.1 sub-technique T1055.012), T1555 vs Credentials from Web Browsers (T1555.003), and T1074 vs Local Data Staging (T1074.001). Preserve source labels and do not silently correct them.
+- QuoIntelligence explicitly lists seven Enterprise ATT&CK IDs: T1215, T1068, T1009, T1014, T1116, T1022 and T1048. Four (T1215, T1009, T1116 and T1022) are revoked in the pinned v12.1 crosswalk; the other three are active and in A_120. None is assigned to a particular event leaf in this draft; do not invent successor mappings for revoked IDs.
+- A_120 is a subset of the 193 active v12.1 top-level techniques. The reported 111/154 distinct linked-parent coverage figure has not yet been independently reproduced in a committed script/register; treat it as a verification task, not a project fact.
 
 ## Interpretation rules
 
@@ -32,25 +59,20 @@ The source material is distributed by AnnoCTR under CC BY-SA 4.0. Report title, 
 4. Dated communications, sample submissions, compilation timestamps and publication dates are not interchangeable with attack-event times.
 5. Report-level ATT&CK lists are not copied to individual activity units.
 6. Missing or ambiguous evidence is not converted into a negative temporal label.
-7. Researcher prior exposure for these five candidates remains `AI_EXPOSED` under the existing project rule.
-
-## Consistency findings to preserve
-
-- The Zscaler article describes a campaign beginning in July 2021 while identifying a specific spear-phishing email sent on 30 June 2021 at 10:44 PKT. This is recorded as a campaign-boundary/date consistency question, not silently normalised into an event sequence.
-- The Intel471 source writes one TTP token as `T1021:002`; the pinned crosswalk contains `T1021.002`. Preserve the source form and keep any normalisation explicit.
-- The Zscaler mapping table pairs `T1055`, `T1555`, and `T1074` with labels corresponding to v12.1 sub-techniques rather than the listed parent IDs. The discrepancy register records the crosswalk entries. No source mapping has been silently corrected or accepted.
+7. The researcher's first pass on these five candidates is `AI_EXPOSED` under the adopted project exposure rule; this pre-annotation package itself is not a human annotation.
 
 ## Draft summary
 
 - Five reports receive a source-scope recommendation of ELIGIBLE, pending researcher decision.
-- One possible atomic primary event leaf is proposed: the timestamped Zscaler email. It is not accepted.
-- Positive primary temporal relations proposed: zero.
+- Three Intel471 communication/platform event-leaf candidates are proposed; one Zscaler operational email event candidate is proposed. All remain unaccepted.
+- One Intel471 communication BEFORE pair is a candidate for separate review; no ChronoCTI-comparable attack-action temporal relation is accepted.
 - Event-level ATT&CK mappings accepted: zero.
 - Human annotations, selected final partitions and real-report projections created by this package: zero.
+- Five reports remain a feasibility pilot only; there is no confirmatory sample-size design or population-inference basis.
 
 ## Required next steps
 
-1. Researcher reviews source-scope eligibility and each proposed activity-unit boundary.
+1. Researcher approves the event-universe/stratum boundary and whether communication events are recorded as event leaves.
 2. Validate every source offset against the local frozen source text.
 3. Reconcile the approved pilot protocol and schema version.
 4. Populate canonical registers only after the approval/freeze gate.
