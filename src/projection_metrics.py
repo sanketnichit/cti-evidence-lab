@@ -116,9 +116,20 @@ def project_report(
 
     normalized: dict[str, tuple[str, ...]] = {}
     for event_id, technique_ids in techniques_by_event.items():
-        if not event_id:
-            raise ValueError("Event IDs must be non-empty.")
-        normalized[event_id] = tuple(sorted({x for x in technique_ids if x}))
+        if not isinstance(event_id, str) or not event_id.strip():
+            raise ValueError("Event IDs must be non-empty strings.")
+        if isinstance(technique_ids, (str, bytes)):
+            raise TypeError("Technique mappings must be an iterable of IDs, not a string.")
+        try:
+            raw_techniques = list(technique_ids)
+        except TypeError as exc:
+            raise TypeError(f"Technique IDs for {event_id!r} must be iterable.") from exc
+        if any(not isinstance(value, str) or not value.strip() for value in raw_techniques):
+            raise ValueError(
+                f"Technique IDs for {event_id!r} must be non-empty strings; "
+                "None and empty values are not silently discarded."
+            )
+        normalized[event_id] = tuple(sorted(set(raw_techniques)))
 
     edge_ids: set[str] = set()
     for edge in temporal_edges:
@@ -154,6 +165,7 @@ def project_report(
 
     projected_provenance: dict[tuple[str, str], set[str]] = defaultdict(set)
     projected_labels: dict[tuple[str, str], set[str]] = defaultdict(set)
+    projected_label_sets_by_unordered_pair: dict[tuple[str, str], set[str]] = defaultdict(set)
     edge_to_pairs: dict[str, list[tuple[str, str]]] = {}
     edge_to_normalized_pairs: dict[str, list[tuple[str, str]]] = {}
     mapped_edge_ids: list[str] = []
@@ -215,6 +227,8 @@ def project_report(
             projected_provenance[pair].add(edge.edge_id)
             relation_class = "STRICT_ORDER" if edge.relation in {"BEFORE", "AFTER"} else edge.relation
             projected_labels[pair].add(relation_class)
+            if pair[0] != pair[1]:
+                projected_label_sets_by_unordered_pair[tuple(sorted(pair))].add(relation_class)
         total_pair_mappings += len(pairs)
         diagonal_mappings += sum(1 for pair in pairs if pair[0] == pair[1])
 
@@ -239,14 +253,20 @@ def project_report(
     )
     distinct_pair_mappings = total_pair_mappings - diagonal_mappings
 
+    # The target pair universe excludes diagonal (T, T) pairs. Diagonal
+    # compression remains visible through the dedicated diagonal metrics, but
+    # it must not inflate collision or label-conflation outputs.
     collision_pairs = {
-        pair: sorted(edge_ids_for_pair)
-        for pair, edge_ids_for_pair in projected_provenance.items()
-        if len(edge_ids_for_pair) > 1
+        pair: sorted(projected_provenance[pair])
+        for pair in distinct_technique_pairs
+        if len(projected_provenance[pair]) > 1
     }
+    # OVERLAP/SIMULTANEOUS/CONCURRENT pairs are symmetric. Key label conflicts
+    # by the unordered pair so the result does not depend on alphabetical
+    # technique-ID orientation of a strict BEFORE/AFTER edge.
     label_conflation = {
         pair: sorted(labels)
-        for pair, labels in projected_labels.items()
+        for pair, labels in projected_label_sets_by_unordered_pair.items()
         if len(labels) > 1
     }
 
@@ -393,8 +413,8 @@ def project_report(
                 else None
             ),
             "collision_pair_share": (
-                len(collision_pairs) / len(projection_pairs)
-                if projection_pairs
+                len(collision_pairs) / len(distinct_technique_pairs)
+                if distinct_technique_pairs
                 else None
             ),
         },
