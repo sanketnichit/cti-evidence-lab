@@ -9,7 +9,7 @@ class ProjectionMetricsTests(unittest.TestCase):
     def test_same_technique_before_edge_becomes_diagonal(self):
         result = project_report(
             {"event-1": {"T1059"}, "event-2": {"T1059"}},
-            [TemporalEdge("r1", "event-1", "event-2", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+            [TemporalEdge("r1", "event-1", "event-2", "BEFORE")],
         )
         self.assertEqual(result["counts"]["shared_technique_endpoint_edges"], 1)
         self.assertEqual(result["counts"]["self_only_edges"], 1)
@@ -34,8 +34,8 @@ class ProjectionMetricsTests(unittest.TestCase):
                 "b2": {"T1105"},
             },
             [
-                TemporalEdge("r1", "a1", "b1", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
-                TemporalEdge("r2", "a2", "b2", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r1", "a1", "b1", "BEFORE"),
+                TemporalEdge("r2", "a2", "b2", "BEFORE"),
             ],
         )
         self.assertEqual(result["counts"]["projected_technique_pairs"], 1)
@@ -49,7 +49,7 @@ class ProjectionMetricsTests(unittest.TestCase):
     def test_multilabel_event_fans_out_without_duplicating_event(self):
         result = project_report(
             {"a": {"T1059", "T1105"}, "b": {"T1071"}},
-            [TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+            [TemporalEdge("r1", "a", "b", "BEFORE")],
         )
         self.assertEqual(result["counts"]["resolved_event_instances"], 2)
         self.assertEqual(
@@ -60,7 +60,7 @@ class ProjectionMetricsTests(unittest.TestCase):
     def test_multilabel_edge_is_partially_representable_after_diagonal_exclusion(self):
         result = project_report(
             {"a": {"T1059", "T1105"}, "b": {"T1059", "T1071"}},
-            [TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+            [TemporalEdge("r1", "a", "b", "BEFORE")],
         )
         self.assertEqual(result["counts"]["diagonal_pair_mappings"], 1)
         self.assertEqual(result["counts"]["distinct_technique_pair_mappings"], 3)
@@ -74,7 +74,7 @@ class ProjectionMetricsTests(unittest.TestCase):
     def test_unmapped_endpoint_is_counted_not_silently_dropped(self):
         result = project_report(
             {"a": {"T1059"}, "b": set()},
-            [TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+            [TemporalEdge("r1", "a", "b", "BEFORE")],
         )
         self.assertEqual(result["counts"]["unmapped_temporal_edges"], 1)
         self.assertEqual(result["rates"]["temporal_edge_mapping_coverage"], 0.0)
@@ -88,8 +88,8 @@ class ProjectionMetricsTests(unittest.TestCase):
                 "a2": {"T_A"},
             },
             [
-                TemporalEdge("r1", "a1", "b1", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
-                TemporalEdge("r2", "b1", "a2", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r1", "a1", "b1", "BEFORE"),
+                TemporalEdge("r2", "b1", "a2", "BEFORE"),
             ],
         )
         self.assertTrue(
@@ -110,7 +110,7 @@ class ProjectionMetricsTests(unittest.TestCase):
                 "event_a": {"T_A", "T_B"},
                 "event_b": {"T_A", "T_B"},
             },
-            [TemporalEdge("r1", "event_a", "event_b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+            [TemporalEdge("r1", "event_a", "event_b", "BEFORE")],
         )
         self.assertTrue(
             result["strict_before_cycle_analysis"]["source_event_graph_is_acyclic"]
@@ -132,8 +132,8 @@ class ProjectionMetricsTests(unittest.TestCase):
         result = project_report(
             {"a": {"T_A"}, "b": {"T_B"}},
             [
-                TemporalEdge("r1", "a", "b", "OVERLAP", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
-                TemporalEdge("r2", "b", "a", "OVERLAP", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r1", "a", "b", "OVERLAP"),
+                TemporalEdge("r2", "b", "a", "OVERLAP"),
             ],
         )
         self.assertEqual(result["counts"]["projected_technique_pairs"], 1)
@@ -147,15 +147,15 @@ class ProjectionMetricsTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             project_report(
                 {"a": {"T_A"}, "b": {"T_B"}},
-                [TemporalEdge("r1", "a", "b", "NO_TEMPORAL_CLAIM", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+                [TemporalEdge("r1", "a", "b", "NO_TEMPORAL_CLAIM")],
             )
 
     def test_inverse_after_and_before_share_normalized_pair_without_label_conflict(self):
         result = project_report(
             {"a": {"T_A"}, "b": {"T_B"}, "c": {"T_A"}, "d": {"T_B"}},
             [
-                TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
-                TemporalEdge("r2", "d", "c", "AFTER", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r1", "a", "b", "BEFORE"),
+                TemporalEdge("r2", "d", "c", "AFTER"),
             ],
         )
         self.assertEqual(result["counts"]["projected_technique_pairs"], 1)
@@ -168,8 +168,8 @@ class ProjectionMetricsTests(unittest.TestCase):
         result = project_report(
             {"a": {"T_A"}, "b": {"T_B"}, "c": {"T_A"}, "d": {"T_B"}},
             [
-                TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
-                TemporalEdge("r2", "c", "d", "OVERLAP", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r1", "a", "b", "BEFORE"),
+                TemporalEdge("r2", "c", "d", "OVERLAP"),
             ],
         )
         self.assertEqual(result["counts"]["label_conflated_technique_pairs"], 1)
@@ -181,8 +181,8 @@ class ProjectionMetricsTests(unittest.TestCase):
             "event_c": {"T_A"},
         }
         edges = [
-            TemporalEdge("r1", "event_a", "event_b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
-            TemporalEdge("r2", "event_c", "event_b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+            TemporalEdge("r1", "event_a", "event_b", "BEFORE"),
+            TemporalEdge("r2", "event_c", "event_b", "BEFORE"),
         ]
         result = project_report(event_mappings, edges)
         self.assertEqual(result["counts"]["projected_before_cycle_components"], 1)
@@ -201,8 +201,8 @@ class ProjectionMetricsTests(unittest.TestCase):
                 "a2": {"T_A"},
             },
             [
-                TemporalEdge("r1", "a1", "b1", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
-                TemporalEdge("r2", "a2", "b1", "AFTER", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r1", "a1", "b1", "BEFORE"),
+                TemporalEdge("r2", "a2", "b1", "AFTER"),
             ],
         )
         self.assertTrue(
@@ -218,7 +218,7 @@ class ProjectionMetricsTests(unittest.TestCase):
     def test_overlap_does_not_create_strict_before_cycle(self):
         result = project_report(
             {"a": {"T_A"}, "b": {"T_B"}},
-            [TemporalEdge("r1", "a", "b", "OVERLAP", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+            [TemporalEdge("r1", "a", "b", "OVERLAP")],
         )
         self.assertEqual(result["counts"]["non_before_temporal_edges"], 1)
         self.assertEqual(result["counts"]["projected_before_cycle_components"], 0)
@@ -227,8 +227,8 @@ class ProjectionMetricsTests(unittest.TestCase):
         result = project_report(
             {"a": {"T_A"}, "b": {"T_B"}},
             [
-                TemporalEdge("r1", "a", "b", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
-                TemporalEdge("r2", "b", "a", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE"),
+                TemporalEdge("r1", "a", "b", "BEFORE"),
+                TemporalEdge("r2", "b", "a", "BEFORE"),
             ],
         )
         self.assertFalse(
@@ -242,7 +242,7 @@ class ProjectionMetricsTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             project_report(
                 {"a": {"T_A"}},
-                [TemporalEdge("r1", "a", "missing", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+                [TemporalEdge("r1", "a", "missing", "BEFORE")],
             )
 
 
@@ -250,7 +250,7 @@ class ProjectionMetricsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "endpoints must be distinct"):
             project_report(
                 {"a": {"T_A"}},
-                [TemporalEdge("r1", "a", "a", "BEFORE", relation_basis="direct_source", scope_compatibility="COMPATIBLE")],
+                [TemporalEdge("r1", "a", "a", "BEFORE")],
             )
 
 
