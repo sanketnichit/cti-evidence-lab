@@ -725,8 +725,12 @@ def aggregate_selected_report_projections(
         for key in opportunity_rate_keys:
             primary_rates[key] = None
             selected_subset_rates[key] = None
-        primary_rates["scope_pair_opportunity_rate_status"] = "WITHHELD_PENDING_RESEARCHER_APPROVAL_OF_NEAREST_COMMON_RESOLVED_SCOPE_RULE"
-        selected_subset_rates["scope_pair_opportunity_rate_status"] = "WITHHELD_PENDING_RESEARCHER_APPROVAL_OF_NEAREST_COMMON_RESOLVED_SCOPE_RULE"
+        approval_status = (
+            "WITHHELD_PENDING_RESEARCHER_APPROVAL_OF_SCOPE_PAIR_RULE:"
+            + scope_pair_rule_id
+        )
+        primary_rates["scope_pair_opportunity_rate_status"] = approval_status
+        selected_subset_rates["scope_pair_opportunity_rate_status"] = approval_status
     else:
         primary_rates["scope_pair_opportunity_rate_status"] = "APPROVED_BY_CALLER"
         selected_subset_rates["scope_pair_opportunity_rate_status"] = "APPROVED_BY_CALLER"

@@ -416,15 +416,12 @@ def validate_scope_assignment_locks(
     ):
         if message:
             errors.append({"code": code, "message": message})
-    if errors:
-        return {"ok": False, "error_count": len(errors), "lock_rows": len(locks), "errors": errors}
-
-    selected = {
-        _partition(row): row for row in selections
-        if row.get("selection_status") == "SELECTED_FINAL"
-    }
-    for partition, selection in selected.items():
-        if selection.get("partition_role") != "SINGLE_ANNOTATOR_FINAL":
+    for selection in selections:
+        if (
+            selection.get("selection_status") == "SELECTED_FINAL"
+            and selection.get("partition_role") != "SINGLE_ANNOTATOR_FINAL"
+        ):
+            partition = _partition(selection)
             errors.append({
                 "code": "SCOPE_ASSIGNMENT_FINAL_ROLE_UNSUPPORTED",
                 "message": (
@@ -432,6 +429,14 @@ def validate_scope_assignment_locks(
                     f"{selection.get('partition_role')!r}; v0.3 assignment adjudication is not implemented"
                 ),
             })
+
+    if errors:
+        return {"ok": False, "error_count": len(errors), "lock_rows": len(locks), "errors": errors}
+
+    selected = {
+        _partition(row): row for row in selections
+        if row.get("selection_status") == "SELECTED_FINAL"
+    }
     locks_by_partition = {}
     lock_ids = set()
     for line_number, row in enumerate(locks, 2):

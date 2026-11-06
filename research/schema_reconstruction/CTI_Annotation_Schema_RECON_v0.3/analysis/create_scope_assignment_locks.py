@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = PACKAGE_ROOT.parents[2]
+sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(PACKAGE_ROOT / "validator"))
 from validate_comparison_scope_assignments import LOCK_HEADERS, build_scope_assignment_lock_rows  # noqa: E402
 
@@ -34,6 +36,7 @@ def main() -> int:
         args.assignment_file,
         locked_by=args.locked_by,
         lock_date=args.lock_date,
+        source_texts=source_texts,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8", newline="") as handle:
