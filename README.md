@@ -2,7 +2,7 @@
 
 A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
-**Status (6 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The dataset maintainer has clarified that source-material use and publication of derivatives are permitted under the corpus CC BY-SA licence, subject to attribution and ShareAlike. Two non-CTI source documents are excluded from the declared study scope but retained in the inventory. The new protocol and reconstructed schema remain drafts; RECON v0.3 is synthetic-only and unapproved. It requires complete event/scope decisions, distinguishes NOT_ASSIGNED from UNCERTAIN and missing decisions, and currently blocks consensus/adjudicated final partitions pending a dedicated scope-assignment adjudication register. No human annotations or real-report projection results exist. No novel contribution is claimed as established.
+**Status (6 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The dataset maintainer has clarified that source-material use and publication of derivatives are permitted under the corpus CC BY-SA licence, subject to attribution and ShareAlike. Two non-CTI source documents are excluded from the declared study scope but retained in the inventory. A structured pre-annotation draft for the five fixed rank-one candidates is now versioned at `research/annotation_drafts/AnnoCTR_Pilot_v0.1/`; it contains 18 proposed activity units, nine scope candidates, 26 pinned-source anchors, and separate mapping/temporal triage. These remain unreviewed proposals, not human annotations or empirical results. The protocol and reconstructed schema remain drafts; RECON v0.3 is synthetic-only and unapproved. No novel contribution is claimed as established.
 
 ## Provisional primary research question
 
@@ -28,7 +28,7 @@ This is a candidate report-level estimand, not a validated research gap. ChronoC
 
 ```text
 docs/       research charter, audits, architecture, methodology, decisions, roadmap, project state
-research/   related work, evidence ledger, protocols, sampling, schema reconstruction and metric contracts
+research/   related work, evidence ledger, protocols, sampling, schema reconstruction, metric contracts and annotation drafts
 src/        legacy v0.3 projection and annotation-validation utilities (synthetic checks only)
 tests/      synthetic unit tests
 examples/   synthetic examples only
@@ -39,7 +39,7 @@ data/processed/annoctr_screening/  three allow-listed, text-free screening metad
 
 ## Current phase
 
-With the dataset-maintainer permission clarification recorded, the next phase is to settle the remaining researcher-owned source-scope and protocol decisions, approve a new versioned annotation protocol/schema, and begin a source-first human feasibility pilot before building a model. The current source of truth is `docs/PROJECT_STATE.md`; RECON v0.3 compares the legacy, incident-bounded and explicit-assignment scope-pair rules, but none is researcher-approved. Formal annotation remains blocked pending protocol/schema approval. The latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
+With the dataset-maintainer permission clarification recorded, a source-first pre-annotation pass has been prepared for the five fixed rank-one candidates. The structured draft is an extraction/review aid only; researcher eligibility, event boundaries, scope and mapping decisions remain unapproved. The next gate is to approve and freeze a pilot protocol/schema, then transfer reviewed decisions into canonical registers. The current source of truth is `docs/PROJECT_STATE.md`; RECON v0.3 compares the legacy, incident-bounded and explicit-assignment scope-pair rules, but none is researcher-approved. Formal annotation remains blocked pending protocol/schema approval. See the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and open methodological choices in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
 
 ## Citation and author name
 
@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest successful CI verification on 6 November 2026: GitHub Actions run [#167](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42164765039) passed on the current `main` head `51eaa3a517abd9fdec8490b36120de85240ca1ac`. It executed **57 root tests**, **69 RECON v0.1 tests** (41 validator, 16 projection, 12 adapter), **76 RECON v0.2 tests**, and **15 RECON v0.3 tests** — **217 successful synthetic test executions**. Checks include complete event-to-scope review, separate NOT_ASSIGNED handling, v0.3 assignment locks and the single-annotator final-role guard, blank-register validation, v0.1 package checksums, both blank-bundle validators, selected-final partition tests and the projection demo. These are synthetic/code-integrity checks only, not real-report findings.
+Latest executable-code CI verification on 6 November 2026: GitHub Actions run [#168](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/42164908914) passed on code commit `9c11e146bb06acd15f92c9e19562052d38d5239b`. It executed **57 root tests**, **69 RECON v0.1 tests** (41 validator, 16 projection, 12 adapter), **76 RECON v0.2 tests**, and **15 RECON v0.3 tests** — **217 successful synthetic test executions**. Checks include complete event-to-scope review, separate NOT_ASSIGNED handling, v0.3 assignment locks and the single-annotator final-role guard, blank-register validation, v0.1 package checksums, both blank-bundle validators, selected-final partition tests and the projection demo. Later annotation-draft commits add Markdown/CSV research materials only; they do not change executable code and did not trigger another projection-test workflow run. These checks are synthetic/code-integrity checks only, not real-report findings.
 
 Run from the repository root:
 
@@ -74,7 +74,7 @@ python -m unittest discover -s tests -v
 python -m examples.toy_projection_demo
 ```
 
-The first report dry-run instructions are in `research/PILOT_REPORT_01_STARTER.md`. This repository contains no completed report-level gold annotations.
+The structured five-report pre-annotation draft is in `research/annotation_drafts/AnnoCTR_Pilot_v0.1/`; the earlier first-report dry-run starter remains in `research/PILOT_REPORT_01_STARTER.md`. This repository contains no completed report-level human annotations or gold partitions.
 
 ## AnnoCTR screening utility
 
