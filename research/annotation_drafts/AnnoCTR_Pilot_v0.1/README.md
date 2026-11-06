@@ -12,9 +12,10 @@ This package structures candidate scopes, activity units, source anchors, ATT&CK
 
 - `report_assessment_draft.csv`: report-level eligibility recommendations and outstanding gates.
 - `scope_candidates_draft.csv`: proposed scope hierarchy.
-- `activity_unit_candidates_draft.csv`: candidate units, granularity and primary-graph treatment.
+- `activity_unit_candidates_draft.csv`: candidate units, granularity, parent containers and primary-graph treatment.
 - `source_anchor_index_draft.csv`: exact zero-based, end-exclusive source offsets and hashes. Source quotations are not reproduced; inspect each pinned source using its offsets.
 - `mapping_triage_draft.csv`: report-level ATT&CK material and event-mapping restrictions.
+- `mapping_source_label_audit_draft.csv`: source ID/name discrepancies against the pinned Enterprise ATT&CK v12.1 crosswalk.
 - `temporal_triage_draft.csv`: report-level review; no positive primary relation is proposed in this pass.
 
 ## Source integrity and attribution
@@ -32,6 +33,12 @@ The source material is distributed by AnnoCTR under CC BY-SA 4.0. Report title, 
 5. Report-level ATT&CK lists are not copied to individual activity units.
 6. Missing or ambiguous evidence is not converted into a negative temporal label.
 7. Researcher prior exposure for these five candidates remains `AI_EXPOSED` under the existing project rule.
+
+## Consistency findings to preserve
+
+- The Zscaler article describes a campaign beginning in July 2021 while identifying a specific spear-phishing email sent on 30 June 2021 at 10:44 PKT. This is recorded as a campaign-boundary/date consistency question, not silently normalised into an event sequence.
+- The Intel471 source writes one TTP token as `T1021:002`; the pinned crosswalk contains `T1021.002`. Preserve the source form and keep any normalisation explicit.
+- The Zscaler mapping table pairs `T1055`, `T1555`, and `T1074` with labels corresponding to v12.1 sub-techniques rather than the listed parent IDs. The discrepancy register records the crosswalk entries. No source mapping has been silently corrected or accepted.
 
 ## Draft summary
 
