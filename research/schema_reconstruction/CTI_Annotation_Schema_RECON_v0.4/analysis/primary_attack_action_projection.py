@@ -56,7 +56,7 @@ def build_primary_attack_action_projection(
     annotator_id: str,
     annotation_pass_id: str,
     comparison_scope_assignments: list[dict[str, str]] | None = None,
-    scope_pair_rule_id: str = v2_aggregation.LEGACY_SCOPE_PAIR_RULE_ID,
+    scope_pair_rule_id: str = v2_aggregation.INCIDENT_SCOPE_PAIR_RULE_ID,
 ) -> dict[str, Any]:
     """Project and count pair opportunities using ATTACK_ACTION units only.
 
@@ -77,6 +77,7 @@ def build_primary_attack_action_projection(
     strata = _read_csv(Path(strata_file), STRATUM_HEADERS)
     part_units = [row for row in tables["activity_units"] if _partition(row) == partition]
     part_strata = [row for row in strata if _partition(row) == partition]
+    part_scopes = [row for row in tables["report_scopes"] if _partition(row) == partition]
     stratum_by_id = {row["activity_unit_id"]: row["activity_stratum"] for row in part_strata}
     unit_by_id = {row["activity_unit_id"]: row for row in part_units}
 
@@ -98,6 +99,17 @@ def build_primary_attack_action_projection(
 
     routes = Counter()
     primary_relations = []
+    scope_excluded_primary_stratum_relation_ids: list[str] = []
+    part_assignments = [
+        row for row in (comparison_scope_assignments or [])
+        if _partition(row) == partition and row.get("activity_unit_id") in primary_ids
+    ]
+    assigned_by_event: dict[str, set[str]] = {}
+    for assignment in part_assignments:
+        if assignment.get("assignment_status") == "ASSIGNED":
+            assigned_by_event.setdefault(assignment.get("activity_unit_id", ""), set()).add(
+                assignment.get("comparison_scope_id", "")
+            )
     auxiliary_relation_ids: dict[str, list[str]] = {
         "AUXILIARY_SAME_STRATUM": [],
         "MIXED_STRATUM": [],
@@ -115,14 +127,44 @@ def build_primary_attack_action_projection(
             route = "MIXED_STRATUM"
         routes[route] += 1
         if route == "PRIMARY_ATTACK_ACTION":
-            if (
+            if not (
                 row.get("relation_label") in {"BEFORE", "AFTER", "OVERLAP", "SIMULTANEOUS", "CONCURRENT_UNSPECIFIED"}
                 and row.get("relation_basis") in {"direct_source", "direct_timestamp"}
                 and row.get("scope_compatibility") == "COMPATIBLE"
                 and row.get("event_a_id") in primary_ids
                 and row.get("event_b_id") in primary_ids
             ):
+                continue
+
+            event_a = unit_by_id.get(row.get("event_a_id", ""))
+            event_b = unit_by_id.get(row.get("event_b_id", ""))
+            comparison_scope_id = row.get("comparison_scope_id", "")
+            if scope_pair_rule_id == v2_aggregation.INCIDENT_SCOPE_PAIR_RULE_ID:
+                expected_scope = (
+                    v2_aggregation.nearest_shared_resolved_incident_scope(
+                        event_a.get("scope_id", ""), event_b.get("scope_id", ""), part_scopes
+                    )
+                    if event_a is not None and event_b is not None else None
+                )
+                scope_eligible = bool(expected_scope) and comparison_scope_id == expected_scope
+            elif scope_pair_rule_id == v2_aggregation.EXPLICIT_SCOPE_PAIR_RULE_ID:
+                scope_eligible = (
+                    comparison_scope_id in assigned_by_event.get(row.get("event_a_id", ""), set())
+                    and comparison_scope_id in assigned_by_event.get(row.get("event_b_id", ""), set())
+                )
+            elif scope_pair_rule_id == v2_aggregation.LEGACY_SCOPE_PAIR_RULE_ID:
+                common_scope_ids = v2_aggregation.shared_resolved_comparison_scope_ids(
+                    event_a.get("scope_id", "") if event_a else "",
+                    event_b.get("scope_id", "") if event_b else "",
+                    part_scopes,
+                )
+                scope_eligible = comparison_scope_id in common_scope_ids
+            else:
+                raise ValueError(f"Unknown scope-pair rule: {scope_pair_rule_id}")
+            if scope_eligible:
                 primary_relations.append(row)
+            else:
+                scope_excluded_primary_stratum_relation_ids.append(row.get("relation_id", ""))
         else:
             auxiliary_relation_ids[route].append(row.get("relation_id", ""))
 
@@ -157,13 +199,6 @@ def build_primary_attack_action_projection(
         for row in primary_relations
     ]
     projection = project_report_recon(mapping_sets, edges)
-    part_scopes = [
-        row for row in tables["report_scopes"] if _partition(row) == partition
-    ]
-    part_assignments = [
-        row for row in (comparison_scope_assignments or [])
-        if _partition(row) == partition and row.get("activity_unit_id") in primary_ids
-    ]
     pair_opportunity = v2_aggregation.compute_event_pair_opportunity(
         primary_units,
         part_scopes,
@@ -191,6 +226,7 @@ def build_primary_attack_action_projection(
                 "MIXED_STRATUM": routes["MIXED_STRATUM"],
             },
             "primary_direct_positive_attack_action_relations": len(primary_relations),
+            "primary_stratum_relation_ids_excluded_by_scope_rule": scope_excluded_primary_stratum_relation_ids,
             "auxiliary_relation_ids": auxiliary_relation_ids,
             "primary_attack_action_mapping_rows": len(part_mappings),
         },
