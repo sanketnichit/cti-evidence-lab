@@ -20,6 +20,7 @@ from report_level_aggregation import (  # noqa: E402
     _rates,
     _conditional_within_technique_opportunity_rate,
     compute_event_pair_opportunity,
+    nearest_shared_resolved_incident_scope,
     summarize_report_denominators,
     PACKAGE_ROOT as EXTENSION_ROOT,
     aggregate_selected_report_projections,
@@ -147,6 +148,19 @@ class EventPairOpportunityTests(unittest.TestCase):
         self.assertEqual(result["same_technique_pair_opportunity_count"], 1)
         self.assertEqual(result["compatible_event_pair_count_by_scope_type"], {"INCIDENT": 1})
         self.assertEqual(result["same_technique_pair_opportunity_count_by_scope_type"], {"INCIDENT": 1})
+
+    def test_nearest_shared_incident_is_selected_for_nested_incident_scopes(self):
+        nested = [
+            {"scope_id": "report", "parent_scope_id": "", "scope_type": "REPORT_AGGREGATE", "scope_status": "RESOLVED"},
+            {"scope_id": "incident-parent", "parent_scope_id": "report", "scope_type": "INCIDENT", "scope_status": "RESOLVED"},
+            {"scope_id": "incident-child", "parent_scope_id": "incident-parent", "scope_type": "INCIDENT", "scope_status": "RESOLVED"},
+            {"scope_id": "host-a", "parent_scope_id": "incident-child", "scope_type": "HOST", "scope_status": "RESOLVED"},
+            {"scope_id": "host-b", "parent_scope_id": "incident-child", "scope_type": "HOST", "scope_status": "RESOLVED"},
+        ]
+        self.assertEqual(
+            nearest_shared_resolved_incident_scope("host-a", "host-b", nested),
+            "incident-child",
+        )
 
     def test_report_aggregate_alone_does_not_make_pair_compatible(self):
         units = [self.units[0], self.units[2]]
