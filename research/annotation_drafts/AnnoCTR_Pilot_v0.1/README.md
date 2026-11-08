@@ -20,7 +20,7 @@ This package structures candidate scopes, activity units, source anchors, ATT&CK
 - `temporal_triage_draft.csv`: report-level review, separating communication-relation candidates from attack-action candidates.
 - `temporal_relation_candidates_draft.csv`: Intel471's dated-communication pair candidate; not accepted.
 - `chronoCTI_label_crosswalk_draft.csv`: proposed label mapping to the ChronoCTI baseline; not approved.
-- `EVENT_UNIVERSE_AND_CHRONOCTI_BOUNDARY_v0.1.md`: rationale and unresolved researcher decisions.
+- `EVENT_UNIVERSE_AND_CHRONOCTI_BOUNDARY_v0.2.md`: adopted working event-universe boundary and schema requirements. The v0.1 note is retained as the superseded proposal.
 
 ## Source integrity and attribution
 
@@ -28,21 +28,19 @@ All offsets refer to AnnoCTR source text at corpus revision `d510b6949e1938d47c9
 
 The 5 November 2026 AnnoCTR dataset-maintainer response is the current project-level permission basis for local research and derivative publication by the five rank-one candidates, subject to attribution and ShareAlike. The earlier Lab52 legal-notice conflict remains documented as historical website-terms evidence; the later maintainer clarification supersedes the earlier unresolved project permission fields for the AnnoCTR-contributed corpus material. The response was qualified by the maintainer's recollection and supplied no report-level exception schedule. Do not publish raw reports or extended verbatim spans. The repository MIT software licence does not replace source-material terms.
 
-## Event-universe boundary — unresolved researcher decision
+## Event-universe boundary — working decision adopted 8 November 2026
 
-Do not add an undocumented rule that only victim-side intrusions can be event leaves. Protocol v0.5 defines an event instance as a distinguishable report-local occurrence and restricts the primary event graph to resolved atomic event leaves; it does not itself state a victim-side-only restriction.
+The primary ChronoCTI-comparable stratum is **incident-linked attack-action occurrences**: concrete report-local actions that form part of conducting, enabling, or completing a specific cyberattack. This is not attacker-only or victim-side-only. It can include targeted phishing delivery and user execution induced by the attack, as well as other incident-linked operational steps.
 
-For a fair comparison with ChronoCTI, the draft proposes reporting separate strata:
-1. **Operational attack-action occurrences** — source-described adversary actions in an attack narrative; baseline-comparable stratum.
-2. **Threat-actor communications and disclosures** — report-local communications/publications that may be resolved occurrences, but are not automatically ATT&CK attack actions.
-3. **Analyst/sample observations** — detections, sample submissions and reverse-engineering observations; not automatically adversary activity events.
-4. **Generic capabilities and malware behaviour** — retain as generic/unresolved behaviour, not fabricated event leaves.
+Classify communications by function, not medium. A targeted phishing message or incident-linked extortion communication can qualify when it is itself an operational step. Forum creation, public source-code posts, response blogs and public claims remain in a separate communication/platform stratum unless the source establishes that the communication itself performs an operational step in a specific attack.
 
-ChronoCTI's published inclusion rules focus on sequential cyberattack incidents and exclude social-media posts, generic malware features/capabilities, and non-attack content. Its temporal relation labels are BEFORE, SIMULTANEOUS-OVERLAP, CONCURRENT and NULL. The proposed mapping to this project's labels is recorded separately in `chronoCTI_label_crosswalk_draft.csv`; it is not silently applied. This stratification is a recommendation pending researcher approval.
+Keep analyst/sample observations, generic capabilities and other non-primary report-local activity in separate descriptive strata. Stratum assignment is independent of ATT&CK mapping: do not remove an otherwise qualifying attack action because it lacks a mapping, and do not promote commentary or observations merely because a technique label appears elsewhere in the report.
+
+ChronoCTI's published inclusion rules focus on step-by-step cyberattack incident narratives and exclude social-media posts, generic malware features/capabilities, and non-attack content. Its example includes phishing followed by a user's execution of a malicious macro, supporting a medium-neutral, incident-linked definition rather than an attacker-only rule. Reference: Rahman et al. (2025), https://doi.org/10.1007/s10115-025-02491-6. The proposed label mapping remains separate in `chronoCTI_label_crosswalk_draft.csv` and is not approved by this event-universe decision.
 
 ### Intel471 communication candidate
 
-The article dates a dyadka0220 source-code post to 3 September 2021 and a Groove response blog to 7 September 2021. These are two distinct communication occurrences. A candidate direct-timestamp BEFORE relation is recorded in `temporal_relation_candidates_draft.csv`. It is not accepted as a primary attack-action edge and should not be counted in ChronoCTI-comparable outputs unless the communication stratum is explicitly approved. This corrects the earlier overly narrow statement that no relation exists anywhere in the report.
+The article dates a dyadka0220 source-code post to 3 September 2021 and a Groove response blog to 7 September 2021. These are two distinct communication occurrences. The candidate direct-timestamp BEFORE relation remains available for secondary descriptive review; it is not currently a primary attack-action edge. Do not convert it into an intrusion chronology.
 
 ## ATT&CK mapping cautions
 
@@ -72,8 +70,8 @@ The article dates a dyadka0220 source-code post to 3 September 2021 and a Groove
 
 ## Required next steps
 
-1. Researcher approves the event-universe/stratum boundary and whether communication events are recorded as event leaves.
-2. Validate every source offset against the local frozen source text.
-3. Reconcile the approved pilot protocol and schema version.
-4. Populate canonical registers only after the approval/freeze gate.
+1. Reclassify the candidate units against the adopted medium-neutral attack-action rule without treating any draft classification as human-approved.
+2. Add a canonical activity_stratum field and validator/projection rules in a newly versioned schema; the existing draft CSV column is not authoritative.
+3. Validate every source offset against the local frozen source text.
+4. Reconcile and freeze the approved pilot protocol/schema before populating canonical registers.
 5. Lock only researcher-reviewed final partitions; project only from valid locks.
