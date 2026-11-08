@@ -103,6 +103,24 @@ Also record a `unit_role`:
 
 **Primary graph rule:** only resolved `event_leaf` units with `atomic_event` granularity enter the primary event-instance graph. `series_container`, `episode_container`, and `aggregate_container` units are retained and analysed separately. They must not be pooled with atomic event instances in a primary occurrence count or edge denominator.
 
+
+#### Primary event-universe stratum — working decision adopted 8 November 2026
+
+The primary ChronoCTI-comparable analysis uses **incident-linked attack-action occurrences**. An attack-action occurrence is a concrete, report-local action that the source describes as part of conducting, enabling, or completing a specific cyberattack/incident. It may be performed by an adversary, malware, or a user/system whose action is induced or manipulated as part of the attack chain. It is not restricted to actions physically performed by an attacker or to victim-side intrusion actions only.
+
+Classify by function in the specific incident, not by medium or by the mere presence of an ATT&CK mapping:
+- Include concrete delivery, phishing, induced user execution, exploitation, execution, persistence, command and control, collection, exfiltration, impact, and operational extortion actions when the source ties the occurrence to the incident.
+- Include preparatory/infrastructure actions only when the report supports the specific action as part of that attack; an observed infrastructure state or platform launch is not enough.
+- A targeted phishing email or victim-directed extortion communication may be an attack action. A forum post, source-code release, public claim, response blog, or leak-site observation is not automatically one; it qualifies only when the source establishes that the communication/publication itself performs an operational step in a specific attack.
+- Analyst/sample observations (detection, scanner submission, discovery, reverse engineering, lab analysis) remain a separate descriptive stratum.
+- Generic malware capabilities, command handlers, or generalized TTPs without a resolved report-local execution remain generic/unresolved; do not create event leaves from capability statements.
+
+Classification is independent of ATT&CK mapping. A qualifying attack-action occurrence remains in the primary event universe even if it has no accepted ATT&CK mapping; retain that unmapped outcome. A report-level or workbook technique list does not by itself make a communication or observation an attack action.
+
+Retain the other resolved report-local events in separate descriptive strata: THREAT_ACTOR_COMMUNICATION, ANALYST_OBSERVATION, GENERIC_CAPABILITY, OTHER_NON_PRIMARY, or UNRESOLVED_CLASSIFICATION. These may be described in parallel views, but they must not be pooled into the primary attack-action event-pair universe, pair-opportunity denominator, positive-edge count, or ATT&CK projection metrics. A relation between two non-primary communication events may be retained and reported separately; mixed-stratum relations do not enter the primary attack-action graph. For primary analysis, both endpoints must be ATTACK_ACTION and must independently satisfy every existing event-leaf, evidence, relation, and scope gate.
+
+**Schema requirement before freeze:** the current RECON v0.1/v0.2/v0.3 activity_units register has no canonical activity-stratum field. The next schema version must add a required activity_stratum field and controlled vocabulary, plus validator rules for primary/auxiliary/mixed-stratum handling. The draft CSV column analysis_stratum_candidate is not a substitute for a canonical field. Do not begin formal annotation or freeze the schema until this requirement is reconciled and implemented.
+
 **Initial-pilot boundary (proposed; researcher approval required):** retain episode containers, their parent/child structure, and any directly supported time evidence, but defer episode-to-episode temporal relation annotation. Do not put episode-container IDs in `temporal_relations`, do not create synthetic event leaves to make an episode pair, and do not include episode-level relations in primary counts or projection metrics. If a future study needs episode-to-episode edges, add a separately versioned register and protocol rule before collecting them. A relation between two resolved atomic event leaves inside or across episodes remains eligible only when it independently meets every primary event-edge rule.
 
 If a repeated series can be decomposed into separately identifiable occurrences, create event-leaf children and keep a series container as their parent. If the report does not distinguish the executions, retain one series container and do not invent child event IDs.
