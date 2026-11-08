@@ -161,10 +161,10 @@ class EventPairOpportunityTests(unittest.TestCase):
         result = compute_event_pair_opportunity(
             [self.units[0], self.units[2]], self.scopes,
             {"a": {"T1059"}, "c": {"T1059"}},
+            scope_pair_rule_id="NEAREST_COMMON_RESOLVED_NON_REPORT_SCOPE_v0.1",
         )
-        # This pins the current broad provisional behaviour for review: a
-        # shared campaign ancestor currently makes separate incident leaves
-        # count as an opportunity pair. The primary rule is still unapproved.
+        # The broad ancestor rule is retained only as a sensitivity analysis:
+        # separate incidents sharing a campaign become comparable under it.
         self.assertEqual(result["compatible_event_pair_count"], 1)
         self.assertEqual(result["same_technique_pair_opportunity_count"], 1)
         self.assertEqual(result["compatible_event_pair_count_by_scope_type"], {"CAMPAIGN": 1})
@@ -177,8 +177,8 @@ class EventPairOpportunityTests(unittest.TestCase):
         result = compute_event_pair_opportunity(
             [self.units[0], self.units[2]], self.scopes,
             {"a": {"T1059"}, "c": {"T1059"}},
-            scope_pair_rule_id="SHARED_RESOLVED_INCIDENT_SCOPE_v0.1",
         )
+        self.assertEqual(result["scope_pair_rule_id"], "SHARED_RESOLVED_INCIDENT_SCOPE_v0.1")
         self.assertEqual(result["compatible_event_pair_count"], 0)
 
     def test_explicit_assignment_requires_both_event_assignments(self):
@@ -459,6 +459,7 @@ class SelectedFinalAggregationIntegrationTests(unittest.TestCase):
             source_texts=self.source_texts,
             confirm_selected_analysis_locks=True,
             approve_scope_pair_rule=True,
+            scope_pair_rule_id="NEAREST_COMMON_RESOLVED_NON_REPORT_SCOPE_v0.1",
         )
         outcome = result["per_report_outcomes"][0]
         self.assertEqual(outcome["compatible_event_pair_count"], 1)
