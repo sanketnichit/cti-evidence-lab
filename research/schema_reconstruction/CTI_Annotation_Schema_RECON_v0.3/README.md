@@ -38,7 +38,7 @@ Assignment basis values are REPORT_EXPLICIT, SOURCE_SUPPORTED_HUMAN_JUDGMENT and
 | SHARED_RESOLVED_INCIDENT_SCOPE_v0.1 | A shared resolved INCIDENT ancestor | Excludes events from separate incidents within one operation |
 | EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3 | Both event endpoints have ASSIGNED rows for the same shared resolved non-report ancestor | Requires human decisions and evidence; can miss valid pairs if assignments are incomplete |
 
-The explicit-assignment rule is the recommended candidate for researcher review, not an adopted scientific decision. It is deliberately conservative: missing or uncertain assignments do not create pair opportunities.
+The explicit-assignment rule is retained as a separate broader-context sensitivity analysis, not as the primary scientific rule. The adopted working primary rule is the nearest shared RESOLVED INCIDENT scope. Explicit assignments remain useful for testing whether broader campaign/operation comparability changes the descriptive results; missing or uncertain assignments never create pair opportunities. This sensitivity must not be pooled with primary incident-bounded metrics.
 
 ## Locking
 
@@ -50,7 +50,7 @@ Validate the extension:
 
     python validator/validate_comparison_scope_assignments.py --base-bundle ../CTI_Annotation_Schema_RECON_v0.1 --v2-extension ../CTI_Annotation_Schema_RECON_v0.2 --assignment-file registers/event_comparison_scope_assignments.csv --lock-file registers/comparison_scope_assignment_locks.csv
 
-Run the v0.3 aggregation wrapper with the local frozen source directory, explicitly confirming both lock layers. Pair-opportunity and conditional rates remain withheld unless the scope rule is separately approved by the researcher:
+Run the v0.3 aggregation wrapper with the local frozen source directory, explicitly confirming both lock layers. This wrapper evaluates the explicit-assignment sensitivity, not the primary incident-bounded analysis. Its pair-opportunity and conditional rates remain withheld unless that sensitivity analysis is separately approved:
 
     python analysis/aggregate_selected_report_projections.py --sources-dir PATH_TO_FROZEN_SOURCES --confirm-selected-analysis-locks --confirm-comparison-scope-assignment-locks
 
