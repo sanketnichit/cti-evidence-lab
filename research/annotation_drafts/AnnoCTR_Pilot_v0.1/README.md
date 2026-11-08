@@ -71,7 +71,7 @@ The article dates a dyadka0220 source-code post to 3 September 2021 and a Groove
 ## Required next steps
 
 1. Reclassify the candidate units against the adopted medium-neutral attack-action rule without treating any draft classification as human-approved.
-2. Add a canonical activity_stratum field and validator/projection rules in a newly versioned schema; the existing draft CSV column is not authoritative.
+2. After protocol approval, populate the canonical v0.4 activity_unit_strata.csv with exactly one evidence-backed decision per activity unit; validate complete coverage and create activity-stratum locks for selected-final partitions. The existing draft CSV column remains non-authoritative triage metadata.
 3. Validate every source offset against the local frozen source text.
-4. Reconcile and freeze the approved pilot protocol/schema before populating canonical registers.
-5. Lock only researcher-reviewed final partitions; project only from valid locks.
+4. Reconcile and freeze the approved pilot protocol/schema before populating canonical annotation registers.
+5. Lock only researcher-reviewed final partitions; project only after the v0.2 analysis lock and v0.4 activity-stratum lock validate.
