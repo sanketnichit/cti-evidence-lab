@@ -38,7 +38,7 @@ Create stratum locks only after a selected-final analysis partition and all its 
 
     python research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/analysis/create_activity_stratum_locks.py --base-bundle research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1 --selection-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/registers/analysis_partition_selection.csv --strata-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/registers/activity_unit_strata.csv --output research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/registers/activity_stratum_locks.csv --locked-by YOUR_RESEARCHER_ID --lock-date YYYY-MM-DD
 
-The primary projection helper filters the event universe, mapping rows, and relation edges before projection. Auxiliary same-stratum relations and mixed-stratum relations remain countable in separate diagnostics but cannot enter primary attack-action projections or denominators.
+The primary projection helper filters the event universe, mapping rows, relation edges and pair-opportunity universe before projection. It defaults to the nearest shared RESOLVED INCIDENT ancestor; a primary relation must cite that exact same nearest incident scope. Cross-incident pairs sharing only a campaign/operation ancestor are excluded from primary metrics. The legacy broad-ancestor and explicit-assignment rules remain separate sensitivities. Auxiliary same-stratum relations and mixed-stratum relations remain countable in separate diagnostics but cannot enter primary attack-action projections or denominators.
 
 ## Safety gates
 
