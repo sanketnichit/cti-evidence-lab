@@ -28,11 +28,11 @@ The primary event graph contains only activity units satisfying all of the follo
 - `instance_status = RESOLVED`;
 - `activity_stratum = ATTACK_ACTION`;
 - distinct endpoint identities;
-- both endpoints belong to compatible, explicitly recorded comparison scopes.
+- both endpoints descend from the same nearest shared `scope_type=INCIDENT`, `scope_status=RESOLVED` comparison scope; the positive relation must cite that exact incident scope.
 
 Series, episodes, aggregates, generic behaviour, unresolved units, and resolved event units in non-primary strata remain in the annotation data. They are not converted into primary attack-action event leaves and are not included in primary event-pair or edge denominators. Resolved non-primary strata may be reported in separate descriptive results.
 
-**Schema prerequisite:** the current RECON v0.1/v0.2/v0.3 packages have no canonical `activity_stratum` field. The endpoint rule above is the adopted target definition, not an implemented validator guarantee. No metric may be computed until a successor schema adds this field, its controlled vocabulary, and validator/projection-adapter checks for non-primary and mixed-stratum endpoints.
+**Schema prerequisite:** RECON v0.4 now implements the logical `activity_stratum` field through a one-to-one companion register, with evidence-backed completeness validation, selected-analysis-bound stratum locks, and attack-action-only projection/pair-opportunity filtering. The v0.4 extension remains a draft and must be reviewed/frozen with the complete protocol before formal annotation or real-report metrics.
 
 ### 2.2 Primary ATT&CK mapping set: `A_120`
 
@@ -112,7 +112,19 @@ For each assessable eligible report `r`, calculate separate binary indicators.
 
 ### 5.2 Compatible event-pair opportunity
 
-`I_pair(r) = 1` if there exists at least one pair of distinct resolved atomic `ATTACK_ACTION` event leaves in a compatible comparison scope; otherwise 0.
+`I_pair(r) = 1` if there exists at least one pair of distinct resolved atomic `ATTACK_ACTION` event leaves that share the same nearest resolved `INCIDENT` ancestor; otherwise 0. A shared campaign, actor operation, victim organisation, host, or `OTHER` scope alone is insufficient.
+
+#### Primary comparison-scope rule — adopted working default, 8 November 2026
+
+Use `SHARED_RESOLVED_INCIDENT_SCOPE_v0.1` as the primary pair-opportunity rule:
+
+1. Both event leaves must descend from the same `scope_type=INCIDENT`, `scope_status=RESOLVED` node in the report-local scope hierarchy.
+2. If more than one resolved INCIDENT ancestor is shared (nested incident scopes), select the nearest shared INCIDENT scope and count the event pair once.
+3. A positive relation enters primary counts only when its `comparison_scope_id` equals that same nearest shared INCIDENT scope. A relation recorded only at a broader campaign/operation scope is not primary under this rule.
+4. If a report has no defensible resolved INCIDENT boundary, do not manufacture one from campaign membership, actor identity, victim-organisation identity, malware family, or report co-occurrence. The report can remain assessable; its incident-bounded pair-opportunity outcome is zero unless a qualifying pair is supported.
+5. Keep broader-context relations in their source register and disclose their exclusion; do not rewrite them as negative or delete them.
+
+**Sensitivity analyses:** retain the legacy nearest shared resolved non-report ancestor rule to quantify the effect of broader context (including cross-incident campaign/operation pairs). Retain RECON v0.3 explicit event-to-scope assignment as a separately reported, evidence-backed sensitivity view. Under either sensitivity rule, apply the same selected rule to both the pair-opportunity denominator and the positive-relation numerator. Do not pool sensitivity counts with primary incident-bounded counts. The explicit-assignment sensitivity requires complete v0.3 assignment review and its lock; it is not a substitute for the primary incident boundary.
 
 ### 5.3 Same-technique pair opportunity
 
@@ -253,9 +265,10 @@ This v0.1 contract contains design choices with different decision states:
 3. Strict cycle analysis uses only `BEFORE`/`AFTER` after documented normalization — **source-grounded rule; synthetic implementation corrected**.
 4. Primary report-level denominator is `N_assessable`; assessability coverage is `N_assessable / N_eligible` — **adopted as the project default on 4 November 2026 under delegated decision**.
 5. A report with zero resolved atomic `ATTACK_ACTION` event leaves remains in `N_assessable` only when source/scope and local-use eligibility pass, report assessability is `ASSESSABLE`, and at least one eligible full-report review is `COMPLETE`; `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved conflicts are disclosed separately, never recoded as zero. Resolved non-primary events do not change the primary zero — **adopted with the denominator rule**.
-6. Pair opportunity and positive temporal-relation outcomes remain separate — **recommended; metric naming/formula approval pending**.
+6. Pair opportunity and positive temporal-relation outcomes remain separate — **adopted working rule**.
+7. Primary comparison scope is the nearest shared resolved INCIDENT ancestor, and a positive relation must cite that exact scope; broad common ancestors and explicit scope assignments are separate sensitivity analyses — **adopted as the working primary rule on 8 November 2026; protocol/schema freeze remains pending**.
 
-Adopting the denominator rule does not approve or freeze this entire metric contract, protocol, or RECON schema. No real-report metric may be computed until the remaining protocol/schema decisions, exact `A_120` vocabulary artifact, report eligibility decisions and validator gates are resolved.
+Adopting the denominator and incident-bounded comparison-scope working rules does not approve or freeze this entire metric contract, protocol, or RECON schema. No real-report metric may be computed until the remaining protocol/schema decisions, report eligibility decisions, v0.4 strata and lock gates, selected-final analysis locks, and a frozen scope rule are in place.
 
 ## 11. Implementation acceptance tests implied by this contract
 
