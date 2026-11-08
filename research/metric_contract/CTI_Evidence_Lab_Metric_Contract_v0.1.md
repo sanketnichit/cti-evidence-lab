@@ -1,7 +1,7 @@
 # CTI Evidence Lab — Metric Contract v0.1 (provisional)
 
-**Prepared:** 3 November 2026  
-**Status:** Working metric specification for researcher review. Not approved, frozen, or computed on real AnnoCTR human annotations.  
+**Prepared:** 8 November 2026  
+**Status:** Updated working metric specification, aligned to the 8 November 2026 attack-action event-universe decision. Not approved, frozen, or computed on real AnnoCTR human annotations.  
 **Inputs reconciled:** Protocol v0.4-draft; Project-wide Consistency Audit v1.4; AnnoCTR Sampling Method v0.3.2; Five-report Re-audit and Sampling Correction v0.1.  
 **Version caveat:** Exact Protocol v0.4.1 and the original Schema v0.4.2 ZIP remain unrecovered. This note is a provisional metric contract, not a claim that those original artifacts were inspected.
 
@@ -31,6 +31,8 @@ The primary event graph contains only activity units satisfying all of the follo
 - both endpoints belong to compatible, explicitly recorded comparison scopes.
 
 Series, episodes, aggregates, generic behaviour, unresolved units, and resolved event units in non-primary strata remain in the annotation data. They are not converted into primary attack-action event leaves and are not included in primary event-pair or edge denominators. Resolved non-primary strata may be reported in separate descriptive results.
+
+**Schema prerequisite:** the current RECON v0.1/v0.2/v0.3 packages have no canonical `activity_stratum` field. The endpoint rule above is the adopted target definition, not an implemented validator guarantee. No metric may be computed until a successor schema adds this field, its controlled vocabulary, and validator/projection-adapter checks for non-primary and mixed-stratum endpoints.
 
 ### 2.2 Primary ATT&CK mapping set: `A_120`
 
@@ -246,11 +248,11 @@ Missing annotation rows never become automatic negative labels. The full-report 
 
 This v0.1 contract contains design choices with different decision states:
 
-1. Primary mapping level is `A_120`; `A_exact` is a separately reported sensitivity analysis — **recommended, not yet adopted**.
-2. Primary within-technique temporal incidence includes all five directly supported positive temporal labels in §3.1 — **recommended, not yet adopted**.
+1. Primary mapping level is `A_120`; `A_exact` is a separately reported sensitivity analysis — **adopted as the working project default on 4 November 2026; the exact-to-parent crosswalk remains a technical gate**.
+2. Primary within-technique temporal incidence includes all five directly supported positive temporal labels in §3.1 — **adopted as the working project default on 4 November 2026 under delegated direction**.
 3. Strict cycle analysis uses only `BEFORE`/`AFTER` after documented normalization — **source-grounded rule; synthetic implementation corrected**.
 4. Primary report-level denominator is `N_assessable`; assessability coverage is `N_assessable / N_eligible` — **adopted as the project default on 4 November 2026 under delegated decision**.
-5. A zero-event-leaf report remains in `N_assessable` only when source/scope and local-use eligibility pass, report assessability is `ASSESSABLE`, and at least one eligible full-report review is `COMPLETE`; `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved conflicts are disclosed separately, never recoded as zero — **adopted with the denominator rule**.
+5. A report with zero resolved atomic `ATTACK_ACTION` event leaves remains in `N_assessable` only when source/scope and local-use eligibility pass, report assessability is `ASSESSABLE`, and at least one eligible full-report review is `COMPLETE`; `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved conflicts are disclosed separately, never recoded as zero. Resolved non-primary events do not change the primary zero — **adopted with the denominator rule**.
 6. Pair opportunity and positive temporal-relation outcomes remain separate — **recommended; metric naming/formula approval pending**.
 
 Adopting the denominator rule does not approve or freeze this entire metric contract, protocol, or RECON schema. No real-report metric may be computed until the remaining protocol/schema decisions, exact `A_120` vocabulary artifact, report eligibility decisions and validator gates are resolved.
@@ -262,6 +264,7 @@ The future validator / metric adapter must reject or flag:
 - an edge with the same event ID at both endpoints;
 - container, series, episode, aggregate, generic, or unresolved endpoints in the primary graph;
 - event endpoints in incompatible or missing comparison scopes;
+- a primary relation or projection input without an explicit `activity_stratum = ATTACK_ACTION` value on both endpoints;
 - relation bases other than `direct_source` or `direct_timestamp` entering primary positive-edge counts;
 - `NO_TEMPORAL_CLAIM` without a declared candidate-pair assessment frame;
 - `workbook_only`, rejected, alternative-only, or out-of-vocabulary mappings entering `A_120`;

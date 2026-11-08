@@ -1,7 +1,7 @@
 # CTI Evidence Lab — Researcher Decision Register v0.2
 
 **Prepared:** 8 November 2026  
-**Status:** Updated working decision record. The AnnoCTR permission gate, two source-scope dispositions, evidence-scope rules, mapping-acceptance rules, prior-exposure handling and candidate-pair negative-label rules have been adopted under delegated project direction. The protocol and reconstructed schema remain drafts and are not frozen.  
+**Status:** Updated working decision record. The AnnoCTR permission gate, two source-scope dispositions, evidence-scope rules, mapping-acceptance rules, prior-exposure handling, candidate-pair negative-label rules and primary attack-action event-universe boundary have been adopted under delegated project direction. The protocol and reconstructed schema remain drafts and are not frozen.  
 **Purpose:** Separate decisions already grounded in available documents from provisional recommendations and choices that require explicit researcher approval before formal annotation.
 
 ## 1. How to read this register
