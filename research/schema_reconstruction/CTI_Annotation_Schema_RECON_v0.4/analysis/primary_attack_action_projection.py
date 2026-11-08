@@ -17,8 +17,10 @@ from typing import Any
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = PACKAGE_ROOT.parents[2]
 V1_ROOT = PACKAGE_ROOT.parent / "CTI_Annotation_Schema_RECON_v0.1"
+V2_ROOT = PACKAGE_ROOT.parent / "CTI_Annotation_Schema_RECON_v0.2"
 sys.path.insert(0, str(V1_ROOT / "analysis"))
 sys.path.insert(0, str(V1_ROOT / "validator"))
+sys.path.insert(0, str(V2_ROOT / "analysis"))
 sys.path.insert(0, str(REPO_ROOT))
 
 from annotation_projection_adapter import (  # noqa: E402
@@ -31,6 +33,7 @@ from projection_metrics_recon import (  # noqa: E402
 )
 from validate_activity_strata import STRATUM_HEADERS, _partition  # noqa: E402
 from validate_annotations import HEADERS as BASE_HEADERS  # noqa: E402
+import report_level_aggregation as v2_aggregation  # noqa: E402
 
 
 def _read_csv(path: Path, headers: list[str]) -> list[dict[str, str]]:
@@ -52,8 +55,19 @@ def build_primary_attack_action_projection(
     report_id: str,
     annotator_id: str,
     annotation_pass_id: str,
+    comparison_scope_assignments: list[dict[str, str]] | None = None,
+    scope_pair_rule_id: str = v2_aggregation.LEGACY_SCOPE_PAIR_RULE_ID,
 ) -> dict[str, Any]:
-    """Project only direct positive relations between ATTACK_ACTION event leaves."""
+    """Project and count pair opportunities using ATTACK_ACTION units only.
+
+    The caller must validate the base bundle, stratum decisions, and selected
+    analysis/stratum locks before using this function on a reviewed partition.
+    """
+    if (
+        scope_pair_rule_id == v2_aggregation.EXPLICIT_SCOPE_PAIR_RULE_ID
+        and comparison_scope_assignments is None
+    ):
+        raise ValueError("The explicit scope-pair rule requires assignment rows")
     root = Path(base_bundle)
     partition = (report_id, annotator_id, annotation_pass_id)
     tables = {
@@ -143,6 +157,22 @@ def build_primary_attack_action_projection(
         for row in primary_relations
     ]
     projection = project_report_recon(mapping_sets, edges)
+    part_scopes = [
+        row for row in tables["report_scopes"] if _partition(row) == partition
+    ]
+    part_assignments = [
+        row for row in (comparison_scope_assignments or [])
+        if _partition(row) == partition and row.get("activity_unit_id") in primary_ids
+    ]
+    pair_opportunity = v2_aggregation.compute_event_pair_opportunity(
+        primary_units,
+        part_scopes,
+        mapping_sets,
+        comparison_scope_assignments=(
+            part_assignments if scope_pair_rule_id == v2_aggregation.EXPLICIT_SCOPE_PAIR_RULE_ID else None
+        ),
+        scope_pair_rule_id=scope_pair_rule_id,
+    )
 
     return {
         "status": "PRIMARY_ATTACK_ACTION_STRATUM_ONLY",
@@ -165,5 +195,6 @@ def build_primary_attack_action_projection(
             "primary_attack_action_mapping_rows": len(part_mappings),
         },
         "mapping_filter": mapping_stats,
+        "pair_opportunity": pair_opportunity,
         "projection": projection,
     }
