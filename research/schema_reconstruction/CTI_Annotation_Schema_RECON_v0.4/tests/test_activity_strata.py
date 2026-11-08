@@ -211,7 +211,8 @@ class ActivityStratumLockTests(unittest.TestCase):
         self.assertTrue(result["ok"], result["errors"])
 
     def test_post_lock_stratum_change_is_rejected(self):
-        rows = list(csv.DictReader(self.strata_file.open("r", encoding="utf-8")))
+        with self.strata_file.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
         rows[0]["activity_stratum"] = "THREAT_ACTOR_COMMUNICATION"
         write_rows(self.strata_file, STRATUM_HEADERS, rows)
         result = validate_activity_stratum_locks(self.selection_file, self.strata_file, self.locks_file)
