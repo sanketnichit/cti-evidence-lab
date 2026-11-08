@@ -26,6 +26,7 @@ Classification is independent of ATT&CK mapping. An attack action remains in the
 
 - registers/activity_unit_strata.csv — one evidence-backed stratum decision per activity unit and annotation partition.
 - registers/activity_stratum_locks.csv — lock of all stratum decisions in each selected-final partition, bound to the RECON v0.2 selected-analysis lock reference.
+- docs/FIELD_DICTIONARY.md, docs/CONTROLLED_VOCABULARIES.md, docs/DATA_MODEL_AND_VALIDATION_RULES.md, docs/PRIMARY_PROJECTION_RULES.md — field, vocabulary, invariant, routing and analysis contracts.
 
 ## Validation and analysis
 
@@ -35,7 +36,7 @@ Run the structural extension validator:
 
 Create stratum locks only after a selected-final analysis partition and all its activity-unit stratum decisions are complete:
 
-    python research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/analysis/create_activity_stratum_locks.py --selection-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/registers/analysis_partition_selection.csv --strata-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/registers/activity_unit_strata.csv --output research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/registers/activity_stratum_locks.csv --locked-by YOUR_RESEARCHER_ID --lock-date YYYY-MM-DD
+    python research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/analysis/create_activity_stratum_locks.py --base-bundle research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1 --selection-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/registers/analysis_partition_selection.csv --strata-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/registers/activity_unit_strata.csv --output research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/registers/activity_stratum_locks.csv --locked-by YOUR_RESEARCHER_ID --lock-date YYYY-MM-DD
 
 The primary projection helper filters the event universe, mapping rows, and relation edges before projection. Auxiliary same-stratum relations and mixed-stratum relations remain countable in separate diagnostics but cannot enter primary attack-action projections or denominators.
 
