@@ -32,7 +32,6 @@ from projection_metrics_recon import (  # noqa: E402
     project_report_recon,
 )
 from validate_activity_strata import STRATUM_HEADERS, _partition  # noqa: E402
-from validate_annotations import shared_resolved_comparison_scope_ids  # noqa: E402
 from validate_annotations import HEADERS as BASE_HEADERS  # noqa: E402
 import report_level_aggregation as v2_aggregation  # noqa: E402
 
