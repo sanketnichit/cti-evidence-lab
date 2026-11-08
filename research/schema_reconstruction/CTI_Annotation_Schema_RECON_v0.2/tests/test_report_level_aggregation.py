@@ -441,6 +441,43 @@ class SelectedFinalAggregationIntegrationTests(unittest.TestCase):
             0.0,
         )
 
+    def test_incident_rule_requires_relation_to_name_nearest_shared_incident(self):
+        import csv
+        import validate_annotations
+
+        scopes = self.rows["report_scopes"]
+        scopes[0].update(
+            scope_id="incident-parent", parent_scope_id="", scope_type="INCIDENT",
+            scope_label="Parent incident", scope_description="Broader incident scope",
+        )
+        scopes.append({
+            **scopes[0], "scope_id": "incident-child", "parent_scope_id": "incident-parent",
+            "scope_type": "INCIDENT", "scope_label": "Child incident",
+            "scope_description": "Nearest incident scope",
+        })
+        for unit in self.rows["activity_units"]:
+            unit["scope_id"] = "incident-child"
+        self.rows["temporal_relations"][0]["comparison_scope_id"] = "incident-parent"
+        for name, table_rows in self.rows.items():
+            with (self.base / "registers" / f"{name}.csv").open(
+                "w", encoding="utf-8", newline=""
+            ) as handle:
+                writer = csv.DictWriter(handle, fieldnames=validate_annotations.HEADERS[name])
+                writer.writeheader()
+                writer.writerows(table_rows)
+
+        self._create_selection_lock()
+        result = aggregate_selected_report_projections(
+            self.extension,
+            source_texts=self.source_texts,
+            confirm_selected_analysis_locks=True,
+            approve_scope_pair_rule=True,
+        )
+        outcome = result["per_report_outcomes"][0]
+        self.assertEqual(outcome["compatible_event_pair_count"], 1)
+        self.assertEqual(outcome["primary_positive_temporal_relation_count"], 0)
+        self.assertEqual(outcome["within_technique_temporal_relation_count"], 0)
+
     def test_legacy_rule_retains_relation_recorded_at_shared_broader_ancestor(self):
         """Legacy scope permits an edge to cite any shared eligible ancestor."""
         import csv
