@@ -151,10 +151,11 @@ def validate_activity_strata(
         if not all(partition) or not unit_id:
             errors.append({"code": "STRATUM_PARTITION_OR_UNIT_ID_MISSING", "message": f"row {line}: report/annotator/pass and activity_unit_id are required"})
             continue
-        if key in seen:
+        flat_key = (*partition, unit_id)
+        if flat_key in seen:
             errors.append({"code": "DUPLICATE_ACTIVITY_STRATUM", "message": f"row {line}: duplicate activity-unit stratum decision"})
             continue
-        seen.add((*partition, unit_id))
+        seen.add(flat_key)
         unit = units.get((*partition, unit_id))
         if unit is None:
             errors.append({"code": "STRATUM_ACTIVITY_UNIT_UNKNOWN", "message": f"row {line}: activity_unit_id does not resolve in the same report/annotator/pass partition"})
