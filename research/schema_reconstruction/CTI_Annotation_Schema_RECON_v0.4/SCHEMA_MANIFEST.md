@@ -9,7 +9,7 @@
 - Lock: activity_stratum_locks.csv binds the complete stratum rows to the v0.2 selected-analysis lock reference
 - Structural validator: validator/validate_activity_strata.py
 - Primary projection filter: analysis/primary_attack_action_projection.py
-- Synthetic tests: tests/test_activity_strata.py
+- Synthetic tests: tests/test_activity_strata.py (12 tests; passed in GitHub Actions run #209 on 8 November 2026)
 - Real annotations: 0
 - Selected final partitions with stratum locks: 0
 - Real projections: 0
