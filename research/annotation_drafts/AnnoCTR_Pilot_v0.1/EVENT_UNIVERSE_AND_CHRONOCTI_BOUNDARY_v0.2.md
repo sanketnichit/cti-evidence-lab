@@ -67,10 +67,6 @@ The fixed five-report set remains a feasibility set. Do not replace reports or b
 
 ## 7. Schema and freeze implications
 
-The current RECON v0.1/v0.2/v0.3 activity_units register does not contain a canonical analytical-stratum field. Before protocol/schema freeze, add a required activity_stratum field to the next schema version, with a controlled vocabulary that distinguishes at least ATTACK_ACTION, THREAT_ACTOR_COMMUNICATION, ANALYST_OBSERVATION, GENERIC_CAPABILITY, OTHER_NON_PRIMARY, and UNRESOLVED_CLASSIFICATION. Add validator rules so that:
-- only ATTACK_ACTION endpoints can enter the primary attack-action graph and its pair denominators;
-- auxiliary strata remain retained and can be analysed separately;
-- mixed-stratum edges are not silently included in primary metrics;
-- stratum is assigned independently of ATT&CK mapping status.
+RECON v0.4 now implements the logical activity_unit.activity_stratum field as a required one-to-one companion register, activity_unit_strata.csv. This preserves the checksum-controlled v0.1 base package rather than editing its frozen activity_units header in place. The controlled vocabulary is ATTACK_ACTION, THREAT_ACTOR_COMMUNICATION, ANALYST_OBSERVATION, GENERIC_CAPABILITY, OTHER_NON_PRIMARY, and UNRESOLVED_CLASSIFICATION. The v0.4 validator enforces complete, evidence-backed coverage; the projection helper sends only ATTACK_ACTION event leaves, mappings, direct positive relations and pair opportunities into primary metrics. Same-stratum auxiliary and mixed-stratum relations remain visible in separate diagnostics. The stratum lock binds those decisions to the v0.2 selected-analysis lock. Synthetic tests cover the routing and post-lock mutation gate. The extension is structurally implemented but remains a draft pending protocol/schema review and freeze. The pre-annotation CSV's analysis_stratum_candidate remains triage metadata, not a canonical decision.
 
 The existing analysis_stratum_candidate column in the pre-annotation CSV is a proposal aid, not a canonical annotation field. Do not begin formal annotation or call the schema frozen until this requirement is implemented and reconciled. No human annotations, selected final partitions, real-report projections, IAA results, or empirical findings are created by this decision.
