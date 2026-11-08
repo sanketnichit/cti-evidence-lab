@@ -254,15 +254,39 @@ def _assigned_scope_ids_by_event(
     return assigned
 
 
+def nearest_shared_resolved_incident_scope(
+    scope_a: str,
+    scope_b: str,
+    scope_rows: list[dict[str, str]],
+) -> str | None:
+    """Return the nearest shared RESOLVED INCIDENT scope, if one exists."""
+    common_ids = shared_resolved_comparison_scope_ids(scope_a, scope_b, scope_rows)
+    by_id = {row.get("scope_id", ""): row for row in scope_rows}
+    return next(
+        (
+            scope_id for scope_id in common_ids
+            if by_id.get(scope_id, {}).get("scope_type") == "INCIDENT"
+            and by_id.get(scope_id, {}).get("scope_status") == "RESOLVED"
+        ),
+        None,
+    )
+
+
 def compute_event_pair_opportunity(
     activity_units: list[dict[str, str]],
     scope_rows: list[dict[str, str]],
     mapping_sets: Mapping[str, set[str]],
     *,
     comparison_scope_assignments: list[dict[str, str]] | None = None,
-    scope_pair_rule_id: str = LEGACY_SCOPE_PAIR_RULE_ID,
+    scope_pair_rule_id: str = INCIDENT_SCOPE_PAIR_RULE_ID,
 ) -> dict[str, int | bool | str]:
-    """Count pair opportunities under a named comparison-scope rule."""
+    """Count pair opportunities under a named comparison-scope rule.
+
+    The default primary rule is the nearest shared RESOLVED INCIDENT ancestor.
+    Broader nearest-ancestor and explicit-assignment rules remain selectable
+    sensitivity analyses.
+    """
+
     if scope_pair_rule_id not in {
         LEGACY_SCOPE_PAIR_RULE_ID, INCIDENT_SCOPE_PAIR_RULE_ID, EXPLICIT_SCOPE_PAIR_RULE_ID
     }:
@@ -289,10 +313,8 @@ def compute_event_pair_opportunity(
             if scope_pair_rule_id == LEGACY_SCOPE_PAIR_RULE_ID:
                 common_scope = common_scope_ids[0] if common_scope_ids else None
             elif scope_pair_rule_id == INCIDENT_SCOPE_PAIR_RULE_ID:
-                common_scope = next(
-                    (scope_id for scope_id in common_scope_ids
-                     if scope_type_by_id.get(scope_id) == "INCIDENT"),
-                    None,
+                common_scope = nearest_shared_resolved_incident_scope(
+                    left.get("scope_id", ""), right.get("scope_id", ""), scope_rows
                 )
             else:
                 shared_assignments = (
@@ -385,7 +407,7 @@ def aggregate_selected_report_projections(
     confirm_selected_analysis_locks: bool = False,
     approve_scope_pair_rule: bool = False,
     comparison_scope_assignments: list[dict[str, str]] | None = None,
-    scope_pair_rule_id: str = LEGACY_SCOPE_PAIR_RULE_ID,
+    scope_pair_rule_id: str = INCIDENT_SCOPE_PAIR_RULE_ID,
 ) -> dict[str, Any]:
     """Aggregate report outcomes after validating selected-final projections.
 
@@ -548,27 +570,18 @@ def aggregate_selected_report_projections(
                 ):
                     continue
             elif scope_pair_rule_id == INCIDENT_SCOPE_PAIR_RULE_ID:
-                # The relation numerator must use the same incident-bounded
-                # pair universe as compute_event_pair_opportunity(). A broader
-                # campaign/operation scope cannot make a cross-incident edge
-                # primary under an incident-only opportunity rule.
+                # The relation numerator must use exactly the same nearest
+                # shared INCIDENT scope selected for pair opportunity.
                 unit_a = event_units_by_id.get(event_a_id)
                 unit_b = event_units_by_id.get(event_b_id)
                 if unit_a is None or unit_b is None:
                     continue
-                shared_scopes = shared_resolved_comparison_scope_ids(
+                expected_incident_scope = nearest_shared_resolved_incident_scope(
                     unit_a.get("scope_id", ""),
                     unit_b.get("scope_id", ""),
                     part_rows["report_scopes"],
                 )
-                shared_incident_scopes = {
-                    scope.get("scope_id", "")
-                    for scope in part_rows["report_scopes"]
-                    if scope.get("scope_type") == "INCIDENT"
-                    and scope.get("scope_status") == "RESOLVED"
-                    and scope.get("scope_id") in shared_scopes
-                }
-                if comparison_scope_id not in shared_incident_scopes:
+                if not expected_incident_scope or comparison_scope_id != expected_incident_scope:
                     continue
             # For the legacy rule, opportunity is defined using the nearest
             # shared resolved non-report ancestor, while the protocol permits
@@ -848,7 +861,7 @@ def aggregate_selected_report_projections(
             "status": "APPROVED_BY_CALLER" if approve_scope_pair_rule else "PROVISIONAL_NOT_APPROVED",
             "definition": {
                 LEGACY_SCOPE_PAIR_RULE_ID: "Nearest shared RESOLVED non-report scope.",
-                INCIDENT_SCOPE_PAIR_RULE_ID: "Shared RESOLVED INCIDENT ancestor only.",
+                INCIDENT_SCOPE_PAIR_RULE_ID: "Nearest shared RESOLVED INCIDENT ancestor only; the primary relation must cite that same scope.",
                 EXPLICIT_SCOPE_PAIR_RULE_ID: "Both endpoints require ASSIGNED rows for the same shared RESOLVED non-report scope; UNCERTAIN or missing assignments do not qualify."
             }[scope_pair_rule_id],
             "rates_enabled": approve_scope_pair_rule,
@@ -895,8 +908,14 @@ def main() -> int:
                         help="Local directory containing frozen REPORT_ID.txt source files")
     parser.add_argument("--confirm-selected-analysis-locks", action="store_true",
                         help="Explicitly confirm the selected-analysis locks before projection")
+    parser.add_argument(
+        "--scope-pair-rule",
+        choices=(LEGACY_SCOPE_PAIR_RULE_ID, INCIDENT_SCOPE_PAIR_RULE_ID, EXPLICIT_SCOPE_PAIR_RULE_ID),
+        default=INCIDENT_SCOPE_PAIR_RULE_ID,
+        help="Primary default is the nearest shared resolved INCIDENT; broader rules are sensitivity analyses",
+    )
     parser.add_argument("--approve-scope-pair-rule", action="store_true",
-                        help="Approve the documented nearest-common-resolved-scope rule for event-pair opportunity rates")
+                        help="Enable scope-pair opportunity rates after the selected rule and annotations are approved")
     parser.add_argument("--output", type=Path,
                         help="Optional JSON output path; source text is never written")
     args = parser.parse_args()
@@ -909,6 +928,7 @@ def main() -> int:
         source_texts=sources,
         confirm_selected_analysis_locks=args.confirm_selected_analysis_locks,
         approve_scope_pair_rule=args.approve_scope_pair_rule,
+        scope_pair_rule_id=args.scope_pair_rule,
     )
     rendered = json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     if args.output:
