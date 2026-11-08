@@ -40,32 +40,20 @@ It also sums per-report projection counts for mapped/unmapped positive edges, fu
 - Missing rows and unselected partitions are not negative results.
 - Primary report-level rates are withheld unless every N_assessable report has a successful selected-final projection. A selected-subset rate is still shown but is explicitly descriptive and not substituted for the primary denominator.
 
-## Scope-pair opportunity rule — approval still required
+## Scope-pair opportunity rule — incident-bounded primary default
 
-The protocol requires scope-compatible event pairs but the metric contract does not fully operationalize every possible pair in a hierarchical scope tree. This implementation provides a conservative, explicit candidate rule:
+The primary event-pair universe uses `SHARED_RESOLVED_INCIDENT_SCOPE_v0.1`: two distinct resolved atomic attack-action event leaves are comparable only when they share the nearest `scope_type=INCIDENT`, `scope_status=RESOLVED` ancestor. Each pair is counted once. A primary positive temporal relation must cite the same nearest incident scope in `comparison_scope_id`.
 
-> Two event leaves are a compatible pair when their nearest common ancestor in the selected partition's scope tree is RESOLVED and is not REPORT_AGGREGATE.
+A shared campaign, actor operation, victim organisation, host or `OTHER` scope alone is insufficient. If no defensible resolved INCIDENT node exists, the pair is outside the primary opportunity universe. Do not invent incident nodes from broad campaign membership or actor/victim identity. The report remains assessable; its incident-bounded opportunity outcome may be zero.
 
-Unresolved/provisional scope paths, no shared scope, and a shared report aggregate alone do not create pair opportunity. This permits two host-scoped activities under one resolved incident scope to be compared. However, the implementation also treats a shared non-report ancestor such as `CAMPAIGN`, `ACTOR_OPERATION`, `VICTIM_ORGANISATION`, or `OTHER` as sufficient. Consequently, events under two distinct incident nodes can still count as a compatible pair when those incident nodes share one of these broader ancestors. That is broader than an incident-bounded comparison. A synthetic regression test now explicitly verifies that the current code counts distinct incident scopes beneath a shared campaign as a compatible opportunity pair. This test records the implementation's current behaviour; it does not establish that the pair is scientifically comparable.
+This is aligned with ChronoCTI's stated input and report-selection boundary: a textual description of an attack incident and step-by-step attack-incident narratives (Rahman et al., 2025, Sections 1 and 4.4.2, https://doi.org/10.1007/s10115-025-02491-6).
 
-**Candidate resolutions for researcher review:**
+### Sensitivity rules
 
-1. **Incident-bounded rule:** count a pair only when both event leaves share the same nearest resolved INCIDENT ancestor. This is simpler and conservative, but excludes cross-incident pairs even when the report places them in one temporally comparable operation.
-2. **Explicit comparison-scope assignment (RECON v0.3 draft):** each event receives a separate ASSIGNED, NOT_ASSIGNED or UNCERTAIN decision for every eligible resolved non-report ancestor scope in its hierarchy. A pair qualifies only when both endpoints have ASSIGNED rows for the same shared resolved non-report ancestor. ASSIGNED and NOT_ASSIGNED require an evidence span and rationale; UNCERTAIN is unresolved. Missing rows block validation as incomplete review rather than being treated as negatives. A separate v0.3 lock binds the assignment rows to the v0.2 selected-analysis lock. This is more expressive but requires complete, consistent human scope review and is not yet approved. The current v0.3 lock path only permits SINGLE_ANNOTATOR_FINAL; consensus/adjudicated scope decisions are unsupported until a v0.3 adjudication log is designed.
+- `NEAREST_COMMON_RESOLVED_NON_REPORT_SCOPE_v0.1`: retained as a broader-context sensitivity. It can count separate INCIDENT nodes beneath a shared campaign/operation/organisation ancestor.
+- `EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3`: retained as an evidence-backed scope-assignment sensitivity. It requires complete event × ancestor scope review, ASSIGNED rows on both endpoints, and a valid v0.3 assignment lock.
 
-**Technical consistency guard:** the structural validator requires every primary direct-positive relation and compatible candidate-pair assessment to name a shared `RESOLVED`, non-`REPORT_AGGREGATE` ancestor from the provisional comparison-scope type set. That alone is not enough to align a relation with every named opportunity rule: the v0.2 aggregator must additionally restrict primary relations to the scope selected by that rule.
-
-**Implementation correction — 6 November 2026:** the primary relation filter now follows the named rule used by `compute_event_pair_opportunity`:
-
-- `NEAREST_COMMON_RESOLVED_NON_REPORT_SCOPE_v0.1`: the event pair must have a nearest shared eligible ancestor. Consistent with the current protocol, a relation may record any shared eligible ancestor for that same pair.
-- `SHARED_RESOLVED_INCIDENT_SCOPE_v0.1`: the relation's `comparison_scope_id` must be a shared resolved `INCIDENT` ancestor. A relation attached only to a broader campaign/operation scope is not included in this incident-bounded numerator.
-- `EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3`: both endpoints must have `ASSIGNED` rows for the exact scope recorded by the relation.
-
-Synthetic integration tests reproduce the incident-bounded mismatch and preserve the documented legacy behaviour for a relation recorded at a broader shared ancestor. This is a code-consistency correction only; it does not approve any scientific scope rule or make real-report claims.
-
-Whichever scientific rule is ultimately chosen, the relation numerator and opportunity denominator must use the same scope-compatibility universe. The conditional within-technique-relation/opportunity ratio must count only reports (and, if pair-level, pairs) that satisfy both sides of the condition. None of the three candidates has been approved.
-
-This is a **provisional operationalization**, not a researcher-approved scientific decision. The module can evaluate the three candidate rules, but it withholds compatible-pair and same-technique-pair opportunity rates unless the caller explicitly approves the selected rule with --approve-scope-pair-rule (or approve_scope_pair_rule=True in Python). Do not pass that approval flag for primary results until the scope rule is decided.
+For every rule, use the same rule for both pair-opportunity denominators and positive-relation numerators. Do not pool sensitivity counts with primary incident-bounded metrics. The v0.2 aggregator now defaults to the incident-bounded rule. Rates remain withheld unless the selected rule and the human annotation/lock conditions are approved; the broad and explicit sensitivity paths remain separately selectable.
 
 ## Running the aggregator
 
@@ -117,9 +105,9 @@ The command-line entry point is exercised by a synthetic CLI test. It accepts a 
 
 ### RECON v0.3 rule comparison
 
-The aggregation function now accepts three named rule IDs. The legacy rule preserves the existing nearest-common-ancestor behaviour. The incident-bounded rule selects only a shared resolved INCIDENT ancestor. The explicit-assignment rule intersects the two endpoint events' ASSIGNED comparison-scope rows with their shared resolved comparison-scope ancestors. It never falls back to the legacy or incident rule when assignment rows are missing or uncertain.
+The aggregation function accepts three named rule IDs and now defaults to the incident-bounded primary rule. The legacy rule preserves the nearest-common-non-report-ancestor behaviour as a broader-context sensitivity. The incident-bounded rule selects the nearest shared resolved INCIDENT ancestor. The explicit-assignment rule intersects the two endpoint events' ASSIGNED comparison-scope rows with their shared resolved comparison-scope ancestors. It never falls back to another rule when assignment rows are missing or uncertain.
 
-For the explicit rule, primary direct-positive relations are counted only when their recorded comparison_scope_id is explicitly ASSIGNED to both endpoints. The v0.3 validator enforces the same rule for positive temporal relations and COMPATIBLE candidate-pair assessments. The v0.3 wrapper validates the assignment register and the assignment lock before calling the report-level aggregator. Rates remain withheld until the researcher approves one rule.
+For the explicit rule, primary direct-positive relations are counted only when their recorded comparison_scope_id is explicitly ASSIGNED to both endpoints. The v0.3 validator enforces the same rule for positive temporal relations and COMPATIBLE candidate-pair assessments. The v0.3 wrapper validates the assignment register and the assignment lock before calling the report-level aggregator. Primary scope-pair opportunity and relation numerators use the incident-bounded rule. The legacy and explicit-assignment sensitivity rates remain separately selectable and must not be pooled with primary results.
 
 
 **Completeness safeguard added in RECON v0.3:** for every resolved atomic event leaf, the validator derives all resolved non-report comparable scopes in its ancestry and requires one explicit row for each. The decision vocabulary distinguishes ASSIGNED, NOT_ASSIGNED and UNCERTAIN. This closes the earlier risk that omitted review rows would be silently interpreted as no pair opportunity. The lock builder and verifier now validate both the base v0.1 annotation bundle and the v0.2 selected-final partition register before creating or accepting a scope-assignment lock.
