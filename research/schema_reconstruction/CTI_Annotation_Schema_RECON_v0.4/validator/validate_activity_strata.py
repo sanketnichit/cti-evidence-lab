@@ -141,7 +141,7 @@ def validate_activity_strata(
         (*_partition(row), row.get("evidence_span_id", "")): row
         for row in tables["evidence_spans"]
     }
-    seen: set[tuple[tuple[str, str, str], str]] = set()
+    seen: set[tuple[str, str, str, str]] = set()
     stratum_by_unit: dict[tuple[tuple[str, str, str], str], str] = {}
     unit_counts: dict[str, int] = {}
     for line, row in enumerate(rows, 2):
@@ -154,7 +154,7 @@ def validate_activity_strata(
         if key in seen:
             errors.append({"code": "DUPLICATE_ACTIVITY_STRATUM", "message": f"row {line}: duplicate activity-unit stratum decision"})
             continue
-        seen.add(key)
+        seen.add((*partition, unit_id))
         unit = units.get((*partition, unit_id))
         if unit is None:
             errors.append({"code": "STRATUM_ACTIVITY_UNIT_UNKNOWN", "message": f"row {line}: activity_unit_id does not resolve in the same report/annotator/pass partition"})
