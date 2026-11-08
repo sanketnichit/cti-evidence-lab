@@ -61,6 +61,10 @@ jobs:
         run: python -m unittest discover -s research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.3/tests -v
       - name: Validate blank explicit comparison-scope extension
         run: python research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.3/validator/validate_comparison_scope_assignments.py --base-bundle research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1 --v2-extension research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2 --assignment-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.3/registers/event_comparison_scope_assignments.csv --lock-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.3/registers/comparison_scope_assignment_locks.csv
+      - name: Run activity-stratum extension synthetic tests
+        run: python -m unittest discover -s research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/tests -v
+      - name: Validate blank activity-stratum extension and lock register
+        run: python research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/validator/validate_activity_strata.py --base-bundle research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1 --strata-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/registers/activity_unit_strata.csv --selection-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/registers/analysis_partition_selection.csv --lock-file research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.4/registers/activity_stratum_locks.csv
       - name: Package the tested source snapshot
         run: git archive --format=zip --prefix=cti-evidence-lab/ HEAD > cti-evidence-lab-main.zip
       - name: Upload source snapshot
