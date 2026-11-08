@@ -1,6 +1,6 @@
 # Protocol v0.5 ↔ Schema RECON v0.1 reconciliation register
 
-**Date:** 5 November 2026  
+**Updated:** 8 November 2026  
 **Status:** Reconciliation finding register; not protocol approval, schema approval, or a freeze decision.  
 **Compared:** `CTI_Event_Instance_Annotation_Protocol_v0.5-draft.md`, RECON v0.1 field dictionary, controlled vocabularies, data-model rules, validator, projection adapter, projection metrics and synthetic QA.
 
@@ -15,18 +15,18 @@ RECON v0.1 remains a reconstruction. It is not the missing original Schema v0.4.
 | Protocol area | RECON v0.1 coverage | Finding |
 |---|---|---|
 | Source identity, freeze and rights | `report_registry`, `evidence_spans`, `record_evidence_links` | Covered with a denominator correction now enforced: assessability requires the exact frozen source to be supplied and hash/character-count verified. |
-| Scope hierarchy | `report_scopes`, unit `scope_id`, evidence links | Structurally covered; scope boundaries and cross-scope compatibility remain human judgments. |
+| Scope hierarchy | `report_scopes`, unit `scope_id`, evidence links; v0.3 assignment extension | The hierarchy is structurally covered. Three comparison-pair rules are implemented as candidates (legacy ancestor, shared incident, explicit event-to-scope assignment); none is researcher-approved. |
 | Mentions and occurrence identity | `event_mentions`, `activity_units`, evidence spans | Core representation covered. `mention_kind` remains deliberately open because the original enum was not recovered. |
 | Granularity, unit roles and counts | `activity_units` | Covered structurally, including role/granularity pairings, count consistency and acyclic parent hierarchy. |
-| ATT&CK mapping | `event_mappings`, mapping evidence links, pinned A_120 and v12.1 crosswalk | Partially covered. Alternative-group consistency is not validated; analyst-candidate rationale is only free text in optional `mapping_notes`. |
-| Time evidence | `time_evidence` | Partially covered. Raw text and normalized bounds are represented, but ISO/timezone/precision consistency and uncertainty-invariant ordering are not fully executable. |
+| ATT&CK mapping | `event_mappings`, mapping evidence links, pinned A_120 and v12.1 crosswalk | Core structural gates are covered: accepted analyst candidates require rationale/evidence, accepted IDs and parents are checked against v12.1, and alternative groups are checked for membership/target consistency. Human semantic fit and alternative-group resolution remain open. |
+| Time evidence | `time_evidence` plus v0.2 temporal-evidence validator | Structural validation now checks aware ISO-8601 bounds, precision/timezone fields, uncertainty notes, retained normalized candidates and invariant strict `BEFORE`/`AFTER` ordering. Timezone equivalence and non-strict label derivation remain semantic/manual boundaries. |
 | Temporal relations | v0.1: `temporal_relations`, evidence spans and generic evidence links; v0.2: `temporal_relation_evidence.csv` | v0.1 alone remains partial. The additive v0.2 extension now distinguishes relation cue, Event A support, Event B support and context, with structural scope checks; Protocol v0.5 Section 4.3 now reflects that representation. |
 | Episode-level exploratory relations | No dedicated register in v0.1/v0.2 | Protocol v0.5 now proposes deferring episode-to-episode relation records from the initial pilot. This avoids a missing-register mismatch if the researcher approves the deferral; otherwise a separate register is still required. |
 | Optional candidate-pair assessment | `candidate_pair_assessments` | Covered structurally. Endpoint eligibility, rule/version pinning, and reasons for all three non-positive outcomes are validated; the candidate universe itself remains a researcher-frozen rule. |
-| Lock and benchmark reveal | v0.1 partition lock; v0.2 `analysis_partition_selection` and selected-final wrapper | Final analysis partition designation and the additional lock are implemented in v0.2 and synthetically tested. The digest is a mutation detector, not an identity signature; benchmark reveal remains a human workflow step. |
+| Lock and benchmark reveal | v0.1 partition lock; v0.2 `analysis_partition_selection` and selected-final wrapper; v0.3 scope-assignment lock | Final analysis partition designation, selection lock and explicit-scope assignment lock are structurally implemented and synthetically tested. The digest is a mutation detector, not an identity signature; annotator identity and benchmark reveal remain human workflow controls. |
 | Projection and cycle diagnostics | Projection adapter and `projection_metrics_recon.py` | Core event-edge projection, omission, collision and cycle-provenance logic is represented and synthetically tested. |
 | Full metric contract | v0.1 per-report projection metrics; v0.2 `report_level_aggregation.py` | The v0.1 module does not perform batch aggregation. The v0.2 aggregator now reports report-level outcomes and occurrence compression on selected-final partitions; scope-pair-opportunity-dependent rates remain withheld pending approval of the pair universe rule. |
-| ChronoCTI baseline alignment | No alignment register in RECON v0.1/v0.2 | Protocol v0.5 now proposes deferring record-level benchmark-pair-to-event-pair alignment from the initial pilot. The deferral requires researcher approval; if rejected, a dedicated register and separate validation are needed. |
+| ChronoCTI baseline alignment | No alignment register in RECON v0.1/v0.2 | Protocol v0.5 proposes deferring record-level benchmark-pair-to-event-pair alignment from the initial pilot. This deferral requires researcher approval; if rejected, a dedicated register and separate validation are needed. |
 
 ## 3. Findings requiring implementation or a design decision
 
@@ -54,11 +54,11 @@ RECON v0.1 and v0.2 have no dedicated episode-to-episode temporal relation regis
 
 Protocol v0.5-draft now proposes deferring episode-to-episode relation records from the initial pilot while retaining episode containers and any supported unit/time evidence. This is the recommended way to keep the initial schema bounded without weakening the atomic event gate. The deferral is not yet an adopted researcher decision: explicit approval is required before freeze. If episode-edge analysis is retained instead, it needs a separately versioned register and distinct tests; do not place episode edges in `temporal_relations`.
 
-### 3.4 Alternative mapping constraints — incomplete executable gate
+### 3.4 Alternative mapping groups — structural gate implemented; resolution semantics open
 
-The validator now requires an `alternative_group_id` for `ALTERNATIVE` rows, at least two mapping rows per group, one activity unit per group, and any `alternative_to_mapping_id` to resolve within the same group and activity unit. The projection function continues to exclude non-`ACCEPTED` rows. The validator does not decide whether alternatives are semantically mutually exclusive or resolve a group on behalf of the annotator; those remain human mapping decisions. The protocol/schema owner must still specify how a group is marked resolved and whether an `ACCEPTED` row may retain the former group ID after resolution.
+The validator requires an `alternative_group_id` for `ALTERNATIVE` rows, at least two mapping rows per group, one activity unit per group, and any `alternative_to_mapping_id` to resolve within the same group and activity unit. The projection path excludes every non-`ACCEPTED` row. These structural rules are tested.
 
-**Proposed repair:** require group membership for alternative rows; validate group membership and target consistency; prevent an unresolved alternative group from contributing an accepted mapping. Preserve multiple independently supported accepted techniques as separate accepted rows without an alternative group.
+The remaining issue is not the existence of group checks: the protocol/schema still needs an explicit lifecycle for a group after human adjudication. It must state how the group is marked resolved, whether one alternative is promoted to `ACCEPTED`, how rejected alternatives remain traceable, and whether a promoted row retains or clears the former group ID. The validator cannot decide whether two candidate mappings are genuinely mutually exclusive. Independently supported multiple techniques remain separate `ACCEPTED` rows, not one alternative group. Do not change the schema until this decision is specified.
 
 ### 3.5 Analyst-candidate mapping rationale — corrected
 
@@ -68,13 +68,11 @@ The validator now requires non-empty `mapping_notes` for every accepted `source_
 
 The validator now requires a non-empty `assessment_reason` for each of `NO_TEMPORAL_CLAIM`, `VAGUE_OR_AMBIGUOUS`, and `NOT_ASSESSABLE`. An unassessed pair still receives no assessment row and is not treated as a negative.
 
-### 3.7 Final analysis partition designation — incomplete
+### 3.7 Final analysis partition designation — implemented in v0.2; v0.3 final-role boundary remains
 
-The adapter accepts one exact report/annotator/pass partition and verifies a computed lock reference. This protects the specific input that is projected. Protocol Section 7.1 additionally requires report-level outcomes to use a designated locked final annotation or an agreed/adjudicated consensus partition when multiple annotators or passes exist.
+RECON v0.2 adds `analysis_partition_selection`, a selected-final adapter and a lock that binds the selected partition to the source/annotation lock, temporal-evidence rows and selection decision. The validator enforces at most one selected-final partition per report. `CONSENSUS` requires two distinct completed independent input partitions; `ADJUDICATED_FINAL` requires an adjudication record that resolves to a record in the selected partition. Report-level aggregation consumes only the selected final partition and does not sum annotator/pass partitions.
 
-The present report registry has no field that designates a partition's analysis role, and the package has no report-level selection manifest. The validator can count eligible/assessable reports after decision conflicts are resolved, but it does not establish which annotation partition is the final analytic record.
-
-**Proposed repair:** add a minimal report-partition designation mechanism before multi-pass or multi-annotator data are analysed. It must distinguish development/repeat/independent/consensus/adjudicated-final partitions and ensure at most one selected final analysis partition per report. Do not sum per-partition edges or events to create report-level outcomes.
+RECON v0.3's separate explicit-scope assignment lock currently supports `SINGLE_ANNOTATOR_FINAL` only: consensus/adjudicated final roles are blocked because the v0.1 adjudication log cannot target v0.3 assignment rows. This is the remaining multi-annotator limitation if the explicit-assignment scope rule is selected. A dedicated scope-assignment adjudication mechanism or a clearly bounded single-annotator pilot is needed before using v0.3 assignments with multiple annotators. All lock behavior remains structural and does not authenticate annotator identity or prove agreement.
 
 ### 3.8 Baseline pair alignment — proposed initial-pilot deferral
 
@@ -95,11 +93,11 @@ The projection module itself is not the report-level aggregator. RECON v0.2 now 
 
 **Proposed repair:** define the pair universe and aggregation rules in the metric contract before implementation. Keep this work separate from the annotation validator and do not report rates until real locked partitions exist.
 
-### 3.10 Time normalization — partial executable validation
+### 3.10 Time normalization — strict-order structural checks implemented; temporal semantics remain open
 
-RECON retains raw expression, type, precision, timezone text/status, normalized start/end/timezone, normalization status and uncertainty notes. Direct-timestamp relations require normalized, evidence-linked times at both endpoints.
+RECON retains raw expression, type, precision, timezone text/status, normalized start/end/timezone, normalization status and uncertainty notes. The v0.2 temporal-evidence validator requires timezone-aware ISO-8601 bounds, supported precision and timezone metadata, valid interval direction, uncertainty notes for non-point intervals, and evidence links for both endpoints. It rejects retained timestamp candidates that remain unnormalized and checks that strict `BEFORE`/`AFTER` ordering is invariant across all retained endpoint-interval combinations.
 
-The validator currently checks field presence and linkability, but does not fully validate timestamp syntax, precision/timezone consistency, or whether the relation label is invariant across the recorded uncertainty intervals. Those semantic/interval checks need a more explicit manual rule or a tested normalization utility before direct-timestamp edges are used in the primary graph.
+The remaining boundaries are semantic: the validator does not prove that a publisher timezone label was correctly converted across daylight-saving/ambiguous abbreviations, or that a timestamp denotes the attack occurrence rather than publication/detection/analysis time. It does not mechanically derive `OVERLAP`, `SIMULTANEOUS` or `CONCURRENT_UNSPECIFIED` from interval overlap. Those labels need a researcher-approved rule and human source review; do not infer them from broad or overlapping uncertainty intervals.
 
 ## 4. Requirements already represented
 
@@ -112,7 +110,7 @@ The following protocol concepts have a clear representation and synthetic struct
 - atomic leaves versus series/episode/aggregate containers;
 - count-status consistency and non-negative bounds;
 - pinned ATT&CK v12.1 exact-to-parent crosswalk and A_120 membership;
-- accepted mapping evidence, mapping-level ATT&CK release and lifecycle checks; accepted analyst-candidate rationale; alternative-group structure; accepted analyst-candidate rationale and mapping evidence; alternative-group structure;
+- accepted mapping evidence, mapping-level ATT&CK release and lifecycle checks; accepted analyst-candidate rationale; alternative-group membership and target-consistency checks;
 - direct timestamp evidence on both endpoints;
 - distinct, scope-compatible primary temporal endpoints;
 - separate non-temporal relations;
@@ -125,13 +123,13 @@ Structural checks do not decide source semantics. Human review must still decide
 
 ## 5. Recommended resolution order
 
-1. Close remaining validator-level omissions: require rationale for accepted analyst-candidate mappings and specify how a resolved versus unresolved alternative group is represented. Alternative-group structure and non-positive pair reasons are now validated.
-2. Review and explicitly approve/revise the proposed initial-pilot deferrals for episode-to-episode relations and record-level baseline alignment.
-3. Add/approve multi-partition final-analysis designation before any repeated-pass or second-annotator results are aggregated.
-4. Review and approve the RECON v0.2 temporal evidence roles and structural scope gates; semantic entailment remains a human decision.
-5. Approve the metric contract and scope-pair opportunity rule; retain rate withholding until that rule is approved. The v0.2 report-level aggregation implementation is already synthetically tested.
-6. Reconcile timestamp normalization and uncertainty rules.
-7. Issue a new schema version, tests, manifest and checksum list; perform a clean CI run; then obtain explicit researcher approval before annotation.
+1. Decide the primary comparison-scope rule: legacy nearest shared ancestor, shared resolved incident, or explicit event-to-scope assignment. Keep the other rule(s) as sensitivity analyses only if the protocol defines them clearly. The v0.2 numerator/denominator parity correction is tested, but no rule has researcher approval and all scope-pair-dependent rates remain withheld.
+2. Decide the event universe and initial-pilot boundary: which report-local actions qualify as resolved atomic event leaves; how attacker communications, analyst observations, malware capability descriptions, artifact metadata and report-level campaign statements are retained without being conflated with attack-event occurrences.
+3. Approve or revise the proposed deferrals for episode-to-episode relations and record-level ChronoCTI pair-to-event alignment. If either is retained in the pilot, define its own register and validation rather than overloading the atomic temporal relation register.
+4. Specify the lifecycle of `ALTERNATIVE` mapping groups after human adjudication, including accepted/rejected status and group provenance.
+5. Approve the relation-label semantics for timestamp-derived evidence, especially `OVERLAP`, `SIMULTANEOUS` and `CONCURRENT_UNSPECIFIED`, and specify how timezone ambiguity is handled. Keep semantic relation decisions human-owned.
+6. Decide whether the initial pilot uses one annotator only or whether a second annotator and scope-assignment adjudication are in scope. RECON v0.2 supports selected-final partition roles structurally; the v0.3 scope-assignment lock currently blocks consensus/adjudicated-final roles.
+7. After the above decisions, reconcile the protocol and extensions into a newly versioned schema package, update the field dictionary/validator/manifest/checksums, run CI, and obtain explicit researcher approval before formal annotation.
 
 ## 6. Current research boundary
 
@@ -140,9 +138,9 @@ Structural checks do not decide source semantics. Human review must still decide
 - Real-report projections: 0.
 - Independent human agreement: not measured.
 - Novelty: not established.
-- The 69-test RECON v0.1 suite is synthetic only (41 validator, 16 projection, 12 adapter). The separate RECON v0.2 suite has 72 synthetic tests. CI run #144 passed 198 total root/v0.1/v0.2 test executions. These do not validate semantic annotation or prove the research question's empirical contribution.
+- Latest CI run #180 on 8 November 2026 passed 226 synthetic test executions: 60 root, 73 RECON v0.1, 78 RECON v0.2 and 15 RECON v0.3. The 31-entry RECON v0.1 checksum manifest passed. The validator regression now tests all five source-linked Mobile ATT&CK IDs (`T1437`, `T1509`, `T1623.001`, `T1629`, `T1631.001`) as rejected non-primary records and confirms zero accepted A_120 mappings. These are structural/code-integrity checks only; they do not validate semantic annotations or prove the research question's empirical contribution.
 
-**Freeze decision:** not ready. RECON v0.1 is useful and increasingly testable, but the gaps above must be resolved or explicitly deferred in the protocol before a new schema version can be approved.
+**Freeze decision:** not ready. The major structural gaps identified in the earlier audit are now implemented across RECON v0.1/v0.2/v0.3 and covered by synthetic tests. The remaining blockers are principally researcher-owned definitions and approvals: event universe, comparison-scope rule, timestamp relation semantics, alternative-group lifecycle, and pilot deferrals. Do not start formal annotation or claim a frozen schema until those choices are recorded and the new schema package is approved.
 
 
 ## RECON v0.2 selected-analysis gate addendum — 5 November 2026
