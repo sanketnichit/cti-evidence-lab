@@ -140,6 +140,34 @@ class PrimaryProjectionRoutingTests(unittest.TestCase):
         self.assertEqual(result["pair_opportunity"]["compatible_event_pair_count"], 1)
         self.assertEqual(result["pair_opportunity"]["same_technique_pair_opportunity_count"], 1)
 
+    def test_cross_incident_campaign_pair_is_not_primary(self):
+        scopes = [
+            {**PARTITION, "scope_id": "report", "parent_scope_id": "", "scope_type": "REPORT_AGGREGATE", "scope_label": "Report", "scope_description": "Synthetic report", "scope_status": "RESOLVED", "scope_confidence": "HIGH", "adjudication_status": "UNREVIEWED", "scope_notes": ""},
+            {**PARTITION, "scope_id": "campaign", "parent_scope_id": "report", "scope_type": "CAMPAIGN", "scope_label": "Campaign", "scope_description": "Shared campaign", "scope_status": "RESOLVED", "scope_confidence": "HIGH", "adjudication_status": "UNREVIEWED", "scope_notes": ""},
+            {**PARTITION, "scope_id": "incident-a", "parent_scope_id": "campaign", "scope_type": "INCIDENT", "scope_label": "Incident A", "scope_description": "First incident", "scope_status": "RESOLVED", "scope_confidence": "HIGH", "adjudication_status": "UNREVIEWED", "scope_notes": ""},
+            {**PARTITION, "scope_id": "incident-b", "parent_scope_id": "campaign", "scope_type": "INCIDENT", "scope_label": "Incident B", "scope_description": "Second incident", "scope_status": "RESOLVED", "scope_confidence": "HIGH", "adjudication_status": "UNREVIEWED", "scope_notes": ""},
+        ]
+        with (self.base / "registers" / "report_scopes.csv").open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=["report_id", "annotator_id", "annotation_pass_id", "scope_id", "parent_scope_id", "scope_type", "scope_label", "scope_description", "scope_status", "scope_confidence", "adjudication_status", "scope_notes"])
+            writer.writeheader()
+            writer.writerows(scopes)
+        with (self.base / "registers" / "activity_units.csv").open("r", encoding="utf-8", newline="") as handle:
+            units = list(csv.DictReader(handle))
+        units[0]["scope_id"] = "incident-a"
+        units[1]["scope_id"] = "incident-b"
+        write_rows(self.base / "registers" / "activity_units.csv", [
+            "report_id", "annotator_id", "annotation_pass_id", "activity_unit_id", "scope_id",
+            "parent_activity_unit_id", "granularity", "unit_role", "instance_status", "count_status",
+            "count_exact", "count_min", "count_max", "count_qualitative", "recurrence_pattern",
+            "unit_summary", "actor_ref", "host_or_asset_ref", "annotator_confidence",
+            "adjudication_status", "unit_notes",
+        ], units)
+        result = self.project()
+        self.assertEqual(result["counts"]["primary_direct_positive_attack_action_relations"], 0)
+        self.assertEqual(result["counts"]["primary_stratum_relation_ids_excluded_by_scope_rule"], ["rel-a-b"])
+        self.assertEqual(result["pair_opportunity"]["compatible_event_pair_count"], 0)
+        self.assertEqual(result["projection"]["counts"]["positive_temporal_edges"], 0)
+
     def test_two_communication_endpoints_are_secondary_not_primary(self):
         self.strata[0]["activity_stratum"] = "THREAT_ACTOR_COMMUNICATION"
         self.strata[1]["activity_stratum"] = "THREAT_ACTOR_COMMUNICATION"
