@@ -352,6 +352,8 @@ def validate_activity_stratum_locks(
         if partition in selected:
             selection = selected[partition]
             analysis_ref = selection.get("lock_reference", "")
+            if not LOCK_REFERENCE_RE.fullmatch(analysis_ref):
+                errors.append({"code": "ACTIVITY_STRATUM_SELECTED_ANALYSIS_LOCK_INVALID", "message": f"row {line}: selected partition has an invalid v0.2 analysis lock reference"})
             part_rows = [item for item in strata if _partition(item) == partition]
             expected_sha = _sha256_json(_canonical_rows(part_rows))
             payload = {
