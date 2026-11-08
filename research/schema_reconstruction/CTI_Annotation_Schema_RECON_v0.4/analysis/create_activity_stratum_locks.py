@@ -12,12 +12,14 @@ sys.path.insert(0, str(PACKAGE_ROOT / "validator"))
 from validate_activity_strata import (  # noqa: E402
     LOCK_HEADERS,
     build_activity_stratum_lock_rows,
+    validate_activity_strata,
     validate_activity_stratum_locks,
 )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Create RECON v0.4 activity-stratum locks")
+    parser.add_argument("--base-bundle", type=Path, required=True)
     parser.add_argument("--selection-file", type=Path, required=True)
     parser.add_argument("--strata-file", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
@@ -25,6 +27,12 @@ def main() -> int:
     parser.add_argument("--lock-date", required=True)
     parser.add_argument("--lock-notes", default="")
     args = parser.parse_args()
+
+    stratum_validation = validate_activity_strata(args.base_bundle, args.strata_file)
+    if not stratum_validation["ok"]:
+        print("refusing to lock an invalid/incomplete stratum register:")
+        print(stratum_validation["errors"])
+        return 1
 
     rows = build_activity_stratum_lock_rows(
         args.selection_file, args.strata_file,
