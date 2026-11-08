@@ -137,6 +137,8 @@ class PrimaryProjectionRoutingTests(unittest.TestCase):
         self.assertEqual(result["counts"]["primary_attack_action_event_leaves"], 2)
         self.assertEqual(result["counts"]["primary_direct_positive_attack_action_relations"], 1)
         self.assertEqual(result["projection"]["counts"]["positive_temporal_edges"], 1)
+        self.assertEqual(result["pair_opportunity"]["compatible_event_pair_count"], 1)
+        self.assertEqual(result["pair_opportunity"]["same_technique_pair_opportunity_count"], 1)
 
     def test_two_communication_endpoints_are_secondary_not_primary(self):
         self.strata[0]["activity_stratum"] = "THREAT_ACTOR_COMMUNICATION"
@@ -146,6 +148,8 @@ class PrimaryProjectionRoutingTests(unittest.TestCase):
         self.assertEqual(result["counts"]["temporal_relation_rows_by_route"]["AUXILIARY_SAME_STRATUM"], 1)
         self.assertEqual(result["counts"]["primary_direct_positive_attack_action_relations"], 0)
         self.assertEqual(result["projection"]["counts"]["positive_temporal_edges"], 0)
+        self.assertEqual(result["pair_opportunity"]["compatible_event_pair_count"], 0)
+        self.assertEqual(result["pair_opportunity"]["same_technique_pair_opportunity_count"], 0)
         self.assertIn("rel-a-b", result["counts"]["auxiliary_relation_ids"]["AUXILIARY_SAME_STRATUM"])
 
     def test_mixed_attack_and_communication_edge_cannot_enter_primary_projection(self):
@@ -155,6 +159,8 @@ class PrimaryProjectionRoutingTests(unittest.TestCase):
         self.assertEqual(result["counts"]["temporal_relation_rows_by_route"]["MIXED_STRATUM"], 1)
         self.assertEqual(result["counts"]["primary_direct_positive_attack_action_relations"], 0)
         self.assertEqual(result["projection"]["counts"]["positive_temporal_edges"], 0)
+        self.assertEqual(result["pair_opportunity"]["compatible_event_pair_count"], 0)
+        self.assertEqual(result["pair_opportunity"]["same_technique_pair_opportunity_count"], 0)
         self.assertIn("rel-a-b", result["counts"]["auxiliary_relation_ids"]["MIXED_STRATUM"])
 
     def test_nonprimary_mapping_is_excluded_from_primary_mapping_sets(self):
