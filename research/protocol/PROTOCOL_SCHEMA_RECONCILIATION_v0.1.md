@@ -134,12 +134,12 @@ Structural checks do not decide source semantics. Human review must still decide
 ## 5. Recommended resolution order
 
 1. Decide the primary comparison-scope rule: legacy nearest shared ancestor, shared resolved incident, or explicit event-to-scope assignment. Keep the other rule(s) as sensitivity analyses only if the protocol defines them clearly. The v0.2 numerator/denominator parity correction is tested, but no rule has researcher approval and all scope-pair-dependent rates remain withheld.
-2. Decide the event universe and initial-pilot boundary: which report-local actions qualify as resolved atomic event leaves; how attacker communications, analyst observations, malware capability descriptions, artifact metadata and report-level campaign statements are retained without being conflated with attack-event occurrences.
+2. **Event-universe decision complete as a working default (8 November 2026).** Implement `activity_stratum` in a newly versioned schema; define the controlled values and container handling; enforce `ATTACK_ACTION` endpoint requirements in validators and projection adapters; retain other strata separately; and add regression tests. Do not treat the existing `analysis_stratum_candidate` draft column as canonical.
 3. Approve or revise the proposed deferrals for episode-to-episode relations and record-level ChronoCTI pair-to-event alignment. If either is retained in the pilot, define its own register and validation rather than overloading the atomic temporal relation register.
 4. Specify the lifecycle of `ALTERNATIVE` mapping groups after human adjudication, including accepted/rejected status and group provenance.
 5. Approve the relation-label semantics for timestamp-derived evidence, especially `OVERLAP`, `SIMULTANEOUS` and `CONCURRENT_UNSPECIFIED`, and specify how timezone ambiguity is handled. Keep semantic relation decisions human-owned.
 6. Decide whether the initial pilot uses one annotator only or whether a second annotator and scope-assignment adjudication are in scope. RECON v0.2 supports selected-final partition roles structurally; the v0.3 scope-assignment lock currently blocks consensus/adjudicated-final roles.
-7. After the above decisions, reconcile the protocol and extensions into a newly versioned schema package, update the field dictionary/validator/manifest/checksums, run CI, and obtain explicit researcher approval before formal annotation.
+7. After the remaining decisions and event-stratum implementation, reconcile the protocol and extensions into a newly versioned schema package, update the field dictionary/controlled vocabularies/blank templates/validator/projection adapter/manifest/checksums, run CI, and obtain explicit researcher approval before formal annotation.
 
 ## 6. Current research boundary
 

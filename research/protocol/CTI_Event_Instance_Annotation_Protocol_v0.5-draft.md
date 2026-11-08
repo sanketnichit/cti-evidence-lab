@@ -2,7 +2,7 @@
 
 **Project:** CTI Evidence Lab  
 **Protocol version:** 0.5-draft  
-**Date:** 5 November 2026  
+**Date:** 8 November 2026  
 **Status:** Consolidated working draft — not frozen, not human-approved, not validated  
 **Replaces for future pilot work:** neither v0.2 nor v0.3 until the researcher approves and tags this version  
 **Primary purpose:** a source-grounded, reproducible descriptive study of report-local activity identity, temporal relations, and ATT&CK technique projection.
@@ -15,7 +15,7 @@
 
 ### 1.1 Provisional research question
 
-Across a transparently sampled set of cyber threat intelligence (CTI) reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented, or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
+Within the primary incident-linked attack-action stratum of a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved atomic attack-action occurrences whose accepted baseline ATT&CK mapping sets intersect, and what occurrence identity or temporal information is retained, partially represented, or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
 
 This is a candidate empirical question, not an established novelty claim.
 
@@ -79,7 +79,7 @@ Use `instance_status`:
 - `GENERIC_BEHAVIOUR` — the report describes a capability, modus operandi, or recurring pattern without asserting a particular report-local occurrence.
 - `NOT_AN_EVENT` — the span is not an action/event mention.
 
-Only `RESOLVED` event instances may enter the primary event-instance graph. Keep unresolved, generic-behaviour, and non-event mentions in separate counts.
+Only `RESOLVED` event instances are candidates for a primary graph. The primary ChronoCTI-comparable graph is further restricted to the `ATTACK_ACTION` stratum under Section 2.5. Keep unresolved, generic-behaviour, and non-event mentions in separate counts.
 
 ### 2.5 Activity-unit granularity and unit role
 
@@ -101,7 +101,7 @@ Also record a `unit_role`:
 - `aggregate_container` — a report-level grouping; not an atomic event;
 - `unresolved_unit` — a unit whose identity/granularity remains unresolved.
 
-**Primary graph rule:** only resolved `event_leaf` units with `atomic_event` granularity enter the primary event-instance graph. `series_container`, `episode_container`, and `aggregate_container` units are retained and analysed separately. They must not be pooled with atomic event instances in a primary occurrence count or edge denominator.
+**Primary graph rule:** only resolved `event_leaf` units with `atomic_event` granularity and `activity_stratum=ATTACK_ACTION` enter the primary ChronoCTI-comparable event graph. Resolved atomic units in other strata may be retained in separate descriptive views, but they are excluded from primary pair opportunities, positive-edge counts, denominators, cycle diagnostics, and ATT&CK projection. `series_container`, `episode_container`, and `aggregate_container` units are retained and analysed separately. They must not be pooled with atomic event instances in a primary occurrence count or edge denominator.
 
 
 #### Primary event-universe stratum — working decision adopted 8 November 2026
@@ -372,9 +372,9 @@ Record the candidate frame, selection rationale, report-level coverage, and samp
 
 For one report, let:
 
-- \(V\) be the set of resolved atomic event-leaf instances;
+- \(V\) be the set of resolved atomic event-leaf instances classified as `activity_stratum=ATTACK_ACTION`;
 - \(A(v)\) be the set of evidence-backed **baseline-compatible parent technique IDs** assigned to event instance \(v\) for the primary ChronoCTI comparison; retain exact sub-technique mappings separately;
-- \(E^+\) be the set of positive, evidence-supported temporal relations between resolved event leaves.
+- \(E^+\) be the set of positive, evidence-supported temporal relations whose two endpoints both belong to \(V\). Relations in other strata are retained and summarized separately, not included in the primary projection.
 
 For an event relation \(e=(u,v)\), calculate a mapping image from the endpoint mapping sets. Pair orientation depends on relation type:
 
@@ -393,7 +393,7 @@ Q_{diag}(e)=\{(t,t):t\in A(u)\cap A(v)\}
 Q_{distinct}(e)=Q(e)\setminus Q_{diag}(e)
 \]
 
-Keep the event relation and its provenance even if the technique projection cannot represent it. Keep a map from every projected technique pair back to all source event-edge IDs.
+Keep every primary `ATTACK_ACTION` event relation and its provenance even if the technique projection cannot represent it. Retain non-primary-stratum relations separately; do not pass them to the primary projection. Keep a map from every projected technique pair back to all source event-edge IDs.
 
 ### 6.1 Edge projection outcomes
 
@@ -434,24 +434,24 @@ Do not combine the measures below into one overall “information-loss percentag
 
 `N_eligible` contains reports that pass source/scope eligibility and local-research-use permission; public-reuse permission is tracked separately. `N_assessable` contains eligible reports with at least one completed human full-report review partition, a complete/readable frozen source, and `report_assessability=ASSESSABLE`, after report-level eligibility/local-use/assessability conflicts have been resolved. Count each report once. If multiple annotators or passes exist, calculate report-level outcomes from the designated locked final annotation or agreed/adjudicated consensus partition, not by summing partitions. Report assessability coverage as `N_assessable / N_eligible`.
 
-A fully reviewed assessable report with zero resolved event leaves remains in `N_assessable` and contributes zero to report-level positive outcomes. `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved report-level conflicts remain visible in coverage/missingness outputs but are not treated as zero outcomes. These denominator choices were adopted as the project default on 4 November 2026; the rest of this protocol remains a draft pending review.
+A fully reviewed assessable report with zero resolved `ATTACK_ACTION` event leaves remains in `N_assessable` and contributes zero to the primary attack-action outcomes. Other resolved event strata are retained and reported separately. `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved report-level conflicts remain visible in coverage/missingness outputs but are not treated as zero outcomes. These denominator choices were adopted as the project default on 4 November 2026; the rest of this protocol remains a draft pending review.
 
 ### 7.2 Report-level outcomes
 
-1. **Same-technique pair-opportunity report rate:** reports with at least one pair of distinct, scope-compatible resolved atomic event leaves whose accepted baseline mapping sets intersect / `N_assessable`. This is an opportunity measure, not evidence that a temporal relation exists.
+1. **Same-technique pair-opportunity report rate:** reports with at least one pair of distinct, scope-compatible resolved atomic event leaves both classified as `ATTACK_ACTION` whose accepted baseline mapping sets intersect / `N_assessable`. This is an opportunity measure, not evidence that a temporal relation exists.
 
 **Scope-pair denominator gate:** `scope-compatible` for this opportunity measure must be defined by an approved, versioned rule before the rate is reported. The current implementation's nearest-common-resolved-non-report-ancestor rule can include pairs in distinct incident scopes when they share a campaign/operation ancestor. Three candidate rules are now available for comparison: (a) the existing nearest shared RESOLVED non-report ancestor; (b) a shared nearest RESOLVED INCIDENT ancestor; and (c) the additive RECON v0.3 explicit event-comparison-scope assignment. Under v0.3, each resolved atomic event leaf must have one explicit decision for every eligible RESOLVED non-report ancestor scope in its hierarchy: ASSIGNED, NOT_ASSIGNED or UNCERTAIN. ASSIGNED and NOT_ASSIGNED require source evidence and rationale. A pair qualifies only when both endpoints are ASSIGNED to the same shared scope; NOT_ASSIGNED and UNCERTAIN do not qualify, while missing decisions block validation as incomplete review. The assignment rows receive a separate lock bound to the v0.2 selected-analysis lock. This draft currently supports SINGLE_ANNOTATOR_FINAL only; CONSENSUS and ADJUDICATED_FINAL are blocked because v0.3 has no scope-assignment adjudication log. Whichever option is chosen must also align primary relation eligibility and the conditional-rate numerator/denominator. None of the three scientific candidates is approved. RECON v0.3 implements the explicit-assignment candidate as a draft extension for synthetic comparison only. A technical consistency guard now requires primary positive relations and compatible candidate-pair assessments to name a shared RESOLVED, non-`REPORT_AGGREGATE` ancestor from the same provisional scope-type universe used for opportunity counting. This guarantees structural numerator/denominator eligibility, but it does not approve the inclusion of cross-incident pairs under broad `CAMPAIGN`, `ACTOR_OPERATION`, `VICTIM_ORGANISATION`, or `OTHER` scopes. Pair-opportunity rates remain withheld. RECON v0.3 has header-only registers and no real event assignments; the extension is not approved or frozen. Its assignment review is complete only when all eligible ancestor-scope candidates are explicitly marked; it does not yet support a consensus/adjudicated scope-assignment final.
-2. **Primary within-technique temporal-relation report rate:** reports with at least one directly source/timestamp-supported positive temporal relation between distinct, scope-compatible resolved atomic event leaves whose accepted baseline mapping sets intersect / `N_assessable`. Count each report once, and report numerator, denominator and relation-label breakdown.
-3. **General positive temporal-relation report rate:** reports with at least one qualifying positive temporal relation between distinct compatible resolved atomic event leaves / `N_assessable`.
-4. **Occurrence compression:** number of resolved atomic event leaves per technique before projection, with series/episode/aggregate containers reported separately.
-5. **Same-technique endpoint rate:** mapped positive event-edge count whose endpoint mapping sets intersect / all mapped positive event edges. Count each source edge once.
-6. **Full omission rate:** fully omitted mapped positive event edges / mapped positive event edges. Report unmapped edges separately.
-7. **Partial diagonal rate:** partially represented mapped positive event edges / mapped positive event edges.
-8. **Diagonal mapping share:** diagonal event-edge-to-technique-pair combinations / all event-edge-to-technique-pair combinations. This counts mapping combinations, not source edges.
-9. **Technique-pair collision/conflation:** projected technique pairs receiving multiple distinct source event edges, excess edge multiplicity, and any conflicting temporal labels. Preserve provenance.
-10. **Projection-induced cycle diagnostics:** event graph acyclicity, projected SCCs, number requiring multiple source event edges, and number generated by single-edge mapping fan-out.
+2. **Primary within-technique temporal-relation report rate:** reports with at least one directly source/timestamp-supported positive temporal relation between distinct, scope-compatible resolved atomic event leaves both classified as `ATTACK_ACTION` whose accepted baseline mapping sets intersect / `N_assessable`. Count each report once, and report numerator, denominator and relation-label breakdown.
+3. **General positive temporal-relation report rate:** calculate the primary figure using qualifying relations whose endpoints are both `ATTACK_ACTION`; report any non-primary strata in separate descriptive tables, not pooled into this rate.
+4. **Occurrence compression:** number of resolved atomic `ATTACK_ACTION` event leaves per technique before projection, with other event strata and series/episode/aggregate containers reported separately.
+5. **Same-technique endpoint rate:** among mapped positive `ATTACK_ACTION` event edges, count the edges whose endpoint mapping sets intersect / all mapped positive `ATTACK_ACTION` event edges. Count each source edge once.
+6. **Full omission rate:** fully omitted mapped positive `ATTACK_ACTION` event edges / mapped positive `ATTACK_ACTION` event edges. Report unmapped attack-action edges separately.
+7. **Partial diagonal rate:** partially represented mapped positive `ATTACK_ACTION` event edges / mapped positive `ATTACK_ACTION` event edges.
+8. **Diagonal mapping share:** diagonal `ATTACK_ACTION` event-edge-to-technique-pair combinations / all `ATTACK_ACTION` event-edge-to-technique-pair combinations. This counts mapping combinations, not source edges.
+9. **Technique-pair collision/conflation:** primary projected technique pairs receiving multiple distinct `ATTACK_ACTION` source event edges, excess edge multiplicity, and any conflicting temporal labels. Preserve provenance.
+10. **Projection-induced cycle diagnostics:** acyclicity of the primary `ATTACK_ACTION` event graph, projected SCCs, number requiring multiple source event edges, and number generated by single-edge mapping fan-out.
 11. **Recurrence cardinality:** counts by `exact`, `minimum`, `range`, `qualitative_only`, and `unknown`, stratified by granularity.
-12. **Coverage/missingness:** event mapping coverage, positive edge mapping coverage, unresolved/generic mention counts, and evidence-span validity.
+12. **Coverage/missingness:** report counts by `activity_stratum`, including resolved atomic `ATTACK_ACTION` leaves and non-primary strata separately; also report event mapping coverage, primary positive-edge mapping coverage, unresolved/generic mention counts, and evidence-span validity.
 
 A 5–8 report protocol-development pilot is not a prevalence estimate. Do not pool atomic events and episode containers to increase denominators.
 

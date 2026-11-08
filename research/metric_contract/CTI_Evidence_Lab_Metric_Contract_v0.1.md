@@ -11,7 +11,7 @@
 
 This contract separates three things that must not be collapsed into one statistic:
 
-1. **Report-level occurrence/relation outcome:** what an eligible, assessable CTI report explicitly supports about distinct report-local atomic activity occurrences.
+1. **Report-level occurrence/relation outcome:** what an eligible, assessable CTI report explicitly supports about distinct report-local atomic attack-action occurrences in the primary stratum; other strata are described separately.
 2. **ATT&CK mapping overlap:** whether accepted parent-level mapping sets for the two occurrences share a technique in the pinned ChronoCTI 120-technique vocabulary.
 3. **Projection consequence:** what happens when a source-supported event relation is represented using distinct technique pairs, which cannot retain a same-technique diagonal pair.
 
@@ -26,14 +26,15 @@ The primary event graph contains only activity units satisfying all of the follo
 - `unit_role = event_leaf`;
 - `granularity = atomic_event`;
 - `instance_status = RESOLVED`;
+- `activity_stratum = ATTACK_ACTION`;
 - distinct endpoint identities;
 - both endpoints belong to compatible, explicitly recorded comparison scopes.
 
-Series, episodes, aggregates, generic behaviour, and unresolved units remain in the annotation data. They are not converted into atomic event leaves and are not included in primary event or edge denominators. They may be reported in separate descriptive/sensitivity results.
+Series, episodes, aggregates, generic behaviour, unresolved units, and resolved event units in non-primary strata remain in the annotation data. They are not converted into primary attack-action event leaves and are not included in primary event-pair or edge denominators. Resolved non-primary strata may be reported in separate descriptive results.
 
 ### 2.2 Primary ATT&CK mapping set: `A_120`
 
-For each resolved atomic event leaf `v`, define `A_120(v)` as the set of accepted, source-supported parent-level ATT&CK technique IDs for that event that belong to the pinned 120-technique ChronoCTI vocabulary.
+For each resolved atomic event leaf `v` classified as `ATTACK_ACTION`, define `A_120(v)` as the set of accepted, source-supported parent-level ATT&CK technique IDs for that event that belong to the pinned 120-technique ChronoCTI vocabulary. An unmapped attack-action remains in the event inventory but cannot contribute to ATT&CK-pair projection inputs.
 
 Rules:
 
@@ -60,7 +61,7 @@ For the broad research question about temporal relations, count these five label
 A qualifying positive relation must additionally satisfy:
 
 - `relation_basis` is `direct_source` or `direct_timestamp`;
-- both endpoints meet the primary event-endpoint rules in §2.1;
+- both endpoints meet the primary event-endpoint rules in §2.1, including `activity_stratum = ATTACK_ACTION`;
 - the relation has relation-specific evidence and a recorded evidence scope;
 - the endpoints have compatible comparison scope.
 
@@ -93,7 +94,7 @@ An eligible report enters `N_assessable` when at least one eligible human annota
 
 Count each report once, not once per annotator or annotation pass. When multiple passes or annotators exist, calculate report-level outcomes from the designated locked final annotation or agreed/adjudicated consensus partition; do not sum outcomes across passes. An incomplete auxiliary or second-annotator pass does not duplicate or negate a report that already has a completed qualifying review, but agreement status must be reported separately. The primary report-level rate uses `N_assessable` as its denominator. Report assessability coverage is always disclosed as `N_assessable / N_eligible`. Public-reuse permission is tracked separately and is not part of the local-use denominator gate.
 
-A report with zero resolved atomic event leaves can still be assessable. If its source and full-report review meet the conditions above, it remains in `N_assessable`, receives zero for the positive target outcome, and is separately classified as having no primary event-leaf opportunity. This is an important study outcome, not an exclusion reason.
+A report with zero resolved atomic `ATTACK_ACTION` event leaves can still be assessable. If its source and full-report review meet the conditions above, it remains in `N_assessable`, receives zero for the primary attack-action outcomes, and is separately classified as having no primary event-leaf opportunity. Resolved non-primary events do not change that primary zero. This is an important study outcome, not an exclusion reason.
 
 A report marked `NOT_ASSESSABLE` or `PENDING`, or one whose full-report review is `NOT_STARTED` or `IN_PROGRESS`, is not counted in `N_assessable`. It remains visible in the assessability-coverage and missingness tables and is never silently recoded as a zero-edge report. A report that fails source/scope or local-use eligibility is outside `N_eligible` and must have a documented reason. Conflicting report-level decisions across annotator/pass partitions are excluded until adjudicated.
 
@@ -105,11 +106,11 @@ For each assessable eligible report `r`, calculate separate binary indicators.
 
 ### 5.1 Event-leaf presence
 
-`I_event(r) = 1` if the report contains at least one resolved atomic `event_leaf`; otherwise 0.
+`I_event(r) = 1` if the report contains at least one resolved atomic `event_leaf` classified as `ATTACK_ACTION`; otherwise 0.
 
 ### 5.2 Compatible event-pair opportunity
 
-`I_pair(r) = 1` if there exists at least one pair of distinct resolved atomic event leaves in a compatible comparison scope; otherwise 0.
+`I_pair(r) = 1` if there exists at least one pair of distinct resolved atomic `ATTACK_ACTION` event leaves in a compatible comparison scope; otherwise 0.
 
 ### 5.3 Same-technique pair opportunity
 
@@ -125,7 +126,7 @@ This is the corrected name for the protocol's earlier “repeated-occurrence rep
 
 ### 5.4 Positive temporal-relation presence
 
-`I_temporal(r) = 1` if at least one qualifying positive temporal relation (any of the five labels in §3.1) exists between distinct compatible primary event leaves; otherwise 0.
+`I_temporal(r) = 1` if at least one qualifying positive temporal relation (any of the five labels in §3.1) exists between distinct compatible `ATTACK_ACTION` event leaves; otherwise 0. Relations in non-primary strata are summarized separately.
 
 This is a descriptive secondary rate:
 
@@ -133,7 +134,7 @@ This is a descriptive secondary rate:
 
 ### 5.5 Primary within-technique temporal-relation outcome
 
-`I_within_tech_temporal(r) = 1` if at least one qualifying positive temporal relation `(u,v)` exists and:
+`I_within_tech_temporal(r) = 1` if at least one qualifying positive temporal relation `(u,v)` between `ATTACK_ACTION` endpoints exists and:
 
 `A_120(u) ∩ A_120(v) ≠ ∅`.
 
@@ -152,13 +153,13 @@ Also report, without substituting them for the primary rate:
 - `reports with I_event = 1 / N_assessable`;
 - `reports with I_pair = 1 / N_assessable`.
 
-These help distinguish “no event opportunity”, “same-technique opportunity but no positive relation observed”, and “positive relation with shared technique”.
+These help distinguish “no event opportunity”, “same-technique opportunity but no positive relation observed”, and “positive relation with shared technique”. All rates above use only the primary `ATTACK_ACTION` stratum; report communication, analyst-observation, and other non-primary stratum counts/relations separately and do not combine them with these numerators or denominators.
 
 ## 6. Event-edge-level projection metrics
 
 Count each source event relation once for event-edge metrics, irrespective of how many technique mappings it expands into. Keep a separate count for mapping-pair combinations.
 
-For each qualifying positive temporal event edge `e=(u,v)`, construct a relation-aware mapping image from `A_120(u)` and `A_120(v)`:
+For each qualifying positive temporal `ATTACK_ACTION` event edge `e=(u,v)`, construct a relation-aware mapping image from `A_120(u)` and `A_120(v)`. Do not include non-primary or mixed-stratum edges in this projection:
 
 - directed ordered pairs for `BEFORE` and `AFTER`;
 - canonical unordered technique dyads for `OVERLAP`, `SIMULTANEOUS`, and `CONCURRENT_UNSPECIFIED`.
@@ -229,8 +230,9 @@ Every report summary should include, at minimum:
 - full-report review completion status;
 - count of mentions by status;
 - count of activity units by granularity, role, and instance status;
-- resolved atomic event-leaf count;
-- count of compatible event-leaf pairs;
+- resolved atomic `ATTACK_ACTION` event-leaf count;
+- resolved counts for each non-primary `activity_stratum` separately;
+- count of compatible `ATTACK_ACTION` event-leaf pairs;
 - count of same-technique pair opportunities;
 - positive temporal edge count by label and relation basis;
 - ambiguous, unresolved, inferred, transitive, and not-assessable relations separately;
