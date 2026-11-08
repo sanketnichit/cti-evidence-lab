@@ -4,6 +4,8 @@
 - Status: draft; not approved or frozen
 - Parent: RECON v0.1 + RECON v0.2 + RECON v0.3
 - Primary stratum: ATTACK_ACTION
+- Primary comparison-scope rule: SHARED_RESOLVED_INCIDENT_SCOPE_v0.1 (nearest shared RESOLVED INCIDENT; relation must cite same scope)
+- Sensitivity rules: NEAREST_COMMON_RESOLVED_NON_REPORT_SCOPE_v0.1; EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3
 - Auxiliary strata: THREAT_ACTOR_COMMUNICATION, ANALYST_OBSERVATION, GENERIC_CAPABILITY, OTHER_NON_PRIMARY, UNRESOLVED_CLASSIFICATION
 - Canonical representation: one-to-one activity_unit_strata.csv extension keyed by report_id, annotator_id, annotation_pass_id, activity_unit_id
 - Lock: activity_stratum_locks.csv binds the complete stratum rows to the v0.2 selected-analysis lock reference
