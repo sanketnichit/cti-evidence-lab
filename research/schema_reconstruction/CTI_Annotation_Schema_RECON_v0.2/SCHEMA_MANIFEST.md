@@ -2,6 +2,8 @@
 
 - Version: 0.2
 - Prepared: 5 November 2026
+- Updated: 14 November 2026
+- Latest verification: GitHub Actions run #236 passed 86 RECON v0.2 synthetic tests as part of 247 total tests; base package checksums and all workflow steps passed.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.1
