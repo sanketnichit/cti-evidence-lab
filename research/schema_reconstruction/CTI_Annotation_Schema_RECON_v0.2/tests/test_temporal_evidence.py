@@ -152,6 +152,57 @@ class TemporalEvidenceTests(unittest.TestCase):
         )
         self.assertTrue(self.report()["ok"], self.report()["errors"])
 
+    def test_timestamp_basis_cannot_establish_non_strict_positive_labels(self):
+        for label in ("OVERLAP", "SIMULTANEOUS", "CONCURRENT_UNSPECIFIED"):
+            with self.subTest(label=label):
+                self.relation["relation_label"] = label
+                self.timestamp_rows(
+                    "2026-01-01T08:00:00Z", "2026-01-01T08:00:00Z",
+                    "2026-01-01T08:00:00Z", "2026-01-01T08:00:00Z",
+                )
+                self.assertIn("NON_STRICT_LABEL_REQUIRES_DIRECT_SOURCE", self.codes())
+
+    def test_explicit_source_can_support_non_strict_positive_label(self):
+        self.relation["relation_label"] = "OVERLAP"
+        self.relation["relation_basis"] = "direct_source"
+        self.save()
+        self.assertTrue(self.report()["ok"], self.report()["errors"])
+
+    def test_inferred_timezone_cannot_support_direct_timestamp(self):
+        self.timestamp_rows(
+            "2026-01-01T08:00:00Z", "2026-01-01T08:00:00Z",
+            "2026-01-02T08:00:00Z", "2026-01-02T08:00:00Z",
+        )
+        self.times[0]["timezone_status"] = "INFERRED"
+        self.save()
+        self.assertIn("EVENT_A_TIMEZONE_NOT_EXPLICIT", self.codes())
+
+    def test_normalized_timezone_must_be_utc(self):
+        self.timestamp_rows(
+            "2026-01-01T08:00:00Z", "2026-01-01T08:00:00Z",
+            "2026-01-02T08:00:00Z", "2026-01-02T08:00:00Z",
+        )
+        self.times[0]["normalized_timezone"] = "Asia/Karachi"
+        self.save()
+        self.assertIn("EVENT_A_NORMALIZED_TIMEZONE_NOT_UTC", self.codes())
+
+    def test_normalized_bounds_must_use_utc_offset(self):
+        self.timestamp_rows(
+            "2026-01-01T08:00:00+05:30", "2026-01-01T08:00:00+05:30",
+            "2026-01-02T08:00:00Z", "2026-01-02T08:00:00Z",
+        )
+        self.save()
+        self.assertIn("EVENT_A_NORMALIZED_BOUNDS_NOT_UTC", self.codes())
+
+    def test_publication_timestamp_cannot_substitute_for_attack_occurrence(self):
+        self.timestamp_rows(
+            "2026-01-01T08:00:00Z", "2026-01-01T08:00:00Z",
+            "2026-01-02T08:00:00Z", "2026-01-02T08:00:00Z",
+        )
+        self.times[0]["time_type"] = "PUBLICATION"
+        self.save()
+        self.assertIn("EVENT_A_TIMESTAMP_SUPPORT_MISSING", self.codes())
+
     def test_after_uses_reverse_interval_order(self):
         self.relation["relation_label"] = "AFTER"
         self.timestamp_rows(
