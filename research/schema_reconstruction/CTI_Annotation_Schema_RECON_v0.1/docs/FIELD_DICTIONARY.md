@@ -146,6 +146,8 @@ Primary evidence spans referenced in direct `primary_evidence_span_id` fields mu
 | `annotator_confidence`, `adjudication_status` | controlled | yes | Confidence/review. |
 | `time_notes` | string | optional | Additional notes. |
 
+**Temporal interpretation:** `normalized_start` and `normalized_end` are closed bounds on possible occurrence instants, not action-duration endpoints. A direct-timestamp primary relation is restricted to strict `BEFORE`/`AFTER`; non-strict positive labels require a direct source assertion. Accepted normalized bounds use UTC, while `timezone_text` preserves the source's literal zone/offset. See `research/protocol/TIMESTAMP_RELATION_SEMANTICS_v0.1.md`.
+
 ## `temporal_relations.csv` — one row per event-pair relation
 
 | Field | Type / values | Required | Definition |
