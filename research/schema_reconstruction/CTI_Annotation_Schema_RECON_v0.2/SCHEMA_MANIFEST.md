@@ -21,14 +21,16 @@
 
 This extension does not replace or alter RECON v0.1 and does not claim equivalence to the missing original v0.4.2 schema.
 
-## Timestamp gate
+## Timestamp gate — working semantics and structural enforcement
 
-- Time evidence must have timezone_status=EXPLICIT and a populated normalized_timezone.
-- Normalized bounds must be timezone-aware ISO-8601 values and start must not follow end.
-- Non-point intervals require uncertainty_notes.
+- A direct-timestamp endpoint requires `time_type=ATTACK_OCCURRENCE`, explicit timezone status/text, preserved raw expression/precision, and a linked endpoint-support span.
+- Normalized bounds are closed bounds on possible occurrence instants, not action-duration intervals. Non-point bounds require `uncertainty_notes`.
+- The source zone/offset is preserved in `timezone_text`; normalized bounds must use UTC-offset ISO-8601 values and `normalized_timezone=UTC`.
 - Retained but non-normalized timestamp candidates are rejected rather than ignored.
-- Direct-timestamp evidence must preserve raw_time_text, time_precision, and explicit timezone_text.
-- For direct timestamp BEFORE/AFTER, the strict order must hold for every retained A/B interval combination.
+- Timestamp-only positives are restricted to `BEFORE`/`AFTER`; strict order must hold for every retained A/B interval combination (`A_end < B_start`, or the reverse for AFTER).
+- `OVERLAP`, `SIMULTANEOUS`, and `CONCURRENT_UNSPECIFIED` require an explicit source assertion and `relation_basis=direct_source`; equal timestamps and overlapping uncertainty bounds are not sufficient.
+- Ambiguous abbreviations, inferred zones, and unresolved daylight-saving folds/gaps cannot support a timestamp-derived edge.
+- Human review remains responsible for confirming that time evidence identifies the attack occurrence and that the source entails the relation. See `research/protocol/TIMESTAMP_RELATION_SEMANTICS_v0.1.md`.
 
 ## Evidence-scope gate
 
