@@ -353,6 +353,11 @@ def validate_bundle(base_bundle: Path, evidence_file: Path, selection_file: Path
     for key, relation in relations.items():
         if relation.get("relation_label") not in POSITIVE or relation.get("relation_basis") not in DIRECT:
             continue
+        if relation.get("relation_basis") == "direct_timestamp" and relation.get("relation_label") not in {"BEFORE", "AFTER"}:
+            errors.append({
+                "code": "NON_STRICT_LABEL_REQUIRES_DIRECT_SOURCE",
+                "message": f"{relation.get('relation_id', '')}: direct_timestamp can establish only strict BEFORE/AFTER; OVERLAP, SIMULTANEOUS and CONCURRENT_UNSPECIFIED require an explicit direct_source assertion",
+            })
         rid, p = relation.get("relation_id", ""), part(relation)
         cue_id = relation.get("primary_evidence_span_id", "")
         cue = spans.get((*p, cue_id))
@@ -501,12 +506,31 @@ def validate_bundle(base_bundle: Path, evidence_file: Path, selection_file: Path
                             "message": f"{rid}: {endpoint_id} requires timezone_status=EXPLICIT, timezone_text, and normalized_timezone",
                         })
                         continue
-                    start = _parse_aware_timestamp(time_row.get("normalized_start", ""))
-                    end = _parse_aware_timestamp(time_row.get("normalized_end", ""))
+                    if time_row.get("normalized_timezone") != "UTC":
+                        errors.append({
+                            "code": f"{prefix}_NORMALIZED_TIMEZONE_NOT_UTC",
+                            "message": f"{rid}: normalized_timezone for {endpoint_id} must be UTC; preserve the source zone in timezone_text",
+                        })
+                        continue
+                    start_text = time_row.get("normalized_start", "")
+                    end_text = time_row.get("normalized_end", "")
+                    start = _parse_aware_timestamp(start_text)
+                    end = _parse_aware_timestamp(end_text)
                     if start is None or end is None:
                         errors.append({
                             "code": f"{prefix}_TIMESTAMP_NOT_TIMEZONE_AWARE",
                             "message": f"{rid}: normalized bounds for {endpoint_id} must be timezone-aware ISO-8601",
+                        })
+                        continue
+                    try:
+                        raw_start_offset = datetime.fromisoformat(start_text.replace("Z", "+00:00")).utcoffset()
+                        raw_end_offset = datetime.fromisoformat(end_text.replace("Z", "+00:00")).utcoffset()
+                    except (TypeError, ValueError):
+                        raw_start_offset = raw_end_offset = None
+                    if raw_start_offset is None or raw_end_offset is None or raw_start_offset.total_seconds() != 0 or raw_end_offset.total_seconds() != 0:
+                        errors.append({
+                            "code": f"{prefix}_NORMALIZED_BOUNDS_NOT_UTC",
+                            "message": f"{rid}: normalized bounds for {endpoint_id} must use a UTC offset (Z or +00:00)",
                         })
                         continue
                     if start > end:
