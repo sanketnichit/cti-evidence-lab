@@ -16,7 +16,7 @@ Every positive direct_source or direct_timestamp relation entering the primary g
 
 The extension validator checks partition-local references, link identity, roles, endpoint alignment, cue presence/type, and evidence-scope completeness. SENTENCE requires cue and both endpoint-support roles to resolve to one sentence; CROSS_SENTENCE requires linked support outside the cue sentence with an explanatory argument/coreference note; DOCUMENT_CONTEXT requires a contextual span in a distinct section/paragraph passage, span-level evidence notes, and relation-level rationale. These are structural traceability checks, not semantic proof.
 
-For direct-timestamp relations, the validator requires preserved raw time text and precision, explicit timezone status/text, populated normalized timezone, timezone-aware ISO-8601 bounds, and documented non-point intervals. Retained timestamp candidates that are not normalized are errors rather than silently ignored. Strict BEFORE/AFTER ordering must hold for every retained A/B interval combination; overlapping or uncertain windows cannot create a strict timestamp edge.
+For direct-timestamp relations, the validator requires preserved raw time text and precision, explicit timezone status/text, UTC-normalized timezone-aware ISO-8601 bounds, and documented non-point intervals. Retained timestamp candidates that are not normalized are errors rather than silently ignored. Timestamp-only positives are restricted to strict BEFORE/AFTER ordering across every retained A/B interval combination; non-strict labels require direct source wording. See the timestamp semantics note in the protocol and `research/protocol/TIMESTAMP_RELATION_SEMANTICS_v0.1.md`.
 
 Run tests with:
 
