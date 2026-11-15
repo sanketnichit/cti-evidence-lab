@@ -196,35 +196,118 @@ class ValidatorTests(unittest.TestCase):
             result = self.validate()
             self.assertIn("ASSESSMENT_REASON_MISSING", {x.code for x in result.errors}, label)
 
-    def test_alternative_mapping_group_requires_two_same_unit_members(self):
-        def alternative(mapping_id, group_id):
-            row = dict(self.rows["event_mappings"][0])
+    def _alternative_candidate(self, mapping_id, technique_id, status, group_id="choice-a", unit_id="event-a"):
+        row = dict(self.rows["event_mappings"][0])
+        names = {
+            "T1059": "Command and Scripting Interpreter",
+            "T1105": "Ingress Tool Transfer",
+        }
+        row.update(
+            mapping_id=mapping_id, activity_unit_id=unit_id, event_instance_id=unit_id,
+            exact_technique_id=technique_id, exact_technique_name=names[technique_id],
+            mapping_basis="source_supported_analyst_candidate", mapping_decision_status=status,
+            alternative_group_id=group_id, alternative_to_mapping_id="",
+            baseline_mapping_status="UNRESOLVED", baseline_parent_technique_id="",
+            baseline_vocabulary_id="", baseline_vocabulary_sha256="",
+            mapping_notes=f"Source-grounded candidate rationale for {technique_id}.",
+        )
+        if status == "ACCEPTED":
             row.update(
-                mapping_id=mapping_id, activity_unit_id="event-a", event_instance_id="event-a",
-                mapping_decision_status="ALTERNATIVE", mapping_basis="source_supported_analyst_candidate",
-                alternative_group_id=group_id, alternative_to_mapping_id="",
-                baseline_mapping_status="UNRESOLVED", baseline_parent_technique_id="",
-                baseline_vocabulary_id="", baseline_vocabulary_sha256="", mapping_notes="",
+                baseline_mapping_status="IN_VOCAB",
+                baseline_parent_technique_id="T1059",
+                baseline_vocabulary_id="CTI Evidence Lab A_120 selected-technique identifier vocabulary",
+                baseline_vocabulary_sha256=A120_HASH,
             )
-            return row
+        return row
 
-        self.rows["event_mappings"] = [alternative("alt-a", "")]
+    def _install_alternative_group(self, statuses=("ALTERNATIVE", "ALTERNATIVE"), group_id="choice-a"):
+        candidates = [
+            self._alternative_candidate("alt-a", "T1059", statuses[0], group_id),
+            self._alternative_candidate("alt-b", "T1105", statuses[1], group_id),
+        ]
+        candidates[1]["alternative_to_mapping_id"] = "alt-a"
+        self.rows["event_mappings"] = candidates + [dict(self.rows["event_mappings"][1])]
+        self.rows["record_evidence_links"] = [
+            dict(self.rows["record_evidence_links"][1]),
+            {
+                **PARTITION, "link_id": "link-alt-a", "record_type": "event_mappings",
+                "record_id": "alt-a", "evidence_span_id": "span-a",
+                "evidence_role": "MAPPING", "link_notes": "candidate-specific evidence",
+            },
+            {
+                **PARTITION, "link_id": "link-alt-b", "record_type": "event_mappings",
+                "record_id": "alt-b", "evidence_span_id": "span-b",
+                "evidence_role": "MAPPING", "link_notes": "candidate-specific evidence",
+            },
+        ]
+
+    def test_alternative_mapping_group_requires_two_same_unit_members(self):
+        self._install_alternative_group(group_id="")
         self.save("event_mappings")
+        self.save("record_evidence_links")
         result = self.validate()
         self.assertIn("ALTERNATIVE_GROUP_MISSING", {x.code for x in result.errors})
 
-        self.rows["event_mappings"] = [alternative("alt-a", "choice-a")]
+        self._install_alternative_group()
+        self.rows["event_mappings"] = self.rows["event_mappings"][:1] + [self.rows["event_mappings"][-1]]
+        self.rows["record_evidence_links"] = [x for x in self.rows["record_evidence_links"] if x["record_id"] != "alt-b"]
         self.save("event_mappings")
+        self.save("record_evidence_links")
         result = self.validate()
         self.assertIn("ALTERNATIVE_GROUP_SINGLETON", {x.code for x in result.errors})
 
-        self.rows["event_mappings"] = [alternative("alt-a", "choice-a"), alternative("alt-b", "choice-a")]
+        self._install_alternative_group()
         self.save("event_mappings")
+        self.save("record_evidence_links")
         result = self.validate()
-        self.assertFalse(
-            {"ALTERNATIVE_GROUP_MISSING", "ALTERNATIVE_GROUP_SINGLETON", "ALTERNATIVE_GROUP_CROSSES_UNITS"}
-            & {x.code for x in result.errors}
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(result.accepted_a120_mappings, 1)  # only the unrelated Event B mapping
+
+    def test_resolved_alternative_group_keeps_lineage_and_accepts_one_winner(self):
+        self._install_alternative_group(("ACCEPTED", "REJECTED"))
+        self.save("event_mappings")
+        self.save("record_evidence_links")
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(result.accepted_a120_mappings, 2)
+        self.assertEqual(
+            {row["alternative_group_id"] for row in self.rows["event_mappings"] if row["mapping_id"].startswith("alt-")},
+            {"choice-a"},
         )
+
+    def test_all_rejected_alternative_group_is_resolved_without_primary_mapping(self):
+        self._install_alternative_group(("REJECTED", "REJECTED"))
+        self.save("event_mappings")
+        self.save("record_evidence_links")
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.errors])
+        self.assertEqual(result.accepted_a120_mappings, 1)
+
+    def test_partially_resolved_alternative_group_is_blocked_and_not_counted(self):
+        self._install_alternative_group(("ACCEPTED", "ALTERNATIVE"))
+        self.save("event_mappings")
+        self.save("record_evidence_links")
+        result = self.validate()
+        self.assertIn("ALTERNATIVE_GROUP_PARTIALLY_RESOLVED", {x.code for x in result.errors})
+        self.assertEqual(result.accepted_a120_mappings, 1)
+
+    def test_mutually_exclusive_group_cannot_accept_multiple_members(self):
+        self._install_alternative_group(("ACCEPTED", "ACCEPTED"))
+        self.save("event_mappings")
+        self.save("record_evidence_links")
+        result = self.validate()
+        self.assertIn("ALTERNATIVE_GROUP_MULTIPLE_ACCEPTED", {x.code for x in result.errors})
+        self.assertEqual(result.accepted_a120_mappings, 1)
+
+    def test_alternative_group_member_requires_own_evidence(self):
+        self._install_alternative_group()
+        self.rows["record_evidence_links"] = [
+            row for row in self.rows["record_evidence_links"] if row["record_id"] != "alt-a"
+        ]
+        self.save("event_mappings")
+        self.save("record_evidence_links")
+        result = self.validate()
+        self.assertIn("ALTERNATIVE_MEMBER_NO_EVIDENCE_LINK", {x.code for x in result.errors})
 
     def test_accepted_analyst_candidate_requires_human_rationale(self):
         mapping = self.rows["event_mappings"][0]
