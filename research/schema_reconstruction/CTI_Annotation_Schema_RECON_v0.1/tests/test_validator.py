@@ -226,9 +226,16 @@ class ValidatorTests(unittest.TestCase):
             self._alternative_candidate("alt-b", "T1105", statuses[1], group_id),
         ]
         candidates[1]["alternative_to_mapping_id"] = "alt-a"
-        self.rows["event_mappings"] = candidates + [dict(self.rows["event_mappings"][1])]
+        event_b_mapping = next(
+            row for row in self.rows["event_mappings"] if row["mapping_id"] == "map-b"
+        )
+        self.rows["event_mappings"] = candidates + [dict(event_b_mapping)]
         self.rows["record_evidence_links"] = [
-            dict(self.rows["record_evidence_links"][1]),
+            {
+                **PARTITION, "link_id": "link-map-b", "record_type": "event_mappings",
+                "record_id": "map-b", "evidence_span_id": "span-b",
+                "evidence_role": "MAPPING", "link_notes": "additional mapping evidence",
+            },
             {
                 **PARTITION, "link_id": "link-alt-a", "record_type": "event_mappings",
                 "record_id": "alt-a", "evidence_span_id": "span-a",
