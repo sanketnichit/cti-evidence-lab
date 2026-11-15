@@ -2,7 +2,7 @@
 
 **Updated:** 15 November 2026  
 **Status:** Reconciliation finding register; not protocol approval, schema approval, or a freeze decision.  
-**Compared:** `CTI_Event_Instance_Annotation_Protocol_v0.5-draft.md`, RECON v0.1 field dictionary, controlled vocabularies, data-model rules, validator, projection adapter, projection metrics and synthetic QA.
+**Compared:** Protocol v0.5-draft; Metric Contract v0.1; Decision Register v0.2; RECON v0.1 field dictionary, controlled vocabularies, data-model rules, validator and projection adapter; RECON v0.2 temporal/selected-final/aggregation layer; RECON v0.3 comparison-scope assignment layer; RECON v0.4 activity-stratum layer; and synthetic QA.
 
 ## 1. Purpose and boundary
 
