@@ -2,7 +2,7 @@
 
 **Prepared:** 15 November 2026  
 **Status:** Updated working metric specification, aligned to the incident-linked attack-action event universe, incident-bounded comparison scope, timestamp semantics and initial-pilot boundaries. Not approved or frozen; no real AnnoCTR human annotations or empirical metrics exist.  
-**Inputs reconciled:** Protocol v0.4-draft; Project-wide Consistency Audit v1.4; AnnoCTR Sampling Method v0.3.2; Five-report Re-audit and Sampling Correction v0.1.  
+**Inputs reconciled:** Protocol v0.5-draft; Decision Register v0.2; RECON v0.1-v0.4 field/validation and aggregation layers; Project-wide Consistency Audit v1.4; AnnoCTR Sampling Method v0.3.2; Five-report Re-audit and Sampling Correction v0.1.  
 **Version caveat:** Exact Protocol v0.4.1 and the original Schema v0.4.2 ZIP remain unrecovered. This note is a provisional metric contract, not a claim that those original artifacts were inspected.
 
 ---
