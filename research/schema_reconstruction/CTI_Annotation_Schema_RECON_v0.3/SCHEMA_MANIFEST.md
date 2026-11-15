@@ -2,6 +2,8 @@
 
 - Version: 0.3
 - Prepared: 5 November 2026
+- Updated: 15 November 2026
+- Latest full-workflow verification: GitHub Actions run #250 passed 15 RECON v0.3 synthetic tests as part of 252 total tests.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.2
@@ -24,10 +26,10 @@
 ## Candidate scope-pair rules
 
 1. NEAREST_COMMON_RESOLVED_NON_REPORT_SCOPE_v0.1 — legacy broad ancestor rule.
-2. SHARED_RESOLVED_INCIDENT_SCOPE_v0.1 — conservative incident-bounded sensitivity rule.
-3. EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3 — recommended candidate; both endpoints must have ASSIGNED rows for the same shared scope.
+2. SHARED_RESOLVED_INCIDENT_SCOPE_v0.1 — adopted working primary rule; nearest shared RESOLVED INCIDENT ancestor, with the relation citing that exact scope.
+3. EXPLICIT_SHARED_EVENT_COMPARISON_SCOPE_ASSIGNMENT_v0.3 — broader-context sensitivity only; both endpoints must have ASSIGNED rows for the same shared scope. It is supported only with SINGLE_ANNOTATOR_FINAL in the initial pilot.
 
-The v0.3 rule does not automatically fall back to either older rule. NOT_ASSIGNED and UNCERTAIN do not qualify; missing decisions block the register as incomplete. The selected rule must govern the opportunity denominator and primary relation numerator consistently.
+The v0.3 explicit-assignment sensitivity does not automatically fall back to either older rule. NOT_ASSIGNED and UNCERTAIN do not qualify; missing decisions block the register as incomplete. When the sensitivity is reported, it must govern both its opportunity denominator and positive-relation numerator consistently. It is not the primary incident-bounded rule.
 
 ## Validation
 
@@ -44,7 +46,7 @@ The v0.2 report-level aggregator accepts a named scope-pair rule and optional as
 
 ## Limitations
 
-The validator cannot decide semantic scope membership or whether a source supports the analyst's assignment rationale. The explicit-assignment candidate depends on human consistency and complete recording of considered scope assignments. No real data has been entered, and the extension has not been approved or frozen.
+The validator cannot decide semantic scope membership or whether a source supports the analyst's assignment rationale. The explicit-assignment sensitivity depends on human consistency and complete recording of considered scope assignments. Multi-annotator CONSENSUS and ADJUDICATED_FINAL use is blocked because a dedicated v0.3 adjudication register is not implemented. No real data has been entered, and the extension has not been approved or frozen.
 
 
 ## Additional validation correction
