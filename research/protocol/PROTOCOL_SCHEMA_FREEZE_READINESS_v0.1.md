@@ -34,7 +34,7 @@ The following are adopted working defaults for the pilot. They are not represent
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow after the initial-pilot boundary merge is GitHub Actions run [#248](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43720713057), on 15 November 2026. It passed **252 synthetic test executions**:
+The latest verified main-branch workflow after the initial-pilot boundary merge is GitHub Actions run [#250](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43722436778), on 15 November 2026. It passed **252 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 78
