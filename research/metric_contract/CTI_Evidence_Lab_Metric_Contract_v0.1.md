@@ -1,7 +1,7 @@
 # CTI Evidence Lab — Metric Contract v0.1 (provisional)
 
-**Prepared:** 8 November 2026  
-**Status:** Updated working metric specification, aligned to the 8 November 2026 attack-action event-universe decision. Not approved, frozen, or computed on real AnnoCTR human annotations.  
+**Prepared:** 15 November 2026  
+**Status:** Updated working metric specification, aligned to the incident-linked attack-action event universe, incident-bounded comparison scope, timestamp semantics and initial-pilot boundaries. Not approved or frozen; no real AnnoCTR human annotations or empirical metrics exist.  
 **Inputs reconciled:** Protocol v0.4-draft; Project-wide Consistency Audit v1.4; AnnoCTR Sampling Method v0.3.2; Five-report Re-audit and Sampling Correction v0.1.  
 **Version caveat:** Exact Protocol v0.4.1 and the original Schema v0.4.2 ZIP remain unrecovered. This note is a provisional metric contract, not a claim that those original artifacts were inspected.
 
@@ -124,7 +124,7 @@ Use `SHARED_RESOLVED_INCIDENT_SCOPE_v0.1` as the primary pair-opportunity rule:
 4. If a report has no defensible resolved INCIDENT boundary, do not manufacture one from campaign membership, actor identity, victim-organisation identity, malware family, or report co-occurrence. The report can remain assessable; its incident-bounded pair-opportunity outcome is zero unless a qualifying pair is supported.
 5. Keep broader-context relations in their source register and disclose their exclusion; do not rewrite them as negative or delete them.
 
-**Sensitivity analyses:** retain the legacy nearest shared resolved non-report ancestor rule to quantify the effect of broader context (including cross-incident campaign/operation pairs). Retain RECON v0.3 explicit event-to-scope assignment as a separately reported, evidence-backed sensitivity view. Under either sensitivity rule, apply the same selected rule to both the pair-opportunity denominator and the positive-relation numerator. Do not pool sensitivity counts with primary incident-bounded counts. The explicit-assignment sensitivity requires complete v0.3 assignment review and its lock; it is not a substitute for the primary incident boundary.
+**Sensitivity analyses:** retain the legacy nearest shared resolved non-report ancestor rule to quantify the effect of broader context (including cross-incident campaign/operation pairs). Retain RECON v0.3 explicit event-to-scope assignment as a separately reported, evidence-backed sensitivity view. Under the adopted 15 November pilot boundary, use the v0.3 sensitivity only with `SINGLE_ANNOTATOR_FINAL`; do not use it for `CONSENSUS` or `ADJUDICATED_FINAL` until a dedicated assignment-adjudication extension is designed and validated. Under either sensitivity rule, apply the same selected rule to both the pair-opportunity denominator and the positive-relation numerator. Do not pool sensitivity counts with primary incident-bounded counts. The explicit-assignment sensitivity requires complete v0.3 assignment review and its lock; it is not a substitute for the primary incident boundary.
 
 ### 5.3 Same-technique pair opportunity
 
@@ -266,6 +266,9 @@ This v0.1 contract contains design choices with different decision states:
 4. Primary report-level denominator is `N_assessable`; assessability coverage is `N_assessable / N_eligible` — **adopted as the project default on 4 November 2026 under delegated decision**.
 5. A report with zero resolved atomic `ATTACK_ACTION` event leaves remains in `N_assessable` only when source/scope and local-use eligibility pass, report assessability is `ASSESSABLE`, and at least one eligible full-report review is `COMPLETE`; `NOT_ASSESSABLE`, `PENDING`, incomplete review and unresolved conflicts are disclosed separately, never recoded as zero. Resolved non-primary events do not change the primary zero — **adopted with the denominator rule**.
 6. Pair opportunity and positive temporal-relation outcomes remain separate — **adopted working rule**.
+7. Report-level outcome definitions in §5.1–§5.6 specify compatible event-pair opportunity, same-technique pair opportunity, positive temporal-relation presence, within-technique temporal-relation presence, and the conditional descriptive rate. RECON v0.2 `report_level_aggregation.py` implements these report-level outcomes and their denominator/coverage handling. **Working definitions and implementation reconciled 15 November 2026; full metric-contract approval and all empirical outputs remain pending.**
+8. `approve_scope_pair_rule` remains an explicit caller gate in the aggregator. The incident-bounded rule is the working primary default, but rates that depend on pair opportunity remain withheld until the researcher approves the frozen scope rule and the selected-final data are valid.
+9. The primary pilot excludes episode-to-episode edges and record-level ChronoCTI pair-to-event alignment; neither is part of the metric universe in this contract.
 7. Primary comparison scope is the nearest shared resolved INCIDENT ancestor, and a positive relation must cite that exact scope; broad common ancestors and explicit scope assignments are separate sensitivity analyses — **adopted as the working primary rule on 8 November 2026; protocol/schema freeze remains pending**.
 
 Adopting the denominator and incident-bounded comparison-scope working rules does not approve or freeze this entire metric contract, protocol, or RECON schema. No real-report metric may be computed until the remaining protocol/schema decisions, report eligibility decisions, v0.4 strata and lock gates, selected-final analysis locks, and a frozen scope rule are in place.
