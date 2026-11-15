@@ -129,6 +129,13 @@ The v0.2 aggregator now defaults to `SHARED_RESOLVED_INCIDENT_SCOPE_v0.1`, selec
 
 **Source:** Rahman et al., *Mining temporal attack patterns from cyberthreat intelligence reports*, Knowledge and Information Systems (2025), Sections 1 and 4.4.2, https://doi.org/10.1007/s10115-025-02491-6. This is a working project decision; full protocol/schema approval remains pending.
 
+
+
+
+### 3.13 Mention kind — working free-text representation, 15 November 2026
+
+The required `event_mentions.mention_kind` field is a string in RECON v0.1. The exact enum in the unrecovered v0.4.2 package cannot be verified, and the recovered Protocol v0.4-draft does not supply a controlled list. The working decision is to keep it as a short descriptive free-text tag, not invent a closed vocabulary. It must not determine event identity, stratum, ATT&CK mapping or metric eligibility. If future analysis requires category-level comparison of mention forms, develop a separately versioned codebook and add its validation before collecting those labels. This resolves the initial-pilot representation without claiming to recover the original enum.
+
 ## 4. Requirements already represented
 
 The following protocol concepts have a clear representation and synthetic structural checks:
@@ -171,7 +178,7 @@ Structural checks do not decide source semantics. Human review must still decide
 - Real-report projections: 0.
 - Independent human agreement: not measured.
 - Novelty: not established.
-- Latest executable-code CI run [#245](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43719467092) on 15 November 2026 passed **252 synthetic test executions**: 60 root, 78 RECON v0.1, 86 RECON v0.2, 15 RECON v0.3 and 13 RECON v0.4. The 31-entry RECON v0.1 checksum manifest passed. It includes the alternative-mapping lifecycle regressions alongside the timestamp, scope, activity-stratum, lock and projection checks. All blank-extension validators and source-snapshot packaging passed. These remain structural/code-integrity checks only; they do not validate semantic annotations or establish empirical findings.
+- Latest full main-branch workflow [#248](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43720713057) on 15 November 2026 passed **252 synthetic test executions**: 60 root, 78 RECON v0.1, 86 RECON v0.2, 15 RECON v0.3 and 13 RECON v0.4. The 31-entry RECON v0.1 checksum manifest passed. It includes the alternative-mapping lifecycle regressions alongside the timestamp, scope, activity-stratum, lock and projection checks. All blank-extension validators and source-snapshot packaging passed. These remain structural/code-integrity checks only; they do not validate semantic annotations or establish empirical findings.
 
 **Freeze decision:** not ready. The key working method decisions and corresponding synthetic safeguards are now in place, including event stratum, incident-bounded scope, timestamp semantics, alternative-mapping lifecycle and initial-pilot boundaries. The remaining blockers are approval/provenance gates rather than those already completed design decisions: the original Protocol v0.4.1 and Schema v0.4.2 artifacts remain unrecovered; the researcher must explicitly accept the reconstructed Protocol v0.5/RECON v0.1-v0.4 package as a new replacement; field/enumeration and lock crosswalks still require a final whole-package review; candidate eligibility decisions remain 0/5; human-locked annotations and real-report projections remain 0; IAA is not measured; novelty is not established. Do not start annotation or claim a frozen schema until the new package is explicitly reviewed, approved, version-locked and tagged.
 
@@ -183,8 +190,3 @@ The v0.2 extension now provides a durable `analysis_partition_selection` registe
 The v0.1 standalone adapter also blocks report-level eligibility/local-use/assessability conflicts, rather than allowing a warning from the parent validator to be bypassed by a direct projection call. These controls are structurally tested only; they do not authenticate annotator identity, prove semantic agreement, or replace human adjudication.
 
 The RECON v0.1 projection metric now distinguishes cycle components that contain multiple source event edges from those that require multiple source event edges. The legacy root projector rejects self-event edges. CI run #125 passed after refreshing the 31-entry v0.1 package checksum manifest.
-
-
-### 3.13 Mention kind — working free-text representation, 15 November 2026
-
-The required `event_mentions.mention_kind` field is a string in RECON v0.1. The exact enum in the unrecovered v0.4.2 package cannot be verified, and the recovered Protocol v0.4-draft does not supply a controlled list. The working decision is to keep it as a short descriptive free-text tag, not invent a closed vocabulary. It must not determine event identity, stratum, ATT&CK mapping or metric eligibility. If future analysis requires category-level comparison of mention forms, develop a separately versioned codebook and add its validation before collecting those labels. This resolves the initial-pilot representation without claiming to recover the original enum.
