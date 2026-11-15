@@ -737,6 +737,28 @@ def validate_bundle(
         if unit and r.get("instance_status") != unit.get("instance_status") and not r.get("mention_unit_status_note"):
             _add(issues, "ERROR", "MENTION_UNIT_STATUS_MISMATCH", "Mention/unit instance_status differs; provide mention_unit_status_note", "event_mentions", i)
 
+    # Alternative groups are partition-local and belong to one activity unit.
+    # An unresolved group is all ALTERNATIVE; a resolved group contains only
+    # ACCEPTED/REJECTED members and at most one ACCEPTED winner.
+    alternative_groups: dict[tuple[tuple[str, str, str], str], list[dict[str, str]]] = {}
+    for mapping in tables["event_mappings"]:
+        group_id = mapping.get("alternative_group_id", "")
+        if group_id:
+            alternative_groups.setdefault((_partition(mapping), group_id), []).append(mapping)
+    resolved_alternative_groups: set[tuple[tuple[str, str, str], str]] = set()
+    for group_key, members in alternative_groups.items():
+        statuses = {row.get("mapping_decision_status", "") for row in members}
+        accepted_count = sum(row.get("mapping_decision_status") == "ACCEPTED" for row in members)
+        same_unit = len({row.get("activity_unit_id", "") for row in members}) == 1
+        if (
+            len(members) >= 2
+            and same_unit
+            and statuses
+            and statuses.issubset({"ACCEPTED", "REJECTED"})
+            and accepted_count <= 1
+        ):
+            resolved_alternative_groups.add(group_key)
+
     # Event mappings: exact-to-parent mapping is checked against the pinned v12.1 STIX crosswalk.
     accepted_a120 = 0
     for i, r in enumerate(tables["event_mappings"], 2):
@@ -847,28 +869,65 @@ def validate_bundle(
                 and mapped_unit.get("unit_role") == "event_leaf"
                 and mapped_unit.get("granularity") == "atomic_event"
                 and mapped_unit.get("instance_status") == "RESOLVED"
+                and (
+                    not r.get("alternative_group_id")
+                    or (_partition(r), r.get("alternative_group_id", "")) in resolved_alternative_groups
+                )
             ):
                 accepted_a120 += 1
 
-    # Alternative mappings must remain an explicit, within-unit group.
-    alternative_groups: dict[tuple[tuple[str, str, str], str], list[dict[str, str]]] = {}
+    # Alternative groups remain traceable after resolution. Do not clear the
+    # group ID from the winner or rejected members.
+    source_supported_bases = {
+        "report_explicit_subtechnique", "report_explicit_parent",
+        "source_supported_analyst_candidate",
+    }
+    mapping_evidence_links = {
+        (*_partition(link), link.get("record_id", ""))
+        for link in tables["record_evidence_links"]
+        if link.get("record_type") == "event_mappings" and link.get("evidence_role") == "MAPPING"
+    }
     for i, mapping in enumerate(tables["event_mappings"], 2):
         group_id = mapping.get("alternative_group_id", "")
         decision = mapping.get("mapping_decision_status", "")
         if decision == "ALTERNATIVE" and not group_id:
             _add(issues, "ERROR", "ALTERNATIVE_GROUP_MISSING", "An ALTERNATIVE mapping requires alternative_group_id", "event_mappings", i)
         if group_id:
-            alternative_groups.setdefault((_partition(mapping), group_id), []).append(mapping)
+            if decision not in {"ALTERNATIVE", "ACCEPTED", "REJECTED"}:
+                _add(issues, "ERROR", "ALTERNATIVE_GROUP_INVALID_MEMBER_STATUS", "Alternative-group members must be ALTERNATIVE while pending, or ACCEPTED/REJECTED after resolution", "event_mappings", i)
+            if not mapping.get("exact_technique_id", "").strip():
+                _add(issues, "ERROR", "ALTERNATIVE_MEMBER_TECHNIQUE_MISSING", "Every alternative-group member must retain its candidate exact_technique_id", "event_mappings", i)
+            if mapping.get("mapping_basis") not in source_supported_bases:
+                _add(issues, "ERROR", "UNSUPPORTED_ALTERNATIVE_MEMBER", "Alternative groups may contain only source-supported mapping candidates", "event_mappings", i)
+            if not mapping.get("mapping_notes", "").strip():
+                _add(issues, "ERROR", "ALTERNATIVE_MEMBER_RATIONALE_MISSING", "Every alternative-group member requires a concise candidate rationale or rejection reason in mapping_notes", "event_mappings", i)
+            if (*_partition(mapping), mapping.get("mapping_id", "")) not in mapping_evidence_links:
+                _add(issues, "ERROR", "ALTERNATIVE_MEMBER_NO_EVIDENCE_LINK", "Every alternative-group member requires its own MAPPING evidence link", "event_mappings", i)
         target_id = mapping.get("alternative_to_mapping_id", "")
         if target_id:
             target = indexes["event_mappings"].get((*_partition(mapping), target_id))
-            if target is None or target.get("alternative_group_id") != group_id or target.get("activity_unit_id") != mapping.get("activity_unit_id"):
-                _add(issues, "ERROR", "ALTERNATIVE_TARGET_MISMATCH", "alternative_to_mapping_id must resolve to a mapping for the same activity unit and alternative group", "event_mappings", i)
+            if target_id == mapping.get("mapping_id", ""):
+                _add(issues, "ERROR", "ALTERNATIVE_TARGET_SELF_REFERENCE", "A mapping cannot point alternative_to_mapping_id to itself", "event_mappings", i)
+            elif target is None or target.get("alternative_group_id") != group_id or target.get("activity_unit_id") != mapping.get("activity_unit_id"):
+                _add(issues, "ERROR", "ALTERNATIVE_TARGET_MISMATCH", "alternative_to_mapping_id must resolve to another mapping for the same activity unit and alternative group", "event_mappings", i)
     for (partition, group_id), members in alternative_groups.items():
+        statuses = {row.get("mapping_decision_status", "") for row in members}
         if len(members) < 2:
             _add(issues, "ERROR", "ALTERNATIVE_GROUP_SINGLETON", f"Alternative group {group_id!r} must contain at least two mapping rows", "event_mappings")
         if len({row.get("activity_unit_id", "") for row in members}) != 1:
             _add(issues, "ERROR", "ALTERNATIVE_GROUP_CROSSES_UNITS", f"Alternative group {group_id!r} must refer to one activity unit", "event_mappings")
+        if statuses == {"ALTERNATIVE"}:
+            # Still open: no member is eligible for primary mapping metrics.
+            continue
+        if "ALTERNATIVE" in statuses:
+            _add(issues, "ERROR", "ALTERNATIVE_GROUP_PARTIALLY_RESOLVED", f"Alternative group {group_id!r} mixes pending and final mapping decisions", "event_mappings")
+            continue
+        if statuses.issubset({"ACCEPTED", "REJECTED"}):
+            accepted_count = sum(row.get("mapping_decision_status") == "ACCEPTED" for row in members)
+            if accepted_count > 1:
+                _add(issues, "ERROR", "ALTERNATIVE_GROUP_MULTIPLE_ACCEPTED", f"Resolved mutually exclusive group {group_id!r} may contain at most one ACCEPTED member", "event_mappings")
+            continue
+        _add(issues, "ERROR", "ALTERNATIVE_GROUP_INVALID_MEMBER_STATUS", f"Alternative group {group_id!r} contains an unsupported or unresolved member status", "event_mappings")
 
     # Time evidence.
     time_types = {"ATTACK_OCCURRENCE", "ATTACK_PERIOD", "DETECTION", "DISCOVERY", "SAMPLE_UPLOAD", "SAMPLE_COMPILATION", "PUBLICATION", "REPORT_RETRIEVAL", "OTHER", "UNKNOWN"}
