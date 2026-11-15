@@ -68,6 +68,8 @@ A scope is the context in which two activities can reasonably be compared. Possi
 
 A text mention is a span or reference that describes an action or activity. Multiple mentions may refer to one occurrence. Repeated wording does not itself prove repeated execution.
 
+**`mention_kind` working representation (15 November 2026):** retain the required `event_mentions.mention_kind` field as a short descriptive free-text tag. Do not invent a controlled enum because the exact original v0.4.2 vocabulary was not recovered. Descriptors may distinguish, for example, an explicit action phrase from a nominal, pronominal or other coreferential reference, but these are examples rather than a closed list. `mention_kind` does not determine event identity, activity stratum, ATT&CK mapping or primary metrics. Co-reference and event identity still require source evidence under Sections 2.4–2.5. If later quantitative analysis depends on mention-kind categories, define and version a controlled codebook before that analysis.
+
 ### 2.4 Event instance
 
 An event instance is one distinguishable report-local occurrence. A technique, tool, malware family, actor, host, sentence, or mention is not itself an event instance.
@@ -337,7 +339,7 @@ MITRE Attack Flow dependency arrows are not temporal BEFORE labels.
 
 ### Pass 2 — Mentions
 
-1. Record action/activity mentions as exact source spans with zero-based, half-open character offsets.
+1. Record action/activity mentions as exact source spans with zero-based, half-open character offsets, and assign a concise descriptive `mention_kind` free-text tag under Section 2.3.
 2. Check that `source_text[start:end]` equals the stored mention text.
 3. Assign an `instance_status` to every mention.
 4. Group co-referring mentions only when source evidence supports a shared occurrence.
