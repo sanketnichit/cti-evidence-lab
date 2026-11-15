@@ -112,7 +112,7 @@ The projection helper is not a lock-verification substitute. Before use on a rev
 2. `report_registry.protocol_version` and `schema_version` are partition metadata fields. The final freeze must specify the exact composite protocol/schema version identifier applied to each annotation partition; this document does not silently assign one.
 3. v0.3 adjudication is not implemented. Do not use its scope-assignment sensitivity with multi-annotator consensus or adjudicated-final data.
 4. v0.3 and v0.4 locks each bind directly to v0.2 selected-analysis lock; neither lock authenticates identity or substitutes for a documented human sign-off.
-5. The v0.2, v0.3 and v0.4 manifests must describe the current incident-bounded primary rule and sensitivity statuses consistently. Earlier manifest statements are superseded where they describe the pre-8/15 November working decision state.
+5. The v0.2/v0.3 manifests and v0.4 README were reconciled during this crosswalk revision to state the incident-bounded primary rule, broader/explicit sensitivity roles and the single-annotator v0.3 limitation. The current text should be checked again at final freeze, alongside the protocol/metric version crosswalk.
 6. All extension registers are currently header-only. No lock has been generated, and all real-report/empirical counts remain zero.
 
 ## 9. Freeze use
