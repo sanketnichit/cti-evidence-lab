@@ -107,9 +107,9 @@ The following working rules are derived from the recovered Protocol v0.4-draft a
 These source-scope dispositions change two eligibility fields in the successor frame v1.0 while preserving both rows in the historical 120-report inventory. The remaining protocol defaults do not create any event-level labels or human annotations. They are working project decisions, not evidence that any report contains a particular event or temporal relation.
 
 
-## 2B. Additional protocol-boundary proposals — 5 November 2026
+## 2B. Additional protocol-boundary items — proposed 5 November 2026, updated 15 November 2026
 
-These are recommendations for the initial feasibility pilot, not adopted researcher decisions. They are recorded here because the current protocol and reconstructed registers must not imply that an unsupported relation type can be annotated in an improvised field.
+This section records issues first identified as proposals for the initial feasibility pilot on 5 November. The status column below records their subsequent disposition: the episode-edge and ChronoCTI pair-alignment deferrals were adopted as working pilot boundaries on 15 November 2026. They remain subject to the overall protocol/schema review and freeze. The section also records structural requirements that must not be improvised into unsupported fields.
 
 | Item | Source-grounded position | Current recommendation | Formal status |
 |---|---|---|---|
