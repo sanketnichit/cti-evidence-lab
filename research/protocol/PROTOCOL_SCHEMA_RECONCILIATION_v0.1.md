@@ -1,6 +1,6 @@
 # Protocol v0.5 ↔ Schema RECON v0.1 reconciliation register
 
-**Updated:** 8 November 2026  
+**Updated:** 15 November 2026  
 **Status:** Reconciliation finding register; not protocol approval, schema approval, or a freeze decision.  
 **Compared:** `CTI_Event_Instance_Annotation_Protocol_v0.5-draft.md`, RECON v0.1 field dictionary, controlled vocabularies, data-model rules, validator, projection adapter, projection metrics and synthetic QA.
 
@@ -16,7 +16,7 @@ RECON v0.1 remains a reconstruction. It is not the missing original Schema v0.4.
 |---|---|---|
 | Source identity, freeze and rights | `report_registry`, `evidence_spans`, `record_evidence_links` | Covered with a denominator correction now enforced: assessability requires the exact frozen source to be supplied and hash/character-count verified. |
 | Scope hierarchy and pair comparability | `report_scopes`, unit `scope_id`, evidence links; v0.2 aggregator; v0.3 assignment extension | The hierarchy is structurally covered. The adopted working primary rule is the nearest shared RESOLVED INCIDENT ancestor, and a primary relation must cite that exact scope. Legacy broad-ancestor and explicit-assignment rules remain separate sensitivities. v0.2/v0.4 defaults and numerator/denominator filters are implemented; final protocol/schema approval remains open. |
-| Mentions and occurrence identity | `event_mentions`, `activity_units`, evidence spans | Core representation covered. `mention_kind` remains deliberately open because the original enum was not recovered. |
+| Mentions and occurrence identity | `event_mentions`, `activity_units`, evidence spans | Core representation covered. The exact original `mention_kind` enum was not recovered; the field remains required short descriptive free text in the working protocol and is not used for event identity, activity stratum, mapping or metrics. A controlled vocabulary would require a separately versioned codebook before any quantitative use. |
 | Granularity, unit roles and counts | `activity_units` | Covered structurally, including role/granularity pairings, count consistency and acyclic parent hierarchy. |
 | Event-universe stratum | RECON v0.4 `activity_unit_strata.csv` one-to-one extension, validator, lock and primary projection filter | Implemented as a draft additive layer without mutating the checksum-controlled v0.1 `activity_units.csv`: every activity unit has exactly one evidence-backed stratum row; selected-final stratum decisions are bound to the v0.2 lock; only ATTACK_ACTION leaves, mappings, edges and pair opportunities enter primary projection. Auxiliary and mixed rows remain visible separately. Thirteen synthetic tests pass; researcher review and protocol/schema freeze remain open. |
 | ATT&CK mapping | `event_mappings`, mapping evidence links, pinned A_120 and v12.1 crosswalk | Core structural gates are covered: accepted analyst candidates require rationale/evidence, accepted IDs and parents are checked against v12.1, and alternative groups are checked for membership, lifecycle state and traceable resolution. Human semantic fit and the decision that candidate interpretations are truly mutually exclusive remain open. |
@@ -26,7 +26,7 @@ RECON v0.1 remains a reconstruction. It is not the missing original Schema v0.4.
 | Optional candidate-pair assessment | `candidate_pair_assessments` | Covered structurally. Endpoint eligibility, rule/version pinning, and reasons for all three non-positive outcomes are validated; the candidate universe itself remains a researcher-frozen rule. |
 | Lock and benchmark reveal | v0.1 partition lock; v0.2 `analysis_partition_selection` and selected-final wrapper; v0.3 scope-assignment lock | Final analysis partition designation, selection lock and explicit-scope assignment lock are structurally implemented and synthetically tested. The digest is a mutation detector, not an identity signature; annotator identity and benchmark reveal remain human workflow controls. |
 | Projection and cycle diagnostics | Projection adapter and `projection_metrics_recon.py` | Core event-edge projection, omission, collision and cycle-provenance logic is represented and synthetically tested. |
-| Full metric contract | v0.1 per-report projection metrics; v0.2 `report_level_aggregation.py`; v0.4 attack-action adapter | The v0.1 module does not perform batch aggregation. The v0.2 aggregator defaults to the nearest shared RESOLVED INCIDENT rule and applies it to both opportunity denominator and positive-relation numerator; v0.4 filters the pair universe to ATTACK_ACTION leaves. Rates remain withheld until full protocol/schema approval and reviewed locked data. |
+| Full metric contract | Metric Contract v0.1; v0.2 `report_level_aggregation.py`; v0.4 attack-action adapter | The contract defines separate report-level event presence, compatible pair opportunity, same-technique pair opportunity, positive relation, within-technique relation and conditional descriptive outcomes. The v0.2 aggregator implements these outcomes with selected-final and denominator gates; v0.4 filters the primary pair/event universe to ATTACK_ACTION leaves and incident-bounded scope. Scope-pair-dependent opportunity rates remain withheld unless the caller explicitly approves the scope rule; no real-report metrics exist. |
 | ChronoCTI baseline alignment | No alignment register in RECON v0.1/v0.2 | **Adopted working pilot deferral (15 November 2026):** preserve benchmark pair IDs/labels/provenance separately; do not create event-pair alignment labels or repurpose existing registers. A later alignment study requires a dedicated register and evidence/validation plan. |
 
 ## 3. Findings requiring implementation or a design decision
@@ -91,18 +91,15 @@ Protocol v0.5-draft previously required explicit alignment labels (`supported`, 
 
 Protocol v0.5-draft Section 6.3 now adopts a working deferral of record-level ChronoCTI pair-to-event alignment from the initial pilot. Preserve raw benchmark pair IDs, labels and provenance in the separate baseline reproduction materials. Do not treat benchmark edges as source evidence. If alignment is later brought into scope, add a dedicated register, candidate-generation rules, evidence requirements and separate validation. This is a working boundary, not formal protocol/schema freeze.
 
-### 3.9 Metric coverage — per-report core implemented, report-level analyses incomplete
+### 3.9 Metric coverage — report-level definitions and aggregation implemented; empirical outputs pending
 
-The current projection module implements the edge-to-pair projection, diagonal/full/partial/unmapped edge outcomes, distinct-pair collisions, label conflicts, source-graph cycle checks, and provenance of projected cycles.
+The projection module implements event-edge-to-technique-pair projection, diagonal/full/partial/unmapped edge outcomes, distinct-pair collisions, label conflicts, source-graph cycle checks and projected-cycle provenance.
 
-The protocol's metric list also includes:
-- same-technique pair-opportunity rate across all distinct compatible event-leaf pairs, whether or not a temporal relation exists;
-- occurrence compression / event-leaf count per technique;
-- report-level numerator/denominator aggregation across `N_assessable`.
+Metric Contract v0.1 defines separate report-level indicators and formulas for event-leaf presence, compatible event-pair opportunity, same-technique pair opportunity, positive temporal-relation presence, within-technique temporal-relation presence and the conditional descriptive rate. It also defines occurrence compression, mapping coverage, edge projection outcomes, omitted diagonal combinations, distinct-pair collisions and strict-order cycle diagnostics. These outcomes have different units and must not be collapsed into a single information-loss percentage.
 
-The projection module itself is not the report-level aggregator. RECON v0.2 now supplies `analysis/report_level_aggregation.py` with synthetic coverage for report eligibility/assessability, selected-final projection outcomes, occurrence compression and per-report projection diagnostics. Pair-opportunity-dependent rates remain withheld until the provisional scope-pair opportunity rule is explicitly approved. The aggregator does not decide source semantics or scope compatibility.
+RECON v0.2 `analysis/report_level_aggregation.py` implements the report-level numerator/denominator handling, selected-final partition gate, assessability coverage, occurrence compression, label breakdowns and projection diagnostics. It requires verified source texts and a valid selected-final projection for each assessable report before publishing the complete report-rate set. It withholds pair-opportunity-dependent rates unless the caller explicitly sets the scope-pair approval gate; the incident-bounded rule is the working default, not yet formal researcher freeze approval. The v0.4 adapter filters the primary calculation to ATTACK_ACTION event leaves and applies the same incident-bounded scope rule to the pair-opportunity denominator and positive-relation numerator.
 
-**Proposed repair:** define the pair universe and aggregation rules in the metric contract before implementation. Keep this work separate from the annotation validator and do not report rates until real locked partitions exist.
+**Disposition:** the earlier repair proposal is complete as a working metric specification and synthetic implementation. Full metric-contract approval, valid human-locked partitions, complete source verification and all empirical outputs remain pending. The aggregator does not decide event semantics, source entailment or scope correctness.
 
 ### 3.10 Time normalization and timestamp-derived relation semantics — working rule adopted; implementation extended
 
@@ -137,13 +134,14 @@ The v0.2 aggregator now defaults to `SHARED_RESOLVED_INCIDENT_SCOPE_v0.1`, selec
 The following protocol concepts have a clear representation and synthetic structural checks:
 
 - report, annotator and pass partitioning;
+- required descriptive `mention_kind` field retained as free text rather than an unrecovered enum;
 - source text hash, exact half-open offsets and optional source-text verification;
 - report-local scope hierarchy and acyclic unit-parent hierarchy;
 - mention status separate from activity-unit status;
 - atomic leaves versus series/episode/aggregate containers;
 - count-status consistency and non-negative bounds;
 - pinned ATT&CK v12.1 exact-to-parent crosswalk and A_120 membership;
-- accepted mapping evidence, mapping-level ATT&CK release and lifecycle checks; accepted analyst-candidate rationale; alternative-group membership and target-consistency checks;
+- accepted mapping evidence, mapping-level ATT&CK release and lifecycle checks; accepted analyst-candidate rationale; alternative-group membership, pending/resolved state, evidence and traceable resolution checks;
 - direct timestamp evidence on both endpoints;
 - distinct, scope-compatible primary temporal endpoints;
 - separate non-temporal relations;
@@ -162,7 +160,9 @@ Structural checks do not decide source semantics. Human review must still decide
 4. **Complete as a working decision and draft implementation — alternative mapping lifecycle.** Pending groups contain only `ALTERNATIVE` members; resolved groups contain one `ACCEPTED` plus `REJECTED` members, or all `REJECTED`. Preserve group lineage; partial and multiple-winner groups are invalid. Human mutual-exclusivity and winner decisions remain open.
 5. **Complete as a working decision and draft implementation — timestamp semantics.** Timestamp-only evidence is restricted to invariant strict BEFORE/AFTER; the three non-strict positive labels require explicit direct-source wording. Normalized occurrence-time bounds are closed possibility ranges and accepted normalized values use UTC. Ambiguous/inferred zones and unresolved DST interpretations do not support timestamp-derived edges. The v0.2 validator and synthetic tests enforce the structural parts; human review remains responsible for semantic correctness.
 6. **Complete as a working workflow boundary — v0.3 scope-assignment sensitivity.** Use v0.3 explicit event-to-scope assignment only with `SINGLE_ANNOTATOR_FINAL` in this pilot. It is not eligible for multi-annotator consensus/adjudicated-final use until a dedicated assignment-adjudication register, validator and procedure are implemented. The primary incident-bounded analysis does not depend on v0.3.
-7. After the remaining decisions, reconcile v0.1-v0.4 protocol/schema layers into one reviewed freeze package, confirm field/lock/projection consistency, update manifests/checksums, run CI, and obtain explicit researcher approval before formal annotation.
+7. **Freeze-preparation audit.** Cross-check the complete Protocol v0.5-draft, Metric Contract v0.1, Decision Register v0.2 and RECON v0.1-v0.4 fields, enums, locks, validation gates, projection inputs and metric outputs. Record all accepted reconstruction proposals and any remaining open field or workflow decisions; do not imply recovery of the missing original v0.4.1/v0.4.2 artifacts.
+8. **Formal approval gate.** The researcher must explicitly accept Protocol v0.5 and the reconstructed schema/extensions as a new replacement package, approve the metric contract and applicable scope-pair rule, and confirm the human annotation/IAA workflow. Create and tag a single versioned freeze manifest only after those approvals; regenerate its file hashes and run the full CI suite.
+9. Begin source-first human feasibility annotation only after each candidate has passed its individual eligibility/source gates and the versioned package is approved/frozen. No real-report metrics or novelty claims precede the locked data.
 
 ## 6. Current research boundary
 
@@ -173,7 +173,7 @@ Structural checks do not decide source semantics. Human review must still decide
 - Novelty: not established.
 - Latest executable-code CI run [#245](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43719467092) on 15 November 2026 passed **252 synthetic test executions**: 60 root, 78 RECON v0.1, 86 RECON v0.2, 15 RECON v0.3 and 13 RECON v0.4. The 31-entry RECON v0.1 checksum manifest passed. It includes the alternative-mapping lifecycle regressions alongside the timestamp, scope, activity-stratum, lock and projection checks. All blank-extension validators and source-snapshot packaging passed. These remain structural/code-integrity checks only; they do not validate semantic annotations or establish empirical findings.
 
-**Freeze decision:** not ready. The event-universe, incident-bounded comparison-scope, and timestamp-semantics boundaries now have working decisions, draft implementations and synthetic coverage, but have not been formally approved/frozen as one complete protocol/schema. Remaining blockers include the alternative-mapping-group lifecycle, pilot deferrals, and the scope-assignment adjudication workflow if the explicit-assignment sensitivity is used with multiple annotators. Do not start formal annotation or claim a frozen schema until those choices are reconciled and the complete versioned package is explicitly approved.
+**Freeze decision:** not ready. The key working method decisions and corresponding synthetic safeguards are now in place, including event stratum, incident-bounded scope, timestamp semantics, alternative-mapping lifecycle and initial-pilot boundaries. The remaining blockers are approval/provenance gates rather than those already completed design decisions: the original Protocol v0.4.1 and Schema v0.4.2 artifacts remain unrecovered; the researcher must explicitly accept the reconstructed Protocol v0.5/RECON v0.1-v0.4 package as a new replacement; field/enumeration and lock crosswalks still require a final whole-package review; candidate eligibility decisions remain 0/5; human-locked annotations and real-report projections remain 0; IAA is not measured; novelty is not established. Do not start annotation or claim a frozen schema until the new package is explicitly reviewed, approved, version-locked and tagged.
 
 
 ## RECON v0.2 selected-analysis gate addendum — 5 November 2026
@@ -183,3 +183,8 @@ The v0.2 extension now provides a durable `analysis_partition_selection` registe
 The v0.1 standalone adapter also blocks report-level eligibility/local-use/assessability conflicts, rather than allowing a warning from the parent validator to be bypassed by a direct projection call. These controls are structurally tested only; they do not authenticate annotator identity, prove semantic agreement, or replace human adjudication.
 
 The RECON v0.1 projection metric now distinguishes cycle components that contain multiple source event edges from those that require multiple source event edges. The legacy root projector rejects self-event edges. CI run #125 passed after refreshing the 31-entry v0.1 package checksum manifest.
+
+
+### 3.13 Mention kind — working free-text representation, 15 November 2026
+
+The required `event_mentions.mention_kind` field is a string in RECON v0.1. The exact enum in the unrecovered v0.4.2 package cannot be verified, and the recovered Protocol v0.4-draft does not supply a controlled list. The working decision is to keep it as a short descriptive free-text tag, not invent a closed vocabulary. It must not determine event identity, stratum, ATT&CK mapping or metric eligibility. If future analysis requires category-level comparison of mention forms, develop a separately versioned codebook and add its validation before collecting those labels. This resolves the initial-pilot representation without claiming to recover the original enum.
