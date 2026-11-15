@@ -50,7 +50,7 @@ The original `CTI_Annotation_Schema_v0.4.2-draft.zip` and exact `CTI_Event_Insta
 
 ## Primary analysis gates
 
-Only resolved `event_leaf` activity units with `atomic_event` granularity may enter the primary event graph. Temporal edges additionally require distinct endpoints, compatible recorded comparison scope, relation-specific evidence and `direct_source` or `direct_timestamp` relation basis. Primary mapping comparisons use accepted source-supported IDs from the pinned A_120 list; `workbook_only` and alternative-only mappings are excluded.
+Only resolved `event_leaf` activity units with `atomic_event` granularity may enter the primary event graph. Temporal edges additionally require distinct endpoints, compatible recorded comparison scope, relation-specific evidence and `direct_source` or `direct_timestamp` relation basis. Primary mapping comparisons use accepted source-supported IDs from the pinned A_120 list; `workbook_only` and alternative-only mappings are excluded. Alternative groups remain pending while all members are `ALTERNATIVE`; they resolve to exactly one `ACCEPTED` plus one or more `REJECTED`, or all `REJECTED`. Group IDs and rejected rows are preserved, and partial/multiple-winner groups block validation.
 
 ## Validator and synthetic tests
 
