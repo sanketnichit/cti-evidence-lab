@@ -1,20 +1,20 @@
 # Synthetic validation results — CTI Annotation Schema RECON v0.1
 
-**Date:** 5 November 2026  
+**Date:** 15 November 2026  
 **Status:** Synthetic structural tests only. No human annotations or real AnnoCTR reports were used.
 
 ## Overall result
 
 - Python compilation of all package Python modules: **PASS**
-- `python -m unittest discover -s tests -v`: **69 tests**
-  - Schema validator: 41
-  - Projection metrics: 16
+- `python -m unittest discover -s tests -v`: **78 tests**
+  - Schema validator: 47
+  - Projection metrics: 19
   - Annotation-to-projection adapter: 12
 - ATT&CK v12.1 crosswalk: 737 unique exact IDs; 333 top-level; 404 sub-techniques; all 404 resolve to valid explicit parent rows; 120/120 A_120 members are top-level self-mappings. Independent CSV SHA-256 recomputation matched the manifest.
 - Header-only blank-bundle check: 0 errors and 1 expected `EMPTY_ANNOTATION_BUNDLE` warning.
 - Pinned derived A_120 vocabulary: 120 unique identifiers loaded and checked.
 
-## Schema validator tests (1–41)
+## Schema validator tests (1–47)
 
 1. Valid two-event direct `BEFORE` relation is accepted.
 2. Missing source text produces a warning rather than silently validating offsets.
@@ -57,42 +57,52 @@
 39. `VAGUE_OR_AMBIGUOUS` and `NOT_ASSESSABLE` candidate assessments require an assessment reason.
 40. Alternative mapping rows require a valid group with at least two members for one activity unit; target links must stay within that group.
 41. An accepted `source_supported_analyst_candidate` mapping requires a non-empty human rationale and mapping-specific evidence.
+42. A pending alternative group is valid only when all members remain `ALTERNATIVE`; pending members do not enter A_120 counts.
+43. Resolving an alternative group with one accepted winner and rejected competitors preserves the group ID and counts only the winner.
+44. An all-rejected alternative group is a valid resolved outcome and contributes no primary mapping.
+45. A partially resolved group is rejected, and its provisional accepted member is withheld from primary mapping counts.
+46. A mutually exclusive group cannot contain multiple accepted mappings.
+47. Each alternative-group member requires its own mapping-specific evidence link and rationale.
 
-Primary relation and candidate-pair comparison scopes must now be shared RESOLVED non-report ancestors from the same provisional scope universe used by opportunity counting. A regression fixture rejects REPORT_AGGREGATE as a comparison scope even when both endpoints descend from it. This remains a structural guard; the scientific scope policy is unapproved and pair-opportunity rates remain withheld.
+Primary relation and candidate-pair comparison scopes are checked against the shared resolved-scope ancestry rules; incident-bounded primary comparison is a later working decision recorded in Protocol v0.5-draft. Alternative mapping groups now have a state lifecycle: all-ALTERNATIVE while pending, exactly one ACCEPTED plus REJECTED members after resolution, or all REJECTED. The group ID and rejected rows remain traceable. These are synthetic structural checks only.
 
-## Projection metric tests (42–57)
+## Projection metric tests (48–66)
 
-42. The four event-edge projection statuses are mutually exclusive and exhaustive.
-43. `project_report_recon()` rejects self-event edges itself.
-44. Unmapped endpoints are not mislabeled as fully omitted mapped edges.
-45. `AFTER` direction is reversed for strict-order projection.
-46. Symmetric temporal labels use unordered technique dyads.
-47. Distinct-pair collisions and conflicting labels retain source-edge provenance.
-48. Technique-cycle components preserve source event-edge provenance.
-49. Single-event-edge mapping-fanout cycles are distinguished from multi-edge cycles.
-50. Source event-graph cycles invalidate projection-induced cycle diagnostics.
-51. Non-positive, inferred/transitive and scope-incompatible edges are rejected.
-52. Alternative, workbook-only, out-of-vocabulary and container mappings are excluded from A_120.
-53. Duplicate mapping IDs are rejected.
-54. Zero-edge input returns undefined (`null`) edge rates rather than divide-by-zero values.
-55. Inverse `AFTER` and `BEFORE` claims normalize to one strict-order pair and do not create a label conflict.
-56. A strict-order claim and `OVERLAP` remain a pair-level label conflict.
-57. Adding a redundant source edge does not hide a cycle induced by one source edge's mapping fan-out.
+48. The four event-edge projection statuses are mutually exclusive and exhaustive.
+49. `project_report_recon()` rejects self-event edges itself.
+50. Unmapped endpoints are not mislabeled as fully omitted mapped edges.
+51. `AFTER` direction is reversed for strict-order projection.
+52. Symmetric temporal labels use unordered technique dyads.
+53. Distinct-pair collisions and conflicting labels retain source-edge provenance.
+54. Technique-cycle components preserve source event-edge provenance.
+55. Single-event-edge mapping-fanout cycles are distinguished from multi-edge cycles.
+56. Source event-graph cycles invalidate projection-induced cycle diagnostics.
+57. Non-positive, inferred/transitive and scope-incompatible edges are rejected.
+58. Alternative, workbook-only, out-of-vocabulary and container mappings are excluded from A_120.
+59. Duplicate mapping IDs are rejected.
+60. Zero-edge input returns undefined (`null`) edge rates rather than divide-by-zero values.
+61. Inverse `AFTER` and `BEFORE` claims normalize to one strict-order pair and do not create a label conflict.
+62. A strict-order claim and `OVERLAP` remain a pair-level label conflict.
+63. Adding a redundant source edge does not hide a cycle induced by one source edge's mapping fan-out.
 
-## Annotation-to-projection adapter tests (58–69)
+64. A `BEFORE`/overlap label conflict is invariant to endpoint direction.
+65. Missing relation basis or comparison scope fails closed.
+66. Null or empty technique identifier sets are rejected.
 
-58. A valid exact report/annotator/pass partition projects only eligible primary rows.
-59. Mixed annotator rows do not leak across partitions.
-60. Container mappings are excluded from the primary event mapping set.
-61. Inferred/non-primary temporal relations are not projected.
-62. Empty mapping sets keep event relations visible as unmapped-endpoint edges.
-63. Scope or structural validation errors stop the adapter.
-64. Incomplete report review stops the adapter.
-65. Ineligible or locally unpermitted reports are blocked.
-66. Explicit annotation-lock confirmation and a non-empty lock reference are required.
-67. Arbitrary or stale lock references are rejected against the computed partition digest.
-68. Prior-exposure status and the associated caution flag are exposed in projection output
-69. A report-level eligibility/local-use/assessability conflict blocks direct selected-partition projection.
+## Annotation-to-projection adapter tests (67–78)
+
+67. A valid exact report/annotator/pass partition projects only eligible primary rows.
+68. Mixed annotator rows do not leak across partitions.
+69. Container mappings are excluded from the primary event mapping set.
+70. Inferred/non-primary temporal relations are not projected.
+71. Empty mapping sets keep event relations visible as unmapped-endpoint edges.
+72. Scope or structural validation errors stop the adapter.
+73. Incomplete report review stops the adapter.
+74. Ineligible or locally unpermitted reports are blocked.
+75. Explicit annotation-lock confirmation and a non-empty lock reference are required.
+76. Arbitrary or stale lock references are rejected against the computed partition digest.
+77. Prior-exposure status and the associated caution flag are exposed in projection output
+78. A report-level eligibility/local-use/assessability conflict blocks direct selected-partition projection.
 
 ## Lifecycle flags in Enterprise ATT&CK v12.1
 

@@ -176,6 +176,18 @@ A technique appearing only in the ChronoCTI workbook is `workbook_only`; it is n
 5. Multiple independently supported `ACCEPTED` mappings may coexist on one activity unit. Each requires its own evidence and confidence. Multiple mapping rows never create additional event instances.
 6. A mapping enters primary `A_120` only when it is accepted, source-supported, its exact ID resolves through the pinned Enterprise ATT&CK v12.1 crosswalk, its parent is in the pinned `A_120` vocabulary, and the lifecycle rule is satisfied.
 
+**Alternative-group lifecycle — adopted working rule, 15 November 2026:**
+
+- An `alternative_group_id` identifies mutually exclusive interpretations for one activity unit within one report/annotator/pass partition. It is not a container for multiple independently supported techniques. Each member has its own mapping ID, candidate exact technique ID, mapping-specific evidence link, and concise rationale in `mapping_notes`.
+- While the choice remains unresolved, every member remains `mapping_decision_status=ALTERNATIVE`. No member in that group enters `A_exact`, `A_120`, pair-opportunity calculations, or projection metrics.
+- A resolved group has either exactly one `ACCEPTED` member and one or more `REJECTED` members, or all members `REJECTED` when none of the candidate interpretations is supported. A group cannot mix pending `ALTERNATIVE` members with final statuses, contain more than one `ACCEPTED` member, or contain `UNRESOLVED` members. An invalid/partially resolved group blocks validation and projection.
+- Keep the same `alternative_group_id` on every member after resolution, including the accepted winner and rejected candidates. Do not delete rejected rows or clear their group IDs. The accepted winner is the only group member eligible for mapping metrics; an all-rejected group contributes no mapping.
+- `alternative_to_mapping_id` is an optional trace link to another member of the same group and unit; it does not select the winner or determine whether the group is resolved.
+- When a separate reviewer adjudicates the group, record the decision for each changed member in `adjudication_log` against `event_mappings.mapping_decision_status`, retaining original/proposed/final values and a rationale. Use `ADJUDICATED` only when that review is actually recorded. A single annotator must not describe their own decision as independent adjudication.
+- If two techniques are independently supported rather than mutually exclusive, record two separate `ACCEPTED` rows without an alternative group. Do not create a group merely because the unit has multiple mappings.
+
+The group-state rules are inferred from the reconstruction's existing `mapping_decision_status`, `alternative_group_id`, `alternative_to_mapping_id`, and `adjudication_log` fields. They do not claim to recover missing original v0.4.2 semantics. The validator enforces structural state/evidence requirements; human review still decides whether candidate interpretations are genuinely mutually exclusive and which, if any, is supported.
+
 ### 3.2 Baseline-compatible mapping
 
 For the primary ChronoCTI comparison:

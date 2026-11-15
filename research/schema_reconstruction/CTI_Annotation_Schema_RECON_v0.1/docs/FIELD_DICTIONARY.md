@@ -121,7 +121,7 @@ Primary evidence spans referenced in direct `primary_evidence_span_id` fields mu
 | `attack_version` | string | yes | Pinned ATT&CK release/version used for mapping. |
 | `mapping_basis` | v0.4 values | yes | `report_explicit_subtechnique`, `report_explicit_parent`, `source_supported_analyst_candidate`, `workbook_only`, `unresolved`. **CONFIRMED v0.4-draft.** |
 | `mapping_decision_status` | `ACCEPTED`, `ALTERNATIVE`, `REJECTED`, `UNRESOLVED` | yes | **RECONSTRUCTION PROPOSAL**; exact v0.4.2 enum unavailable. |
-| `alternative_group_id`, `alternative_to_mapping_id` | string/blank | conditional | Link mutually exclusive alternatives; alternatives do not enter primary mapping set. |
+| `alternative_group_id`, `alternative_to_mapping_id` | string/blank | conditional | Stable group ID links mutually exclusive interpretations for one unit and partition; retain it on all members after resolution. The optional target is a within-group trace link, not a winner selector. Pending groups contain only `ALTERNATIVE` rows; resolved groups contain one `ACCEPTED` plus one or more `REJECTED`, or all `REJECTED`. Pending/invalid group members do not enter primary mapping metrics. |
 | `baseline_vocabulary_id`, `baseline_vocabulary_sha256` | string | yes for baseline analysis | Must identify the pinned derived A_120 artifact and SHA-256. |
 | `baseline_parent_technique_id` | string/blank | conditional | Parent technique ID used in the ChronoCTI 120-term vocabulary. |
 | `baseline_mapping_status` | `IN_VOCAB`, `OUT_OF_VOCAB`, `UNRESOLVED`, `NOT_APPLICABLE` | yes | **RECONSTRUCTION PROPOSAL.** `IN_VOCAB` requires membership in pinned A_120. |

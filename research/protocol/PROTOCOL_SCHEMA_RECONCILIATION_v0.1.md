@@ -55,11 +55,21 @@ RECON v0.1 and v0.2 have no dedicated episode-to-episode temporal relation regis
 
 Protocol v0.5-draft now proposes deferring episode-to-episode relation records from the initial pilot while retaining episode containers and any supported unit/time evidence. This is the recommended way to keep the initial schema bounded without weakening the atomic event gate. The deferral is not yet an adopted researcher decision: explicit approval is required before freeze. If episode-edge analysis is retained instead, it needs a separately versioned register and distinct tests; do not place episode edges in `temporal_relations`.
 
-### 3.4 Alternative mapping groups — structural gate implemented; resolution semantics open
+### 3.4 Alternative mapping groups — working lifecycle decision adopted 15 November 2026
 
-The validator requires an `alternative_group_id` for `ALTERNATIVE` rows, at least two mapping rows per group, one activity unit per group, and any `alternative_to_mapping_id` to resolve within the same group and activity unit. The projection path excludes every non-`ACCEPTED` row. These structural rules are tested.
+The existing row fields are sufficient for a conservative lifecycle; no new group register or columns are needed in this reconstruction.
 
-The remaining issue is not the existence of group checks: the protocol/schema still needs an explicit lifecycle for a group after human adjudication. It must state how the group is marked resolved, whether one alternative is promoted to `ACCEPTED`, how rejected alternatives remain traceable, and whether a promoted row retains or clears the former group ID. The validator cannot decide whether two candidate mappings are genuinely mutually exclusive. Independently supported multiple techniques remain separate `ACCEPTED` rows, not one alternative group. Do not change the schema until this decision is specified.
+- **Pending:** every member of a group is `ALTERNATIVE`. Each row has a distinct mapping ID, one exact candidate technique ID, mapping-specific evidence link and rationale. Pending members never contribute to the accepted mapping set.
+- **Resolved with a winner:** exactly one member becomes `ACCEPTED`; every other member becomes `REJECTED`.
+- **Resolved without a winner:** every member becomes `REJECTED`.
+- A group with a mixture of `ALTERNATIVE` and final statuses is partially resolved and invalid. More than one `ACCEPTED` member is invalid. `UNRESOLVED` rows are not group members; when no candidate can be specified, retain a separate `UNRESOLVED` mapping decision instead of inventing a candidate.
+- Preserve the same `alternative_group_id` on all members, including the winner and rejected alternatives. Preserve rejected rows. `alternative_to_mapping_id` is an optional within-group trace link, not the resolution mechanism.
+- A separate reviewer records each adjudicated member decision in `adjudication_log` against `event_mappings.mapping_decision_status`. Do not label a single annotator's own choice as independent adjudication.
+- Two independently supported techniques remain separate `ACCEPTED` mappings with no alternative group.
+
+The v0.1 validator now enforces group membership, single-unit ownership, source-supported candidate basis, exact candidate IDs, per-member rationale/evidence, pending-vs-resolved status consistency, at-most-one accepted winner and stable group lineage. Accepted A_120 mapping counts exclude any member of an unresolved or invalid group. The projection function already excludes non-`ACCEPTED` rows and continues to rely on successful validation before use.
+
+These rules are a new working interpretation of the reconstructed fields, not recovered original v0.4.2 semantics. The validator cannot decide whether candidates are truly mutually exclusive or whether a winner is semantically correct; those remain human judgments.
 
 ### 3.5 Analyst-candidate mapping rationale — corrected
 
