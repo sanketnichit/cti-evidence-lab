@@ -58,7 +58,7 @@ All annotation rows are partitioned by `(report_id, annotator_id, annotation_pas
 1. `event_mappings.activity_unit_id` must resolve within the same partition.
 2. Only `mapping_decision_status=ACCEPTED` with source-supported `mapping_basis` may enter primary mapping sets.
 3. `mapping_basis=workbook_only` must never be accepted into `A_exact` or `A_120`.
-4. `ALTERNATIVE`, `REJECTED`, or `UNRESOLVED` decisions are excluded from primary mapping sets. An `ALTERNATIVE` row requires an `alternative_group_id`; each group contains at least two mapping rows for one activity unit, and any `alternative_to_mapping_id` resolves within that group and unit.
+4. `ALTERNATIVE`, `REJECTED`, or `UNRESOLVED` decisions are excluded from primary mapping sets. An `ALTERNATIVE` row requires an `alternative_group_id`; each group contains at least two source-supported candidate rows for one activity unit, each with its own evidence link and rationale. A pending group has only `ALTERNATIVE` members. A resolved group has exactly one `ACCEPTED` plus one or more `REJECTED` members, or all members `REJECTED`. Preserve the group ID and rejected rows after resolution; partial resolution and multiple accepted members are invalid. The optional `alternative_to_mapping_id` remains a within-group trace link and does not select a winner.
 5. Every `baseline_mapping_status=IN_VOCAB` must have `baseline_parent_technique_id` present in the pinned A_120 list and matching `baseline_vocabulary_sha256`.
 6. Exact technique/sub-technique IDs are retained separately from parent technique IDs.
 7. An accepted `source_supported_analyst_candidate` mapping requires a non-empty human rationale in `mapping_notes` and a mapping-specific evidence link.
