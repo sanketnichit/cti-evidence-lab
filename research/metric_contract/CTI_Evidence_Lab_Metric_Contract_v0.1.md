@@ -260,7 +260,7 @@ Missing annotation rows never become automatic negative labels. The full-report 
 
 This v0.1 contract contains design choices with different decision states:
 
-1. Primary mapping level is `A_120`; `A_exact` is a separately reported sensitivity analysis — **adopted as the working project default on 4 November 2026; the exact-to-parent crosswalk remains a technical gate**.
+1. Primary mapping level is `A_120`; `A_exact` is a separately reported sensitivity analysis — **adopted as the working project default on 4 November 2026; the 737-row v12.1 exact-to-parent crosswalk is generated, hash-pinned and checked by the validator. Whole-package approval remains pending.**
 2. Primary within-technique temporal incidence includes all five directly supported positive temporal labels in §3.1 — **adopted as the working project default on 4 November 2026 under delegated direction**.
 3. Strict cycle analysis uses only `BEFORE`/`AFTER` after documented normalization — **source-grounded rule; synthetic implementation corrected**.
 4. Primary report-level denominator is `N_assessable`; assessability coverage is `N_assessable / N_eligible` — **adopted as the project default on 4 November 2026 under delegated decision**.
@@ -269,9 +269,9 @@ This v0.1 contract contains design choices with different decision states:
 7. Report-level outcome definitions in §5.1–§5.6 specify compatible event-pair opportunity, same-technique pair opportunity, positive temporal-relation presence, within-technique temporal-relation presence, and the conditional descriptive rate. RECON v0.2 `report_level_aggregation.py` implements these report-level outcomes and their denominator/coverage handling. **Working definitions and implementation reconciled 15 November 2026; full metric-contract approval and all empirical outputs remain pending.**
 8. `approve_scope_pair_rule` remains an explicit caller gate in the aggregator. The incident-bounded rule is the working primary default, but rates that depend on pair opportunity remain withheld until the researcher approves the frozen scope rule and the selected-final data are valid.
 9. The primary pilot excludes episode-to-episode edges and record-level ChronoCTI pair-to-event alignment; neither is part of the metric universe in this contract.
-7. Primary comparison scope is the nearest shared resolved INCIDENT ancestor, and a positive relation must cite that exact scope; broad common ancestors and explicit scope assignments are separate sensitivity analyses — **adopted as the working primary rule on 8 November 2026; protocol/schema freeze remains pending**.
+10. Primary comparison scope is the nearest shared resolved INCIDENT ancestor, and a positive relation must cite that exact scope; broad common ancestors and explicit scope assignments are separate sensitivity analyses — **adopted as the working primary rule on 8 November 2026; protocol/schema freeze remains pending**.
 
-Adopting the denominator and incident-bounded comparison-scope working rules does not approve or freeze this entire metric contract, protocol, or RECON schema. No real-report metric may be computed until the remaining protocol/schema decisions, report eligibility decisions, v0.4 strata and lock gates, selected-final analysis locks, and a frozen scope rule are in place.
+Adopting the working denominator, outcome formulas, attack-action universe and incident-bounded comparison-scope rules does not approve or freeze this entire metric contract, protocol or RECON schema. No real-report metric may be computed until the researcher has approved the complete versioned package, each report has passed its own eligibility/source gates, v0.4 strata and selected-final locks are valid, and the scope-pair approval gate is explicitly opened.
 
 ## 11. Implementation acceptance tests implied by this contract
 
