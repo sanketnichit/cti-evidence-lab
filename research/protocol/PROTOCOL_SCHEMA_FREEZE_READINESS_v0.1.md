@@ -31,10 +31,11 @@ The following are adopted working defaults for the pilot. They are not represent
 | Explicit-scope sensitivity | RECON v0.3 explicit event-to-scope assignment remains a single-annotator sensitivity only. Multi-annotator consensus/adjudicated use requires a dedicated assignment-adjudication extension. | Protocol v0.5 sensitivity rules; Decision Register rows 22; reconciliation §3.7. |
 | Mention kind | Keep required `mention_kind` as short descriptive free text, not an invented controlled enum. It does not determine event identity, stratum, mapping or metrics. | Protocol v0.5 §2.3; RECON field dictionary preserves it as a string because the original enum is unavailable. |
 | Report-level metrics | Keep compatible pair opportunity, same-technique opportunity, positive temporal-relation presence and within-technique temporal-relation presence separate. The conditional rate is descriptive, not the primary outcome. | Metric Contract v0.1 §§5–6; RECON v0.2 report-level aggregator. |
+| Register/version/lock crosswalk | A technical crosswalk now maps all 12 v0.1 base registers and the 6 v0.2–v0.4 extension/lock registers to their keys, validators, consumers, protocol areas and lock dependencies. It records the sibling v0.3/v0.4 lock relationship. | `research/protocol/PROTOCOL_SCHEMA_REGISTER_VERSION_LOCK_CROSSWALK_v0.1.md`; technical mapping complete, but whole-package field/enum/semantic review remains open. |
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow after the initial-pilot boundary merge is GitHub Actions run [#250](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43722436778), on 15 November 2026. It passed **252 synthetic test executions**:
+The latest verified main-branch workflow at the start of this crosswalk update is GitHub Actions run [#251](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43722561645), on 15 November 2026. It passed **252 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 78
@@ -51,7 +52,7 @@ These tests validate code paths and synthetic fixtures only. They do not establi
 | Gate | Evidence/status | Required before |
 |---|---|---|
 | Accept reconstruction provenance | The exact Protocol v0.4.1 and original Schema v0.4.2 ZIP remain unrecovered. Protocol v0.5 and RECON v0.1-v0.4 are newly consolidated working artifacts. | Formal freeze. The researcher must accept the reconstructed package as a new replacement, not as the missing original. |
-| Whole-package field and enum review | Some enums are confirmed in the recovered v0.4 draft; others are explicitly provisional reconstruction choices. `mention_kind` is deliberately free text. | Formal freeze. Review headers, field requiredness, controlled values, cross-register keys, locks, and version references together. |
+| Whole-package field and enum review | Some enums are confirmed in the recovered v0.4 draft; others are explicitly provisional reconstruction choices. `mention_kind` is deliberately free text. The register/version/lock dependency map is documented, but the semantic crosswalk still needs whole-package review. | Formal freeze. Review headers, field requiredness, controlled values, cross-register keys, locks, version references and protocol-to-field fit together. |
 | Metric contract approval | Metric Contract v0.1 and the v0.2 aggregator now align on the principal report-level outcomes. The aggregator still requires an explicit scope-pair approval flag before pair-opportunity-dependent rates are enabled. | Formal freeze and before reporting any pair-opportunity rates. |
 | Candidate eligibility | Formal researcher/source-scope eligibility decisions remain 0/5. A report cannot be selected merely because it yields useful events or positive edges. | Any source-first annotation of the five candidates. |
 | Human annotation workflow | Human-locked annotations: 0. IAA: not measured. The selected-final mechanism supports single-annotator and certain consensus/adjudicated workflows; the v0.3 scope-assignment sensitivity remains single-annotator only. | Before annotation. State whether the first pilot is single-annotator; recruit an independent second annotator only if one is genuinely available and unexposed. |
@@ -60,7 +61,7 @@ These tests validate code paths and synthetic fixtures only. They do not establi
 
 ## 5. Required freeze sequence
 
-1. Review Protocol v0.5, Metric Contract v0.1, Decision Register v0.2, RECON v0.1-v0.4, and this reconciliation register as one package.
+1. Review Protocol v0.5, Metric Contract v0.1, Decision Register v0.2, RECON v0.1-v0.4, the protocol/schema reconciliation register and `PROTOCOL_SCHEMA_REGISTER_VERSION_LOCK_CROSSWALK_v0.1.md` as one package.
 2. Resolve any remaining differences in headers, requiredness, enum definitions, IDs, lock references, relation/scope rules and metric outputs. The exact original schema must not be silently reconstructed or renamed.
 3. Obtain the researcher's explicit acceptance of the reconstructed package as a new replacement for the unavailable originals. Record any edits and the final approved scope.
 4. Confirm the human annotation/rater workflow and approve the incident-bounded scope-pair rule for metric purposes.

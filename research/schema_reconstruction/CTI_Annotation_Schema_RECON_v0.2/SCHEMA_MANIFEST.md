@@ -2,8 +2,8 @@
 
 - Version: 0.2
 - Prepared: 5 November 2026
-- Updated: 14 November 2026
-- Latest verification: GitHub Actions run #236 passed 86 RECON v0.2 synthetic tests as part of 247 total tests; base package checksums and all workflow steps passed.
+- Updated: 15 November 2026
+- Latest full-workflow verification: GitHub Actions run #250 passed 86 RECON v0.2 synthetic tests as part of 252 total tests; base package checksums and all workflow steps passed.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.1
@@ -61,7 +61,7 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 - Outcomes are calculated only from the selected-final partition. Passes and annotators are never summed.
 - Primary report-level rates are withheld until every N_assessable report has a successful selected-final projection.
 - Projection counts are summed within reports; technique-pair collision keys and SCCs are never merged across different reports.
-- Compatible event-pair opportunity currently uses the nearest common RESOLVED non-report scope. This can include a shared CAMPAIGN/ACTOR_OPERATION ancestor above distinct INCIDENT nodes; a synthetic regression test records this current behaviour. The opportunity counter and v0.1 validator now share the same scope-resolution helper: positive temporal relations and compatible candidate-pair assessments must point to a shared RESOLVED non-report ancestor in that provisional type set. This is a technical parity guard, not scientific approval of broad-scope comparability. Candidate resolutions remain incident-bounded comparison or an explicit comparison-scope assignment per event; neither is implemented or approved. Pair-opportunity rates remain withheld.
+- The report-level opportunity counter now defaults to `SHARED_RESOLVED_INCIDENT_SCOPE_v0.1`: a pair requires the nearest shared RESOLVED INCIDENT ancestor, and a primary positive relation must cite that exact scope. This rule is implemented in the v0.2 aggregator and v0.4 primary projection helper. The legacy nearest common RESOLVED non-report ancestor remains a broader-context sensitivity; it can include cross-incident pairs sharing a campaign/operation ancestor. The v0.3 explicit event-to-scope assignment is a separately reported sensitivity and is supported only for `SINGLE_ANNOTATOR_FINAL` in the initial pilot. Each sensitivity applies its own rule to both numerator and denominator. Pair-opportunity-dependent rates remain withheld unless the caller explicitly enables `approve_scope_pair_rule`; this caller flag is not proof of researcher approval.
 - Raw source text is loaded from a local source directory at runtime and is never written to the result JSON.
 - The blank package has no annotations or selected partitions. A blank aggregation result is structural output, not empirical zero-outcome data.
 
@@ -79,6 +79,6 @@ The aggregator is structural and arithmetic. It does not decide semantic event i
 - CLI smoke testing covers JSON output from a blank bundle without emitting source text.
 
 
-## RECON v0.3 explicit comparison-scope assignment candidate
+## RECON v0.3 explicit comparison-scope assignment sensitivity
 
-The sibling RECON v0.3 draft adds event-level comparison-scope assignments and assignment locks. The v0.2 aggregator exposes three named scope-pair rule candidates: nearest common resolved non-report scope (legacy), shared resolved INCIDENT scope, and explicit shared event comparison-scope assignment. The v0.3 wrapper uses the explicit candidate only after assignment and lock validation. This does not approve the scientific rule; all scope-pair rate gates remain provisional unless separately approved. See ../CTI_Annotation_Schema_RECON_v0.3/.
+The sibling RECON v0.3 draft adds event-level comparison-scope assignments and assignment locks. The v0.2 aggregator exposes three named scope-pair rules: nearest common resolved non-report scope (legacy sensitivity), shared resolved INCIDENT scope (working primary rule), and explicit shared event comparison-scope assignment (broader-context sensitivity). The v0.3 wrapper uses the explicit-assignment rule only after assignment and lock validation, and the initial-pilot workflow supports `SINGLE_ANNOTATOR_FINAL` only. The rule is not primary and its rate gate remains separately approval-controlled. See ../CTI_Annotation_Schema_RECON_v0.3/.
