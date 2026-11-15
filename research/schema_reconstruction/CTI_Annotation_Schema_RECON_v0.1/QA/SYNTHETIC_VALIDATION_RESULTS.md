@@ -57,6 +57,12 @@
 39. `VAGUE_OR_AMBIGUOUS` and `NOT_ASSESSABLE` candidate assessments require an assessment reason.
 40. Alternative mapping rows require a valid group with at least two members for one activity unit; target links must stay within that group.
 41. An accepted `source_supported_analyst_candidate` mapping requires a non-empty human rationale and mapping-specific evidence.
+42. A pending alternative group is valid only when all members remain `ALTERNATIVE`; pending members do not enter A_120 counts.
+43. Resolving an alternative group with one accepted winner and rejected competitors preserves the group ID and counts only the winner.
+44. An all-rejected alternative group is a valid resolved outcome and contributes no primary mapping.
+45. A partially resolved group is rejected, and its provisional accepted member is withheld from primary mapping counts.
+46. A mutually exclusive group cannot contain multiple accepted mappings.
+47. Each alternative-group member requires its own mapping-specific evidence link and rationale.
 
 Primary relation and candidate-pair comparison scopes are checked against the shared resolved-scope ancestry rules; incident-bounded primary comparison is a later working decision recorded in Protocol v0.5-draft. Alternative mapping groups now have a state lifecycle: all-ALTERNATIVE while pending, exactly one ACCEPTED plus REJECTED members after resolution, or all REJECTED. The group ID and rejected rows remain traceable. These are synthetic structural checks only.
 
