@@ -23,6 +23,8 @@ All registers are currently header-only. There are no real report annotations, s
 
 **Important dependency distinction:** v0.3 and v0.4 are separate additive extensions over the selected v0.2 analysis partition. The v0.4 manifest lists v0.3 among its parent layers because it forms part of the combined working package, but the v0.4 stratum lock itself binds to the v0.2 selected-analysis lock. The v0.3 assignment lock is separately required only when the v0.3 explicit-scope sensitivity is invoked. Do not treat the v0.4 lock as proof that v0.3 assignments were validated or locked.
 
+**Extension field/header audit (16 November 2026):** the six v0.2-v0.4 extension CSV headers exactly match their validator header constants. v0.2 and v0.3 now publish extension-specific field dictionaries and controlled-vocabulary notes; v0.4's dictionary covers both companion registers. This checks register/documentation structure, not semantic correctness or approval of reconstructed choices.
+
 ## 3. RECON v0.1 — base register crosswalk
 
 The common annotation partition is:
@@ -44,7 +46,7 @@ Except for the adjudication log, every base register stores these three fields d
 | `registers/temporal_relations.csv` | One direct/derived/unresolved temporal relation between event-unit endpoints | Partition + `relation_id` | Protocol §4 and timestamp rule §4.2.1 | Temporal graph, evidence extension, pair metrics, projection and strict-order cycles. |
 | `registers/candidate_pair_assessments.csv` | One explicitly assessed event pair under a declared candidate-generation rule | Partition + `assessment_id` | Protocol §4.1, Pass 5 and §7 | Optional assessed-negative/ambiguous coverage; not an exhaustive all-pairs matrix. |
 | `registers/non_temporal_relations.csv` | One causal/dependency/narrative-order-only relation between activity units | Partition + `non_temporal_relation_id` | Protocol §4.4 | Kept separate from temporal edges; excluded from temporal graph and projection. |
-| `registers/adjudication_log.csv` | One reviewer decision for a target annotation record/field | `(report_id, target_annotator_id, annotation_pass_id, adjudication_id)` | Protocol annotation/adjudication workflow | Resolves selected target-record values where supported. RECON v0.2 requires `field_name` to identify a column in the resolved target register before an `ADJUDICATED_FINAL` selection can use the log (CI #287). Equality between `final_value` and the persisted target-row value, and supersession across multiple append-only entries, remains to be specified before freeze. It does not contain targets in the v0.3 scope-assignment register. |
+| `registers/adjudication_log.csv` | One reviewer decision for a target annotation record/field | `(report_id, target_annotator_id, annotation_pass_id, adjudication_id)` | Protocol annotation/adjudication workflow | Resolves selected target-record values where supported. RECON v0.2 requires `field_name` to resolve in the target register, protects partition/record identity, and validates one date-ordered value history across `ADJUDICATED`, `AGREED`, and `DEFERRED`: later entries chain from the prior `final_value`, non-value-changing statuses preserve the field, and the latest value matches the persisted target field. The first history row's `original_value` remains a historical value not independently verifiable without a prior row. These are reconstruction proposals, not recovered original semantics. It does not contain targets in the v0.3 scope-assignment register. |
 
 ### Base package invariants
 
