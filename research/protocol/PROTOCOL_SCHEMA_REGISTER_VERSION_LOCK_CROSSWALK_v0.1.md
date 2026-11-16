@@ -44,7 +44,7 @@ Except for the adjudication log, every base register stores these three fields d
 | `registers/temporal_relations.csv` | One direct/derived/unresolved temporal relation between event-unit endpoints | Partition + `relation_id` | Protocol §4 and timestamp rule §4.2.1 | Temporal graph, evidence extension, pair metrics, projection and strict-order cycles. |
 | `registers/candidate_pair_assessments.csv` | One explicitly assessed event pair under a declared candidate-generation rule | Partition + `assessment_id` | Protocol §4.1, Pass 5 and §7 | Optional assessed-negative/ambiguous coverage; not an exhaustive all-pairs matrix. |
 | `registers/non_temporal_relations.csv` | One causal/dependency/narrative-order-only relation between activity units | Partition + `non_temporal_relation_id` | Protocol §4.4 | Kept separate from temporal edges; excluded from temporal graph and projection. |
-| `registers/adjudication_log.csv` | One reviewer decision for a target annotation record/field | `(report_id, target_annotator_id, annotation_pass_id, adjudication_id)` | Protocol annotation/adjudication workflow | Resolves selected target-record values where supported. It does not contain targets in the v0.3 scope-assignment register. |
+| `registers/adjudication_log.csv` | One reviewer decision for a target annotation record/field | `(report_id, target_annotator_id, annotation_pass_id, adjudication_id)` | Protocol annotation/adjudication workflow | Resolves selected target-record values where supported. RECON v0.2 requires `field_name` to identify a column in the resolved target register before an `ADJUDICATED_FINAL` selection can use the log. It does not contain targets in the v0.3 scope-assignment register. |
 
 ### Base package invariants
 
