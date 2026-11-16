@@ -4,7 +4,7 @@
 
 For every activity unit in RECON v0.1 activity_units.csv, RECON v0.4 requires exactly one activity_unit_strata.csv row with the same report_id, annotator_id, annotation_pass_id and activity_unit_id. Missing, duplicate and orphan rows are errors. This is the canonical v0.4 representation of the logical activity_unit.activity_stratum field; the v0.1 register is not modified.
 
-Every row requires a controlled stratum, controlled basis, source evidence span, non-empty rationale, confidence and adjudication status. UNRESOLVED_CLASSIFICATION requires basis UNRESOLVED. Other strata require REPORT_EXPLICIT or SOURCE_SUPPORTED_HUMAN_JUDGMENT.
+Every row requires a controlled stratum, controlled basis, source evidence span, non-empty rationale, confidence and `adjudication_status=UNREVIEWED`. This draft has no adjudication-log register for stratum decisions, so AGREED and ADJUDICATED values fail validation. Lock creation and validation support only `SINGLE_ANNOTATOR_FINAL`; CONSENSUS and ADJUDICATED_FINAL partitions are blocked for this extension until a dedicated stratum adjudication layer is designed. UNRESOLVED_CLASSIFICATION requires basis UNRESOLVED. Other strata require REPORT_EXPLICIT or SOURCE_SUPPORTED_HUMAN_JUDGMENT.
 
 GENERIC_CAPABILITY cannot be attached to a RESOLVED atomic event_leaf. A capability description with no resolved report-local execution is not an event occurrence.
 

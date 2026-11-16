@@ -107,6 +107,18 @@ class ActivityStratumValidationTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("UNRESOLVED_STRATUM_BASIS_MISMATCH", {row["code"] for row in result["errors"]})
 
+    def test_stratum_adjudication_state_is_unreviewed_until_extension_exists(self):
+        for value in ("AGREED", "ADJUDICATED"):
+            self.strata[0]["adjudication_status"] = value
+            self.save()
+            result = self.validate()
+            self.assertIn(
+                "INVALID_STRATUM_ADJUDICATION_STATUS",
+                {row["code"] for row in result["errors"]},
+                value,
+            )
+            self.strata[0]["adjudication_status"] = "UNREVIEWED"
+
     def test_base_confidence_and_adjudication_enums_are_enforced(self):
         mutations = {
             "activity_units": ("annotator_confidence", "CERTAIN"),
@@ -497,6 +509,30 @@ class ActivityStratumLockTests(unittest.TestCase):
         write_rows(report_registry, list(rows[0].keys()), rows)
         result = validate_activity_stratum_locks(self.base, self.selection_file, self.strata_file, self.locks_file)
         self.assertIn("SELECTED_FINAL_PARTITION_INVALID", {row["code"] for row in result["errors"]})
+
+    def test_lock_creation_rejects_consensus_final_without_stratum_adjudication(self):
+        with self.selection_file.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0]["partition_role"] = "CONSENSUS"
+        write_rows(self.selection_file, SELECTION_HEADERS, rows)
+        with self.assertRaisesRegex(ValueError, "no activity-stratum adjudication log"):
+            build_activity_stratum_lock_rows(
+                self.base, self.selection_file, self.strata_file,
+                locked_by="researcher-1", lock_date="2026-11-08",
+            )
+
+    def test_lock_validation_rejects_consensus_final_without_stratum_adjudication(self):
+        with self.selection_file.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0]["partition_role"] = "CONSENSUS"
+        write_rows(self.selection_file, SELECTION_HEADERS, rows)
+        result = validate_activity_stratum_locks(
+            self.base, self.selection_file, self.strata_file, self.locks_file
+        )
+        self.assertIn(
+            "ACTIVITY_STRATUM_FINAL_ROLE_UNSUPPORTED",
+            {row["code"] for row in result["errors"]},
+        )
 
 
 if __name__ == "__main__":

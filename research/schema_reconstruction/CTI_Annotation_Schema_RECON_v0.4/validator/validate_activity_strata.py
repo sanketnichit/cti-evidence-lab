@@ -51,6 +51,10 @@ ACTIVITY_STRATA = {
     "UNRESOLVED_CLASSIFICATION",
 }
 STRATUM_BASES = {"REPORT_EXPLICIT", "SOURCE_SUPPORTED_HUMAN_JUDGMENT", "UNRESOLVED"}
+# The extension has no adjudication log for stratum records. Until one is
+# designed, only independent single-annotator stratum decisions may be locked.
+STRATUM_ADJUDICATION_STATUSES = {"UNREVIEWED"}
+STRATUM_FINAL_ROLES = {"SINGLE_ANNOTATOR_FINAL"}
 
 # These v0.1 fields are declared controlled in the field dictionary. The
 # original base validator checks the scope-confidence field and several
@@ -352,8 +356,11 @@ def validate_activity_strata(
             errors.append({"code": "STRATUM_EVIDENCE_MISSING_OR_UNKNOWN", "message": f"row {line}: evidence_span_id must resolve in the same partition"})
         if row.get("annotator_confidence") not in base_validator.CONFIDENCE:
             errors.append({"code": "INVALID_STRATUM_CONFIDENCE", "message": f"row {line}: annotator_confidence is invalid"})
-        if row.get("adjudication_status") not in base_validator.ADJUDICATION_STATUSES:
-            errors.append({"code": "INVALID_STRATUM_ADJUDICATION_STATUS", "message": f"row {line}: adjudication_status is invalid"})
+        if row.get("adjudication_status") not in STRATUM_ADJUDICATION_STATUSES:
+            errors.append({
+                "code": "INVALID_STRATUM_ADJUDICATION_STATUS",
+                "message": f"row {line}: RECON v0.4 has no stratum adjudication log; only UNREVIEWED independent decisions are supported",
+            })
         if stratum == "UNRESOLVED_CLASSIFICATION" and basis != "UNRESOLVED":
             errors.append({"code": "UNRESOLVED_STRATUM_BASIS_MISMATCH", "message": f"row {line}: UNRESOLVED_CLASSIFICATION requires stratum_basis=UNRESOLVED"})
         elif stratum and stratum != "UNRESOLVED_CLASSIFICATION" and basis == "UNRESOLVED":
@@ -444,6 +451,17 @@ def build_activity_stratum_lock_rows(
     selections, error = _read_exact(Path(selection_file), SELECTION_HEADERS)
     if error:
         raise ValueError(error)
+    unsupported_roles = [
+        row.get("partition_role", "")
+        for row in selections
+        if row.get("selection_status") == "SELECTED_FINAL"
+        and row.get("partition_role") not in STRATUM_FINAL_ROLES
+    ]
+    if unsupported_roles:
+        raise ValueError(
+            "RECON v0.4 has no activity-stratum adjudication log; only "
+            "SINGLE_ANNOTATOR_FINAL selected partitions can be locked"
+        )
     selection_errors, _ = validate_analysis_partition_selection(
         Path(base_bundle), Path(selection_file)
     )
@@ -523,6 +541,18 @@ def validate_activity_stratum_locks(
             "code": "ACTIVITY_STRATUM_REGISTER_VALIDATION_FAILED",
             "message": str(stratum_validation["errors"]),
         })
+    for selection in selections:
+        if (
+            selection.get("selection_status") == "SELECTED_FINAL"
+            and selection.get("partition_role") not in STRATUM_FINAL_ROLES
+        ):
+            errors.append({
+                "code": "ACTIVITY_STRATUM_FINAL_ROLE_UNSUPPORTED",
+                "message": (
+                    "RECON v0.4 has no activity-stratum adjudication log; "
+                    "only SINGLE_ANNOTATOR_FINAL selected partitions are supported"
+                ),
+            })
     for code, message in (
         ("SELECTION_REGISTER_INVALID", selection_error),
         ("STRATUM_REGISTER_INVALID", strata_error),
