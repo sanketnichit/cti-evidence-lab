@@ -262,6 +262,50 @@ class ActivityStratumValidationTests(unittest.TestCase):
         self.assertTrue(any("baseline_vocabulary_id" in message for message in messages))
         self.assertTrue(any("baseline_vocabulary_sha256" in message for message in messages))
 
+    def test_report_registry_decision_reasons_are_required_conditionally(self):
+        path = self.base / "registers" / "report_registry.csv"
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0].update(
+            source_scope_eligibility="PENDING",
+            source_scope_reason="",
+            local_research_use_basis="",
+            report_assessability="NOT_ASSESSABLE",
+            assessability_reason="",
+        )
+        write_rows(path, list(rows[0].keys()), rows)
+        result = self.validate()
+        messages = [
+            issue["message"] for issue in result["errors"]
+            if issue["code"] == "CONDITIONAL_REASON_MISSING"
+        ]
+        for field in ("source_scope_reason", "local_research_use_basis", "assessability_reason"):
+            self.assertTrue(
+                any(field in message for message in messages),
+                "missing conditional-reason error for report_registry." + field,
+            )
+
+    def test_eligible_assessable_source_does_not_require_ineligibility_reasons(self):
+        path = self.base / "registers" / "report_registry.csv"
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0].update(
+            source_scope_eligibility="ELIGIBLE",
+            source_scope_reason="",
+            report_assessability="ASSESSABLE",
+            assessability_reason="",
+        )
+        write_rows(path, list(rows[0].keys()), rows)
+        result = self.validate()
+        conditional = [
+            issue["message"] for issue in result["errors"]
+            if issue["code"] == "CONDITIONAL_REASON_MISSING"
+        ]
+        self.assertFalse(any(
+            "source_scope_reason" in message or "assessability_reason" in message
+            for message in conditional
+        ))
+
 
 class PrimaryProjectionRoutingTests(unittest.TestCase):
     def setUp(self):
