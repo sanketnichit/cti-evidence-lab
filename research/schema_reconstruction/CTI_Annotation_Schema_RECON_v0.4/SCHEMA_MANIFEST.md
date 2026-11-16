@@ -21,6 +21,7 @@
 The v0.1 activity_units register and its checksum-controlled package remain unchanged. The logical `activity_unit.activity_stratum` field is stored in a versioned companion register to preserve the reconstructed ancestor schema. The v0.4 full-package validator additionally enforces required v0.1 confidence, adjudication-status and evidence-span-kind values, plus the remaining clearly required non-empty cells and report-registry conditional reason pairings described in `docs/DATA_MODEL_AND_VALIDATION_RULES.md`.
 
 - Lock preconditions: lock creation and verification revalidate the v0.2 selected-final decision against the v0.1 report registry and require valid complete v0.4 stratum coverage. Verify the v0.2 selected-analysis digest separately through the v0.2 selected-partition adapter using the exact frozen source text before projection.
+- Adjudication boundary: v0.4 stratum rows support `UNREVIEWED` only; lock creation/verification support `SINGLE_ANNOTATOR_FINAL` only. Multi-annotator CONSENSUS or ADJUDICATED_FINAL use requires a dedicated stratum adjudication register and procedure.
 
 
 - Time-evidence target identity: mention-only time rows resolve through `event_mentions.activity_unit_id`; when both `activity_unit_id` and `mention_id` are populated, they must resolve to the same unit. Conflicting dual targets fail full-package validation.
