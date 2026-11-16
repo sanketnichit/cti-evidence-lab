@@ -18,6 +18,8 @@ The extension validator checks partition-local references, link identity, roles,
 
 For direct-timestamp relations, the validator requires preserved raw time text and precision, explicit timezone status/text, UTC-normalized timezone-aware ISO-8601 bounds, and documented non-point intervals. Retained timestamp candidates that are not normalized are errors rather than silently ignored. Timestamp-only positives are restricted to strict BEFORE/AFTER ordering across every retained A/B interval combination; non-strict labels require direct source wording. See the timestamp semantics note in the protocol and `research/protocol/TIMESTAMP_RELATION_SEMANTICS_v0.1.md`.
 
+Time-evidence targets follow the v0.1 field dictionary: a row may identify its unit directly, identify a mention whose `event_mentions.activity_unit_id` resolves the unit, or supply both. When both are populated they must resolve to the same activity unit. For `direct_timestamp` relations, mention-only records are resolved through `event_mentions` before checking that each endpoint has a comparable `ATTACK_OCCURRENCE` interval linked to its endpoint-support span. Unknown and contradictory targets fail closed; a mention-linked time record is not silently omitted from the temporal relation check.
+
 Run tests with:
 
     python -m unittest discover -s research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.2/tests -v
