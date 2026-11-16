@@ -238,6 +238,94 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.save()
         self.assertIn("ADJUDICATION_HISTORY_ORDER_AMBIGUOUS", self.codes())
 
+    def test_agreed_and_deferred_decisions_cannot_change_field_value(self):
+        for status in ("AGREED", "DEFERRED"):
+            with self.subTest(status=status):
+                self.adjudications = [{
+                    "decision_status": status,
+                    "original_value": "RESOLVED",
+                    "proposed_value": "UNRESOLVED",
+                    "final_value": "UNRESOLVED",
+                }]
+                self.rows = [self.selection()]
+                self.save()
+                self.assertIn("ADJUDICATION_NONVALUE_DECISION_CHANGES_FIELD", self.codes())
+
+    def test_agreed_or_deferred_history_does_not_satisfy_adjudicated_final(self):
+        for status in ("AGREED", "DEFERRED"):
+            with self.subTest(status=status):
+                self.adjudications = [{
+                    "decision_status": status,
+                    "original_value": "RESOLVED",
+                    "proposed_value": "RESOLVED",
+                    "final_value": "RESOLVED",
+                }]
+                self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+                self.save()
+                self.assertIn("ADJUDICATED_FINAL_WITHOUT_LOG", self.codes())
+
+    def test_nonvalue_outcomes_participate_in_append_only_value_chain(self):
+        self.adjudications = [
+            {
+                "adjudication_id": "adj-1",
+                "original_value": "UNRESOLVED",
+                "proposed_value": "INCOMPLETE",
+                "final_value": "INCOMPLETE",
+                "decision_status": "ADJUDICATED",
+                "decision_date": "2026-11-05",
+            },
+            {
+                "adjudication_id": "adj-2",
+                "original_value": "INCOMPLETE",
+                "proposed_value": "RESOLVED",
+                "final_value": "INCOMPLETE",
+                "decision_status": "DEFERRED",
+                "decision_date": "2026-11-06",
+            },
+            {
+                "adjudication_id": "adj-3",
+                "original_value": "INCOMPLETE",
+                "proposed_value": "RESOLVED",
+                "final_value": "RESOLVED",
+                "decision_status": "ADJUDICATED",
+                "decision_date": "2026-11-07",
+            },
+        ]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        self.assertEqual(set(), self.codes())
+
+    def test_nonvalue_outcome_cannot_break_history_chain(self):
+        self.adjudications = [
+            {
+                "adjudication_id": "adj-1",
+                "original_value": "UNRESOLVED",
+                "proposed_value": "INCOMPLETE",
+                "final_value": "INCOMPLETE",
+                "decision_status": "ADJUDICATED",
+                "decision_date": "2026-11-05",
+            },
+            {
+                "adjudication_id": "adj-2",
+                "original_value": "UNRESOLVED",
+                "proposed_value": "INCOMPLETE",
+                "final_value": "UNRESOLVED",
+                "decision_status": "DEFERRED",
+                "decision_date": "2026-11-06",
+            },
+            {
+                "adjudication_id": "adj-3",
+                "original_value": "UNRESOLVED",
+                "proposed_value": "RESOLVED",
+                "final_value": "RESOLVED",
+                "decision_status": "ADJUDICATED",
+                "decision_date": "2026-11-07",
+            },
+        ]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        self.assertIn("ADJUDICATION_HISTORY_CHAIN_BROKEN", self.codes())
+
     def test_adjudication_cannot_change_partition_or_record_identity(self):
         identity_fields = {
             "report_id": "r1",

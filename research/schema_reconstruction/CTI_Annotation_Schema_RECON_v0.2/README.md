@@ -45,6 +45,10 @@ The protocol-to-schema comparison and remaining implementation limits are record
 
 This is a testable design candidate, not an operational annotation instruction. Researcher review and protocol approval are still required.
 
+## Field-level adjudication history outcomes
+
+The v0.2 selected-final validator treats `AGREED`, `DEFERRED`, and `ADJUDICATED` records as one append-only value history for each target field. `ADJUDICATED` may change the value; `AGREED` and `DEFERRED` must keep `original_value` and `final_value` identical. Every later history row must begin from the immediately preceding row's `final_value`, and the latest value must match the persisted target-register field. `AGREED` and `DEFERRED` do not satisfy the `ADJUDICATED_FINAL` selection gate by themselves. The first row's initial `original_value` remains a historical input because the current persisted row cannot independently prove that starting value after later revisions.
+
 ## Final analysis partition selection
 
 analysis_partition_selection.csv records the report-level partition chosen for analysis. It allows at most one SELECTED_FINAL partition per report. A final selection must resolve to an existing report/annotator/pass row, and the underlying report must be eligible, permitted for local use, assessable, and fully reviewed. A final selection also records a role, rationale, date, and SHA-256 lock reference. Solo work is labelled SINGLE_ANNOTATOR_FINAL; repeated passes are not independent annotators.
