@@ -66,6 +66,26 @@ BASE_REVIEW_ENUM_FIELDS = {
     "candidate_pair_assessments": ("adjudication_status",),
     "non_temporal_relations": ("annotator_confidence", "adjudication_status"),
 }
+
+# Required non-empty base fields that the v0.1 validator does not already
+# enforce through key, enum, numeric, foreign-key, or conditional checks.
+# These are additive full-package gates; the checksum-controlled v0.1 files
+# remain unchanged. The source field dictionary is the requirements source.
+BASE_REQUIRED_NONEMPTY_FIELDS = {
+    "report_registry": (
+        "protocol_version", "schema_version", "source_title", "source_vendor",
+        "source_url", "source_path", "retrieval_date", "extraction_method",
+        "transformation_notes",
+    ),
+    "report_scopes": ("scope_label", "scope_description"),
+    "activity_units": ("unit_summary",),
+    "event_mentions": ("mention_kind",),
+    "evidence_spans": ("evidence_text",),
+    "event_mappings": ("attack_version",),
+    "temporal_relations": ("comparison_scope_id",),
+    "candidate_pair_assessments": ("comparison_scope_id",),
+    "adjudication_log": ("reviewer_id", "field_name", "rationale", "decision_date"),
+}
 LOCK_FORMAT = "CTI-EVIDENCE-LAB-ACTIVITY-STRATUM-LOCK-v1"
 LOCK_REFERENCE_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 
@@ -114,6 +134,36 @@ def _canonical_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
         row["report_id"], row["annotator_id"], row["annotation_pass_id"],
         row["activity_unit_id"],
     ))
+
+def _validate_required_base_fields(tables: Mapping[str, list[dict[str, str]]]) -> list[dict[str, str]]:
+    """Fail closed on required non-empty fields from the v0.1 field dictionary.
+
+    The v0.1 loader enforces exact headers and some key/value invariants, but
+    does not have a generic required-cell contract. This check covers the
+    remaining clearly required non-empty fields in the full v0.1-v0.4 path.
+    Conditional, optional, and explicitly blank-permitted fields are excluded.
+    """
+    errors: list[dict[str, str]] = []
+    for register, fields in BASE_REQUIRED_NONEMPTY_FIELDS.items():
+        for line, row in enumerate(tables.get(register, []), 2):
+            for field in fields:
+                if not row.get(field, "").strip():
+                    errors.append({
+                        "code": "REQUIRED_FIELD_EMPTY",
+                        "message": f"{register} row {line}: required field {field!r} must not be blank",
+                    })
+    for line, row in enumerate(tables.get("report_registry", []), 2):
+        value = row.get("retrieval_date", "")
+        if value:
+            try:
+                date.fromisoformat(value)
+            except ValueError:
+                errors.append({
+                    "code": "INVALID_RETRIEVAL_DATE",
+                    "message": f"report_registry row {line}: retrieval_date must use ISO YYYY-MM-DD",
+                })
+    return errors
+
 
 def _validate_base_metadata_enums(tables: Mapping[str, list[dict[str, str]]]) -> list[dict[str, str]]:
     """Validate every required confidence/review value and evidence-span kind.
@@ -183,6 +233,7 @@ def validate_activity_strata(
         tables = {name: [] for name in base_validator.HEADERS}
         errors.append({"code": "BASE_REGISTERS_INVALID", "message": str(exc)})
 
+    errors.extend(_validate_required_base_fields(tables))
     errors.extend(_validate_base_metadata_enums(tables))
 
     units = {
