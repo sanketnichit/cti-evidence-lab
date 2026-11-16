@@ -8,6 +8,7 @@ import json
 import re
 from datetime import date, datetime, timezone
 from pathlib import Path
+from typing import Any
 
 HEADERS = [
     "report_id", "annotator_id", "annotation_pass_id", "relation_evidence_id",
