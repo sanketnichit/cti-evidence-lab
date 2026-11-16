@@ -3,7 +3,7 @@
 - Version: 0.2
 - Prepared: 5 November 2026
 - Updated: 15 November 2026
-- Latest full-workflow verification: GitHub Actions run #250 passed 86 RECON v0.2 synthetic tests as part of 252 total tests; base package checksums and all workflow steps passed.
+- Latest full-workflow verification: GitHub Actions run #272 passed 88 RECON v0.2 synthetic tests as part of 266 total tests; base package checksums and all workflow steps passed.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.1
@@ -26,6 +26,7 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 ## Timestamp gate — working semantics and structural enforcement
 
 - A direct-timestamp endpoint requires `time_type=ATTACK_OCCURRENCE`, explicit timezone status/text, preserved raw expression/precision, and a linked endpoint-support span.
+- Time evidence may link to an activity unit, a mention, or both. Mention-only rows resolve through `event_mentions.activity_unit_id`; dual targets must identify the same unit. The direct-timestamp endpoint check uses the resolved unit before matching endpoint-support spans.
 - Normalized bounds are closed bounds on possible occurrence instants, not action-duration intervals. Non-point bounds require `uncertainty_notes`.
 - The source zone/offset is preserved in `timezone_text`; normalized bounds must use UTC-offset ISO-8601 values and `normalized_timezone=UTC`.
 - Retained but non-normalized timestamp candidates are rejected rather than ignored.
