@@ -18,6 +18,24 @@ The v0.1 field dictionary declares `annotator_confidence` and `adjudication_stat
 
 Blank and unknown values fail validation. This is an additive v0.4 validation gate; the checksum-controlled v0.1 package files and register headers remain unchanged.
 
+## Cross-layer required-cell checks
+
+The v0.1 field dictionary marks a number of descriptive and decision fields as required, but the v0.1 CSV loader checks headers and row width without enforcing every required cell. The v0.4 full-package validator now rejects blank values for the following remaining required fields:
+
+| Register | Required non-empty fields added by v0.4 |
+|---|---|
+| `report_registry.csv` | `protocol_version`, `schema_version`, `source_title`, `source_vendor`, `source_url`, `source_path`, `retrieval_date`, `extraction_method`, `transformation_notes` |
+| `report_scopes.csv` | `scope_label`, `scope_description` |
+| `activity_units.csv` | `unit_summary` |
+| `event_mentions.csv` | `mention_kind` (still descriptive free text; no enum is invented) |
+| `evidence_spans.csv` | `evidence_text` |
+| `event_mappings.csv` | `attack_version` |
+| `temporal_relations.csv` | `comparison_scope_id` on every relation row |
+| `candidate_pair_assessments.csv` | `comparison_scope_id` on every assessment row |
+| `adjudication_log.csv` | `reviewer_id`, `field_name`, `rationale`, `decision_date` |
+
+`report_registry.retrieval_date` is additionally required to parse as ISO `YYYY-MM-DD`. An `OUT_OF_VOCAB` mapping must retain both the baseline vocabulary identifier and its SHA-256. Fields explicitly marked optional or conditional are not blanket-required; existing field-specific checks continue to handle required conditional values such as negative assessment reasons, mapping evidence, and primary relation evidence. This additive layer does not change the v0.1 headers or checksum manifest.
+
 ## Temporal relation routing
 
 Temporal relation rows are routed using the stratum of both endpoints:
