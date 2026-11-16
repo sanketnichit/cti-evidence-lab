@@ -11,14 +11,14 @@
 - Lock: activity_stratum_locks.csv binds the complete stratum rows to the v0.2 selected-analysis lock reference
 - Structural validator: validator/validate_activity_strata.py
 - Primary projection filter: analysis/primary_attack_action_projection.py
-- Synthetic tests: tests/test_activity_strata.py (22 tests; passed in GitHub Actions run #264 on 16 November 2026, as part of 261 total synthetic test executions)
+- Synthetic tests: tests/test_activity_strata.py (24 tests; passed in GitHub Actions run #268 on 16 November 2026, as part of 263 total synthetic test executions)
 - Real annotations: 0
 - Selected final partitions with stratum locks: 0
 - Real projections: 0
 - IAA: not measured
 - Empirical findings: none
 
-The v0.1 activity_units register and its checksum-controlled package remain unchanged. The logical `activity_unit.activity_stratum` field is stored in a versioned companion register to preserve the reconstructed ancestor schema. The v0.4 full-package validator additionally enforces required v0.1 confidence, adjudication-status and evidence-span-kind values, plus the remaining clearly required non-empty cells described in `docs/DATA_MODEL_AND_VALIDATION_RULES.md`.
+The v0.1 activity_units register and its checksum-controlled package remain unchanged. The logical `activity_unit.activity_stratum` field is stored in a versioned companion register to preserve the reconstructed ancestor schema. The v0.4 full-package validator additionally enforces required v0.1 confidence, adjudication-status and evidence-span-kind values, plus the remaining clearly required non-empty cells and report-registry conditional reason pairings described in `docs/DATA_MODEL_AND_VALIDATION_RULES.md`.
 
 - Lock preconditions: lock creation and verification revalidate the v0.2 selected-final decision against the v0.1 report registry and require valid complete v0.4 stratum coverage. Verify the v0.2 selected-analysis digest separately through the v0.2 selected-partition adapter using the exact frozen source text before projection.
 
