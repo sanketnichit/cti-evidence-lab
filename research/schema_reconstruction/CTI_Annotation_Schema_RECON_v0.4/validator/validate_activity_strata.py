@@ -162,6 +162,14 @@ def _validate_required_base_fields(tables: Mapping[str, list[dict[str, str]]]) -
                     "code": "INVALID_RETRIEVAL_DATE",
                     "message": f"report_registry row {line}: retrieval_date must use ISO YYYY-MM-DD",
                 })
+    for line, row in enumerate(tables.get("event_mappings", []), 2):
+        if row.get("baseline_mapping_status") == "OUT_OF_VOCAB":
+            for field in ("baseline_vocabulary_id", "baseline_vocabulary_sha256"):
+                if not row.get(field, "").strip():
+                    errors.append({
+                        "code": "REQUIRED_FIELD_EMPTY",
+                        "message": f"event_mappings row {line}: {field!r} is required when baseline_mapping_status=OUT_OF_VOCAB",
+                    })
     return errors
 
 
