@@ -2,7 +2,7 @@
 
 - Version: 0.2
 - Prepared: 5 November 2026
-- Updated: 15 November 2026
+- Updated: 16 November 2026
 - Latest full-workflow verification: GitHub Actions run #272 passed 88 RECON v0.2 synthetic tests as part of 266 total tests; base package checksums and all workflow steps passed.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
