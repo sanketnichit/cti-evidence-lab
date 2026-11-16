@@ -3,7 +3,7 @@
 - Version: 0.2
 - Prepared: 5 November 2026
 - Updated: 16 November 2026
-- Latest main-branch verification: GitHub Actions run #287 passed 90 RECON v0.2 synthetic tests as part of 274 total tests; base package checksums and all workflow steps passed.
+- Latest main-branch verification: GitHub Actions run #294 passed 95 RECON v0.2 synthetic tests as part of 279 total tests; base package checksums and all workflow steps passed. The selected-final suite includes append-only adjudication value-history and immutable identity-field regressions.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.1
