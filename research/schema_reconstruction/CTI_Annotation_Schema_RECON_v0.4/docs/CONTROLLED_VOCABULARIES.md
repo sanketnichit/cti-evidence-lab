@@ -16,3 +16,7 @@
 - REPORT_EXPLICIT — the source itself makes the classification clear.
 - SOURCE_SUPPORTED_HUMAN_JUDGMENT — a human annotator classifies the unit based on the source and records a rationale.
 - UNRESOLVED — the annotator cannot resolve the stratum from the available source evidence. This basis is mandatory for UNRESOLVED_CLASSIFICATION and cannot be used for the other values.
+
+## Review/adjudication boundary
+
+The v0.4 companion register has no adjudication-log register. In this draft, `adjudication_status` must therefore remain `UNREVIEWED`, and selected-final stratum locks support `SINGLE_ANNOTATOR_FINAL` only. `AGREED`, `ADJUDICATED`, `CONSENSUS`, and `ADJUDICATED_FINAL` are not supported for v0.4 stratum decisions until a dedicated adjudication extension is introduced.
