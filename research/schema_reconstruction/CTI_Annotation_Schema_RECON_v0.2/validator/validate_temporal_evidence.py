@@ -205,63 +205,86 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
                 ),
             })
             continue
-        if decision.get("decision_status") == "ADJUDICATED":
-            try:
-                decision_date = date.fromisoformat(decision.get("decision_date", ""))
-            except ValueError:
-                errors.append({
-                    "code": "ADJUDICATION_DECISION_DATE_INVALID",
-                    "message": f"adjudication_log row {line}: ADJUDICATED decisions require ISO YYYY-MM-DD decision_date",
-                })
-                continue
-            history_key = (
+        if decision.get("decision_status") not in {"AGREED", "ADJUDICATED", "DEFERRED"}:
+            continue
+        try:
+            decision_date = date.fromisoformat(decision.get("decision_date", ""))
+        except ValueError:
+            errors.append({
+                "code": "ADJUDICATION_DECISION_DATE_INVALID",
+                "message": f"adjudication_log row {line}: decisions require ISO YYYY-MM-DD decision_date",
+            })
+            continue
+        history_key = (
+            decision.get("report_id", ""),
+            decision.get("target_annotator_id", ""),
+            decision.get("annotation_pass_id", ""),
+            register_name,
+            target_id,
+            field_name,
+        )
+        adjudication_histories.setdefault(history_key, []).append({
+            "line": line,
+            "decision_date": decision_date,
+            "decision_status": decision.get("decision_status", ""),
+            "original_value": decision.get("original_value", ""),
+            "final_value": decision.get("final_value", ""),
+            "target_value": target.get(field_name, ""),
+            "partition": (
                 decision.get("report_id", ""),
                 decision.get("target_annotator_id", ""),
                 decision.get("annotation_pass_id", ""),
-                register_name,
-                target_id,
-                field_name,
-            )
-            adjudication_histories.setdefault(history_key, []).append({
-                "line": line,
-                "decision_date": decision_date,
-                "original_value": decision.get("original_value", ""),
-                "final_value": decision.get("final_value", ""),
-                "target_value": target.get(field_name, ""),
-                "partition": (
-                    decision.get("report_id", ""),
-                    decision.get("target_annotator_id", ""),
-                    decision.get("annotation_pass_id", ""),
-                ),
-            })
+            ),
+        })
 
-    # ADJUDICATED entries form an append-only, per-field revision chain.
-    # decision_date orders revisions; same-day duplicates are ambiguous because
-    # the register has no separate sequence/supersession field. Each later
-    # original_value must equal the previous final_value, and the latest
-    # final_value must equal the persisted target-register field.
+    # All field-level adjudication outcomes share one append-only value history.
+    # ADJUDICATED changes a field; AGREED and DEFERRED are non-value-changing
+    # review outcomes. The latter must preserve the current value and remain
+    # in the same chain, not float outside the history merely because they do
+    # not satisfy the ADJUDICATED_FINAL selection gate.
     for history_key, entries in adjudication_histories.items():
-        entries.sort(key=lambda item: item["decision_date"])
-        dates = [item["decision_date"] for item in entries]
-        if len(dates) != len(set(dates)):
-            errors.append({
-                "code": "ADJUDICATION_HISTORY_ORDER_AMBIGUOUS",
-                "message": (
-                    f"adjudication_log target field {history_key!r} has multiple "
-                    "ADJUDICATED decisions on the same date; append-only order is ambiguous"
-                ),
-            })
-            continue
-        for previous, current in zip(entries, entries[1:]):
-            if current["original_value"] != previous["final_value"]:
+        entries.sort(key=lambda item: (item["decision_date"], item["line"]))
+        history_valid = True
+        entries_by_date = {}
+        for entry in entries:
+            entries_by_date.setdefault(entry["decision_date"], []).append(entry)
+        for decision_date, same_day in entries_by_date.items():
+            if len(same_day) > 1 and any(
+                item["decision_status"] == "ADJUDICATED" for item in same_day
+            ):
+                errors.append({
+                    "code": "ADJUDICATION_HISTORY_ORDER_AMBIGUOUS",
+                    "message": (
+                        f"adjudication_log target field {history_key!r} has multiple "
+                        f"entries including a value-changing decision on {decision_date}; "
+                        "the register has no same-day sequence field"
+                    ),
+                })
+                history_valid = False
+
+        for index, current in enumerate(entries):
+            if current["decision_status"] in {"AGREED", "DEFERRED"}:
+                if current["original_value"] != current["final_value"]:
+                    errors.append({
+                        "code": "ADJUDICATION_NONVALUE_DECISION_CHANGES_FIELD",
+                        "message": (
+                            f"adjudication_log row {current['line']}: "
+                            f"{current['decision_status']} must keep original_value "
+                            "and final_value identical"
+                        ),
+                    })
+                    history_valid = False
+            if index and current["original_value"] != entries[index - 1]["final_value"]:
                 errors.append({
                     "code": "ADJUDICATION_HISTORY_CHAIN_BROKEN",
                     "message": (
                         f"adjudication_log row {current['line']}: original_value "
-                        "must equal the immediately preceding ADJUDICATED final_value "
+                        "must equal the immediately preceding decision's final_value "
                         f"for target field {history_key!r}"
                     ),
                 })
+                history_valid = False
+
         latest = entries[-1]
         if latest["final_value"] != latest["target_value"]:
             errors.append({
@@ -272,7 +295,10 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
                     f"record {history_key[4]!r}"
                 ),
             })
-        else:
+            history_valid = False
+        if history_valid and any(
+            item["decision_status"] == "ADJUDICATED" for item in entries
+        ):
             adjudicated.add(latest["partition"])
 
     selected_report_ids = {
