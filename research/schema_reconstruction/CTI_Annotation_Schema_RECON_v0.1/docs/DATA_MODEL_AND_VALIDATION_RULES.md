@@ -71,6 +71,19 @@ All annotation rows are partitioned by `(report_id, annotator_id, annotation_pas
 4. `link_id` is unique; the composite `(report_id, annotator_id, annotation_pass_id, record_type, record_id, evidence_span_id, evidence_role)` is also unique.
 5. `record_type` is a known register; `record_id` resolves in that register.
 
+## Field-level adjudication history
+
+The adjudication log is append-only. A record with `decision_status=ADJUDICATED` is a value-changing revision for one exact `(report_id, target_annotator_id, annotation_pass_id, target_register, target_record_id, field_name)` tuple. This is a working reconstruction rule because the original adjudication ordering contract was not recovered.
+
+- The target record and `field_name` must resolve in the named register.
+- For one target field, `decision_date` orders successive `ADJUDICATED` revisions. Two such decisions on the same date are ambiguous and fail validation; the current schema has no separate sequence or supersession ID.
+- For each revision after the first, `original_value` must equal the preceding revision's `final_value`.
+- The latest `final_value` must exactly equal the value persisted in the target-register field. Values are compared as stored strings; no implicit normalization is applied.
+- `AGREED` and `DEFERRED` rows remain review-history outcomes and do not change the persisted value or satisfy the `ADJUDICATED_FINAL` selection gate.
+- The first revision's `original_value` is retained as history; without a prior revision row, the current target record alone cannot independently verify that historical starting value.
+
+This structural chain check does not authenticate reviewer identity, prove that source evidence supports the adjudication, or establish that a human review actually occurred. The decision semantics require researcher acceptance before formal schema freeze.
+
 ## Temporal relation eligibility
 
 A row enters the primary positive temporal graph only when:
