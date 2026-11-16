@@ -27,6 +27,9 @@ REQUIRED = {
     "activity_units": {
         "report_id", "annotator_id", "annotation_pass_id", "activity_unit_id",
     },
+    "event_mentions": {
+        "report_id", "annotator_id", "annotation_pass_id", "mention_id", "activity_unit_id",
+    },
     "time_evidence": {
         "report_id", "annotator_id", "annotation_pass_id", "time_evidence_id",
         "activity_unit_id", "raw_time_text", "time_type", "time_precision",
@@ -304,8 +307,62 @@ def validate_bundle(base_bundle: Path, evidence_file: Path, selection_file: Path
     relations = {(*part(r), r["relation_id"]): r for r in tables.get("temporal_relations", []) if r.get("relation_id")}
     spans = {(*part(r), r["evidence_span_id"]): r for r in tables.get("evidence_spans", []) if r.get("evidence_span_id")}
     units = {(*part(r), r["activity_unit_id"]) for r in tables.get("activity_units", []) if r.get("activity_unit_id")}
+    mentions = {
+        (*part(r), r.get("mention_id", "")): r
+        for r in tables.get("event_mentions", [])
+        if r.get("mention_id")
+    }
     grouped = {}
     seen_ids, seen_assignments = set(), set()
+
+    # time_evidence may attach directly to an activity unit, to a mention,
+    # or to both. When both are supplied they must resolve to the same unit.
+    # This preserves the field dictionary's "at least one" target contract
+    # while preventing contradictory cross-register targets.
+    time_rows_by_unit = {}
+    for line, time_row in enumerate(tables.get("time_evidence", []), 2):
+        p = part(time_row)
+        activity_unit_id = time_row.get("activity_unit_id", "")
+        mention_id = time_row.get("mention_id", "")
+        mention = mentions.get((*p, mention_id)) if mention_id else None
+        if not activity_unit_id and not mention_id:
+            errors.append({
+                "code": "TIME_WITHOUT_TARGET",
+                "message": f"time_evidence row {line}: at least one of activity_unit_id or mention_id is required",
+            })
+        if activity_unit_id and (*p, activity_unit_id) not in units:
+            errors.append({
+                "code": "UNKNOWN_TIME_UNIT",
+                "message": f"time_evidence row {line}: activity_unit_id {activity_unit_id!r} does not resolve in the same partition",
+            })
+        if mention_id and mention is None:
+            errors.append({
+                "code": "UNKNOWN_TIME_MENTION",
+                "message": f"time_evidence row {line}: mention_id {mention_id!r} does not resolve in the same partition",
+            })
+        if mention is not None:
+            mention_unit_id = mention.get("activity_unit_id", "")
+            if not mention_unit_id or (*p, mention_unit_id) not in units:
+                errors.append({
+                    "code": "TIME_MENTION_UNIT_UNKNOWN",
+                    "message": f"time_evidence row {line}: linked mention does not resolve to an activity unit in the same partition",
+                })
+            if activity_unit_id and mention_unit_id and activity_unit_id != mention_unit_id:
+                errors.append({
+                    "code": "TIME_TARGET_MISMATCH",
+                    "message": f"time_evidence row {line}: activity_unit_id {activity_unit_id!r} disagrees with mention {mention_id!r} activity_unit_id {mention_unit_id!r}",
+                })
+        resolved_unit_id = activity_unit_id or (mention.get("activity_unit_id", "") if mention else "")
+        if (
+            resolved_unit_id
+            and (*p, resolved_unit_id) in units
+            and not (
+                activity_unit_id
+                and mention is not None
+                and mention.get("activity_unit_id", "") != activity_unit_id
+            )
+        ):
+            time_rows_by_unit.setdefault((*p, resolved_unit_id), []).append(time_row)
 
     for line, row in enumerate(links, 2):
         p = part(row)
@@ -468,10 +525,8 @@ def validate_bundle(base_bundle: Path, evidence_file: Path, selection_file: Path
             def endpoint_intervals(endpoint_id, support_rows, prefix):
                 support_spans = {r.get("evidence_span_id", "") for r in support_rows}
                 candidates = [
-                    t for t in tables.get("time_evidence", [])
-                    if part(t) == p
-                    and t.get("activity_unit_id") == endpoint_id
-                    and t.get("time_type") == "ATTACK_OCCURRENCE"
+                    t for t in time_rows_by_unit.get((*p, endpoint_id), [])
+                    if t.get("time_type") == "ATTACK_OCCURRENCE"
                     and t.get("primary_evidence_span_id") in support_spans
                 ]
                 intervals = []
