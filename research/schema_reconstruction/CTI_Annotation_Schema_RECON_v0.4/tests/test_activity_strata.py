@@ -107,6 +107,32 @@ class ActivityStratumValidationTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("UNRESOLVED_STRATUM_BASIS_MISMATCH", {row["code"] for row in result["errors"]})
 
+    def test_base_confidence_and_adjudication_enums_are_enforced(self):
+        mutations = {
+            "activity_units": ("annotator_confidence", "CERTAIN"),
+            "event_mentions": ("adjudication_status", "REVIEWED"),
+            "report_scopes": ("adjudication_status", "PENDING"),
+        }
+        for register, (field, value) in mutations.items():
+            path = self.base / "registers" / f"{register}.csv"
+            with path.open("r", encoding="utf-8", newline="") as handle:
+                rows = list(csv.DictReader(handle))
+            rows[0][field] = value
+            write_rows(path, list(rows[0].keys()), rows)
+        result = self.validate()
+        codes = {row["code"] for row in result["errors"]}
+        self.assertIn("INVALID_ANNOTATOR_CONFIDENCE", codes)
+        self.assertIn("INVALID_ADJUDICATION_STATUS", codes)
+
+    def test_evidence_span_kind_must_use_controlled_vocabulary(self):
+        path = self.base / "registers" / "evidence_spans.csv"
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0]["span_kind"] = "UNSPECIFIED"
+        write_rows(path, list(rows[0].keys()), rows)
+        result = self.validate()
+        self.assertIn("INVALID_SPAN_KIND", {row["code"] for row in result["errors"]})
+
 
 class PrimaryProjectionRoutingTests(unittest.TestCase):
     def setUp(self):
