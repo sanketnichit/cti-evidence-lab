@@ -36,15 +36,15 @@ The following are adopted working defaults for the pilot. They are not represent
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow is GitHub Actions run [#260](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43855540613), on 16 November 2026, commit `62c08d0326df9199b2cfbef8c0edd06bf557a0dd`. It passed **256 synthetic test executions**:
+The latest verified main-branch workflow is GitHub Actions run [#264](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43870883272), on 16 November 2026, commit `e0bd86c403d536272487c1aaa587fdd301518e69`. It passed **261 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 78
 - RECON v0.2: 86
 - RECON v0.3: 15
-- RECON v0.4: 17
+- RECON v0.4: 22
 
-The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.4 suite now includes selected-final lock precondition tests and full-package checks for required base annotator-confidence, adjudication-status and evidence-span-kind enums.
+The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.4 suite covers selected-final lock preconditions, base review metadata enums, and required-cell/retrieval-date/OUT_OF_VOCAB provenance checks.
 
 These tests validate code paths and synthetic fixtures only. They do not establish semantic validity, human agreement, source eligibility, report findings, or empirical research results.
 
@@ -53,7 +53,7 @@ These tests validate code paths and synthetic fixtures only. They do not establi
 | Gate | Evidence/status | Required before |
 |---|---|---|
 | Accept reconstruction provenance | The exact Protocol v0.4.1 and original Schema v0.4.2 ZIP remain unrecovered. Protocol v0.5 and RECON v0.1-v0.4 are newly consolidated working artifacts. | Formal freeze. The researcher must accept the reconstructed package as a new replacement, not as the missing original. |
-| Whole-package field and enum review | The 12 RECON v0.1 CSV headers were compared with the field dictionary; shared partition keys are documented in its common conventions and no header-field mismatch was found. The v0.4 full-package validator now rejects invalid/blank base `annotator_confidence`, `adjudication_status`, and `evidence_spans.span_kind` values. `mention_kind` remains deliberate free text. Other enum/semantic relationships and provisional reconstruction choices still require researcher review. | Formal freeze. Complete the remaining semantic crosswalk and review requiredness, controlled values, cross-register keys, locks, version references and protocol-to-field fit together. |
+| Whole-package field, enum and requiredness review | The 12 RECON v0.1 CSV headers were compared with the field dictionary; shared partition keys are documented centrally and no header mismatch was found. The v0.4 full-package validator now rejects invalid/blank base confidence, adjudication and span-kind values, plus blank cells for the remaining clearly required fields (provenance, scope labels, unit summaries, mention kind, evidence text, mapping ATT&CK version, comparison-scope IDs and adjudication metadata). Retrieval dates and OUT_OF_VOCAB baseline provenance are also checked. `mention_kind` remains required descriptive free text. | Formal freeze. Complete the remaining semantic crosswalk and researcher review of provisional/reconstructed choices, cross-register meaning, lock dependencies, versions and protocol-to-field fit together. |
 | Metric contract approval | Metric Contract v0.1 and the v0.2 aggregator now align on the principal report-level outcomes. The aggregator still requires an explicit scope-pair approval flag before pair-opportunity-dependent rates are enabled. | Formal freeze and before reporting any pair-opportunity rates. |
 | Candidate eligibility | Formal researcher/source-scope eligibility decisions remain 0/5. A report cannot be selected merely because it yields useful events or positive edges. | Any source-first annotation of the five candidates. |
 | Human annotation workflow | Human-locked annotations: 0. IAA: not measured. The selected-final mechanism supports single-annotator and certain consensus/adjudicated workflows; the v0.3 scope-assignment sensitivity remains single-annotator only. | Before annotation. State whether the first pilot is single-annotator; recruit an independent second annotator only if one is genuinely available and unexposed. |
