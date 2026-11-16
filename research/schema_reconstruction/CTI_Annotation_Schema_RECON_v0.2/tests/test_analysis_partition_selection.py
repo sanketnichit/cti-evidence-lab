@@ -144,6 +144,30 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.save()
         self.assertEqual(set(), self.codes())
 
+    def test_adjudicated_final_rejects_field_not_present_in_target_register(self):
+        self.adjudications = [{
+            "report_id": "r1", "annotation_pass_id": "pass-2",
+            "target_annotator_id": "human-1", "target_register": "event_mentions",
+            "target_record_id": "mention-1", "field_name": "not_a_real_field",
+            "decision_status": "ADJUDICATED", "rationale": "Synthetic adjudication.",
+        }]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        codes = self.codes()
+        self.assertIn("ADJUDICATION_FIELD_NOT_IN_TARGET_REGISTER", codes)
+        self.assertIn("ADJUDICATED_FINAL_WITHOUT_LOG", codes)
+
+    def test_adjudication_field_validation_also_applies_to_agreed_rows(self):
+        self.adjudications = [{
+            "report_id": "r1", "annotation_pass_id": "pass-2",
+            "target_annotator_id": "human-1", "target_register": "event_mentions",
+            "target_record_id": "mention-1", "field_name": "unknown_field",
+            "decision_status": "AGREED", "rationale": "Synthetic agreement.",
+        }]
+        self.rows = [self.selection()]
+        self.save()
+        self.assertIn("ADJUDICATION_FIELD_NOT_IN_TARGET_REGISTER", self.codes())
+
     def test_adjudicated_final_rejects_log_for_unrelated_target_record(self):
         self.adjudications = [{
             "report_id": "r1", "annotation_pass_id": "pass-2",
