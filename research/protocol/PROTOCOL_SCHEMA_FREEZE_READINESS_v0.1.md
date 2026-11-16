@@ -25,6 +25,7 @@ The following are adopted working defaults for the pilot. They are not represent
 | Primary event universe | Only resolved atomic `event_leaf` units classified as incident-linked `ATTACK_ACTION` enter the primary graph. Classification is independent of ATT&CK mapping. | Protocol v0.5 §2.5; RECON v0.4 activity-stratum register, lock, validator and projection filter. |
 | Primary comparison scope | Use the nearest shared `scope_type=INCIDENT`, `scope_status=RESOLVED` ancestor. A primary positive relation must cite that same scope. Do not invent incident scopes from broader co-membership. | Protocol v0.5 §2 and §7; v0.2 aggregation default; v0.4 projection filter and regressions. |
 | Timestamp-derived relations | Timestamp bounds are closed ranges of possible occurrence instants, not action durations. Timestamp-only positives are strict `BEFORE`/`AFTER`; non-strict labels require explicit `direct_source` wording. Accepted bounds normalize to UTC with source timezone preserved. | Protocol v0.5 §4.2.1; timestamp semantics note; v0.2 validator and tests. |
+| Time-evidence target linkage | `time_evidence` may point to an activity unit, a mention, or both. A mention resolves to its unit through `event_mentions.activity_unit_id`; both targets must agree when populated. | RECON v0.2 now resolves mention-only time evidence for `direct_timestamp` endpoint checks; RECON v0.4 rejects contradictory dual targets. CI #272 regressions. |
 | Alternative mapping groups | Pending groups contain only `ALTERNATIVE` rows. Resolved groups contain one `ACCEPTED` plus `REJECTED` competitors, or all `REJECTED`. Preserve group IDs and rejected rows. Partial/multiple-winner states are invalid. | Protocol v0.5 §3.1; RECON v0.1 validator and regression tests. |
 | Episode relations | Retain episode containers and supported time evidence; defer episode-to-episode edges and metrics from the initial pilot. Do not create synthetic atomic event leaves. | Protocol v0.5 §2.5; no episode relation register is added. |
 | ChronoCTI pair alignment | Defer record-level benchmark technique-pair to source event-pair alignment. Preserve raw benchmark pair IDs, labels and provenance separately; never treat benchmark edges as source evidence. | Protocol v0.5 §6.3; separate baseline reproduction materials remain the source for raw benchmark records. |
@@ -36,15 +37,15 @@ The following are adopted working defaults for the pilot. They are not represent
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow is GitHub Actions run [#268](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43871726904), on 16 November 2026, commit `0c415ca3396b376c2aab74f7809e68e1c395c12d`. It passed **263 synthetic test executions**:
+The latest verified main-branch workflow is GitHub Actions run [#272](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43873129990), on 16 November 2026, commit `9f1adcb574ee5c66cee2fd97b6c011302a99d0b4`. It passed **266 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 78
-- RECON v0.2: 86
+- RECON v0.2: 88
 - RECON v0.3: 15
-- RECON v0.4: 24
+- RECON v0.4: 25
 
-The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.4 suite covers selected-final lock preconditions, base review metadata enums, required-cell/retrieval-date/OUT_OF_VOCAB provenance checks, and conditional report-registry reason pairings.
+The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.2 suite now covers mention-only timestamp targets and endpoint-target matching; v0.4 tests dual-target consistency alongside selected-final lock preconditions, base review metadata enums, required-cell checks and conditional report-registry reasons.
 
 These tests validate code paths and synthetic fixtures only. They do not establish semantic validity, human agreement, source eligibility, report findings, or empirical research results.
 
