@@ -133,6 +133,114 @@ class ActivityStratumValidationTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("INVALID_SPAN_KIND", {row["code"] for row in result["errors"]})
 
+    def test_required_descriptive_and_mapping_fields_cannot_be_blank(self):
+        cases = [
+            ("report_registry", "source_title"),
+            ("report_scopes", "scope_description"),
+            ("activity_units", "unit_summary"),
+            ("event_mentions", "mention_kind"),
+            ("evidence_spans", "evidence_text"),
+            ("event_mappings", "attack_version"),
+        ]
+        for register, field in cases:
+            path = self.base / "registers" / f"{register}.csv"
+            with path.open("r", encoding="utf-8", newline="") as handle:
+                rows = list(csv.DictReader(handle))
+            rows[0][field] = ""
+            write_rows(path, list(rows[0].keys()), rows)
+        result = self.validate()
+        required_messages = {
+            issue["message"] for issue in result["errors"]
+            if issue["code"] == "REQUIRED_FIELD_EMPTY"
+        }
+        for register, field in cases:
+            self.assertTrue(
+                any(register in message and field in message for message in required_messages),
+                f"missing required-field error for {register}.{field}",
+            )
+
+    def test_required_comparison_scope_is_enforced_for_relations_and_assessments(self):
+        assessment = {
+            **PARTITION,
+            "assessment_id": "assessment-a-b",
+            "event_a_id": "event-a",
+            "event_b_id": "event-b",
+            "candidate_rule_id": "synthetic-rule",
+            "candidate_rule_version": "1",
+            "comparison_scope_id": "",
+            "scope_compatibility": "INCOMPATIBLE",
+            "assessment_label": "NO_TEMPORAL_CLAIM",
+            "related_relation_id": "",
+            "assessment_reason": "Synthetic negative assessment.",
+            "adjudication_status": "UNREVIEWED",
+            "assessment_notes": "",
+        }
+        path = self.base / "registers" / "candidate_pair_assessments.csv"
+        write_rows(path, [
+            "report_id", "annotator_id", "annotation_pass_id", "assessment_id",
+            "event_a_id", "event_b_id", "candidate_rule_id", "candidate_rule_version",
+            "comparison_scope_id", "scope_compatibility", "assessment_label",
+            "related_relation_id", "assessment_reason", "adjudication_status", "assessment_notes",
+        ], [assessment])
+        relation_path = self.base / "registers" / "temporal_relations.csv"
+        with relation_path.open("r", encoding="utf-8", newline="") as handle:
+            relations = list(csv.DictReader(handle))
+        relations[0]["comparison_scope_id"] = ""
+        write_rows(relation_path, list(relations[0].keys()), relations)
+        result = self.validate()
+        messages = [
+            issue["message"] for issue in result["errors"]
+            if issue["code"] == "REQUIRED_FIELD_EMPTY"
+        ]
+        self.assertTrue(any("temporal_relations" in message and "comparison_scope_id" in message for message in messages))
+        self.assertTrue(any("candidate_pair_assessments" in message and "comparison_scope_id" in message for message in messages))
+
+    def test_required_adjudication_metadata_cannot_be_blank(self):
+        row = {
+            "report_id": PARTITION["report_id"],
+            "annotation_pass_id": PARTITION["annotation_pass_id"],
+            "adjudication_id": "adj-1",
+            "target_annotator_id": PARTITION["annotator_id"],
+            "reviewer_id": "",
+            "target_register": "event_mappings",
+            "target_record_id": "map-a",
+            "field_name": "",
+            "original_value": "T1059",
+            "proposed_value": "T1059",
+            "final_value": "T1059",
+            "decision_status": "AGREED",
+            "rationale": "",
+            "decision_date": "",
+            "primary_evidence_span_id": "",
+            "adjudication_notes": "",
+        }
+        path = self.base / "registers" / "adjudication_log.csv"
+        write_rows(path, [
+            "report_id", "annotation_pass_id", "adjudication_id", "target_annotator_id",
+            "reviewer_id", "target_register", "target_record_id", "field_name",
+            "original_value", "proposed_value", "final_value", "decision_status",
+            "rationale", "decision_date", "primary_evidence_span_id", "adjudication_notes",
+        ], [row])
+        result = self.validate()
+        messages = [
+            issue["message"] for issue in result["errors"]
+            if issue["code"] == "REQUIRED_FIELD_EMPTY"
+        ]
+        for field in ("reviewer_id", "field_name", "rationale", "decision_date"):
+            self.assertTrue(
+                any("adjudication_log" in message and field in message for message in messages),
+                f"missing required-field error for adjudication_log.{field}",
+            )
+
+    def test_retrieval_date_must_be_iso_date(self):
+        path = self.base / "registers" / "report_registry.csv"
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0]["retrieval_date"] = "yesterday"
+        write_rows(path, list(rows[0].keys()), rows)
+        result = self.validate()
+        self.assertIn("INVALID_RETRIEVAL_DATE", {row["code"] for row in result["errors"]})
+
 
 class PrimaryProjectionRoutingTests(unittest.TestCase):
     def setUp(self):
