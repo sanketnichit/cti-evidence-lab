@@ -633,6 +633,47 @@ class ValidatorTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("ASSESSMENT_RELATION_MISMATCH", {x.code for x in result.errors})
 
+    def test_positive_pair_assessment_accepts_reversed_endpoints_with_inverse_strict_label(self):
+        self.rows["candidate_pair_assessments"].append({
+            **PARTITION, "assessment_id": "assessment-b-a", "event_a_id": "event-b", "event_b_id": "event-a",
+            "candidate_rule_id": "same-scope-event-pairs", "candidate_rule_version": "0.1",
+            "comparison_scope_id": "scope-incident", "scope_compatibility": "COMPATIBLE",
+            "assessment_label": "AFTER", "related_relation_id": "rel-a-b",
+            "assessment_reason": "Equivalent reversed strict-order representation.",
+            "adjudication_status": "UNREVIEWED", "assessment_notes": "",
+        })
+        self.save("candidate_pair_assessments")
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.errors])
+
+    def test_positive_pair_assessment_rejects_reversed_endpoints_with_same_strict_label(self):
+        self.rows["candidate_pair_assessments"].append({
+            **PARTITION, "assessment_id": "assessment-b-a", "event_a_id": "event-b", "event_b_id": "event-a",
+            "candidate_rule_id": "same-scope-event-pairs", "candidate_rule_version": "0.1",
+            "comparison_scope_id": "scope-incident", "scope_compatibility": "COMPATIBLE",
+            "assessment_label": "BEFORE", "related_relation_id": "rel-a-b",
+            "assessment_reason": "Contradictory reversed strict-order representation.",
+            "adjudication_status": "UNREVIEWED", "assessment_notes": "",
+        })
+        self.save("candidate_pair_assessments")
+        result = self.validate()
+        self.assertIn("ASSESSMENT_RELATION_MISMATCH", {x.code for x in result.errors})
+
+    def test_symmetric_positive_assessment_accepts_reversed_endpoints(self):
+        self.rows["temporal_relations"][0]["relation_label"] = "OVERLAP"
+        self.rows["candidate_pair_assessments"].append({
+            **PARTITION, "assessment_id": "assessment-b-a", "event_a_id": "event-b", "event_b_id": "event-a",
+            "candidate_rule_id": "same-scope-event-pairs", "candidate_rule_version": "0.1",
+            "comparison_scope_id": "scope-incident", "scope_compatibility": "COMPATIBLE",
+            "assessment_label": "OVERLAP", "related_relation_id": "rel-a-b",
+            "assessment_reason": "Symmetric relation is endpoint-order invariant.",
+            "adjudication_status": "UNREVIEWED", "assessment_notes": "",
+        })
+        self.save("temporal_relations")
+        self.save("candidate_pair_assessments")
+        result = self.validate()
+        self.assertTrue(result.ok, [x for x in result.errors])
+
     def test_accepted_a120_count_excludes_container_mapping(self):
         self.rows["activity_units"].append({
             **PARTITION, "activity_unit_id": "series-unit", "scope_id": "scope-incident",
