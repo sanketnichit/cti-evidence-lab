@@ -44,6 +44,7 @@ The primary projection helper filters the event universe, mapping rows, relation
 
 - Every base activity unit must have one and only one stratum decision; missing, duplicate, and orphan rows fail.
 - Every decision requires a source evidence span and rationale; unresolved classification uses basis UNRESOLVED.
+- This draft records `adjudication_status=UNREVIEWED` only. It has no activity-stratum adjudication log, so AGREED/ADJUDICATED rows are rejected and the v0.4 lock workflow supports only `SINGLE_ANNOTATOR_FINAL`. CONSENSUS and ADJUDICATED_FINAL partitions require a separately versioned adjudication extension before use.
 - GENERIC_CAPABILITY cannot be represented as a resolved atomic event leaf.
 - Both endpoints of a primary positive temporal edge must be ATTACK_ACTION. Same-stratum auxiliary edges and mixed-stratum edges are retained but routed outside primary analysis.
 - Mapping rows for auxiliary events never contribute to the primary A_120 mapping sets.
