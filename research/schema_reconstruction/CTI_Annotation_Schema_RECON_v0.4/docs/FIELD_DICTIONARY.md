@@ -15,7 +15,7 @@ The v0.1 activity_units header is immutable within its reconstructed package. RE
 | evidence_span_id | yes | FK to an evidence_spans.csv row in the same partition. Evidence grounding for the classification. |
 | stratum_rationale | yes | Why the unit belongs to the selected stratum or why it cannot be resolved. |
 | annotator_confidence | yes | HIGH, MEDIUM, or LOW. |
-| adjudication_status | yes | UNREVIEWED, AGREED, or ADJUDICATED. |
+| adjudication_status | yes | UNREVIEWED only in this draft. A v0.4 stratum adjudication log is not implemented; AGREED/ADJUDICATED states are rejected until a dedicated versioned adjudication layer exists. |
 | stratum_notes | no | Additional boundary or uncertainty detail. |
 
 ## activity_stratum_locks.csv
