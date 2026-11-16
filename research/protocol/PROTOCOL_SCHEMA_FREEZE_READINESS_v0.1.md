@@ -36,15 +36,15 @@ The following are adopted working defaults for the pilot. They are not represent
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow is GitHub Actions run [#256](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43852972287), on 16 November 2026, commit `478e3fbd8603749734736416816f03b07e8f8bff`. It passed **254 synthetic test executions**:
+The latest verified main-branch workflow is GitHub Actions run [#260](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43855540613), on 16 November 2026, commit `62c08d0326df9199b2cfbef8c0edd06bf557a0dd`. It passed **256 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 78
 - RECON v0.2: 86
 - RECON v0.3: 15
-- RECON v0.4: 15
+- RECON v0.4: 17
 
-The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The two additional v0.4 tests verify that ineligible selected-final partitions are rejected both when building and when validating activity-stratum locks.
+The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.4 suite now includes selected-final lock precondition tests and full-package checks for required base annotator-confidence, adjudication-status and evidence-span-kind enums.
 
 These tests validate code paths and synthetic fixtures only. They do not establish semantic validity, human agreement, source eligibility, report findings, or empirical research results.
 
@@ -53,7 +53,7 @@ These tests validate code paths and synthetic fixtures only. They do not establi
 | Gate | Evidence/status | Required before |
 |---|---|---|
 | Accept reconstruction provenance | The exact Protocol v0.4.1 and original Schema v0.4.2 ZIP remain unrecovered. Protocol v0.5 and RECON v0.1-v0.4 are newly consolidated working artifacts. | Formal freeze. The researcher must accept the reconstructed package as a new replacement, not as the missing original. |
-| Whole-package field and enum review | Some enums are confirmed in the recovered v0.4 draft; others are explicitly provisional reconstruction choices. `mention_kind` is deliberately free text. The register/version/lock dependency map is documented, but the semantic crosswalk still needs whole-package review. | Formal freeze. Review headers, field requiredness, controlled values, cross-register keys, locks, version references and protocol-to-field fit together. |
+| Whole-package field and enum review | The 12 RECON v0.1 CSV headers were compared with the field dictionary; shared partition keys are documented in its common conventions and no header-field mismatch was found. The v0.4 full-package validator now rejects invalid/blank base `annotator_confidence`, `adjudication_status`, and `evidence_spans.span_kind` values. `mention_kind` remains deliberate free text. Other enum/semantic relationships and provisional reconstruction choices still require researcher review. | Formal freeze. Complete the remaining semantic crosswalk and review requiredness, controlled values, cross-register keys, locks, version references and protocol-to-field fit together. |
 | Metric contract approval | Metric Contract v0.1 and the v0.2 aggregator now align on the principal report-level outcomes. The aggregator still requires an explicit scope-pair approval flag before pair-opportunity-dependent rates are enabled. | Formal freeze and before reporting any pair-opportunity rates. |
 | Candidate eligibility | Formal researcher/source-scope eligibility decisions remain 0/5. A report cannot be selected merely because it yields useful events or positive edges. | Any source-first annotation of the five candidates. |
 | Human annotation workflow | Human-locked annotations: 0. IAA: not measured. The selected-final mechanism supports single-annotator and certain consensus/adjudicated workflows; the v0.3 scope-assignment sensitivity remains single-annotator only. | Before annotation. State whether the first pilot is single-annotator; recruit an independent second annotator only if one is genuinely available and unexposed. |
