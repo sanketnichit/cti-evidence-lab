@@ -53,19 +53,19 @@
 35. A reversed endpoint order with the inverse strict label (`BEFORE(A,B)` versus `AFTER(B,A)`) is the same positive temporal claim.
 36. Reversing endpoints without inverting `BEFORE`/`AFTER` is rejected as a contradictory positive assessment.
 37. Symmetric positive labels (`OVERLAP`, `SIMULTANEOUS`, `CONCURRENT_UNSPECIFIED`) remain invariant to endpoint order.
-35. A fully reviewed assessable report with zero resolved event leaves remains in `N_assessable`.
-36. An otherwise assessable report with an incomplete full-report review is not yet counted in `N_assessable`.
-37. Candidate-pair assessment endpoints must be resolved atomic event leaves; unresolved/container endpoints are rejected.
-38. `N_assessable` excludes an otherwise completed partition unless its exact frozen source text is supplied and hash/character-count verified.
-39. `VAGUE_OR_AMBIGUOUS` and `NOT_ASSESSABLE` candidate assessments require an assessment reason.
-40. Alternative mapping rows require a valid group with at least two members for one activity unit; target links must stay within that group.
-41. An accepted `source_supported_analyst_candidate` mapping requires a non-empty human rationale and mapping-specific evidence.
-42. A pending alternative group is valid only when all members remain `ALTERNATIVE`; pending members do not enter A_120 counts.
-43. Resolving an alternative group with one accepted winner and rejected competitors preserves the group ID and counts only the winner.
-44. An all-rejected alternative group is a valid resolved outcome and contributes no primary mapping.
-45. A partially resolved group is rejected, and its provisional accepted member is withheld from primary mapping counts.
-46. A mutually exclusive group cannot contain multiple accepted mappings.
-47. Each alternative-group member requires its own mapping-specific evidence link and rationale.
+38. A fully reviewed assessable report with zero resolved event leaves remains in `N_assessable`.
+39. An otherwise assessable report with an incomplete full-report review is not yet counted in `N_assessable`.
+40. Candidate-pair assessment endpoints must be resolved atomic event leaves; unresolved/container endpoints are rejected.
+41. `N_assessable` excludes an otherwise completed partition unless its exact frozen source text is supplied and hash/character-count verified.
+42. `VAGUE_OR_AMBIGUOUS` and `NOT_ASSESSABLE` candidate assessments require an assessment reason.
+43. Alternative mapping rows require a valid group with at least two members for one activity unit; target links must stay within that group.
+44. An accepted `source_supported_analyst_candidate` mapping requires a non-empty human rationale and mapping-specific evidence.
+45. A pending alternative group is valid only when all members remain `ALTERNATIVE`; pending members do not enter A_120 counts.
+46. Resolving an alternative group with one accepted winner and rejected competitors preserves the group ID and counts only the winner.
+47. An all-rejected alternative group is a valid resolved outcome and contributes no primary mapping.
+48. A partially resolved group is rejected, and its provisional accepted member is withheld from primary mapping counts.
+49. A mutually exclusive group cannot contain multiple accepted mappings.
+50. Each alternative-group member requires its own mapping-specific evidence link and rationale.
 
 Primary relation and candidate-pair comparison scopes are checked against the shared resolved-scope ancestry rules; incident-bounded primary comparison is a later working decision recorded in Protocol v0.5-draft. Alternative mapping groups now have a state lifecycle: all-ALTERNATIVE while pending, exactly one ACCEPTED plus REJECTED members after resolution, or all REJECTED. The group ID and rejected rows remain traceable. These are synthetic structural checks only.
 
