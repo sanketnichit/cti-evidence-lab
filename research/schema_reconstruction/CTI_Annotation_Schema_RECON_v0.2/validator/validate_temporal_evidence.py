@@ -148,6 +148,21 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
     target_rows_cache = {}
     adjudicated = set()
     adjudication_histories: dict[tuple[str, str, str, str, str, str], list[dict[str, Any]]] = {}
+    # Record and partition identity is immutable: changing these through
+    # field-level adjudication would orphan primary/foreign-key references.
+    immutable_target_fields = {
+        "report_registry": {"report_id", "annotator_id", "annotation_pass_id"},
+        "report_scopes": {"report_id", "annotator_id", "annotation_pass_id", "scope_id"},
+        "activity_units": {"report_id", "annotator_id", "annotation_pass_id", "activity_unit_id"},
+        "event_mentions": {"report_id", "annotator_id", "annotation_pass_id", "mention_id"},
+        "evidence_spans": {"report_id", "annotator_id", "annotation_pass_id", "evidence_span_id"},
+        "record_evidence_links": {"report_id", "annotator_id", "annotation_pass_id", "link_id"},
+        "event_mappings": {"report_id", "annotator_id", "annotation_pass_id", "mapping_id"},
+        "time_evidence": {"report_id", "annotator_id", "annotation_pass_id", "time_evidence_id"},
+        "temporal_relations": {"report_id", "annotator_id", "annotation_pass_id", "relation_id"},
+        "candidate_pair_assessments": {"report_id", "annotator_id", "annotation_pass_id", "assessment_id"},
+        "non_temporal_relations": {"report_id", "annotator_id", "annotation_pass_id", "non_temporal_relation_id"},
+    }
     for line, decision in enumerate(adjudications, 2):
         register_name = decision.get("target_register", "")
         target_id_field = target_id_fields.get(register_name)
@@ -177,6 +192,16 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
                 "message": (
                     f"adjudication_log row {line}: field_name {field_name!r} "
                     f"does not identify a field in target register {register_name!r}"
+                ),
+            })
+            continue
+        if field_name in immutable_target_fields.get(register_name, set()):
+            errors.append({
+                "code": "ADJUDICATION_IDENTITY_FIELD_FORBIDDEN",
+                "message": (
+                    f"adjudication_log row {line}: field_name {field_name!r} is a "
+                    "partition or record-identity field and cannot be changed through "
+                    "field-level adjudication"
                 ),
             })
             continue
