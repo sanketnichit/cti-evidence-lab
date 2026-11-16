@@ -51,9 +51,7 @@ analysis_partition_selection.csv records the report-level partition chosen for a
 
 The selection register remains header-only. A v0.2 projection wrapper is implemented and synthetic-tested. It resolves exactly one selected-final row, validates the temporal evidence register, and verifies a lock that covers the v0.1 source/register lock, v0.2 temporal-evidence rows, and final-selection decision. It delegates only after those checks to the unchanged v0.1 adapter.
 
-For `ADJUDICATED_FINAL`, the selected-partition validator requires an `ADJUDICATED` log entry whose report/annotator/pass and target record resolve, and whose `field_name` is an actual column in that target register. An unrelated or misspelled field does not satisfy the adjudication gate. The validator checks field identity; it does not yet assert that `final_value` equals the stored target-row value, which remains an explicit semantic synchronization question for protocol freeze.
-
-For `ADJUDICATED_FINAL`, the selected-partition validator requires an `ADJUDICATED` log entry whose report/annotator/pass and target record resolve, and whose `field_name` is an actual column in that target register. An unrelated or misspelled field does not satisfy the adjudication gate. The validator checks field identity; it does not yet assert that `final_value` equals the stored target-row value, which remains an explicit semantic synchronization question for protocol freeze.
+For `ADJUDICATED_FINAL`, the selected-partition validator requires a valid `ADJUDICATED` log entry whose report/annotator/pass, target record and `field_name` resolve. It also verifies the append-only value history: adjudicated revisions are ordered by ISO `decision_date`, same-day revisions to the same target field are rejected as ambiguous, each later `original_value` matches the preceding `final_value`, and the latest `final_value` exactly matches the persisted target-register field. This is a working reconstruction rule, not recovered original v0.4.2 semantics; researcher acceptance remains required before freeze.
 
 ## Report-level aggregation
 

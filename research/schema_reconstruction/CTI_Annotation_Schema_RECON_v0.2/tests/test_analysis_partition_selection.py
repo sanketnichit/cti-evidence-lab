@@ -15,8 +15,10 @@ REGISTRY_HEADERS = [
     "local_research_use_status", "report_assessability", "full_report_review_status",
 ]
 ADJUDICATION_HEADERS = [
-    "report_id", "annotation_pass_id", "target_annotator_id", "target_register",
-    "target_record_id", "field_name", "decision_status", "rationale",
+    "report_id", "annotation_pass_id", "adjudication_id", "target_annotator_id",
+    "reviewer_id", "target_register", "target_record_id", "field_name",
+    "original_value", "proposed_value", "final_value", "decision_status",
+    "rationale", "decision_date", "primary_evidence_span_id", "adjudication_notes",
 ]
 TARGET_HEADERS = ["report_id", "annotator_id", "annotation_pass_id", "mention_id", "instance_status"]
 
@@ -60,7 +62,29 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
 
     def save(self):
         write(self.base / "registers" / "report_registry.csv", REGISTRY_HEADERS, self.registry)
-        write(self.base / "registers" / "adjudication_log.csv", ADJUDICATION_HEADERS, self.adjudications)
+        completed_adjudications = []
+        for index, supplied in enumerate(self.adjudications, 1):
+            row = {
+                "report_id": "r1",
+                "annotation_pass_id": "pass-2",
+                "adjudication_id": f"adj-{index}",
+                "target_annotator_id": "human-1",
+                "reviewer_id": "reviewer-1",
+                "target_register": "event_mentions",
+                "target_record_id": "mention-1",
+                "field_name": "instance_status",
+                "original_value": "UNRESOLVED",
+                "proposed_value": "RESOLVED",
+                "final_value": "RESOLVED",
+                "decision_status": "ADJUDICATED",
+                "rationale": "Synthetic adjudication.",
+                "decision_date": "2026-11-05",
+                "primary_evidence_span_id": "",
+                "adjudication_notes": "",
+            }
+            row.update(supplied)
+            completed_adjudications.append(row)
+        write(self.base / "registers" / "adjudication_log.csv", ADJUDICATION_HEADERS, completed_adjudications)
         write(self.base / "registers" / "event_mentions.csv", TARGET_HEADERS, self.target_records)
         write(self.selection_file, SELECTION_HEADERS, self.rows)
 
@@ -144,6 +168,75 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
         self.save()
         self.assertEqual(set(), self.codes())
+
+    def test_adjudicated_final_rejects_final_value_not_persisted_on_target(self):
+        self.adjudications = [{
+            "final_value": "UNRESOLVED",
+        }]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        codes = self.codes()
+        self.assertIn("ADJUDICATION_FINAL_VALUE_MISMATCH", codes)
+        self.assertIn("ADJUDICATED_FINAL_WITHOUT_LOG", codes)
+
+    def test_append_only_adjudication_history_uses_date_and_value_chain(self):
+        self.adjudications = [
+            {
+                "adjudication_id": "adj-1",
+                "original_value": "UNRESOLVED",
+                "proposed_value": "INCOMPLETE",
+                "final_value": "INCOMPLETE",
+                "decision_date": "2026-11-05",
+            },
+            {
+                "adjudication_id": "adj-2",
+                "original_value": "INCOMPLETE",
+                "proposed_value": "RESOLVED",
+                "final_value": "RESOLVED",
+                "decision_date": "2026-11-06",
+            },
+        ]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        self.assertEqual(set(), self.codes())
+
+    def test_append_only_adjudication_history_rejects_broken_value_chain(self):
+        self.adjudications = [
+            {
+                "adjudication_id": "adj-1",
+                "original_value": "UNRESOLVED",
+                "final_value": "INCOMPLETE",
+                "decision_date": "2026-11-05",
+            },
+            {
+                "adjudication_id": "adj-2",
+                "original_value": "UNRESOLVED",
+                "final_value": "RESOLVED",
+                "decision_date": "2026-11-06",
+            },
+        ]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        self.assertIn("ADJUDICATION_HISTORY_CHAIN_BROKEN", self.codes())
+
+    def test_append_only_adjudication_history_rejects_same_day_ambiguity(self):
+        self.adjudications = [
+            {
+                "adjudication_id": "adj-1",
+                "original_value": "UNRESOLVED",
+                "final_value": "INCOMPLETE",
+                "decision_date": "2026-11-05",
+            },
+            {
+                "adjudication_id": "adj-2",
+                "original_value": "INCOMPLETE",
+                "final_value": "RESOLVED",
+                "decision_date": "2026-11-05",
+            },
+        ]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        self.assertIn("ADJUDICATION_HISTORY_ORDER_AMBIGUOUS", self.codes())
 
     def test_adjudicated_final_rejects_field_not_present_in_target_register(self):
         self.adjudications = [{

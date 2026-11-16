@@ -59,6 +59,10 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 - The wrapper verifies a second lock over the v0.1 source/register lock, v0.2 temporal-evidence rows, and final-selection decision; it delegates to the unchanged v0.1 adapter only after both v0.2 and v0.1 validation pass.
 - The selection register remains header-only; there is no selected report and no real-report projection.
 
+## Field-level adjudication synchronization
+
+The selected-final validator checks that an `ADJUDICATED` row resolves to a real target record and field, that append-only `ADJUDICATED` revisions for that field form a date-ordered value chain, that same-day revisions are unambiguous, and that the latest `final_value` equals the persisted target field. `AGREED` and `DEFERRED` rows do not advance the value chain or satisfy `ADJUDICATED_FINAL`. This is a reconstruction proposal requiring researcher review; the missing original v0.4.2 adjudication contract was not recovered.
+
 ## Report-level aggregation
 
 - Module: analysis/report_level_aggregation.py.
