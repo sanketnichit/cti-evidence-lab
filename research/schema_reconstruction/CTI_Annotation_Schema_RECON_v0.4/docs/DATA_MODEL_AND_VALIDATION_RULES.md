@@ -8,6 +8,16 @@ Every row requires a controlled stratum, controlled basis, source evidence span,
 
 GENERIC_CAPABILITY cannot be attached to a RESOLVED atomic event_leaf. A capability description with no resolved report-local execution is not an event occurrence.
 
+## Cross-layer base review metadata enums
+
+The v0.1 field dictionary declares `annotator_confidence` and `adjudication_status` as required controlled values on the applicable base registers, and `evidence_spans.span_kind` as a controlled value. The original v0.1 validator does not reject invalid values for all of those fields. The v0.4 full-package validator therefore adds fail-closed checks for:
+
+- `annotator_confidence`: HIGH, MEDIUM, or LOW on activity units, mentions, mappings, time evidence, temporal relations, and non-temporal relations
+- `adjudication_status`: UNREVIEWED, AGREED, or ADJUDICATED on scopes, activity units, mentions, mappings, time evidence, temporal relations, candidate-pair assessments, and non-temporal relations
+- `evidence_spans.span_kind`: MENTION, RELATION, TIME, SCOPE, MAPPING, RIGHTS, or OTHER
+
+Blank and unknown values fail validation. This is an additive v0.4 validation gate; the checksum-controlled v0.1 package files and register headers remain unchanged.
+
 ## Temporal relation routing
 
 Temporal relation rows are routed using the stratum of both endpoints:
