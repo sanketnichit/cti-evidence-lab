@@ -15,7 +15,8 @@ PART = {"report_id": "r1", "annotator_id": "a1", "annotation_pass_id": "p1"}
 REL_H = ["report_id", "annotator_id", "annotation_pass_id", "relation_id", "event_a_id", "event_b_id", "relation_label", "relation_basis", "evidence_scope", "primary_evidence_span_id", "relation_notes"]
 SPAN_H = ["report_id", "annotator_id", "annotation_pass_id", "evidence_span_id", "span_kind", "sentence_id", "section_locator", "paragraph_locator"]
 UNIT_H = ["report_id", "annotator_id", "annotation_pass_id", "activity_unit_id"]
-TIME_H = ["report_id", "annotator_id", "annotation_pass_id", "time_evidence_id", "activity_unit_id", "raw_time_text", "time_type", "time_precision", "timezone_text", "normalization_status", "normalized_start", "normalized_end", "normalized_timezone", "timezone_status", "uncertainty_notes", "primary_evidence_span_id"]
+MENTION_H = ["report_id", "annotator_id", "annotation_pass_id", "mention_id", "activity_unit_id"]
+TIME_H = ["report_id", "annotator_id", "annotation_pass_id", "time_evidence_id", "activity_unit_id", "mention_id", "raw_time_text", "time_type", "time_precision", "timezone_text", "normalization_status", "normalized_start", "normalized_end", "normalized_timezone", "timezone_status", "uncertainty_notes", "primary_evidence_span_id"]
 
 
 def write(path, headers, rows):
@@ -41,6 +42,7 @@ class TemporalEvidenceTests(unittest.TestCase):
         ]
         self.units = [{**PART, "activity_unit_id": "evA"}, {**PART, "activity_unit_id": "evB"}]
         self.times = []
+        self.mentions = []
         self.links = [
             {**PART, "relation_evidence_id": "re1", "relation_id": "rel1", "evidence_span_id": "a", "evidence_role": "EVENT_A_SUPPORT", "supported_event_id": "evA", "evidence_notes": ""},
             {**PART, "relation_evidence_id": "re2", "relation_id": "rel1", "evidence_span_id": "b", "evidence_role": "EVENT_B_SUPPORT", "supported_event_id": "evB", "evidence_notes": ""},
@@ -54,6 +56,7 @@ class TemporalEvidenceTests(unittest.TestCase):
         write(self.base / "registers" / "temporal_relations.csv", REL_H, [self.relation])
         write(self.base / "registers" / "evidence_spans.csv", SPAN_H, self.spans)
         write(self.base / "registers" / "activity_units.csv", UNIT_H, self.units)
+        write(self.base / "registers" / "event_mentions.csv", MENTION_H, self.mentions)
         write(self.base / "registers" / "time_evidence.csv", TIME_H, self.times)
         write(self.ext, HEADERS, self.links)
 
@@ -126,6 +129,32 @@ class TemporalEvidenceTests(unittest.TestCase):
         self.times = [{**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "raw_time_text": "synthetic time interval", "time_type": "ATTACK_OCCURRENCE", "time_precision": "INTERVAL", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"}]
         self.save()
         self.assertIn("EVENT_B_TIMESTAMP_SUPPORT_MISSING", self.codes())
+
+    def test_direct_timestamp_accepts_mention_only_time_targets(self):
+        self.relation["relation_basis"] = "direct_timestamp"
+        self.mentions = [
+            {**PART, "mention_id": "mentionA", "activity_unit_id": "evA"},
+            {**PART, "mention_id": "mentionB", "activity_unit_id": "evB"},
+        ]
+        self.times = [
+            {**PART, "time_evidence_id": "tA", "activity_unit_id": "", "mention_id": "mentionA", "raw_time_text": "2026-01-01 08:00 UTC", "time_type": "ATTACK_OCCURRENCE", "time_precision": "MINUTE", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"},
+            {**PART, "time_evidence_id": "tB", "activity_unit_id": "", "mention_id": "mentionB", "raw_time_text": "2026-01-01 09:00 UTC", "time_type": "ATTACK_OCCURRENCE", "time_precision": "MINUTE", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T09:00:00Z", "normalized_end": "2026-01-01T09:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "b"},
+        ]
+        self.save()
+        self.assertTrue(self.report()["ok"], self.report()["errors"])
+
+    def test_time_evidence_cannot_link_different_unit_and_mention_targets(self):
+        self.relation["relation_basis"] = "direct_timestamp"
+        self.mentions = [
+            {**PART, "mention_id": "mentionA", "activity_unit_id": "evA"},
+            {**PART, "mention_id": "mentionB", "activity_unit_id": "evB"},
+        ]
+        self.times = [
+            {**PART, "time_evidence_id": "tA", "activity_unit_id": "evA", "mention_id": "mentionB", "raw_time_text": "2026-01-01 08:00 UTC", "time_type": "ATTACK_OCCURRENCE", "time_precision": "MINUTE", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T08:00:00Z", "normalized_end": "2026-01-01T08:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "a"},
+            {**PART, "time_evidence_id": "tB", "activity_unit_id": "evB", "mention_id": "mentionB", "raw_time_text": "2026-01-01 09:00 UTC", "time_type": "ATTACK_OCCURRENCE", "time_precision": "MINUTE", "timezone_text": "UTC", "normalization_status": "NORMALIZED", "normalized_start": "2026-01-01T09:00:00Z", "normalized_end": "2026-01-01T09:00:00Z", "normalized_timezone": "UTC", "timezone_status": "EXPLICIT", "uncertainty_notes": "", "primary_evidence_span_id": "b"},
+        ]
+        self.save()
+        self.assertIn("TIME_TARGET_MISMATCH", self.codes())
 
 
     def timestamp_rows(self, a_start, a_end, b_start, b_end, a_notes="", b_notes=""):
