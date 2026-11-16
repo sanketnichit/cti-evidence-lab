@@ -36,15 +36,15 @@ The following are adopted working defaults for the pilot. They are not represent
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow is GitHub Actions run [#264](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43870883272), on 16 November 2026, commit `e0bd86c403d536272487c1aaa587fdd301518e69`. It passed **261 synthetic test executions**:
+The latest verified main-branch workflow is GitHub Actions run [#268](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43871726904), on 16 November 2026, commit `0c415ca3396b376c2aab74f7809e68e1c395c12d`. It passed **263 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 78
 - RECON v0.2: 86
 - RECON v0.3: 15
-- RECON v0.4: 22
+- RECON v0.4: 24
 
-The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.4 suite covers selected-final lock preconditions, base review metadata enums, and required-cell/retrieval-date/OUT_OF_VOCAB provenance checks.
+The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.4 suite covers selected-final lock preconditions, base review metadata enums, required-cell/retrieval-date/OUT_OF_VOCAB provenance checks, and conditional report-registry reason pairings.
 
 These tests validate code paths and synthetic fixtures only. They do not establish semantic validity, human agreement, source eligibility, report findings, or empirical research results.
 
