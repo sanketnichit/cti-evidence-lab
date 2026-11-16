@@ -3,10 +3,11 @@
 - Version: 0.3
 - Prepared: 5 November 2026
 - Updated: 15 November 2026
-- Latest full-workflow verification: GitHub Actions run #250 passed 15 RECON v0.3 synthetic tests as part of 252 total tests.
+- Latest full-workflow verification: GitHub Actions run #299 on 16 November 2026 passed 15 RECON v0.3 synthetic tests as part of 283 total tests; checksum verification and all blank-extension validators passed.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.2
+- Register documentation: docs/FIELD_DICTIONARY.md and docs/CONTROLLED_VOCABULARIES.md.
 - Real assignment rows: 0
 - Synthetic tests only: yes
 - Semantic scope-assignment review: not performed
