@@ -28,7 +28,7 @@ A change to the source, any v0.1 partition register, v0.2 evidence row, or final
 ## Fail-closed sequence
 
 1. Require explicit lock confirmation.
-2. Validate the selection register and require exactly one selected-final row for the requested report.
+2. Validate the selection register and require exactly one selected-final row for the requested report. For `ADJUDICATED_FINAL`, an `ADJUDICATED` log row must resolve to a target record in that selected partition, and `field_name` must be present in the target register's actual header. For `ADJUDICATED_FINAL`, an `ADJUDICATED` log row must resolve to a target record in that selected partition, and `field_name` must be present in the target register's actual header.
 3. Validate the temporal-evidence extension against the parent temporal relations, activity units, evidence spans and time evidence.
 4. Recompute the selected-analysis digest and compare it with both the register value and caller-supplied value.
 5. Recompute the v0.1 partition lock and delegate to the unchanged v0.1 adapter.
