@@ -10,6 +10,7 @@
 - registers/event_comparison_scope_assignments.csv: one decision for one event instance × candidate comparison scope × annotation partition.
 - registers/comparison_scope_assignment_locks.csv: a separate lock over the assignment rows and the v0.2 selected-analysis lock reference.
 - validator/validate_comparison_scope_assignments.py: validates assignments, relation-scope consistency and the v0.3 lock.
+- docs/FIELD_DICTIONARY.md and docs/CONTROLLED_VOCABULARIES.md: define the assignment and lock fields, conditional evidence requirements, controlled values and single-annotator-only boundary.
 - analysis/comparison_scope_rules.py: evaluates the legacy, incident-bounded and explicit-assignment rules on the same pair.
 - analysis/create_scope_assignment_locks.py: creates lock rows for SELECTED_FINAL partitions after assignment review.
 - analysis/aggregate_selected_report_projections.py: calls the v0.2 aggregator with the explicit-assignment rule after validating the v0.3 register and lock.
