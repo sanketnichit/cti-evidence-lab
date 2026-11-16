@@ -7,6 +7,7 @@
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.1
+- Register documentation: docs/FIELD_DICTIONARY.md and docs/CONTROLLED_VOCABULARIES.md; field semantics and conditional requiredness describe the current reconstructed validator contract.
 - Real report rows: 0
 - Synthetic tests only: yes
 - Semantic evidence review: not performed
