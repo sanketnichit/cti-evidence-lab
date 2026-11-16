@@ -32,7 +32,7 @@ REQUIRED = {
     },
     "time_evidence": {
         "report_id", "annotator_id", "annotation_pass_id", "time_evidence_id",
-        "activity_unit_id", "raw_time_text", "time_type", "time_precision",
+        "activity_unit_id", "mention_id", "raw_time_text", "time_type", "time_precision",
         "timezone_text", "normalization_status", "normalized_start",
         "normalized_end", "normalized_timezone", "timezone_status",
         "uncertainty_notes", "primary_evidence_span_id",
