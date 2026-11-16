@@ -432,7 +432,7 @@ def main() -> int:
         if not args.selection_file or not args.lock_file:
             parser.error("--selection-file and --lock-file must be supplied together")
         lock_validation = validate_activity_stratum_locks(
-            args.selection_file, args.strata_file, args.lock_file
+            args.base_bundle, args.selection_file, args.strata_file, args.lock_file
         )
     result = {"validation": validation, "locks": lock_validation, "ok": validation["ok"] and (lock_validation is None or lock_validation["ok"])}
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
