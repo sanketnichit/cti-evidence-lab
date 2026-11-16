@@ -76,10 +76,10 @@ All annotation rows are partitioned by `(report_id, annotator_id, annotation_pas
 The adjudication log is append-only. A record with `decision_status=ADJUDICATED` is a value-changing revision for one exact `(report_id, target_annotator_id, annotation_pass_id, target_register, target_record_id, field_name)` tuple. This is a working reconstruction rule because the original adjudication ordering contract was not recovered.
 
 - The target record and `field_name` must resolve in the named register.
-- For one target field, `decision_date` orders all `AGREED`, `DEFERRED`, and `ADJUDICATED` history entries. Two entries on the same date are ambiguous when at least one is value-changing (`ADJUDICATED`); the current schema has no separate sequence or supersession ID. Multiple same-day non-value-changing entries are order-independent only when they preserve the same field value.
-- For every history entry after the first, `original_value` must equal the immediately preceding entry's `final_value`. This keeps non-value-changing review outcomes inside the same append-only value history.
-- `ADJUDICATED` is value-changing. `AGREED` and `DEFERRED` must have identical `original_value` and `final_value`; their `proposed_value` may record a considered alternative, but they cannot alter the stored field or satisfy the `ADJUDICATED_FINAL` selection gate on their own.
-- The latest history entry's `final_value` must exactly equal the value persisted in the target-register field. Values are compared as stored strings; no implicit normalization is applied.
+- For one target field, `decision_date` orders successive `ADJUDICATED` revisions. Two such decisions on the same date are ambiguous and fail validation; the current schema has no separate sequence or supersession ID.
+- For each revision after the first, `original_value` must equal the preceding revision's `final_value`.
+- The latest `final_value` must exactly equal the value persisted in the target-register field. Values are compared as stored strings; no implicit normalization is applied.
+- `AGREED` and `DEFERRED` rows remain review-history outcomes and do not change the persisted value or satisfy the `ADJUDICATED_FINAL` selection gate.
 - The first revision's `original_value` is retained as history; without a prior revision row, the current target record alone cannot independently verify that historical starting value.
 
 This structural chain check does not authenticate reviewer identity, prove that source evidence supports the adjudication, or establish that a human review actually occurred. The decision semantics require researcher acceptance before formal schema freeze.
