@@ -34,19 +34,19 @@ The following are adopted working defaults for the pilot. They are not represent
 | Mention kind | Keep required `mention_kind` as short descriptive free text, not an invented controlled enum. It does not determine event identity, stratum, mapping or metrics. | Protocol v0.5 §2.3; RECON field dictionary preserves it as a string because the original enum is unavailable. |
 | Report-level metrics | Keep compatible pair opportunity, same-technique opportunity, positive temporal-relation presence and within-technique temporal-relation presence separate. The conditional rate is descriptive, not the primary outcome. | Metric Contract v0.1 §§5–6; RECON v0.2 report-level aggregator. |
 | Register/version/lock crosswalk | A technical crosswalk now maps all 12 v0.1 base registers and the 6 v0.2–v0.4 extension/lock registers to their keys, validators, consumers, protocol areas and lock dependencies. It records the sibling v0.3/v0.4 lock relationship. | `research/protocol/PROTOCOL_SCHEMA_REGISTER_VERSION_LOCK_CROSSWALK_v0.1.md`; technical mapping complete, but whole-package field/enum/semantic review remains open. |
-| Activity-stratum lock preconditions | RECON v0.4 lock creation and verification revalidate the v0.2 selected-final register against the base report registry and revalidate complete v0.4 stratum coverage. The v0.2 selected-analysis digest still requires source-backed verification through the v0.2 selected-partition adapter before projection. | RECON v0.4 validator/lock CLI; CI #268. This closes the eligibility bypass, not the full package freeze or source/semantic review. |
+| Activity-stratum lock preconditions | RECON v0.4 lock creation and verification revalidate the v0.2 selected-final register against the base report registry and revalidate complete v0.4 stratum coverage. The v0.2 selected-analysis digest still requires source-backed verification through the v0.2 selected-partition adapter before projection. | RECON v0.4 validator/lock CLI; CI #276. This closes the eligibility bypass, not the full package freeze or source/semantic review. |
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow is GitHub Actions run [#272](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43873129990), on 16 November 2026, commit `9f1adcb574ee5c66cee2fd97b6c011302a99d0b4`. It passed **266 synthetic test executions**:
+The latest verified main-branch workflow is GitHub Actions run [#276](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43875993928), on 16 November 2026, commit `ac2c41ec42363ab6c6f437e4138b2092aa104607`. It passed **269 synthetic test executions**:
 
 - Root repository: 60
-- RECON v0.1: 78
+- RECON v0.1: 81
 - RECON v0.2: 88
 - RECON v0.3: 15
 - RECON v0.4: 25
 
-The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.2 suite now covers mention-only timestamp targets and endpoint-target matching; v0.4 tests dual-target consistency alongside selected-final lock preconditions, base review metadata enums, required-cell checks and conditional report-registry reasons.
+The workflow also passed the 31-entry RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.1 suite covers direction-aware positive pair-assessment linkage; the v0.2 suite covers mention-only timestamp targets; and the v0.4 suite covers dual-target consistency, selected-final lock preconditions, base review metadata enums, required-cell checks and conditional report-registry reasons.
 
 These tests validate code paths and synthetic fixtures only. They do not establish semantic validity, human agreement, source eligibility, report findings, or empirical research results.
 
