@@ -23,7 +23,7 @@ All registers are currently header-only. There are no real report annotations, s
 
 **Important dependency distinction:** v0.3 and v0.4 are separate additive extensions over the selected v0.2 analysis partition. The v0.4 manifest lists v0.3 among its parent layers because it forms part of the combined working package, but the v0.4 stratum lock itself binds to the v0.2 selected-analysis lock. The v0.3 assignment lock is separately required only when the v0.3 explicit-scope sensitivity is invoked. Do not treat the v0.4 lock as proof that v0.3 assignments were validated or locked.
 
-**Extension field/header audit (16 November 2026):** the six v0.2-v0.4 extension CSV headers exactly match their validator header constants. v0.2 and v0.3 now publish extension-specific field dictionaries and controlled-vocabulary notes; v0.4's dictionary covers both companion registers. This checks register/documentation structure, not semantic correctness or approval of reconstructed choices.
+**Extension field/header audit (16 November 2026):** the six v0.2-v0.4 extension CSV headers exactly match their validator header constants. The v0.2, v0.3, and v0.4 field dictionaries now enumerate all fields in their respective extension registers: a direct comparison found no omitted or extra fields across all six registers. v0.2 and v0.3 also publish extension-specific controlled-vocabulary notes; v0.4's dictionary/vocabulary covers both companion registers. This checks header/documentation structure, not semantic correctness or approval of reconstructed choices.
 
 ## 3. RECON v0.1 — base register crosswalk
 
