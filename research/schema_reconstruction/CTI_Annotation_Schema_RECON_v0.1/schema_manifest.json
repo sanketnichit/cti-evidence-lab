@@ -98,7 +98,7 @@
     "status": "PROVISIONAL_SYNTHETICALLY_TESTED_NOT_RUN_ON_REAL_REPORTS",
     "documentation": "docs/PROJECTION_METRICS_RECON_v0.1.md",
     "test_path": "tests/test_projection_metrics_recon.py",
-    "test_count": 16,
+    "test_count": 19,
     "test_command": "python -m unittest discover -s tests -v",
     "not_integrated_with_public_github_source": true
   },
