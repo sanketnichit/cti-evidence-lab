@@ -3,7 +3,7 @@
 - Version: 0.2
 - Prepared: 5 November 2026
 - Updated: 16 November 2026
-- Latest main-branch verification: GitHub Actions run #294 passed 95 RECON v0.2 synthetic tests as part of 279 total tests; base package checksums and all workflow steps passed. The selected-final suite includes append-only adjudication value-history and immutable identity-field regressions.
+- Latest main-branch verification: GitHub Actions run #299 passed 99 RECON v0.2 synthetic tests as part of 283 total tests; base package checksums and all workflow steps passed. The selected-final suite includes append-only field history across ADJUDICATED/AGREED/DEFERRED outcomes, non-value-changing outcome enforcement and immutable identity-field regressions.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.1
@@ -61,7 +61,7 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 
 ## Field-level adjudication synchronization
 
-The selected-final validator checks that an `ADJUDICATED` row resolves to a real target record and field, that append-only `ADJUDICATED` revisions for that field form a date-ordered value chain, that same-day revisions are unambiguous, and that the latest `final_value` equals the persisted target field. `AGREED` and `DEFERRED` rows do not advance the value chain or satisfy `ADJUDICATED_FINAL`. This is a reconstruction proposal requiring researcher review; the missing original v0.4.2 adjudication contract was not recovered.
+The selected-final validator checks that `ADJUDICATED`, `AGREED`, and `DEFERRED` rows for a target field form one date-ordered append-only value history. `AGREED` and `DEFERRED` must keep `original_value` and `final_value` identical; every later history row must begin from the preceding `final_value`; and the latest value must equal the persisted target field. Same-day entries are rejected when at least one is value-changing (`ADJUDICATED`); same-day non-value-changing entries are order-independent only when they preserve the same value. Only a valid history containing an `ADJUDICATED` row satisfies `ADJUDICATED_FINAL`. This is a reconstruction proposal requiring researcher review; the missing original v0.4.2 adjudication contract was not recovered. The first history row's starting `original_value` remains a historical value that cannot be independently verified without a prior row.
 
 Field-level adjudication may change annotation content, but not partition identity or the target register's primary record ID. Those fields are immutable through this path because changing them would invalidate record keys and dependent references. Identity corrections require a separately controlled migration.
 
