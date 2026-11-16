@@ -2,7 +2,7 @@
 
 A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
-**Status (14 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The five fixed rank-one reports remain feasibility candidates, not human-approved selected reports. The primary analytical stratum is incident-linked attack-action occurrences; the primary pair rule is the nearest shared resolved incident. A working timestamp rule now restricts timestamp-only positives to invariant strict BEFORE/AFTER, reserves OVERLAP/SIMULTANEOUS/CONCURRENT_UNSPECIFIED for explicit source assertions, and requires UTC-normalized occurrence-time bounds with explicit timezone evidence. RECON v0.4 carries evidence-backed activity strata. These are draft method/tooling decisions, not a frozen schema or empirical findings. No novelty claim is established.
+**Status (16 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The five fixed rank-one reports remain feasibility candidates, not human-approved selected reports. The primary analytical stratum is incident-linked attack-action occurrences; the primary pair rule is the nearest shared resolved incident. A working timestamp rule now restricts timestamp-only positives to invariant strict BEFORE/AFTER, reserves OVERLAP/SIMULTANEOUS/CONCURRENT_UNSPECIFIED for explicit source assertions, and requires UTC-normalized occurrence-time bounds with explicit timezone evidence. RECON v0.4 carries evidence-backed activity strata. These are draft method/tooling decisions, not a frozen schema or empirical findings. No novelty claim is established.
 
 ## Provisional primary research question
 
@@ -65,7 +65,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest executable-code CI verification on 16 November 2026: GitHub Actions run [#272](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43873129990) passed on main head `9f1adcb574ee5c66cee2fd97b6c011302a99d0b4`. It executed **60 root tests**, **78 RECON v0.1 tests**, **88 RECON v0.2 tests**, **15 RECON v0.3 tests**, and **25 RECON v0.4 tests** — **266 successful synthetic test executions**. All workflow steps passed, including package checksum verification, blank-register validation, selected-final activity-stratum lock checks, base confidence/adjudication/span-kind enum checks, required-cell and conditional report-decision rationale checks, mention-linked timestamp resolution, and source snapshot packaging. These are code-integrity checks only, not real-report findings or semantic annotation validation.
+Latest executable-code CI verification on 16 November 2026: GitHub Actions run [#276](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43875993928) passed on main head `ac2c41ec42363ab6c6f437e4138b2092aa104607`. It executed **60 root tests**, **81 RECON v0.1 tests**, **88 RECON v0.2 tests**, **15 RECON v0.3 tests**, and **25 RECON v0.4 tests** — **269 successful synthetic test executions**. All workflow steps passed, including package checksum verification, blank-register validation, selected-final activity-stratum lock checks, base confidence/adjudication/span-kind enum checks, required-cell and conditional report-decision rationale checks, mention-linked timestamp resolution, direction-aware positive pair-assessment checks, and source snapshot packaging. These are code-integrity checks only, not real-report findings or semantic annotation validation.
 
 Run from the repository root:
 
@@ -117,7 +117,7 @@ original `CTI_Annotation_Schema_v0.4.2-draft.zip`, and it is not approved or fro
 for formal annotation. The exact v0.4.1 protocol and original v0.4.2 ZIP were not
 recovered. The package contains 12 blank registers, a field dictionary, controlled
 vocabularies, a structural validator, a projection module, an annotation-to-projection
-adapter, and 69 synthetic tests (41 validator, 16 projection, 12 adapter). None of these tests are results on real CTI reports.
+adapter, and 81 synthetic tests (50 validator, 19 projection, 12 adapter). None of these tests are results on real CTI reports.
 
 ### Current evidence boundary
 
