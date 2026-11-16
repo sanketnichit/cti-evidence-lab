@@ -36,6 +36,16 @@ The v0.1 field dictionary marks a number of descriptive and decision fields as r
 
 `report_registry.retrieval_date` is additionally required to parse as ISO `YYYY-MM-DD`. An `OUT_OF_VOCAB` mapping must retain both the baseline vocabulary identifier and its SHA-256. Fields explicitly marked optional or conditional are not blanket-required; existing field-specific checks continue to handle required conditional values such as negative assessment reasons, mapping evidence, and primary relation evidence. This additive layer does not change the v0.1 headers or checksum manifest.
 
+## Conditional report-decision reasons
+
+The report-registry field dictionary uses conditional reason/basis fields. The combined v0.4 validator now enforces the documented pairings:
+
+- `source_scope_reason` is required when `source_scope_eligibility` is `INELIGIBLE` or `PENDING`.
+- `local_research_use_basis` is required whenever a `local_research_use_status` decision is recorded, including `PERMITTED`; the basis records the evidence supporting that permission decision.
+- `assessability_reason` is required when `report_assessability` is `NOT_ASSESSABLE` or `PENDING`.
+
+These checks do not require exclusion or assessability reasons for `ELIGIBLE`/`ASSESSABLE` states. They preserve the distinction between a source-scope decision, a rights decision and an assessability decision.
+
 ## Temporal relation routing
 
 Temporal relation rows are routed using the stratum of both endpoints:
