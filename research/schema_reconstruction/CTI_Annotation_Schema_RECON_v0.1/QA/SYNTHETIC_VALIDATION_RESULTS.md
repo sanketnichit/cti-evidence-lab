@@ -49,7 +49,7 @@
 31. Contradictory `BEFORE` and `OVERLAP` claims for the same event pair are rejected.
 32. Conflicting report-level eligibility/local-use/assessability decisions are warned and excluded from report-level denominators until adjudicated.
 33. CRLF source text is hashed and offset-checked without newline translation.
-34. Positive candidate-pair assessments must match their linked temporal relation's event pair and label.
+34. Positive candidate-pair assessments must match their linked temporal relation's normalized temporal claim, preserving BEFORE/AFTER direction and symmetric-label equivalence.
 35. A reversed endpoint order with the inverse strict label (`BEFORE(A,B)` versus `AFTER(B,A)`) is the same positive temporal claim.
 36. Reversing endpoints without inverting `BEFORE`/`AFTER` is rejected as a contradictory positive assessment.
 37. Symmetric positive labels (`OVERLAP`, `SIMULTANEOUS`, `CONCURRENT_UNSPECIFIED`) remain invariant to endpoint order.
