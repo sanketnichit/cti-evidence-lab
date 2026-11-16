@@ -18,7 +18,7 @@ ADJUDICATION_HEADERS = [
     "report_id", "annotation_pass_id", "target_annotator_id", "target_register",
     "target_record_id", "field_name", "decision_status", "rationale",
 ]
-TARGET_HEADERS = ["report_id", "annotator_id", "annotation_pass_id", "mention_id"]
+TARGET_HEADERS = ["report_id", "annotator_id", "annotation_pass_id", "mention_id", "instance_status"]
 
 
 def write(path, headers, rows):
@@ -43,6 +43,7 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.target_records = [{
             "report_id": "r1", "annotator_id": "human-1",
             "annotation_pass_id": "pass-2", "mention_id": "mention-1",
+            "instance_status": "RESOLVED",
         }]
         self.rows = []
         self.save()
