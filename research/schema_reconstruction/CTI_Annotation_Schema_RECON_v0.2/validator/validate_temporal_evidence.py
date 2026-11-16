@@ -116,7 +116,7 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
         base_bundle / "registers" / "adjudication_log.csv",
         {
             "report_id", "annotation_pass_id", "target_annotator_id",
-            "target_register", "target_record_id", "decision_status",
+            "target_register", "target_record_id", "field_name", "decision_status",
         },
     )
     if error:
@@ -143,29 +143,39 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
     }
     target_rows_cache = {}
     adjudicated = set()
-    for decision in adjudications:
-        if decision.get("decision_status") != "ADJUDICATED":
-            continue
+    for line, decision in enumerate(adjudications, 2):
         register_name = decision.get("target_register", "")
-        target_field = target_id_fields.get(register_name)
+        target_id_field = target_id_fields.get(register_name)
         target_id = decision.get("target_record_id", "")
-        if not target_field or not target_id:
+        if not target_id_field or not target_id:
             continue
         if register_name not in target_rows_cache:
             target_rows_cache[register_name], target_error = load(
                 base_bundle / "registers" / f"{register_name}.csv",
-                {"report_id", "annotator_id", "annotation_pass_id", target_field},
+                {"report_id", "annotator_id", "annotation_pass_id", target_id_field},
             )
             if target_error:
                 target_rows_cache[register_name] = []
-        resolved = any(
-            target.get("report_id") == decision.get("report_id")
-            and target.get("annotator_id") == decision.get("target_annotator_id")
-            and target.get("annotation_pass_id") == decision.get("annotation_pass_id")
-            and target.get(target_field) == target_id
-            for target in target_rows_cache[register_name]
-        )
-        if resolved:
+        target = next((
+            candidate for candidate in target_rows_cache[register_name]
+            if candidate.get("report_id") == decision.get("report_id")
+            and candidate.get("annotator_id") == decision.get("target_annotator_id")
+            and candidate.get("annotation_pass_id") == decision.get("annotation_pass_id")
+            and candidate.get(target_id_field) == target_id
+        ), None)
+        if target is None:
+            continue
+        field_name = decision.get("field_name", "")
+        if not field_name or field_name not in target:
+            errors.append({
+                "code": "ADJUDICATION_FIELD_NOT_IN_TARGET_REGISTER",
+                "message": (
+                    f"adjudication_log row {line}: field_name {field_name!r} "
+                    f"does not identify a field in target register {register_name!r}"
+                ),
+            })
+            continue
+        if decision.get("decision_status") == "ADJUDICATED":
             adjudicated.add((
                 decision.get("report_id", ""),
                 decision.get("target_annotator_id", ""),
