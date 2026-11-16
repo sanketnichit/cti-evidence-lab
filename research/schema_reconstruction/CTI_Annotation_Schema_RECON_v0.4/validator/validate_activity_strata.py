@@ -189,6 +189,56 @@ def _validate_required_base_fields(tables: Mapping[str, list[dict[str, str]]]) -
     return errors
 
 
+def _validate_time_evidence_targets(tables: Mapping[str, list[dict[str, str]]]) -> list[dict[str, str]]:
+    """Ensure dual time-evidence targets identify the same report-local unit."""
+    errors: list[dict[str, str]] = []
+    units = {
+        (*_partition(row), row.get("activity_unit_id", ""))
+        for row in tables.get("activity_units", [])
+        if row.get("activity_unit_id")
+    }
+    mentions = {
+        (*_partition(row), row.get("mention_id", "")): row
+        for row in tables.get("event_mentions", [])
+        if row.get("mention_id")
+    }
+    for line, row in enumerate(tables.get("time_evidence", []), 2):
+        partition = _partition(row)
+        activity_unit_id = row.get("activity_unit_id", "")
+        mention_id = row.get("mention_id", "")
+        if not activity_unit_id and not mention_id:
+            errors.append({
+                "code": "TIME_WITHOUT_TARGET",
+                "message": f"time_evidence row {line}: at least one of activity_unit_id or mention_id is required",
+            })
+            continue
+        if activity_unit_id and (*partition, activity_unit_id) not in units:
+            errors.append({
+                "code": "UNKNOWN_TIME_UNIT",
+                "message": f"time_evidence row {line}: activity_unit_id {activity_unit_id!r} does not resolve in the same partition",
+            })
+        if mention_id:
+            mention = mentions.get((*partition, mention_id))
+            if mention is None:
+                errors.append({
+                    "code": "UNKNOWN_TIME_MENTION",
+                    "message": f"time_evidence row {line}: mention_id {mention_id!r} does not resolve in the same partition",
+                })
+            else:
+                mention_unit_id = mention.get("activity_unit_id", "")
+                if not mention_unit_id or (*partition, mention_unit_id) not in units:
+                    errors.append({
+                        "code": "TIME_MENTION_UNIT_UNKNOWN",
+                        "message": f"time_evidence row {line}: linked mention does not resolve to an activity unit in the same partition",
+                    })
+                if activity_unit_id and mention_unit_id and activity_unit_id != mention_unit_id:
+                    errors.append({
+                        "code": "TIME_TARGET_MISMATCH",
+                        "message": f"time_evidence row {line}: activity_unit_id {activity_unit_id!r} disagrees with mention {mention_id!r} activity_unit_id {mention_unit_id!r}",
+                    })
+    return errors
+
+
 def _validate_base_metadata_enums(tables: Mapping[str, list[dict[str, str]]]) -> list[dict[str, str]]:
     """Validate every required confidence/review value and evidence-span kind.
 
@@ -259,6 +309,7 @@ def validate_activity_strata(
 
     errors.extend(_validate_required_base_fields(tables))
     errors.extend(_validate_base_metadata_enums(tables))
+    errors.extend(_validate_time_evidence_targets(tables))
 
     units = {
         (*_partition(row), row.get("activity_unit_id", "")): row
