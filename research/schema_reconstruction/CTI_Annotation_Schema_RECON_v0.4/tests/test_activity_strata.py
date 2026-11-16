@@ -133,6 +133,36 @@ class ActivityStratumValidationTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("INVALID_SPAN_KIND", {row["code"] for row in result["errors"]})
 
+    def test_time_evidence_mention_only_target_is_valid_but_dual_targets_must_agree(self):
+        path = self.base / "registers" / "time_evidence.csv"
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle)
+            headers = list(reader.fieldnames or [])
+        row = {field: "" for field in headers}
+        row.update({
+            **PARTITION,
+            "time_evidence_id": "time-mention-a",
+            "activity_unit_id": "",
+            "mention_id": "mention-a",
+            "raw_time_text": "2026-01-01",
+            "time_type": "ATTACK_OCCURRENCE",
+            "time_precision": "DAY",
+            "timezone_status": "UNKNOWN",
+            "normalization_status": "UNRESOLVED",
+            "primary_evidence_span_id": "span-a",
+            "annotator_confidence": "HIGH",
+            "adjudication_status": "UNREVIEWED",
+        })
+        write_rows(path, headers, [row])
+        mention_only = self.validate()
+        self.assertNotIn("TIME_WITHOUT_TARGET", {issue["code"] for issue in mention_only["errors"]})
+        self.assertNotIn("TIME_TARGET_MISMATCH", {issue["code"] for issue in mention_only["errors"]})
+
+        row["activity_unit_id"] = "event-b"
+        write_rows(path, headers, [row])
+        mismatched = self.validate()
+        self.assertIn("TIME_TARGET_MISMATCH", {issue["code"] for issue in mismatched["errors"]})
+
     def test_required_descriptive_and_mapping_fields_cannot_be_blank(self):
         cases = [
             ("report_registry", "source_title"),
