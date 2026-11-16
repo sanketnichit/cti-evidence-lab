@@ -38,15 +38,15 @@ The following are adopted working defaults for the pilot. They are not represent
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow is GitHub Actions run [#278](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43876700350), on 16 November 2026, commit `fcbdd7124411115e03c9ebc970455d1eb59e8cda`. It passed **272 synthetic test executions**:
+The latest verified main-branch workflow is GitHub Actions run [#287](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43880526440), on 16 November 2026, commit `f3a38ddce1a61d2d7ef4b462d24476f012c12025`. It passed **274 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 81
-- RECON v0.2: 88
+- RECON v0.2: 90
 - RECON v0.3: 15
 - RECON v0.4: 28
 
-The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.1 suite includes direction-aware positive pair-assessment checks; v0.2 covers mention-only timestamp targets and endpoint-target matching; v0.4 covers selected-final lock preconditions and the single-annotator-only stratum adjudication boundary alongside base metadata enums, required-cell checks and conditional report-registry reasons.
+The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.1 suite includes direction-aware positive pair-assessment checks; v0.2 covers mention-only timestamp targets, endpoint-target matching and field-level adjudication target validation; v0.4 covers selected-final lock preconditions and the single-annotator-only stratum adjudication boundary alongside base metadata enums, required-cell checks and conditional report-registry reasons.
 
 These tests validate code paths and synthetic fixtures only. They do not establish semantic validity, human agreement, source eligibility, report findings, or empirical research results.
 
@@ -98,3 +98,5 @@ Do not begin formal annotation or calculate real-report rates when any of the fo
 - Validated novelty claim: **none**
 
 This document is a readiness control, not an approval signature. The project remains in research-design and tooling preparation until the gates above are explicitly satisfied.
+
+The adjudication-field check confirms that `field_name` exists in its target register, but the validator does not yet require `final_value` to equal the persisted target-row value or define how multiple append-only decisions for the same field supersede one another. Resolve that synchronization contract before approving multi-annotator adjudicated-final use.
