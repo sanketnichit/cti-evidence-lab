@@ -35,7 +35,7 @@ def main() -> int:
         return 1
 
     rows = build_activity_stratum_lock_rows(
-        args.selection_file, args.strata_file,
+        args.base_bundle, args.selection_file, args.strata_file,
         locked_by=args.locked_by, lock_date=args.lock_date,
         lock_notes=args.lock_notes,
     )
@@ -45,7 +45,7 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(rows)
     validation = validate_activity_stratum_locks(
-        args.selection_file, args.strata_file, args.output
+        args.base_bundle, args.selection_file, args.strata_file, args.output
     )
     print(f"created {len(rows)} activity-stratum lock(s); valid={validation['ok']}")
     if not validation["ok"]:

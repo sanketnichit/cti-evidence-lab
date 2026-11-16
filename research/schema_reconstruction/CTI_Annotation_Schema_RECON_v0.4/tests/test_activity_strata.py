@@ -204,6 +204,8 @@ class ActivityStratumLockTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
+        self.base = self.root / "CTI_Annotation_Schema_RECON_v0.1"
+        make_fixture(self.base)
         self.selection_file = self.root / "analysis_partition_selection.csv"
         self.strata_file = self.root / "activity_unit_strata.csv"
         self.locks_file = self.root / "activity_stratum_locks.csv"
@@ -226,7 +228,7 @@ class ActivityStratumLockTests(unittest.TestCase):
         ]
         write_rows(self.strata_file, STRATUM_HEADERS, rows)
         lock_rows = build_activity_stratum_lock_rows(
-            self.selection_file, self.strata_file,
+            self.base, self.selection_file, self.strata_file,
             locked_by="researcher-1", lock_date="2026-11-08",
         )
         write_rows(self.locks_file, LOCK_HEADERS, lock_rows)
@@ -235,7 +237,7 @@ class ActivityStratumLockTests(unittest.TestCase):
         self.temp.cleanup()
 
     def test_valid_lock_passes(self):
-        result = validate_activity_stratum_locks(self.selection_file, self.strata_file, self.locks_file)
+        result = validate_activity_stratum_locks(self.base, self.selection_file, self.strata_file, self.locks_file)
         self.assertTrue(result["ok"], result["errors"])
 
     def test_post_lock_stratum_change_is_rejected(self):
@@ -243,8 +245,29 @@ class ActivityStratumLockTests(unittest.TestCase):
             rows = list(csv.DictReader(handle))
         rows[0]["activity_stratum"] = "THREAT_ACTOR_COMMUNICATION"
         write_rows(self.strata_file, STRATUM_HEADERS, rows)
-        result = validate_activity_stratum_locks(self.selection_file, self.strata_file, self.locks_file)
+        result = validate_activity_stratum_locks(self.base, self.selection_file, self.strata_file, self.locks_file)
         self.assertIn("ACTIVITY_STRATUM_LOCK_MISMATCH", {row["code"] for row in result["errors"]})
+
+    def test_lock_creation_rejects_ineligible_selected_partition(self):
+        report_registry = self.base / "registers" / "report_registry.csv"
+        with report_registry.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0]["source_scope_eligibility"] = "PENDING"
+        write_rows(report_registry, list(rows[0].keys()), rows)
+        with self.assertRaisesRegex(ValueError, "selected-final partition validation failed"):
+            build_activity_stratum_lock_rows(
+                self.base, self.selection_file, self.strata_file,
+                locked_by="researcher-1", lock_date="2026-11-08",
+            )
+
+    def test_lock_validation_rechecks_selected_partition_eligibility(self):
+        report_registry = self.base / "registers" / "report_registry.csv"
+        with report_registry.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0]["source_scope_eligibility"] = "PENDING"
+        write_rows(report_registry, list(rows[0].keys()), rows)
+        result = validate_activity_stratum_locks(self.base, self.selection_file, self.strata_file, self.locks_file)
+        self.assertIn("SELECTED_FINAL_PARTITION_INVALID", {row["code"] for row in result["errors"]})
 
 
 if __name__ == "__main__":

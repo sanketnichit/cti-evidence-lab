@@ -25,7 +25,10 @@ sys.path.insert(0, str(V2_ROOT / "validator"))
 sys.path.insert(0, str(REPO_ROOT))
 
 import validate_annotations as base_validator  # noqa: E402
-from validate_temporal_evidence import SELECTION_HEADERS  # noqa: E402
+from validate_temporal_evidence import (  # noqa: E402
+    SELECTION_HEADERS,
+    validate_analysis_partition_selection,
+)
 from src.source_text_integrity import read_frozen_source  # noqa: E402
 
 STRATUM_HEADERS = [
@@ -254,6 +257,7 @@ def validate_activity_strata(
 
 
 def build_activity_stratum_lock_rows(
+    base_bundle: str | Path,
     selection_file: str | Path,
     strata_file: str | Path,
     *,
@@ -261,9 +265,18 @@ def build_activity_stratum_lock_rows(
     lock_date: str,
     lock_notes: str = "",
 ) -> list[dict[str, str]]:
+    """Build locks only after validating the base bundle and selected-final gates."""
     selections, error = _read_exact(Path(selection_file), SELECTION_HEADERS)
     if error:
         raise ValueError(error)
+    selection_errors, _ = validate_analysis_partition_selection(
+        Path(base_bundle), Path(selection_file)
+    )
+    if selection_errors:
+        raise ValueError(f"selected-final partition validation failed: {selection_errors}")
+    stratum_validation = validate_activity_strata(base_bundle, strata_file)
+    if not stratum_validation["ok"]:
+        raise ValueError(f"activity-stratum register validation failed: {stratum_validation['errors']}")
     strata, error = _read_exact(Path(strata_file), STRATUM_HEADERS)
     if error:
         raise ValueError(error)
@@ -311,14 +324,30 @@ def build_activity_stratum_lock_rows(
 
 
 def validate_activity_stratum_locks(
+    base_bundle: str | Path,
     selection_file: str | Path,
     strata_file: str | Path,
     lock_file: str | Path,
 ) -> dict[str, Any]:
+    """Validate locks only while the selected-final partition remains eligible."""
     selections, selection_error = _read_exact(Path(selection_file), SELECTION_HEADERS)
     strata, strata_error = _read_exact(Path(strata_file), STRATUM_HEADERS)
     locks, lock_error = _read_exact(Path(lock_file), LOCK_HEADERS)
     errors = []
+    selection_errors, _ = validate_analysis_partition_selection(
+        Path(base_bundle), Path(selection_file)
+    )
+    for item in selection_errors:
+        errors.append({
+            "code": "SELECTED_FINAL_PARTITION_INVALID",
+            "message": f"{item.get('code', 'UNKNOWN')}: {item.get('message', '')}",
+        })
+    stratum_validation = validate_activity_strata(base_bundle, strata_file)
+    if not stratum_validation["ok"]:
+        errors.append({
+            "code": "ACTIVITY_STRATUM_REGISTER_VALIDATION_FAILED",
+            "message": str(stratum_validation["errors"]),
+        })
     for code, message in (
         ("SELECTION_REGISTER_INVALID", selection_error),
         ("STRATUM_REGISTER_INVALID", strata_error),
@@ -403,7 +432,7 @@ def main() -> int:
         if not args.selection_file or not args.lock_file:
             parser.error("--selection-file and --lock-file must be supplied together")
         lock_validation = validate_activity_stratum_locks(
-            args.selection_file, args.strata_file, args.lock_file
+            args.base_bundle, args.selection_file, args.strata_file, args.lock_file
         )
     result = {"validation": validation, "locks": lock_validation, "ok": validation["ok"] and (lock_validation is None or lock_validation["ok"])}
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
