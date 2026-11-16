@@ -1,6 +1,6 @@
 # CTI Evidence Lab — Protocol and Schema Freeze Readiness v0.1
 
-**Date:** 15 November 2026  
+**Date:** 16 November 2026  
 **Status:** Readiness audit only — NOT APPROVED, NOT FROZEN, NOT READY FOR HUMAN ANNOTATION  
 **Applies to:** Protocol v0.5-draft; Metric Contract v0.1; Decision Register v0.2; RECON v0.1 base plus v0.2 temporal/selected-final, v0.3 explicit-scope assignment, and v0.4 activity-stratum extensions.
 
@@ -32,18 +32,19 @@ The following are adopted working defaults for the pilot. They are not represent
 | Mention kind | Keep required `mention_kind` as short descriptive free text, not an invented controlled enum. It does not determine event identity, stratum, mapping or metrics. | Protocol v0.5 §2.3; RECON field dictionary preserves it as a string because the original enum is unavailable. |
 | Report-level metrics | Keep compatible pair opportunity, same-technique opportunity, positive temporal-relation presence and within-technique temporal-relation presence separate. The conditional rate is descriptive, not the primary outcome. | Metric Contract v0.1 §§5–6; RECON v0.2 report-level aggregator. |
 | Register/version/lock crosswalk | A technical crosswalk now maps all 12 v0.1 base registers and the 6 v0.2–v0.4 extension/lock registers to their keys, validators, consumers, protocol areas and lock dependencies. It records the sibling v0.3/v0.4 lock relationship. | `research/protocol/PROTOCOL_SCHEMA_REGISTER_VERSION_LOCK_CROSSWALK_v0.1.md`; technical mapping complete, but whole-package field/enum/semantic review remains open. |
+| Activity-stratum lock preconditions | RECON v0.4 lock creation and verification now revalidate the v0.2 selected-final register against the base report registry and revalidate complete v0.4 stratum coverage. The v0.2 selected-analysis digest still requires source-backed verification through the v0.2 selected-partition adapter before projection. | RECON v0.4 validator/lock CLI; CI #256 regressions. This closes the eligibility bypass, not the full package freeze or source/semantic review. |
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow at the start of this crosswalk update is GitHub Actions run [#251](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43722561645), on 15 November 2026. It passed **252 synthetic test executions**:
+The latest verified main-branch workflow is GitHub Actions run [#256](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/43852972287), on 16 November 2026, commit `478e3fbd8603749734736416816f03b07e8f8bff`. It passed **254 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 78
 - RECON v0.2: 86
 - RECON v0.3: 15
-- RECON v0.4: 13
+- RECON v0.4: 15
 
-The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging.
+The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The two additional v0.4 tests verify that ineligible selected-final partitions are rejected both when building and when validating activity-stratum locks.
 
 These tests validate code paths and synthetic fixtures only. They do not establish semantic validity, human agreement, source eligibility, report findings, or empirical research results.
 
@@ -56,7 +57,7 @@ These tests validate code paths and synthetic fixtures only. They do not establi
 | Metric contract approval | Metric Contract v0.1 and the v0.2 aggregator now align on the principal report-level outcomes. The aggregator still requires an explicit scope-pair approval flag before pair-opportunity-dependent rates are enabled. | Formal freeze and before reporting any pair-opportunity rates. |
 | Candidate eligibility | Formal researcher/source-scope eligibility decisions remain 0/5. A report cannot be selected merely because it yields useful events or positive edges. | Any source-first annotation of the five candidates. |
 | Human annotation workflow | Human-locked annotations: 0. IAA: not measured. The selected-final mechanism supports single-annotator and certain consensus/adjudicated workflows; the v0.3 scope-assignment sensitivity remains single-annotator only. | Before annotation. State whether the first pilot is single-annotator; recruit an independent second annotator only if one is genuinely available and unexposed. |
-| Source freeze and identity controls | The validator checks exact source hash/character count and lock references, but lock digests do not authenticate the annotator's identity or independently prove a review occurred. | Before each annotation pass and selected-final projection. Maintain the source copy, access controls, benchmark reveal discipline and human sign-off record. |
+| Source freeze and identity controls | The validator checks exact source hash/character count and lock references, and v0.4 lock creation/verification now rechecks selected-final eligibility and complete stratum coverage. The v0.2 selected-analysis lock digest must still be independently verified by the v0.2 adapter against the exact frozen source. Lock digests do not authenticate annotator identity or prove that a human review occurred. | Before each annotation pass and selected-final projection. Maintain the source copy, access controls, benchmark reveal discipline and human sign-off record. |
 | Novelty and claims | Novelty remains unproven; no real-report results or event graphs exist. | Before any novelty, prevalence, effectiveness or publication-ready claim. |
 
 ## 5. Required freeze sequence

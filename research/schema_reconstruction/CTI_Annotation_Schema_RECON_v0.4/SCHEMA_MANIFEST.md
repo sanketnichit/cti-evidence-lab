@@ -11,7 +11,7 @@
 - Lock: activity_stratum_locks.csv binds the complete stratum rows to the v0.2 selected-analysis lock reference
 - Structural validator: validator/validate_activity_strata.py
 - Primary projection filter: analysis/primary_attack_action_projection.py
-- Synthetic tests: tests/test_activity_strata.py (13 tests; passed in GitHub Actions run #226 on 8 November 2026)
+- Synthetic tests: tests/test_activity_strata.py (15 tests; passed in GitHub Actions run #256 on 16 November 2026, as part of 254 total synthetic test executions)
 - Real annotations: 0
 - Selected final partitions with stratum locks: 0
 - Real projections: 0
@@ -19,3 +19,5 @@
 - Empirical findings: none
 
 The v0.1 activity_units register and its checksum-controlled package remain unchanged. The logical activity_unit.activity_stratum field is stored in a versioned companion register to preserve the reconstructed ancestor schema.
+
+- Lock preconditions: lock creation and verification revalidate the v0.2 selected-final decision against the v0.1 report registry and require valid complete v0.4 stratum coverage. Verify the v0.2 selected-analysis digest separately through the v0.2 selected-partition adapter using the exact frozen source text before projection.
