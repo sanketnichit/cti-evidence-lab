@@ -98,6 +98,20 @@ COMPARABLE_SCOPE_TYPES = {
 }
 
 
+def temporal_claim_signature(event_a_id: str, event_b_id: str, label: str) -> tuple:
+    """Normalize a pair claim while preserving the direction of BEFORE/AFTER.
+
+    BEFORE(A, B) is equivalent to AFTER(B, A). Symmetric labels compare as an
+    unordered event pair. This signature is shared by duplicate-relation and
+    positive candidate-assessment linkage checks.
+    """
+    if label == "BEFORE":
+        return ("STRICT_ORDER", event_a_id, event_b_id)
+    if label == "AFTER":
+        return ("STRICT_ORDER", event_b_id, event_a_id)
+    return (label, *sorted((event_a_id, event_b_id)))
+
+
 def resolved_scope_ancestor_chain(
     scope_id: str,
     scope_rows: Iterable[Mapping[str, str]],
@@ -1006,12 +1020,7 @@ def validate_bundle(
             _add(issues, "ERROR", "NO_TEMPORAL_CLAIM_WRONG_REGISTER", "NO_TEMPORAL_CLAIM belongs in candidate_pair_assessments, not temporal_relations", "temporal_relations", i)
         if label in POSITIVE_TEMPORAL_LABELS and basis in DIRECT_RELATION_BASES and a and b and a != b:
             unordered_pair = tuple(sorted((a, b)))
-            if label == "BEFORE":
-                signature = ("STRICT_ORDER", a, b)
-            elif label == "AFTER":
-                signature = ("STRICT_ORDER", b, a)
-            else:
-                signature = (label, unordered_pair[0], unordered_pair[1])
+            signature = temporal_claim_signature(a, b, label)
             partition_pair = (_partition(r), unordered_pair)
             prior = temporal_pair_signatures.setdefault(partition_pair, {})
             if signature in prior:
@@ -1136,9 +1145,20 @@ def validate_bundle(
             else:
                 linked = indexes["temporal_relations"].get((*_partition(r), r.get("related_relation_id", "")))
                 if linked:
-                    same_pair = {r.get("event_a_id"), r.get("event_b_id")} == {linked.get("event_a_id"), linked.get("event_b_id")}
-                    if not same_pair or r.get("assessment_label") != linked.get("relation_label"):
-                        _add(issues, "ERROR", "ASSESSMENT_RELATION_MISMATCH", "Positive candidate assessment must match the linked relation's event pair and label", "candidate_pair_assessments", i)
+                    assessment_signature = temporal_claim_signature(
+                        a, b, r.get("assessment_label", "")
+                    )
+                    relation_signature = temporal_claim_signature(
+                        linked.get("event_a_id", ""),
+                        linked.get("event_b_id", ""),
+                        linked.get("relation_label", ""),
+                    )
+                    if assessment_signature != relation_signature:
+                        _add(
+                            issues, "ERROR", "ASSESSMENT_RELATION_MISMATCH",
+                            "Positive candidate assessment must match the linked relation's oriented temporal claim; reversed BEFORE/AFTER endpoints require the inverse label",
+                            "candidate_pair_assessments", i,
+                        )
 
     # Non-temporal relations stay separate and never count as temporal graph edges.
     for i, r in enumerate(tables["non_temporal_relations"], 2):
