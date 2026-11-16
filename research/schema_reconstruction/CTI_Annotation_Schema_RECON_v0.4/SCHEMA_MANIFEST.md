@@ -11,7 +11,7 @@
 - Lock: activity_stratum_locks.csv binds the complete stratum rows to the v0.2 selected-analysis lock reference
 - Structural validator: validator/validate_activity_strata.py
 - Primary projection filter: analysis/primary_attack_action_projection.py
-- Synthetic tests: tests/test_activity_strata.py (24 tests; passed in GitHub Actions run #268 on 16 November 2026, as part of 263 total synthetic test executions)
+- Synthetic tests: tests/test_activity_strata.py (25 tests; passed in GitHub Actions run #272 on 16 November 2026, as part of 266 total synthetic test executions)
 - Real annotations: 0
 - Selected final partitions with stratum locks: 0
 - Real projections: 0
@@ -23,4 +23,5 @@ The v0.1 activity_units register and its checksum-controlled package remain unch
 - Lock preconditions: lock creation and verification revalidate the v0.2 selected-final decision against the v0.1 report registry and require valid complete v0.4 stratum coverage. Verify the v0.2 selected-analysis digest separately through the v0.2 selected-partition adapter using the exact frozen source text before projection.
 
 
+- Time-evidence target identity: mention-only time rows resolve through `event_mentions.activity_unit_id`; when both `activity_unit_id` and `mention_id` are populated, they must resolve to the same unit. Conflicting dual targets fail full-package validation.
 - Required-cell gates: provenance/version/extraction metadata, scope labels/descriptions, activity-unit summaries, mention kind, evidence text, mapping ATT&CK version, comparison-scope IDs on relation/assessment rows, and adjudication reviewer/field/rationale/date are non-empty; retrieval date must be ISO YYYY-MM-DD; OUT_OF_VOCAB mappings retain baseline vocabulary ID and SHA-256.
