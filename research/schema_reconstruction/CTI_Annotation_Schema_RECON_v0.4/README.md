@@ -51,6 +51,8 @@ The primary projection helper filters the event universe, mapping rows, relation
 
 The lock-creation command and lock validator both revalidate the v0.2 selected-final decision against the base report registry and revalidate the complete v0.4 stratum register before accepting a lock. This prevents an ineligible or no-longer-assessable partition from being locked using only a hash-shaped selection reference. The v0.2 selected-analysis digest is a separate upstream gate: verify it with the v0.2 selected-partition adapter against the exact frozen source text before running the primary projection helper.
 
+The v0.4 full-package validator also fails closed on required v0.1 `annotator_confidence`, `adjudication_status`, and `evidence_spans.span_kind` values. These fields were already documented as controlled in the v0.1 field dictionary, but the original v0.1 validator did not check every applicable register. The additional checks preserve the checksum-controlled v0.1 package unchanged and are covered by v0.4 regression tests.
+
 ## Research-readiness boundary
 
 The package contains blank registers and synthetic tests only. It creates no human annotations, selected-final partitions, real-report projections, IAA measurements, or empirical findings. The working comparison-scope rule, timestamp semantics and alternative-mapping lifecycle are now recorded in Protocol v0.5-draft and the decision register; v0.3 explicit-scope assignment remains a single-annotator sensitivity because multi-annotator adjudication is not implemented. These decisions are not formal protocol/schema freeze approval. Do not begin annotation until the whole reconstructed package is reviewed, versioned, approved and frozen.
