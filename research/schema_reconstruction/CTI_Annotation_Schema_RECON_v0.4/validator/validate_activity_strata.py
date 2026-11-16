@@ -51,6 +51,21 @@ ACTIVITY_STRATA = {
     "UNRESOLVED_CLASSIFICATION",
 }
 STRATUM_BASES = {"REPORT_EXPLICIT", "SOURCE_SUPPORTED_HUMAN_JUDGMENT", "UNRESOLVED"}
+
+# These v0.1 fields are declared controlled in the field dictionary. The
+# original base validator checks the scope-confidence field and several
+# decision enums, but does not check these annotation-review metadata fields.
+SPAN_KINDS = {"MENTION", "RELATION", "TIME", "SCOPE", "MAPPING", "RIGHTS", "OTHER"}
+BASE_REVIEW_ENUM_FIELDS = {
+    "report_scopes": ("adjudication_status",),
+    "activity_units": ("annotator_confidence", "adjudication_status"),
+    "event_mentions": ("annotator_confidence", "adjudication_status"),
+    "event_mappings": ("annotator_confidence", "adjudication_status"),
+    "time_evidence": ("annotator_confidence", "adjudication_status"),
+    "temporal_relations": ("annotator_confidence", "adjudication_status"),
+    "candidate_pair_assessments": ("adjudication_status",),
+    "non_temporal_relations": ("annotator_confidence", "adjudication_status"),
+}
 LOCK_FORMAT = "CTI-EVIDENCE-LAB-ACTIVITY-STRATUM-LOCK-v1"
 LOCK_REFERENCE_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 
@@ -100,6 +115,38 @@ def _canonical_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
         row["activity_unit_id"],
     ))
 
+def _validate_base_metadata_enums(tables: Mapping[str, list[dict[str, str]]]) -> list[dict[str, str]]:
+    """Validate every required confidence/review value and evidence-span kind.
+
+    These are controlled values in the RECON v0.1 field dictionary. Keeping
+    the check here makes the combined v0.1-v0.4 annotation package fail closed
+    without changing the checksum-controlled v0.1 base package in place.
+    """
+    errors: list[dict[str, str]] = []
+    for register, fields in BASE_REVIEW_ENUM_FIELDS.items():
+        for line, row in enumerate(tables.get(register, []), 2):
+            for field in fields:
+                value = row.get(field, "")
+                if field == "annotator_confidence" and value not in base_validator.CONFIDENCE:
+                    errors.append({
+                        "code": "INVALID_ANNOTATOR_CONFIDENCE",
+                        "message": f"{register} row {line}: {field} must be HIGH, MEDIUM or LOW; got {value!r}",
+                    })
+                elif field == "adjudication_status" and value not in base_validator.ADJUDICATION_STATUSES:
+                    errors.append({
+                        "code": "INVALID_ADJUDICATION_STATUS",
+                        "message": f"{register} row {line}: {field} must be UNREVIEWED, AGREED or ADJUDICATED; got {value!r}",
+                    })
+    for line, row in enumerate(tables.get("evidence_spans", []), 2):
+        value = row.get("span_kind", "")
+        if value not in SPAN_KINDS:
+            errors.append({
+                "code": "INVALID_SPAN_KIND",
+                "message": f"evidence_spans row {line}: span_kind is not in the controlled vocabulary; got {value!r}",
+            })
+    return errors
+
+
 
 def _sha256_json(payload: Any) -> str:
     rendered = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
@@ -135,6 +182,8 @@ def validate_activity_strata(
     except ValueError as exc:
         tables = {name: [] for name in base_validator.HEADERS}
         errors.append({"code": "BASE_REGISTERS_INVALID", "message": str(exc)})
+
+    errors.extend(_validate_base_metadata_enums(tables))
 
     units = {
         (*_partition(row), row.get("activity_unit_id", "")): row
