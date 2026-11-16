@@ -63,6 +63,8 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 
 The selected-final validator checks that an `ADJUDICATED` row resolves to a real target record and field, that append-only `ADJUDICATED` revisions for that field form a date-ordered value chain, that same-day revisions are unambiguous, and that the latest `final_value` equals the persisted target field. `AGREED` and `DEFERRED` rows do not advance the value chain or satisfy `ADJUDICATED_FINAL`. This is a reconstruction proposal requiring researcher review; the missing original v0.4.2 adjudication contract was not recovered.
 
+Field-level adjudication may change annotation content, but not partition identity or the target register's primary record ID. Those fields are immutable through this path because changing them would invalidate record keys and dependent references. Identity corrections require a separately controlled migration.
+
 ## Report-level aggregation
 
 - Module: analysis/report_level_aggregation.py.
