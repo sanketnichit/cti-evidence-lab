@@ -57,6 +57,8 @@ The v0.4 full-package validator also enforces required non-empty base cells that
 
 The report-registry conditional reason gates are also enforced: `source_scope_reason` is required for `INELIGIBLE`/`PENDING` source-scope decisions, `local_research_use_basis` is required for every recorded local-use status, and `assessability_reason` is required for `NOT_ASSESSABLE`/`PENDING` reports. These prevent a status enum from standing in for its required rationale.
 
+The full-package validation also checks time-evidence target identity. The field dictionary permits an activity-unit target, a mention target, or both; a mention resolves to its activity unit through `event_mentions`. When both targets are present they must resolve to the same activity unit. The v0.2 direct-timestamp validator accepts mention-only time evidence by resolving the mention before endpoint-support matching.
+
 ## Research-readiness boundary
 
 The package contains blank registers and synthetic tests only. It creates no human annotations, selected-final partitions, real-report projections, IAA measurements, or empirical findings. The working comparison-scope rule, timestamp semantics and alternative-mapping lifecycle are now recorded in Protocol v0.5-draft and the decision register; v0.3 explicit-scope assignment remains a single-annotator sensitivity because multi-annotator adjudication is not implemented. These decisions are not formal protocol/schema freeze approval. Do not begin annotation until the whole reconstructed package is reviewed, versioned, approved and frozen.

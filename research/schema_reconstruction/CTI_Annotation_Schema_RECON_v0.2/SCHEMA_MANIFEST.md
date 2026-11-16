@@ -34,6 +34,13 @@ This extension does not replace or alter RECON v0.1 and does not claim equivalen
 - Ambiguous abbreviations, inferred zones, and unresolved daylight-saving folds/gaps cannot support a timestamp-derived edge.
 - Human review remains responsible for confirming that time evidence identifies the attack occurrence and that the source entails the relation. See `research/protocol/TIMESTAMP_RELATION_SEMANTICS_v0.1.md`.
 
+### Time-evidence target resolution
+
+- `time_evidence` may target `activity_unit_id`, `mention_id`, or both, as defined by the v0.1 field dictionary.
+- A `mention_id` must resolve in the same report/annotator/pass and maps through `event_mentions.activity_unit_id` to an activity unit.
+- If both IDs are populated, they must resolve to the same unit; contradictory targets are rejected.
+- The direct-timestamp endpoint gate resolves mention-only time rows through the mention's activity unit before matching endpoint-support spans.
+
 ## Evidence-scope gate
 
 - SENTENCE: cue and at least one A- and B-support span must share a non-empty sentence_id.

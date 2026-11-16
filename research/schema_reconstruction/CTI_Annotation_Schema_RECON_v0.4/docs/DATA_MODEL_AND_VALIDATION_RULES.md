@@ -46,6 +46,10 @@ The report-registry field dictionary uses conditional reason/basis fields. The c
 
 These checks do not require exclusion or assessability reasons for `ELIGIBLE`/`ASSESSABLE` states. They preserve the distinction between a source-scope decision, a rights decision and an assessability decision.
 
+## Cross-register time-evidence target identity
+
+The v0.1 field dictionary permits `time_evidence` to link to an `activity_unit_id`, a `mention_id`, or both. A mention-only row resolves to its unit through `event_mentions.activity_unit_id`; when both identifiers are present they must identify the same report-local activity unit. The v0.2 temporal-evidence validator resolves mention-only rows before testing direct-timestamp endpoint support. The v0.4 full-package validator also rejects contradictory dual targets. This prevents a time record from being assigned to one unit in the base projection while being interpreted as evidence for a different unit through its mention reference.
+
 ## Temporal relation routing
 
 Temporal relation rows are routed using the stratum of both endpoints:
