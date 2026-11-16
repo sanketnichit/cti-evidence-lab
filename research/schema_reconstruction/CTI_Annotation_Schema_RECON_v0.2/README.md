@@ -30,6 +30,8 @@ Validate the blank extension with the command shown in SCHEMA_MANIFEST.md.
 
 - registers/temporal_relation_evidence.csv
 - registers/analysis_partition_selection.csv
+- docs/FIELD_DICTIONARY.md
+- docs/CONTROLLED_VOCABULARIES.md
 - validator/validate_temporal_evidence.py
 - tests/test_temporal_evidence.py
 - tests/test_analysis_partition_selection.py
