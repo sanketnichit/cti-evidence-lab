@@ -241,6 +241,27 @@ class ActivityStratumValidationTests(unittest.TestCase):
         result = self.validate()
         self.assertIn("INVALID_RETRIEVAL_DATE", {row["code"] for row in result["errors"]})
 
+    def test_out_of_vocabulary_mapping_requires_baseline_provenance(self):
+        path = self.base / "registers" / "event_mappings.csv"
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        rows[0].update(
+            exact_technique_id="T1002",
+            exact_technique_name="Data Compressed",
+            baseline_parent_technique_id="T1002",
+            baseline_mapping_status="OUT_OF_VOCAB",
+            baseline_vocabulary_id="",
+            baseline_vocabulary_sha256="",
+        )
+        write_rows(path, list(rows[0].keys()), rows)
+        result = self.validate()
+        messages = [
+            issue["message"] for issue in result["errors"]
+            if issue["code"] == "REQUIRED_FIELD_EMPTY"
+        ]
+        self.assertTrue(any("baseline_vocabulary_id" in message for message in messages))
+        self.assertTrue(any("baseline_vocabulary_sha256" in message for message in messages))
+
 
 class PrimaryProjectionRoutingTests(unittest.TestCase):
     def setUp(self):
