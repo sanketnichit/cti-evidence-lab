@@ -238,6 +238,27 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.save()
         self.assertIn("ADJUDICATION_HISTORY_ORDER_AMBIGUOUS", self.codes())
 
+    def test_adjudication_cannot_change_partition_or_record_identity(self):
+        identity_fields = {
+            "report_id": "r1",
+            "annotator_id": "human-1",
+            "annotation_pass_id": "pass-2",
+            "mention_id": "mention-1",
+        }
+        for field_name, value in identity_fields.items():
+            with self.subTest(field_name=field_name):
+                self.adjudications = [{
+                    "field_name": field_name,
+                    "original_value": value,
+                    "proposed_value": value,
+                    "final_value": value,
+                }]
+                self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+                self.save()
+                codes = self.codes()
+                self.assertIn("ADJUDICATION_IDENTITY_FIELD_FORBIDDEN", codes)
+                self.assertIn("ADJUDICATED_FINAL_WITHOUT_LOG", codes)
+
     def test_adjudicated_final_rejects_field_not_present_in_target_register(self):
         self.adjudications = [{
             "report_id": "r1", "annotation_pass_id": "pass-2",
