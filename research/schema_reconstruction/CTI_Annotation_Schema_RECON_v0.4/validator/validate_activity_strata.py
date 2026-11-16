@@ -170,6 +170,22 @@ def _validate_required_base_fields(tables: Mapping[str, list[dict[str, str]]]) -
                         "code": "REQUIRED_FIELD_EMPTY",
                         "message": f"event_mappings row {line}: {field!r} is required when baseline_mapping_status=OUT_OF_VOCAB",
                     })
+    for line, row in enumerate(tables.get("report_registry", []), 2):
+        if row.get("source_scope_eligibility") in {"INELIGIBLE", "PENDING"} and not row.get("source_scope_reason", "").strip():
+            errors.append({
+                "code": "CONDITIONAL_REASON_MISSING",
+                "message": f"report_registry row {line}: source_scope_reason is required when source_scope_eligibility is {row.get('source_scope_eligibility')}",
+            })
+        if row.get("local_research_use_status") and not row.get("local_research_use_basis", "").strip():
+            errors.append({
+                "code": "CONDITIONAL_REASON_MISSING",
+                "message": f"report_registry row {line}: local_research_use_basis is required for a recorded local_research_use_status decision",
+            })
+        if row.get("report_assessability") in {"NOT_ASSESSABLE", "PENDING"} and not row.get("assessability_reason", "").strip():
+            errors.append({
+                "code": "CONDITIONAL_REASON_MISSING",
+                "message": f"report_registry row {line}: assessability_reason is required when report_assessability is {row.get('report_assessability')}",
+            })
     return errors
 
 

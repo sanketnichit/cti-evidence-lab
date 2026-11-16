@@ -53,6 +53,8 @@ Except for the adjudication log, every base register stores these three fields d
 - `compute_annotation_lock_reference` hashes the exact frozen source text plus all v0.1 register rows for one report/annotator/pass. `build_projection_for_partition` requires an explicit caller confirmation and the exact recomputed digest before base projection.
 - This digest is a mutation detector, not a digital signature or proof of human authorship, reviewer independence or that a human completed the pass.
 
+The combined v0.4 validator also enforces the report-registry conditional reason pairings: a non-eligible/pending source-scope status requires `source_scope_reason`; every recorded local-use status requires `local_research_use_basis`; and a non-assessable/pending report requires `assessability_reason`. These are required provenance for the decision, not substitutes for the actual eligibility, rights or assessability review.
+
 ## 4. RECON v0.2 — temporal evidence and selected-final analysis
 
 | Register | Record grain / purpose | Key | Validator / consumer | Lock relationship |
