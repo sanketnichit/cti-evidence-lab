@@ -79,7 +79,7 @@ The adjudication log is append-only. A record with `decision_status=ADJUDICATED`
 - For one target field, `decision_date` orders successive `ADJUDICATED` revisions. Two such decisions on the same date are ambiguous and fail validation; the current schema has no separate sequence or supersession ID.
 - For each revision after the first, `original_value` must equal the preceding revision's `final_value`.
 - The latest `final_value` must exactly equal the value persisted in the target-register field. Values are compared as stored strings; no implicit normalization is applied.
-- `AGREED` and `DEFERRED` rows remain review-history outcomes and do not change the persisted value or satisfy the `ADJUDICATED_FINAL` selection gate.
+- `ADJUDICATED` must change the target field (`original_value != final_value`); use `AGREED` when the original value is retained. `AGREED` and `DEFERRED` rows must preserve the value and do not satisfy the `ADJUDICATED_FINAL` selection gate.
 - The first revision's `original_value` is retained as history; without a prior revision row, the current target record alone cannot independently verify that historical starting value.
 
 This structural chain check does not authenticate reviewer identity, prove that source evidence supports the adjudication, or establish that a human review actually occurred. The decision semantics require researcher acceptance before formal schema freeze.
