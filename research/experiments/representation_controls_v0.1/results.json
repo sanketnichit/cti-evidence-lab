@@ -1,0 +1,869 @@
+{
+  "cases": {
+    "distinct_mapping": {
+      "loop_permitting": {
+        "collision_keys": 0,
+        "pair_provenance": [
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1021",
+            "target_technique": "T1105"
+          }
+        ],
+        "source_edges_with_any_image": 1,
+        "unique_labeled_pairs": 1,
+        "unique_labeled_self_loops": 0
+      },
+      "occurrence_preserving": {
+        "edge_endpoints": [
+          {
+            "edge_id": "e1",
+            "relation": "BEFORE",
+            "source_event": "a",
+            "target_event": "b"
+          }
+        ],
+        "edges": 1,
+        "nodes": 2
+      },
+      "primary": {
+        "counts": {
+          "diagonal_mapping_combinations": 0,
+          "distinct_pair_collision_keys_by_relation_class": 0,
+          "distinct_pair_collision_keys_global": 0,
+          "distinct_pair_combinations": 1,
+          "distinct_pair_label_conflicts": 0,
+          "event_edge_to_pair_combinations": 1,
+          "fully_omitted_edges": 0,
+          "mapped_event_instances": 2,
+          "mapped_positive_temporal_edges": 1,
+          "no_diagonal_mapping_edges": 1,
+          "partially_represented_edges": 0,
+          "positive_temporal_edges": 1,
+          "projected_cycle_components_from_single_edge_fanout": 0,
+          "projected_cycle_components_requiring_multiple_source_edges": 0,
+          "projected_cycle_components_with_multiple_source_edges": 0,
+          "projected_strict_order_cycle_components": 0,
+          "resolved_event_instances": 2,
+          "same_technique_endpoint_edges": 0,
+          "source_strict_order_cycle_components": 0,
+          "unique_distinct_technique_pairs": 1,
+          "unique_techniques": 2,
+          "unmapped_endpoint_edges": 0
+        },
+        "edge_projection_status": {
+          "e1": "no_diagonal_mapping"
+        },
+        "projection": {
+          "distinct_pair_collisions_by_relation_class": {},
+          "distinct_pair_collisions_global": {},
+          "distinct_pair_label_conflicts": {},
+          "distinct_pair_provenance_by_relation_class": {
+            "STRICT_ORDER|T1021->T1105": [
+              "e1"
+            ]
+          },
+          "edge_to_diagonal_pairs": {
+            "e1": []
+          },
+          "edge_to_distinct_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1105"
+              ]
+            ]
+          },
+          "edge_to_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1105"
+              ]
+            ]
+          }
+        },
+        "rates": {
+          "diagonal_mapping_share": 0.0,
+          "full_omission_rate_mapped_edges": 0.0,
+          "no_diagonal_mapping_rate_mapped_edges": 1.0,
+          "partial_representation_rate_mapped_edges": 0.0,
+          "same_technique_endpoint_rate_mapped_edges": 0.0
+        },
+        "strict_order_cycle_analysis": {
+          "projected_cycle_components": [],
+          "projected_cycle_provenance": [],
+          "projection_cycle_analysis_valid": true,
+          "source_cycle_components": [],
+          "source_event_graph_is_acyclic": true
+        }
+      }
+    },
+    "mixed_mapping": {
+      "loop_permitting": {
+        "collision_keys": 0,
+        "pair_provenance": [
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1021",
+            "target_technique": "T1021"
+          },
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1021",
+            "target_technique": "T1105"
+          }
+        ],
+        "source_edges_with_any_image": 1,
+        "unique_labeled_pairs": 2,
+        "unique_labeled_self_loops": 1
+      },
+      "occurrence_preserving": {
+        "edge_endpoints": [
+          {
+            "edge_id": "e1",
+            "relation": "BEFORE",
+            "source_event": "a",
+            "target_event": "b"
+          }
+        ],
+        "edges": 1,
+        "nodes": 2
+      },
+      "primary": {
+        "counts": {
+          "diagonal_mapping_combinations": 1,
+          "distinct_pair_collision_keys_by_relation_class": 0,
+          "distinct_pair_collision_keys_global": 0,
+          "distinct_pair_combinations": 1,
+          "distinct_pair_label_conflicts": 0,
+          "event_edge_to_pair_combinations": 2,
+          "fully_omitted_edges": 0,
+          "mapped_event_instances": 2,
+          "mapped_positive_temporal_edges": 1,
+          "no_diagonal_mapping_edges": 0,
+          "partially_represented_edges": 1,
+          "positive_temporal_edges": 1,
+          "projected_cycle_components_from_single_edge_fanout": 0,
+          "projected_cycle_components_requiring_multiple_source_edges": 0,
+          "projected_cycle_components_with_multiple_source_edges": 0,
+          "projected_strict_order_cycle_components": 0,
+          "resolved_event_instances": 2,
+          "same_technique_endpoint_edges": 1,
+          "source_strict_order_cycle_components": 0,
+          "unique_distinct_technique_pairs": 1,
+          "unique_techniques": 2,
+          "unmapped_endpoint_edges": 0
+        },
+        "edge_projection_status": {
+          "e1": "partially_represented"
+        },
+        "projection": {
+          "distinct_pair_collisions_by_relation_class": {},
+          "distinct_pair_collisions_global": {},
+          "distinct_pair_label_conflicts": {},
+          "distinct_pair_provenance_by_relation_class": {
+            "STRICT_ORDER|T1021->T1105": [
+              "e1"
+            ]
+          },
+          "edge_to_diagonal_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1021"
+              ]
+            ]
+          },
+          "edge_to_distinct_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1105"
+              ]
+            ]
+          },
+          "edge_to_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1021"
+              ],
+              [
+                "T1021",
+                "T1105"
+              ]
+            ]
+          }
+        },
+        "rates": {
+          "diagonal_mapping_share": 0.5,
+          "full_omission_rate_mapped_edges": 0.0,
+          "no_diagonal_mapping_rate_mapped_edges": 0.0,
+          "partial_representation_rate_mapped_edges": 1.0,
+          "same_technique_endpoint_rate_mapped_edges": 1.0
+        },
+        "strict_order_cycle_analysis": {
+          "projected_cycle_components": [],
+          "projected_cycle_provenance": [],
+          "projection_cycle_analysis_valid": true,
+          "source_cycle_components": [],
+          "source_event_graph_is_acyclic": true
+        }
+      }
+    },
+    "occurrence_collapse_cycle": {
+      "loop_permitting": {
+        "collision_keys": 0,
+        "pair_provenance": [
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1021",
+            "target_technique": "T1105"
+          },
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e2"
+            ],
+            "source_technique": "T1105",
+            "target_technique": "T1021"
+          }
+        ],
+        "source_edges_with_any_image": 2,
+        "unique_labeled_pairs": 2,
+        "unique_labeled_self_loops": 0
+      },
+      "occurrence_preserving": {
+        "edge_endpoints": [
+          {
+            "edge_id": "e1",
+            "relation": "BEFORE",
+            "source_event": "a",
+            "target_event": "b"
+          },
+          {
+            "edge_id": "e2",
+            "relation": "BEFORE",
+            "source_event": "b",
+            "target_event": "c"
+          }
+        ],
+        "edges": 2,
+        "nodes": 3
+      },
+      "primary": {
+        "counts": {
+          "diagonal_mapping_combinations": 0,
+          "distinct_pair_collision_keys_by_relation_class": 0,
+          "distinct_pair_collision_keys_global": 0,
+          "distinct_pair_combinations": 2,
+          "distinct_pair_label_conflicts": 0,
+          "event_edge_to_pair_combinations": 2,
+          "fully_omitted_edges": 0,
+          "mapped_event_instances": 3,
+          "mapped_positive_temporal_edges": 2,
+          "no_diagonal_mapping_edges": 2,
+          "partially_represented_edges": 0,
+          "positive_temporal_edges": 2,
+          "projected_cycle_components_from_single_edge_fanout": 0,
+          "projected_cycle_components_requiring_multiple_source_edges": 1,
+          "projected_cycle_components_with_multiple_source_edges": 1,
+          "projected_strict_order_cycle_components": 1,
+          "resolved_event_instances": 3,
+          "same_technique_endpoint_edges": 0,
+          "source_strict_order_cycle_components": 0,
+          "unique_distinct_technique_pairs": 2,
+          "unique_techniques": 2,
+          "unmapped_endpoint_edges": 0
+        },
+        "edge_projection_status": {
+          "e1": "no_diagonal_mapping",
+          "e2": "no_diagonal_mapping"
+        },
+        "projection": {
+          "distinct_pair_collisions_by_relation_class": {},
+          "distinct_pair_collisions_global": {},
+          "distinct_pair_label_conflicts": {},
+          "distinct_pair_provenance_by_relation_class": {
+            "STRICT_ORDER|T1021->T1105": [
+              "e1"
+            ],
+            "STRICT_ORDER|T1105->T1021": [
+              "e2"
+            ]
+          },
+          "edge_to_diagonal_pairs": {
+            "e1": [],
+            "e2": []
+          },
+          "edge_to_distinct_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1105"
+              ]
+            ],
+            "e2": [
+              [
+                "T1105",
+                "T1021"
+              ]
+            ]
+          },
+          "edge_to_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1105"
+              ]
+            ],
+            "e2": [
+              [
+                "T1105",
+                "T1021"
+              ]
+            ]
+          }
+        },
+        "rates": {
+          "diagonal_mapping_share": 0.0,
+          "full_omission_rate_mapped_edges": 0.0,
+          "no_diagonal_mapping_rate_mapped_edges": 1.0,
+          "partial_representation_rate_mapped_edges": 0.0,
+          "same_technique_endpoint_rate_mapped_edges": 0.0
+        },
+        "strict_order_cycle_analysis": {
+          "projected_cycle_components": [
+            [
+              "T1021",
+              "T1105"
+            ]
+          ],
+          "projected_cycle_provenance": [
+            {
+              "internal_pairs": [
+                [
+                  "T1021",
+                  "T1105"
+                ],
+                [
+                  "T1105",
+                  "T1021"
+                ]
+              ],
+              "single_event_edge_mapping_fanout": false,
+              "single_source_edges_inducing_cycle": [],
+              "source_event_edge_count": 2,
+              "source_event_edge_ids": [
+                "e1",
+                "e2"
+              ],
+              "technique_nodes": [
+                "T1021",
+                "T1105"
+              ]
+            }
+          ],
+          "projection_cycle_analysis_valid": true,
+          "source_cycle_components": [],
+          "source_event_graph_is_acyclic": true
+        }
+      }
+    },
+    "repeated_same_technique": {
+      "loop_permitting": {
+        "collision_keys": 1,
+        "pair_provenance": [
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1",
+              "e2"
+            ],
+            "source_technique": "T1021",
+            "target_technique": "T1021"
+          }
+        ],
+        "source_edges_with_any_image": 2,
+        "unique_labeled_pairs": 1,
+        "unique_labeled_self_loops": 1
+      },
+      "occurrence_preserving": {
+        "edge_endpoints": [
+          {
+            "edge_id": "e1",
+            "relation": "BEFORE",
+            "source_event": "a",
+            "target_event": "b"
+          },
+          {
+            "edge_id": "e2",
+            "relation": "BEFORE",
+            "source_event": "b",
+            "target_event": "c"
+          }
+        ],
+        "edges": 2,
+        "nodes": 3
+      },
+      "primary": {
+        "counts": {
+          "diagonal_mapping_combinations": 2,
+          "distinct_pair_collision_keys_by_relation_class": 0,
+          "distinct_pair_collision_keys_global": 0,
+          "distinct_pair_combinations": 0,
+          "distinct_pair_label_conflicts": 0,
+          "event_edge_to_pair_combinations": 2,
+          "fully_omitted_edges": 2,
+          "mapped_event_instances": 3,
+          "mapped_positive_temporal_edges": 2,
+          "no_diagonal_mapping_edges": 0,
+          "partially_represented_edges": 0,
+          "positive_temporal_edges": 2,
+          "projected_cycle_components_from_single_edge_fanout": 0,
+          "projected_cycle_components_requiring_multiple_source_edges": 0,
+          "projected_cycle_components_with_multiple_source_edges": 0,
+          "projected_strict_order_cycle_components": 0,
+          "resolved_event_instances": 3,
+          "same_technique_endpoint_edges": 2,
+          "source_strict_order_cycle_components": 0,
+          "unique_distinct_technique_pairs": 0,
+          "unique_techniques": 1,
+          "unmapped_endpoint_edges": 0
+        },
+        "edge_projection_status": {
+          "e1": "fully_omitted",
+          "e2": "fully_omitted"
+        },
+        "projection": {
+          "distinct_pair_collisions_by_relation_class": {},
+          "distinct_pair_collisions_global": {},
+          "distinct_pair_label_conflicts": {},
+          "distinct_pair_provenance_by_relation_class": {},
+          "edge_to_diagonal_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1021"
+              ]
+            ],
+            "e2": [
+              [
+                "T1021",
+                "T1021"
+              ]
+            ]
+          },
+          "edge_to_distinct_pairs": {
+            "e1": [],
+            "e2": []
+          },
+          "edge_to_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1021"
+              ]
+            ],
+            "e2": [
+              [
+                "T1021",
+                "T1021"
+              ]
+            ]
+          }
+        },
+        "rates": {
+          "diagonal_mapping_share": 1.0,
+          "full_omission_rate_mapped_edges": 1.0,
+          "no_diagonal_mapping_rate_mapped_edges": 0.0,
+          "partial_representation_rate_mapped_edges": 0.0,
+          "same_technique_endpoint_rate_mapped_edges": 1.0
+        },
+        "strict_order_cycle_analysis": {
+          "projected_cycle_components": [],
+          "projected_cycle_provenance": [],
+          "projection_cycle_analysis_valid": true,
+          "source_cycle_components": [],
+          "source_event_graph_is_acyclic": true
+        }
+      }
+    },
+    "same_technique": {
+      "loop_permitting": {
+        "collision_keys": 0,
+        "pair_provenance": [
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1021",
+            "target_technique": "T1021"
+          }
+        ],
+        "source_edges_with_any_image": 1,
+        "unique_labeled_pairs": 1,
+        "unique_labeled_self_loops": 1
+      },
+      "occurrence_preserving": {
+        "edge_endpoints": [
+          {
+            "edge_id": "e1",
+            "relation": "BEFORE",
+            "source_event": "a",
+            "target_event": "b"
+          }
+        ],
+        "edges": 1,
+        "nodes": 2
+      },
+      "primary": {
+        "counts": {
+          "diagonal_mapping_combinations": 1,
+          "distinct_pair_collision_keys_by_relation_class": 0,
+          "distinct_pair_collision_keys_global": 0,
+          "distinct_pair_combinations": 0,
+          "distinct_pair_label_conflicts": 0,
+          "event_edge_to_pair_combinations": 1,
+          "fully_omitted_edges": 1,
+          "mapped_event_instances": 2,
+          "mapped_positive_temporal_edges": 1,
+          "no_diagonal_mapping_edges": 0,
+          "partially_represented_edges": 0,
+          "positive_temporal_edges": 1,
+          "projected_cycle_components_from_single_edge_fanout": 0,
+          "projected_cycle_components_requiring_multiple_source_edges": 0,
+          "projected_cycle_components_with_multiple_source_edges": 0,
+          "projected_strict_order_cycle_components": 0,
+          "resolved_event_instances": 2,
+          "same_technique_endpoint_edges": 1,
+          "source_strict_order_cycle_components": 0,
+          "unique_distinct_technique_pairs": 0,
+          "unique_techniques": 1,
+          "unmapped_endpoint_edges": 0
+        },
+        "edge_projection_status": {
+          "e1": "fully_omitted"
+        },
+        "projection": {
+          "distinct_pair_collisions_by_relation_class": {},
+          "distinct_pair_collisions_global": {},
+          "distinct_pair_label_conflicts": {},
+          "distinct_pair_provenance_by_relation_class": {},
+          "edge_to_diagonal_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1021"
+              ]
+            ]
+          },
+          "edge_to_distinct_pairs": {
+            "e1": []
+          },
+          "edge_to_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1021"
+              ]
+            ]
+          }
+        },
+        "rates": {
+          "diagonal_mapping_share": 1.0,
+          "full_omission_rate_mapped_edges": 1.0,
+          "no_diagonal_mapping_rate_mapped_edges": 0.0,
+          "partial_representation_rate_mapped_edges": 0.0,
+          "same_technique_endpoint_rate_mapped_edges": 1.0
+        },
+        "strict_order_cycle_analysis": {
+          "projected_cycle_components": [],
+          "projected_cycle_provenance": [],
+          "projection_cycle_analysis_valid": true,
+          "source_cycle_components": [],
+          "source_event_graph_is_acyclic": true
+        }
+      }
+    },
+    "single_edge_fanout_cycle": {
+      "loop_permitting": {
+        "collision_keys": 0,
+        "pair_provenance": [
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1021",
+            "target_technique": "T1021"
+          },
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1021",
+            "target_technique": "T1105"
+          },
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1105",
+            "target_technique": "T1021"
+          },
+          {
+            "relation": "BEFORE",
+            "source_edge_ids": [
+              "e1"
+            ],
+            "source_technique": "T1105",
+            "target_technique": "T1105"
+          }
+        ],
+        "source_edges_with_any_image": 1,
+        "unique_labeled_pairs": 4,
+        "unique_labeled_self_loops": 2
+      },
+      "occurrence_preserving": {
+        "edge_endpoints": [
+          {
+            "edge_id": "e1",
+            "relation": "BEFORE",
+            "source_event": "a",
+            "target_event": "b"
+          }
+        ],
+        "edges": 1,
+        "nodes": 2
+      },
+      "primary": {
+        "counts": {
+          "diagonal_mapping_combinations": 2,
+          "distinct_pair_collision_keys_by_relation_class": 0,
+          "distinct_pair_collision_keys_global": 0,
+          "distinct_pair_combinations": 2,
+          "distinct_pair_label_conflicts": 0,
+          "event_edge_to_pair_combinations": 4,
+          "fully_omitted_edges": 0,
+          "mapped_event_instances": 2,
+          "mapped_positive_temporal_edges": 1,
+          "no_diagonal_mapping_edges": 0,
+          "partially_represented_edges": 1,
+          "positive_temporal_edges": 1,
+          "projected_cycle_components_from_single_edge_fanout": 1,
+          "projected_cycle_components_requiring_multiple_source_edges": 0,
+          "projected_cycle_components_with_multiple_source_edges": 0,
+          "projected_strict_order_cycle_components": 1,
+          "resolved_event_instances": 2,
+          "same_technique_endpoint_edges": 1,
+          "source_strict_order_cycle_components": 0,
+          "unique_distinct_technique_pairs": 2,
+          "unique_techniques": 2,
+          "unmapped_endpoint_edges": 0
+        },
+        "edge_projection_status": {
+          "e1": "partially_represented"
+        },
+        "projection": {
+          "distinct_pair_collisions_by_relation_class": {},
+          "distinct_pair_collisions_global": {},
+          "distinct_pair_label_conflicts": {},
+          "distinct_pair_provenance_by_relation_class": {
+            "STRICT_ORDER|T1021->T1105": [
+              "e1"
+            ],
+            "STRICT_ORDER|T1105->T1021": [
+              "e1"
+            ]
+          },
+          "edge_to_diagonal_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1021"
+              ],
+              [
+                "T1105",
+                "T1105"
+              ]
+            ]
+          },
+          "edge_to_distinct_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1105"
+              ],
+              [
+                "T1105",
+                "T1021"
+              ]
+            ]
+          },
+          "edge_to_pairs": {
+            "e1": [
+              [
+                "T1021",
+                "T1021"
+              ],
+              [
+                "T1021",
+                "T1105"
+              ],
+              [
+                "T1105",
+                "T1021"
+              ],
+              [
+                "T1105",
+                "T1105"
+              ]
+            ]
+          }
+        },
+        "rates": {
+          "diagonal_mapping_share": 0.5,
+          "full_omission_rate_mapped_edges": 0.0,
+          "no_diagonal_mapping_rate_mapped_edges": 0.0,
+          "partial_representation_rate_mapped_edges": 1.0,
+          "same_technique_endpoint_rate_mapped_edges": 1.0
+        },
+        "strict_order_cycle_analysis": {
+          "projected_cycle_components": [
+            [
+              "T1021",
+              "T1105"
+            ]
+          ],
+          "projected_cycle_provenance": [
+            {
+              "internal_pairs": [
+                [
+                  "T1021",
+                  "T1105"
+                ],
+                [
+                  "T1105",
+                  "T1021"
+                ]
+              ],
+              "single_event_edge_mapping_fanout": true,
+              "single_source_edges_inducing_cycle": [
+                "e1"
+              ],
+              "source_event_edge_count": 1,
+              "source_event_edge_ids": [
+                "e1"
+              ],
+              "technique_nodes": [
+                "T1021",
+                "T1105"
+              ]
+            }
+          ],
+          "projection_cycle_analysis_valid": true,
+          "source_cycle_components": [],
+          "source_event_graph_is_acyclic": true
+        }
+      }
+    },
+    "unmapped_endpoint": {
+      "loop_permitting": {
+        "collision_keys": 0,
+        "pair_provenance": [],
+        "source_edges_with_any_image": 0,
+        "unique_labeled_pairs": 0,
+        "unique_labeled_self_loops": 0
+      },
+      "occurrence_preserving": {
+        "edge_endpoints": [
+          {
+            "edge_id": "e1",
+            "relation": "BEFORE",
+            "source_event": "a",
+            "target_event": "b"
+          }
+        ],
+        "edges": 1,
+        "nodes": 2
+      },
+      "primary": {
+        "counts": {
+          "diagonal_mapping_combinations": 0,
+          "distinct_pair_collision_keys_by_relation_class": 0,
+          "distinct_pair_collision_keys_global": 0,
+          "distinct_pair_combinations": 0,
+          "distinct_pair_label_conflicts": 0,
+          "event_edge_to_pair_combinations": 0,
+          "fully_omitted_edges": 0,
+          "mapped_event_instances": 1,
+          "mapped_positive_temporal_edges": 0,
+          "no_diagonal_mapping_edges": 0,
+          "partially_represented_edges": 0,
+          "positive_temporal_edges": 1,
+          "projected_cycle_components_from_single_edge_fanout": 0,
+          "projected_cycle_components_requiring_multiple_source_edges": 0,
+          "projected_cycle_components_with_multiple_source_edges": 0,
+          "projected_strict_order_cycle_components": 0,
+          "resolved_event_instances": 2,
+          "same_technique_endpoint_edges": 0,
+          "source_strict_order_cycle_components": 0,
+          "unique_distinct_technique_pairs": 0,
+          "unique_techniques": 1,
+          "unmapped_endpoint_edges": 1
+        },
+        "edge_projection_status": {
+          "e1": "unmapped_endpoint"
+        },
+        "projection": {
+          "distinct_pair_collisions_by_relation_class": {},
+          "distinct_pair_collisions_global": {},
+          "distinct_pair_label_conflicts": {},
+          "distinct_pair_provenance_by_relation_class": {},
+          "edge_to_diagonal_pairs": {
+            "e1": []
+          },
+          "edge_to_distinct_pairs": {
+            "e1": []
+          },
+          "edge_to_pairs": {
+            "e1": []
+          }
+        },
+        "rates": {
+          "diagonal_mapping_share": null,
+          "full_omission_rate_mapped_edges": null,
+          "no_diagonal_mapping_rate_mapped_edges": null,
+          "partial_representation_rate_mapped_edges": null,
+          "same_technique_endpoint_rate_mapped_edges": null
+        },
+        "strict_order_cycle_analysis": {
+          "projected_cycle_components": [],
+          "projected_cycle_provenance": [],
+          "projection_cycle_analysis_valid": true,
+          "source_cycle_components": [],
+          "source_event_graph_is_acyclic": true
+        }
+      }
+    }
+  },
+  "scope": "Named finite counterexamples; no learned model, corpus rate, or exhaustive theorem testing",
+  "status": "SYNTHETIC_REPRESENTATION_CONTROLS_NOT_EMPIRICAL_RESULTS"
+}

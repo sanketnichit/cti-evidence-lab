@@ -1,0 +1,1249 @@
+{
+  "anchors_verified": 33,
+  "crlf_recoveries": 120,
+  "fixed_pilot_reports_verified": 5,
+  "frame_reports_verified": 120,
+  "input_sha256": {
+    "AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv": "bdcb94ccba961a5f4421a026560d1ef1b7e2f0085532dfde613071cd71b882b2",
+    "report_assessment_draft.csv": "00175cebccbdf7feb8ca9329fd454c87b20cb40b205a0cc8c44ea10820dde616",
+    "source_anchor_index_draft.csv": "66d3afeeea14d718b5ceb55f632d79c4e59b6fefb785882f575063d4ef5348ed"
+  },
+  "source_text_exported": false,
+  "sources": [
+    {
+      "anchors": [
+        {
+          "anchor_id": "I01",
+          "char_end": 8420,
+          "char_start": 8317,
+          "occurrences": 1,
+          "source_line_number": 82,
+          "span_sha256": "50806c83cd6ff1122371bbf3943b27b6137b086e234b6cd399c3ec9a1a892d1f"
+        },
+        {
+          "anchor_id": "I02",
+          "char_end": 14235,
+          "char_start": 14039,
+          "occurrences": 1,
+          "source_line_number": 124,
+          "span_sha256": "81bf271ea84b7d88f3da4bf3fc58d2c9f4576a922d000f8a8f5c290dbfdb8b7c"
+        },
+        {
+          "anchor_id": "I03",
+          "char_end": 14598,
+          "char_start": 14490,
+          "occurrences": 1,
+          "source_line_number": 127,
+          "span_sha256": "88a7b46f7e4c581ffbd727ca81a14736601bcfb624fef9799664e60124089089"
+        },
+        {
+          "anchor_id": "I04",
+          "char_end": 18651,
+          "char_start": 18512,
+          "occurrences": 1,
+          "source_line_number": 164,
+          "span_sha256": "bab1ebd3377deab474935843493658e7dff8e506590811343fba065087271f6b"
+        },
+        {
+          "anchor_id": "I05",
+          "char_end": 19683,
+          "char_start": 19572,
+          "occurrences": 1,
+          "source_line_number": 179,
+          "span_sha256": "30a7774565b7252010afcd8771122074777d13824687d5fd62aef3932821648c"
+        },
+        {
+          "anchor_id": "I06",
+          "char_end": 20184,
+          "char_start": 20073,
+          "occurrences": 1,
+          "source_line_number": 185,
+          "span_sha256": "6d625ce5cf09990aa70750a5170f86300991653007ad7fb273fa7af1412ec3e8"
+        }
+      ],
+      "decoded_original_sha256": "16e3aff4ebbe18500c6fa784acb7e58613c3447f18355f4b3c4b4136ccbb60d7",
+      "raw_bytes_sha256": "16e3aff4ebbe18500c6fa784acb7e58613c3447f18355f4b3c4b4136ccbb60d7",
+      "report_id": "intel471_2021-09-09_groove-gang-ransomware-babuk-revil",
+      "source_text_char_count": 23835,
+      "source_text_sha256": "87e1e45070dffc9ae446013754ae6466c28cc5910c56501c4d8f1dcb573e7d56",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "5799adb6eecc4a3fe4e109fbb93af06c958cf8ed6c160dbd8336d83915fbd612",
+      "raw_bytes_sha256": "5799adb6eecc4a3fe4e109fbb93af06c958cf8ed6c160dbd8336d83915fbd612",
+      "report_id": "intel471_2021-05-10_darkside-ransomware-colonial-pipeline-attack",
+      "source_text_char_count": 5620,
+      "source_text_sha256": "680d54866e1d2d63414b0db9da27d71e2d384486b69ebd1f78d5cdd7394ddf78",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "0a1bb924d72b89102cc4fd0421316fed49e9aa4239c1bd01a47ed92197ff06d0",
+      "raw_bytes_sha256": "0a1bb924d72b89102cc4fd0421316fed49e9aa4239c1bd01a47ed92197ff06d0",
+      "report_id": "intel471_2020-11-10_trickbot-update-november-2020-bazar",
+      "source_text_char_count": 6352,
+      "source_text_sha256": "9eb6945c928f5a1a0520e98c4ddb7e943add1a75389db30b3c14554eb511e3de",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "93cd0183aed06c0bead5192e3b8edd844da69a0c062e6488ed1644c48909b460",
+      "raw_bytes_sha256": "93cd0183aed06c0bead5192e3b8edd844da69a0c062e6488ed1644c48909b460",
+      "report_id": "intel471_2021-08-18_information-stealer-ransomware-account-takeover",
+      "source_text_char_count": 6533,
+      "source_text_sha256": "764aa47b62034d4c7247205f894f84ff0753e6620e7fd19db4cdb8c39a9a24d4",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "80562c870728f3f736740e56525c36f327a5d162cf869513c00b371181951028",
+      "raw_bytes_sha256": "80562c870728f3f736740e56525c36f327a5d162cf869513c00b371181951028",
+      "report_id": "intel471_2020-11-16_ransomware-as-a-service-2020",
+      "source_text_char_count": 12509,
+      "source_text_sha256": "cdba4d8690bfde3fc40927251651a6b1e6d6661ace17574255fea1037324aecf",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "a0779994cebae9dee96374510e4809949ddd5ea364a7b8ef60e397d012538690",
+      "raw_bytes_sha256": "a0779994cebae9dee96374510e4809949ddd5ea364a7b8ef60e397d012538690",
+      "report_id": "intel471_2020-12-10_china-cybercrime-undergrond-deepmix-tea",
+      "source_text_char_count": 9999,
+      "source_text_sha256": "3a7e5b08bd1f08ae902dc90a96cb83e41a65aa5121ea5aabe32bc4fed40ff431",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "336e8bcad5df7088464799525ce07c8a3d1a5b77252cc9a41452311c95ec8308",
+      "raw_bytes_sha256": "336e8bcad5df7088464799525ce07c8a3d1a5b77252cc9a41452311c95ec8308",
+      "report_id": "intel471_2021-11-02_shipping-companies-ransomware-credentials",
+      "source_text_char_count": 5950,
+      "source_text_sha256": "e4dfb9f33484d09a2663a7952459ca4524b55bf42045d0276c23181dece889f8",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "3a5d0998a7dd080a604589eb73acf5ffd78400c352aeaa3e026b682b9e7aa6f3",
+      "raw_bytes_sha256": "3a5d0998a7dd080a604589eb73acf5ffd78400c352aeaa3e026b682b9e7aa6f3",
+      "report_id": "intel471_2021-08-23_shinyhunters-data-breach-mitre-attack",
+      "source_text_char_count": 6524,
+      "source_text_sha256": "af428ce8890df214386632a351012f4366a7e317fe37218f40c7be98d7e31e08",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "f9083d4d37616ceb0d802cd8839e1a124994f70f0fb74b844c48a85184678cc5",
+      "raw_bytes_sha256": "f9083d4d37616ceb0d802cd8839e1a124994f70f0fb74b844c48a85184678cc5",
+      "report_id": "intel471_2021-09-30_public-sector-cybersecurity-threats-2021",
+      "source_text_char_count": 5560,
+      "source_text_sha256": "53e15640dda2b76717ea8b774540b23e1abab9518268d884f346b9be06868058",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "4cc6d5467664a2200390312cf76afd2f77db0a875a23c8e2d375628a18c140e8",
+      "raw_bytes_sha256": "4cc6d5467664a2200390312cf76afd2f77db0a875a23c8e2d375628a18c140e8",
+      "report_id": "intel471_2021-04-19_china-cybercrime-big-data-privacy",
+      "source_text_char_count": 8003,
+      "source_text_sha256": "1cff6d427cdd97a1ac2d4cb9a9e76fc2aa1f13ef42fdd4f2e99a9c3824d15ee1",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "9f0ddd31b7e187fc6e9fd593a4c727a0d6834b6d1e8cbdf2fa7805e37abc1c21",
+      "raw_bytes_sha256": "9f0ddd31b7e187fc6e9fd593a4c727a0d6834b6d1e8cbdf2fa7805e37abc1c21",
+      "report_id": "intel471_2021-05-14_darkside-ransomware-shut-down-revil",
+      "source_text_char_count": 6715,
+      "source_text_sha256": "3c07608994315382038c144a5efb380effa9e8960cae4424f014e8c0bd1a13d1",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "39cbe22daaad32bc292320b3a16c0b096e5380250d87f51bc63b2498191c3ed2",
+      "raw_bytes_sha256": "39cbe22daaad32bc292320b3a16c0b096e5380250d87f51bc63b2498191c3ed2",
+      "report_id": "intel471_2021-07-28_ransomware-as-a-service-fivehands",
+      "source_text_char_count": 7573,
+      "source_text_sha256": "9bf08a0c4795c35fd0ed0ebce6e6d6751bed689c968a9822effb9c7ee16eb900",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "6e4bb4b8213186f9c3eef5b074744600376573cc1faacd5615635b3f205be566",
+      "raw_bytes_sha256": "6e4bb4b8213186f9c3eef5b074744600376573cc1faacd5615635b3f205be566",
+      "report_id": "intel471_2016-06-17_who-hacked-the-democratic-national",
+      "source_text_char_count": 6653,
+      "source_text_sha256": "6545ca85f848820a1e122baade60051fc1a820fb86a990a396de2bda7136453f",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2095e91576ce989457f64f230ba0b4fdac9bc9d6c5353661ef5eb3008721ee49",
+      "raw_bytes_sha256": "2095e91576ce989457f64f230ba0b4fdac9bc9d6c5353661ef5eb3008721ee49",
+      "report_id": "intel471_2021-04-26_financial-cybercrime-2021-jackpotting-atm",
+      "source_text_char_count": 7687,
+      "source_text_sha256": "48efe2a9102fe7c2b36a1ed7c9cd90e175275a302eebda8f938f73d05a2e6db5",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "843672f4f806ede988a8ee8929d67427515fc1c1079236ad3dac6879c38f6f49",
+      "raw_bytes_sha256": "843672f4f806ede988a8ee8929d67427515fc1c1079236ad3dac6879c38f6f49",
+      "report_id": "intel471_2020-07-08_irans-domestic-espionage",
+      "source_text_char_count": 6919,
+      "source_text_sha256": "09715c5e28d9fd401c886b3660badacd40e93b23de529b2cd7f6dc2ba4cdfcf3",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "04f9ee4a35bfb76b0b0dc3be6cf3c267b9ba69c2866943ea61aef0493316def6",
+      "raw_bytes_sha256": "04f9ee4a35bfb76b0b0dc3be6cf3c267b9ba69c2866943ea61aef0493316def6",
+      "report_id": "intel471_2020-12-17_jokers-stash-fbi-interpol-dns",
+      "source_text_char_count": 3730,
+      "source_text_sha256": "c1af9f17dae05c37ba7c46b6f410b8434bf17718978094f3ae865e72ed29ce93",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "ca2314fe4bce6347ae0a4bd34facb1c4534c5763ced796bbbf290f0f36bcf302",
+      "raw_bytes_sha256": "ca2314fe4bce6347ae0a4bd34facb1c4534c5763ced796bbbf290f0f36bcf302",
+      "report_id": "intel471_2021-01-27_emotet-takedown-2021",
+      "source_text_char_count": 2051,
+      "source_text_sha256": "79b235136de83edad89a18db9cff1a640d634cd55072f6d25b764edf5834916c",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "0db4021c6eb46bf18c0418c700b8f21f6bcc9dd2f7eacb1f994ea574bd0071f3",
+      "raw_bytes_sha256": "0db4021c6eb46bf18c0418c700b8f21f6bcc9dd2f7eacb1f994ea574bd0071f3",
+      "report_id": "intel471_2021-04-07_ettersilent-maldoc-builder-macro-trickbot",
+      "source_text_char_count": 6457,
+      "source_text_sha256": "39a0f464e285889c00e9cf81c75841c26492f166a057719dd187e4aa5f1fe997",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "9411ade85d96fe0246ff18445c5cc77aae4ff043bbea648e7fefb4199e227ea3",
+      "raw_bytes_sha256": "9411ade85d96fe0246ff18445c5cc77aae4ff043bbea648e7fefb4199e227ea3",
+      "report_id": "intel471_2020-08-12_prioritizing-critical-vulnerabilities-a-threat",
+      "source_text_char_count": 14293,
+      "source_text_sha256": "74addb82046f1a2b1b449c09b9bebdc95caf7c88d07737ecd9f0970514f8db8e",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "fe7ec9724f859d28524e076753e10993864dc8374902d3a7e879ed7fa93c01b7",
+      "raw_bytes_sha256": "fe7ec9724f859d28524e076753e10993864dc8374902d3a7e879ed7fa93c01b7",
+      "report_id": "intel471_2020-12-01_ransomware-attack-access-merchants-infostealer",
+      "source_text_char_count": 5845,
+      "source_text_sha256": "e143cc5c386f11a347c8fb7c84f96cc4bdef061bfde06e03a0da6bd1c23a1ea2",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2006aa9dab4027d9533170d9fe720c820a1afb9d42303379e10a06849cb147bc",
+      "raw_bytes_sha256": "2006aa9dab4027d9533170d9fe720c820a1afb9d42303379e10a06849cb147bc",
+      "report_id": "intel471_2020-03-26_analysis-of-an-attempted-attack",
+      "source_text_char_count": 15211,
+      "source_text_sha256": "c38ffcd2bf0e69fdce8b55beea213f1a0ca92f074ada7a36400499eaed0b981b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2b90f544c936158d385a6e655d7d39c9806242c3e44eb2d4254524d831f5a785",
+      "raw_bytes_sha256": "2b90f544c936158d385a6e655d7d39c9806242c3e44eb2d4254524d831f5a785",
+      "report_id": "intel471_2021-01-15_solarwinds-supply-chain-attack-iran",
+      "source_text_char_count": 7683,
+      "source_text_sha256": "4ed38943171a2845887bdad367154ceda6d44b9246ffab4d6a5da21eb39046a3",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2455317e4ee96c52bdb24e0d2178bcb114fdd2f27cdf7e511e428df2e6904574",
+      "raw_bytes_sha256": "2455317e4ee96c52bdb24e0d2178bcb114fdd2f27cdf7e511e428df2e6904574",
+      "report_id": "intel471_2021-02-23_bulletproof-hosting-yalishanda-ransomware-banking",
+      "source_text_char_count": 7513,
+      "source_text_sha256": "ad26813c8c8809cd144ab88fc4752b0c542f4ce02f49d1277a644df5f3c73c0b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "7e744d052f53686009f53dd60345b30251587b38132e03034a194f5fc6927130",
+      "raw_bytes_sha256": "7e744d052f53686009f53dd60345b30251587b38132e03034a194f5fc6927130",
+      "report_id": "intel471_2020-10-15_trickbot-online-emotet-microsoft-cyber",
+      "source_text_char_count": 4169,
+      "source_text_sha256": "d7aa161926a68dde0ba92ccf02d874aabe1b6279c839a335638beb30b0bc3b71",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "3929e457ee65611e5326614545aebfd1c5cfb59fc95bf9190b442f1e26f4b31b",
+      "raw_bytes_sha256": "3929e457ee65611e5326614545aebfd1c5cfb59fc95bf9190b442f1e26f4b31b",
+      "report_id": "intel471_2021-02-12_scada-oldsmar-florida-water-treatment",
+      "source_text_char_count": 3597,
+      "source_text_sha256": "9e1301e82cf1383ee349ffab27b7bc5e0d54fe5560844a496c8ed465fb2b92fa",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "e2c2678bc38f50f5a50a13128aad1d283cee73106680f45364bb7102c4004676",
+      "raw_bytes_sha256": "e2c2678bc38f50f5a50a13128aad1d283cee73106680f45364bb7102c4004676",
+      "report_id": "intel471_2020-10-13_travelex-ddos-attack-lazarus-group",
+      "source_text_char_count": 3618,
+      "source_text_sha256": "ec496dc83c343f52e90ad7e3d068880c7df40a74a4bbdc74843a0d2157f96c79",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "77d87df232b14e6c75de67e0b6218a5eeb928c7768736f4ed6f270f741b97d79",
+      "raw_bytes_sha256": "77d87df232b14e6c75de67e0b6218a5eeb928c7768736f4ed6f270f741b97d79",
+      "report_id": "intel471_2020-05-04_changes-in-revil-ransomware-version",
+      "source_text_char_count": 3624,
+      "source_text_sha256": "c0f40f71bb65544a82d9bb7be832359a4df49beb873eeff589a6b0107adf3cb6",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "8836568b73c47f045a54306f99792f27ee4684103654d7cafffe89ee979a1f3c",
+      "raw_bytes_sha256": "8836568b73c47f045a54306f99792f27ee4684103654d7cafffe89ee979a1f3c",
+      "report_id": "intel471_2021-07-14_how-cybercriminals-create-turbulence-for",
+      "source_text_char_count": 6318,
+      "source_text_sha256": "6727a689a9e0aff366fb4c57ea76b9f58dce580427b3dd0746eb387b83ddb5df",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "dfaa3302903840b5552d8a945632c2ca2a3b51c9a3347c438e79b51d9e8f018a",
+      "raw_bytes_sha256": "dfaa3302903840b5552d8a945632c2ca2a3b51c9a3347c438e79b51d9e8f018a",
+      "report_id": "intel471_2020-12-18_ta505-get2-loader-malware-december",
+      "source_text_char_count": 2334,
+      "source_text_sha256": "bd8f038fd392a176bedf0517b851894c71850c5b34e21296c0f796ac9e6077c0",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "c8b1291ec158b916f61e94d82ea208a91605957f2e137e4f115bcdef358e9017",
+      "raw_bytes_sha256": "c8b1291ec158b916f61e94d82ea208a91605957f2e137e4f115bcdef358e9017",
+      "report_id": "intel471_2021-12-09_emotet-returns-december-2021",
+      "source_text_char_count": 13286,
+      "source_text_sha256": "a13c4a4adc3d4d74a03f4e31773ae9033728d5985699dc73976a6e647a2d78ec",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "anchors": [
+        {
+          "anchor_id": "L01",
+          "char_end": 1367,
+          "char_start": 1290,
+          "occurrences": 1,
+          "source_line_number": 11,
+          "span_sha256": "21a768a5dede939c915a356e07523fb2d1c4e5cd00071f998f036ebb4b9cf08f"
+        },
+        {
+          "anchor_id": "L02",
+          "char_end": 656,
+          "char_start": 512,
+          "occurrences": 1,
+          "source_line_number": 6,
+          "span_sha256": "2c8b1cd034fce3258b2395bb8eb0a1e76ef4c55a988aecda7886dd7fdc041e0f"
+        },
+        {
+          "anchor_id": "L03",
+          "char_end": 1289,
+          "char_start": 1230,
+          "occurrences": 1,
+          "source_line_number": 10,
+          "span_sha256": "9c6bf878c6b0ec9cb8a779333fa44b6ae1a9a8e1fdb2d634219fe509b2911107"
+        },
+        {
+          "anchor_id": "L04",
+          "char_end": 4795,
+          "char_start": 4726,
+          "occurrences": 1,
+          "source_line_number": 32,
+          "span_sha256": "08a83ee14e394660b1b5564c3c45ab549f37aaffe2a2fe789d31a96f4c707a9a"
+        },
+        {
+          "anchor_id": "L05",
+          "char_end": 5571,
+          "char_start": 5521,
+          "occurrences": 1,
+          "source_line_number": 35,
+          "span_sha256": "e7351bd260516ce9235022b11cdf57828d94c2344376c96f24530ebf59962035"
+        }
+      ],
+      "decoded_original_sha256": "419f496c0b9d1b250c6847e6757d121c69ec5898a6ccb37ee5adeb180de778d0",
+      "raw_bytes_sha256": "419f496c0b9d1b250c6847e6757d121c69ec5898a6ccb37ee5adeb180de778d0",
+      "report_id": "lab52_2022-01-12_tokyox-dll-side-loading-an",
+      "source_text_char_count": 7668,
+      "source_text_sha256": "d76b8fd4959b95c9d85a60adb8c96a14e2a46e1f5930f6323e07db74ea7d0ecc",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "b79287058b9526cce3b40b9e6a00a7a8c21206ec0eaa8ee7d770420a0a622e33",
+      "raw_bytes_sha256": "b79287058b9526cce3b40b9e6a00a7a8c21206ec0eaa8ee7d770420a0a622e33",
+      "report_id": "lab52_2020-02-18_the-role-of-china-in",
+      "source_text_char_count": 14643,
+      "source_text_sha256": "8d98b4118cb745a0ae189967f2ebc0fe125b7fdeee4f0cbffcdacd545253b57c",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "81885b606428814a7d98e861993db9c2df0ddfc4571720340c895427f25a0522",
+      "raw_bytes_sha256": "81885b606428814a7d98e861993db9c2df0ddfc4571720340c895427f25a0522",
+      "report_id": "lab52_2020-05-14_the-energy-reserves-in-the",
+      "source_text_char_count": 13884,
+      "source_text_sha256": "6f0a7b6d32fa89d8d09a9f0dff8bd88faf173147ad736b4f82a71e276356c455",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2f426885814eeed965227e6c007112e459bdb87b716a8b5552883b97359dd682",
+      "raw_bytes_sha256": "2f426885814eeed965227e6c007112e459bdb87b716a8b5552883b97359dd682",
+      "report_id": "lab52_2021-05-17_literature-lover-targeting-colombia-with",
+      "source_text_char_count": 7257,
+      "source_text_sha256": "ed2ee382c760f162e2c240e116b33c662a356f8b272c560b99520e44c329273c",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "dcc592e596fed4af41d882620cee3601d3b8f821a3ce909963e61839b4ea02f5",
+      "raw_bytes_sha256": "dcc592e596fed4af41d882620cee3601d3b8f821a3ce909963e61839b4ea02f5",
+      "report_id": "lab52_2020-01-13_apt27-rootkit-updates",
+      "source_text_char_count": 4829,
+      "source_text_sha256": "2283e171668652f9f2127d367932e3b6a087e3649ddfca015db1f8b257a03f77",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "26d552a43d7715262ab3df9f1b5dfdea18fd3e18b1b80f6708e0832701b62229",
+      "raw_bytes_sha256": "26d552a43d7715262ab3df9f1b5dfdea18fd3e18b1b80f6708e0832701b62229",
+      "report_id": "lab52_2019-09-26_ongoing-njrat-campaign-against-middle",
+      "source_text_char_count": 8082,
+      "source_text_sha256": "348f15bc99cf050d28e4001347af0d3955a92cee0f30c11fdb6ec160be3ce612",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "3b46e000cb879d007e496ccb63a3bf1ddd124e8f32541abf90e4d74abb405303",
+      "raw_bytes_sha256": "3b46e000cb879d007e496ccb63a3bf1ddd124e8f32541abf90e4d74abb405303",
+      "report_id": "lab52_2019-05-16_winnti-group-geostrategic-analysis-and",
+      "source_text_char_count": 9791,
+      "source_text_sha256": "f7a09a86d5e6f8686960a8cd73366a90abf4c099c6d4967610c99984c1908427",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "0c79b7aa3a1bfbca18a1021edb8ccdd9afad7636d01f5bd76ce2c9fec453d894",
+      "raw_bytes_sha256": "0c79b7aa3a1bfbca18a1021edb8ccdd9afad7636d01f5bd76ce2c9fec453d894",
+      "report_id": "lab52_2020-06-02_mustang-panda-recent-activity-dll",
+      "source_text_char_count": 5838,
+      "source_text_sha256": "8ce8036143027b125f32814bb88d74700990460a5f986937ef8451fbf89f1338",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "4f273c5bd332332677aa4f4774e28c10bf98c4820cb45d1802a2d8db048d17ab",
+      "raw_bytes_sha256": "4f273c5bd332332677aa4f4774e28c10bf98c4820cb45d1802a2d8db048d17ab",
+      "report_id": "lab52_2021-04-29_chimera-apt-updates-on-its",
+      "source_text_char_count": 7161,
+      "source_text_sha256": "9cdc5c824003d229edf8a9557b13ff2aaff4183a76528114564a87a36a137603",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "ceefdd3b373149b188b891b2386e95d2d50b2f4a6bc7080f3404a188bbaf5d8c",
+      "raw_bytes_sha256": "ceefdd3b373149b188b891b2386e95d2d50b2f4a6bc7080f3404a188bbaf5d8c",
+      "report_id": "lab52_2019-05-30_leviathan-geostrategy-and-ttp-technical",
+      "source_text_char_count": 14863,
+      "source_text_sha256": "83007c8141b2e545b432f5f7457fad0b3a5eb2494fed018673e007cedda27427",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "e8a148a27c328b73f354fa455c851e996c6b3d982f61512a67d600aa5ce789a9",
+      "raw_bytes_sha256": "e8a148a27c328b73f354fa455c851e996c6b3d982f61512a67d600aa5ce789a9",
+      "report_id": "lab52_2019-10-18_cyber-iii-cold-war-hack",
+      "source_text_char_count": 12157,
+      "source_text_sha256": "ef1ff0551db8027bf264f6e37421b18f711dbc4798d5b5e8bac1eaed19422e50",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "82e68cb3bd666094ac66c012502816efc5983161719b2531bb2dcc0924be0261",
+      "raw_bytes_sha256": "82e68cb3bd666094ac66c012502816efc5983161719b2531bb2dcc0924be0261",
+      "report_id": "lab52_2020-04-14_china-from-culture-to-conflict",
+      "source_text_char_count": 8200,
+      "source_text_sha256": "0b7fa51d381ff7231977c54ab717deba551b3e6055839b1c34a47268bf54b2c7",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "695ae7d03fccb677134e4b4e40e95f1c6fd258f63e8c1677ac7f8291e6acd279",
+      "raw_bytes_sha256": "695ae7d03fccb677134e4b4e40e95f1c6fd258f63e8c1677ac7f8291e6acd279",
+      "report_id": "lab52_2020-01-09_icefog-apt-group-abusing-recent",
+      "source_text_char_count": 2431,
+      "source_text_sha256": "dd6e91ec7dd5bed2007a5748628216fd076e44aaef5a74664f782ce220c6a9b2",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "dcf9f0d5169abba77eb46dacdb0d6ccbddb633680288713ad117d6e6f90d5353",
+      "raw_bytes_sha256": "dcf9f0d5169abba77eb46dacdb0d6ccbddb633680288713ad117d6e6f90d5353",
+      "report_id": "lab52_2020-02-12_intelligence-operation-against-targets-in",
+      "source_text_char_count": 3816,
+      "source_text_sha256": "cf1d2dff3fdd4de317cd283078f354fa353baad47685b031b82dce2d1b55d7d8",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "bbc286b096dc579253c83e60adb641956ab195fd29a51fac7d183f6a3fcb41bd",
+      "raw_bytes_sha256": "bbc286b096dc579253c83e60adb641956ab195fd29a51fac7d183f6a3fcb41bd",
+      "report_id": "lab52_2019-04-02_wirte-group-attacking-the-middle",
+      "source_text_char_count": 15793,
+      "source_text_sha256": "0ed1f10c3b52731e2a8a4b1139a3f337694d04ed9d357c7af49c3532f73ab68f",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "3589283b9757874bfd518fff380852f73d496e2ee283ff73a14cf064d767d1be",
+      "raw_bytes_sha256": "3589283b9757874bfd518fff380852f73d496e2ee283ff73a14cf064d767d1be",
+      "report_id": "lab52_2021-07-05_quick-review-of-babuk-ransomware",
+      "source_text_char_count": 5855,
+      "source_text_sha256": "7e9e7db516cca60aba06a4450ab939e15a1cffd95b878009bb9ee75f9e90744e",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "cee8bc2231dbc730a7dc1312b6bb5a7ace246d9790bd581b3b83abd80c4fec32",
+      "raw_bytes_sha256": "cee8bc2231dbc730a7dc1312b6bb5a7ace246d9790bd581b3b83abd80c4fec32",
+      "report_id": "lab52_2020-08-26_a-twisted-malware-infection-chain",
+      "source_text_char_count": 7768,
+      "source_text_sha256": "58f0c1f9c82d2df83ade5a83fbcf8abec094e8a7ad5d6ec1faa67781f2261f5d",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "685bbbbe7041694cd989c60eb93785b8b3b96678e267b1d40de3f9d2caa4743c",
+      "raw_bytes_sha256": "685bbbbe7041694cd989c60eb93785b8b3b96678e267b1d40de3f9d2caa4743c",
+      "report_id": "lab52_2019-10-18_cyber-gru-xiv-conclusions",
+      "source_text_char_count": 3299,
+      "source_text_sha256": "b7198f0ca9b67a9b18005bb0748f397dc96f6ed99901010c1d1519ea73a3017e",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "7258a74bfa085a7de6283f9b528627712ced447622a68bb4d6c919d9b00c4b74",
+      "raw_bytes_sha256": "7258a74bfa085a7de6283f9b528627712ced447622a68bb4d6c919d9b00c4b74",
+      "report_id": "lab52_2020-03-23_apt-c-36-new-anti",
+      "source_text_char_count": 4780,
+      "source_text_sha256": "e83195fe17c391bfa61301a3064ea3320b5bc3e4d545bf09fa4c2dd34f0e72b9",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "c0e326ae27cbd69b5583980c7c33fde1a0af810f8bed8990ba7e31e86a1b720a",
+      "raw_bytes_sha256": "c0e326ae27cbd69b5583980c7c33fde1a0af810f8bed8990ba7e31e86a1b720a",
+      "report_id": "lab52_2022-01-10_tokyox-dll-side-loading-an",
+      "source_text_char_count": 10574,
+      "source_text_sha256": "daf1edcd2bdd94f7b10f7d1ef763ea6c4484f0627532aa26f75dcfc4120f9131",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "ca56c98a568d5e087a6dfda8314a90c4d6ba1031cc9f6cf4bcff502109be9377",
+      "raw_bytes_sha256": "ca56c98a568d5e087a6dfda8314a90c4d6ba1031cc9f6cf4bcff502109be9377",
+      "report_id": "lab52_2020-01-15_apt-c-36-recent-activity",
+      "source_text_char_count": 6023,
+      "source_text_sha256": "3ab41bfc989240209cbf56f90f97b384a06c26ccbfa418637e38eb655e19e2ca",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "33ca0905eb4d11608e13dbf0d8f7259e81cd207c25cb283fd13604315f704a7e",
+      "raw_bytes_sha256": "33ca0905eb4d11608e13dbf0d8f7259e81cd207c25cb283fd13604315f704a7e",
+      "report_id": "lab52_2020-06-09_recent-fk-undead-rootkit-samples",
+      "source_text_char_count": 5558,
+      "source_text_sha256": "67f9364fe74d89ee2861374e86941569de370968d95b2a0be4dba8803870aa5b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "9ef3667d1a9103f1e85d37d99e1ddbccaa65b9d1cd767a941bc46ffb0382466a",
+      "raw_bytes_sha256": "9ef3667d1a9103f1e85d37d99e1ddbccaa65b9d1cd767a941bc46ffb0382466a",
+      "report_id": "lab52_2022-01-24_new-transparentribe-operation-targeting-india",
+      "source_text_char_count": 8906,
+      "source_text_sha256": "a4e4eae69d46f92d2da0775a2577ee003cc39166d94a61b50300bb918a7b9306",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "anchors": [
+        {
+          "anchor_id": "P01",
+          "char_end": 2061,
+          "char_start": 1972,
+          "occurrences": 1,
+          "source_line_number": 19,
+          "span_sha256": "6cc6accdc043cc45d69b62eb51b55cd7194668cff768a403dfac1cfd18653a32"
+        },
+        {
+          "anchor_id": "P02",
+          "char_end": 2611,
+          "char_start": 2518,
+          "occurrences": 1,
+          "source_line_number": 26,
+          "span_sha256": "631d94b0e5398e816838a8ac527d2c8aabac79ee07b52f35181502c326fab59e"
+        },
+        {
+          "anchor_id": "P03",
+          "char_end": 2933,
+          "char_start": 2784,
+          "occurrences": 1,
+          "source_line_number": 29,
+          "span_sha256": "10ae896530656fc3eba4515cadf813c34aec7f8c0fa66871fec1a08b7aa14f2c"
+        },
+        {
+          "anchor_id": "P04",
+          "char_end": 3011,
+          "char_start": 2934,
+          "occurrences": 1,
+          "source_line_number": 30,
+          "span_sha256": "4d88de944a45c8c9a1d0c1110135b4c73b463f55fdb24313b108311c575853c5"
+        },
+        {
+          "anchor_id": "P05",
+          "char_end": 4155,
+          "char_start": 4092,
+          "occurrences": 1,
+          "source_line_number": 38,
+          "span_sha256": "53cbf7e0379e36f1f3aabf88c9afa9b3f1cc0976397d2061891cb5383a944438"
+        }
+      ],
+      "decoded_original_sha256": "f3a2db2c97ce17d936ce46bccdc359bb6b695d7702df8b784e960890c3b1c64a",
+      "raw_bytes_sha256": "f3a2db2c97ce17d936ce46bccdc359bb6b695d7702df8b784e960890c3b1c64a",
+      "report_id": "proofpoint_2021-07-01_malware-masquerades-privacy-tool",
+      "source_text_char_count": 13167,
+      "source_text_sha256": "b3653c517baef27621db962ef305875e6d71ee44e40403d0892e22fe5e76e517",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "949a9bfae223f40900ac34bfc74333f6a3070e126d89f415da5585e23769768a",
+      "raw_bytes_sha256": "949a9bfae223f40900ac34bfc74333f6a3070e126d89f415da5585e23769768a",
+      "report_id": "proofpoint_2021-10-19_whatta-ta-ta505-ramps-activity",
+      "source_text_char_count": 16165,
+      "source_text_sha256": "fd7e538942814ef1fab0b950ea2ac7c522cb342c1fb1338182a5872e786b9e5b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "941a2ca2c8319b860cd8c5429b2b13bc46dcb8845abcfd17522f4802dbae06df",
+      "raw_bytes_sha256": "941a2ca2c8319b860cd8c5429b2b13bc46dcb8845abcfd17522f4802dbae06df",
+      "report_id": "proofpoint_2021-04-15_threat-actors-pair-tax-themed",
+      "source_text_char_count": 11456,
+      "source_text_sha256": "40f9ea6fb686f1526031603e75b926c40fd4c1a677ceaec534fab67ec7cc5aed",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "c05c82b781d6e3bba11602c2c7384532102ebe4ce17affb203c25b70c738dfbc",
+      "raw_bytes_sha256": "c05c82b781d6e3bba11602c2c7384532102ebe4ce17affb203c25b70c738dfbc",
+      "report_id": "proofpoint_2021-10-20_ta551-uses-sliver-red-team",
+      "source_text_char_count": 4085,
+      "source_text_sha256": "8e385d1d29e29349cea4c3bc07116111ef35e9710417c86988c8e50551ed2da1",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2b59590fbeefe83f01683f016cbef7f7732722a78865d464d7e20259a1a47802",
+      "raw_bytes_sha256": "2b59590fbeefe83f01683f016cbef7f7732722a78865d464d7e20259a1a47802",
+      "report_id": "proofpoint_2021-12-13_tinynuke-banking-malware-targets-french",
+      "source_text_char_count": 9590,
+      "source_text_sha256": "2fd90042ed24397ab729f3631e694b23159501a093efabc359cc4ad37ba55844",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2bbacb0cb0eba91e27796cd481e7dd3496bc2ba9eea2e79973f8a9cfd5715ee4",
+      "raw_bytes_sha256": "2bbacb0cb0eba91e27796cd481e7dd3496bc2ba9eea2e79973f8a9cfd5715ee4",
+      "report_id": "proofpoint_2021-05-26_bazaflix-bazaloader-fakes-movie-streaming",
+      "source_text_char_count": 7777,
+      "source_text_sha256": "ad64a8d142ebda84f38c8f1079a4e2287376904a4a9591a5e50eba88208c0479",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "76056bb671472fc7164743d98346200f9bd062a62c4bf8e6be5392f5b0f7ba35",
+      "raw_bytes_sha256": "76056bb671472fc7164743d98346200f9bd062a62c4bf8e6be5392f5b0f7ba35",
+      "report_id": "proofpoint_2021-05-06_bec-taxonomy-invoice-fraud",
+      "source_text_char_count": 6480,
+      "source_text_sha256": "08c83975fbd925db8443f88ca08270add21c94dcbaaaf21e5fe2efa5a6f0bc5f",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "214db2122c12e32f9bb80ddde7e7dd4272d87e4390a492e9dc78eb52bb05b845",
+      "raw_bytes_sha256": "214db2122c12e32f9bb80ddde7e7dd4272d87e4390a492e9dc78eb52bb05b845",
+      "report_id": "proofpoint_2021-08-24_delta-variant-spreads-covid-19",
+      "source_text_char_count": 11913,
+      "source_text_sha256": "e80b08d64fd14f8c4d1a38e4503eec73cdcbc794b874186cdb5fe1c6c2ccd25b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2d6e428fdf1fd5019b9e73845a65bd523f32162b0a5810e22579b433bfad88cd",
+      "raw_bytes_sha256": "2d6e428fdf1fd5019b9e73845a65bd523f32162b0a5810e22579b433bfad88cd",
+      "report_id": "proofpoint_2021-12-07_university-targeted-credential-phishing-campaigns",
+      "source_text_char_count": 6378,
+      "source_text_sha256": "4253ef9db023c314cb4962786b28f46a4bed5bb59372b62a97590287fe95f01d",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "1fa3b8f49cce612678c8ce17ead9a9f92c8bcec96655885558fce6478c46b5a8",
+      "raw_bytes_sha256": "1fa3b8f49cce612678c8ce17ead9a9f92c8bcec96655885558fce6478c46b5a8",
+      "report_id": "proofpoint_2021-05-24_compromised-cloud-accounts-cost-firms",
+      "source_text_char_count": 5258,
+      "source_text_sha256": "3df25b357989da047e8240475771597675c2d1d63221c85d632ca8c863403f34",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "07196067c19f07db69a7d84088be5ccd03573dcb49dd3b14adf597e3c2491946",
+      "raw_bytes_sha256": "07196067c19f07db69a7d84088be5ccd03573dcb49dd3b14adf597e3c2491946",
+      "report_id": "proofpoint_2021-07-13_operation-spoofedscholars-conversation-ta453",
+      "source_text_char_count": 10786,
+      "source_text_sha256": "4edfebe56466701695a156ee0945bc07b43a59eeb0ed73e29f50746ac7573d16",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "c04291df864df656e6ae0dfc52d351eb5f70b8665377ea4e243381ff15184d7f",
+      "raw_bytes_sha256": "c04291df864df656e6ae0dfc52d351eb5f70b8665377ea4e243381ff15184d7f",
+      "report_id": "proofpoint_2021-05-03_new-variant-buer-loader-written",
+      "source_text_char_count": 12073,
+      "source_text_sha256": "2d80ca94c86a5046e34b59c78df1aa2c83c8fc9bf302e75714e8eb1c5331fadc",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "be9d05569791b1a4537c3cc1f2a2f96d188ed5f200a76eeb781aa4fa69195970",
+      "raw_bytes_sha256": "be9d05569791b1a4537c3cc1f2a2f96d188ed5f200a76eeb781aa4fa69195970",
+      "report_id": "proofpoint_2021-07-28_i-knew-you-were-trouble",
+      "source_text_char_count": 12596,
+      "source_text_sha256": "85c34591465208223cd6087e33c5822d403b12aef4f1ba948428355254979461",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "a674606a23801a1dea3f88aea519d454c9e75b2dcdc612f80732c36cc7aba54e",
+      "raw_bytes_sha256": "a674606a23801a1dea3f88aea519d454c9e75b2dcdc612f80732c36cc7aba54e",
+      "report_id": "proofpoint_2021-06-22_ransomware-insights-proofpoints-senior-director",
+      "source_text_char_count": 5696,
+      "source_text_sha256": "de8b4be84e3b78d746b247d4f9a66778735d3acd52f6108f57f4fba5bd3c7c1e",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "5a5801fdf1abdb245e9728f96845b0778e3a2fdb799ec8500d3067af65369e3c",
+      "raw_bytes_sha256": "5a5801fdf1abdb245e9728f96845b0778e3a2fdb799ec8500d3067af65369e3c",
+      "report_id": "proofpoint_2021-11-30_high-volume-german-phishing-campaign",
+      "source_text_char_count": 5623,
+      "source_text_sha256": "e4b926be80229b12664a564ef2d70aef65dc896911f6182a2f353876ce4cc0ba",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "a881c769532b8605cb2ce542ca6cc6894fef5ea2bd85d5eba311c10fa2f29a17",
+      "raw_bytes_sha256": "a881c769532b8605cb2ce542ca6cc6894fef5ea2bd85d5eba311c10fa2f29a17",
+      "report_id": "proofpoint_2022-02-03_mfa-psa-oh-my",
+      "source_text_char_count": 9772,
+      "source_text_sha256": "7703c78bfc6c9819f999a81ebe4fb8d88138a271e34905cc06b6ec9d5b8fd75b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "ecbaa51045ecae77a1865e7c9fea83ea0998f5c7911a5e62573f73e3da825235",
+      "raw_bytes_sha256": "ecbaa51045ecae77a1865e7c9fea83ea0998f5c7911a5e62573f73e3da825235",
+      "report_id": "proofpoint_2021-11-18_triple-threat-north-korea-aligned",
+      "source_text_char_count": 3404,
+      "source_text_sha256": "5021b5689e11ae55852e4bb4d838710810c54ec69d4bd8b37238c26c9590492d",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "32be60816b3e91b7c1b64778cb4049f880970e824d869b935d280a7ae8c98450",
+      "raw_bytes_sha256": "32be60816b3e91b7c1b64778cb4049f880970e824d869b935d280a7ae8c98450",
+      "report_id": "proofpoint_2021-05-18_threat-actors-exploit-microsoft-and",
+      "source_text_char_count": 6059,
+      "source_text_sha256": "b37c27a34571a6c2136151daead18880b9db3711620b2801491b0253c58ae12e",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "9f99651d9b5b563f3092bb3efd8b36998df099ff99bf85798d643fb369e57911",
+      "raw_bytes_sha256": "9f99651d9b5b563f3092bb3efd8b36998df099ff99bf85798d643fb369e57911",
+      "report_id": "proofpoint_2021-06-10_ransom-ddos-extortion-actor-fancy",
+      "source_text_char_count": 6591,
+      "source_text_sha256": "979dbf6a1a3b485a1cbf0456dcd27d26405bde6063337b5ba90800a7ab78349d",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "d209390ea4e9398e12926bea10ee85ad4421b1ccbee361df1dc325614bd9fece",
+      "raw_bytes_sha256": "d209390ea4e9398e12926bea10ee85ad4421b1ccbee361df1dc325614bd9fece",
+      "report_id": "proofpoint_2021-09-29_ta544-targets-italian-organizations-ursnif",
+      "source_text_char_count": 6242,
+      "source_text_sha256": "caa83e56bccfb3997c74a02288b739f456dc5dd1c4b20629b4833845e18a2d86",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "db19978d01b8583b4fb382cf4f7b8ca62c3f8dad80944484c857ceb31b82d65e",
+      "raw_bytes_sha256": "db19978d01b8583b4fb382cf4f7b8ca62c3f8dad80944484c857ceb31b82d65e",
+      "report_id": "proofpoint_2021-06-24_jssloader-recoded-and-reloaded",
+      "source_text_char_count": 9855,
+      "source_text_sha256": "776bee58611290f6e6530c213e82b2190008d9f006330f269de97cadabd4f91e",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "13cac48fc09a8e4c3b2c24e0ef67e79a477a4ba340f32eda56f0f00df3966fff",
+      "raw_bytes_sha256": "13cac48fc09a8e4c3b2c24e0ef67e79a477a4ba340f32eda56f0f00df3966fff",
+      "report_id": "proofpoint_2021-10-28_ta575-uses-squid-game-lures",
+      "source_text_char_count": 3837,
+      "source_text_sha256": "1240a69114ed1431aafdccfee327e886be71d0cc3dd2c9c5aeb65138abda82ad",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "22530a73f7f9a3e09029088923984ef12e702aafb82b8a4b71240126039758f2",
+      "raw_bytes_sha256": "22530a73f7f9a3e09029088923984ef12e702aafb82b8a4b71240126039758f2",
+      "report_id": "proofpoint_2021-06-17_announcing-proofpoint-information-and-cloud",
+      "source_text_char_count": 11867,
+      "source_text_sha256": "ad9912c4110de1a2cb5632d095e272b97b6e867101dd47a70e59290c47ee0a33",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "22743d1eb48e4d2f710ca5483b2a7f7a501a397cc9c8a4f8ea93620476d4cba7",
+      "raw_bytes_sha256": "22743d1eb48e4d2f710ca5483b2a7f7a501a397cc9c8a4f8ea93620476d4cba7",
+      "report_id": "proofpoint_2022-01-27_oivavoii-active-malicious-hybrid-cloud",
+      "source_text_char_count": 6184,
+      "source_text_sha256": "a75d9be0e79a0db15ca3c126e502a864e802620782c8741587af25ea9b045363",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "71a2790e4691d1af252520ffe531a8f7bb30f34e182761b7bb88b38973dbb9cd",
+      "raw_bytes_sha256": "71a2790e4691d1af252520ffe531a8f7bb30f34e182761b7bb88b38973dbb9cd",
+      "report_id": "proofpoint_2021-10-27_new-threat-actor-spoofs-philippine",
+      "source_text_char_count": 14651,
+      "source_text_sha256": "1f0e8ad1cedcd550e7667b252b55f231f0e1aed9ab57c94546bc5be06ceb7b89",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "6e22b05ad1e29c3acc683034342b87bfc30bce63595820a386401e7c3751ef39",
+      "raw_bytes_sha256": "6e22b05ad1e29c3acc683034342b87bfc30bce63595820a386401e7c3751ef39",
+      "report_id": "proofpoint_2021-06-29_cobalt-strike-favorite-tool-apt",
+      "source_text_char_count": 16397,
+      "source_text_sha256": "cda2911145d0a8ddd9cab1cd39f3ac55eaa9a4ee192bc38e1d5daffc6ca624ad",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "c56340deff07b0cab1ce52b0f1a9fd3204c50523fe9209bf3285c5833745c069",
+      "raw_bytes_sha256": "c56340deff07b0cab1ce52b0f1a9fd3204c50523fe9209bf3285c5833745c069",
+      "report_id": "proofpoint_2021-12-09_holiday-feelin-ta575-brings-warm",
+      "source_text_char_count": 4956,
+      "source_text_sha256": "c472d3c9f3f9606911207655454bcd1fdb714712e2b7dffd0ff5a513113572ff",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "dba3f544ba7b94af5ca1e3db9ca3f5feda92a89e5bab70e3b1f1f3e3e9dd501f",
+      "raw_bytes_sha256": "dba3f544ba7b94af5ca1e3db9ca3f5feda92a89e5bab70e3b1f1f3e3e9dd501f",
+      "report_id": "proofpoint_2021-08-31_bec-taxonomy-advance-fee-fraud",
+      "source_text_char_count": 4582,
+      "source_text_sha256": "945756840eb9f9f66de817631ec413b53c4c392e3bb768fa8aed13f9cbafcb1a",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "anchors": [
+        {
+          "anchor_id": "Q01",
+          "char_end": 424,
+          "char_start": 264,
+          "occurrences": 1,
+          "source_line_number": 6,
+          "span_sha256": "91aebabc0cbb013758db8a16e5f8223508cca6c2ffee2181b68c5c0e95f68b56"
+        },
+        {
+          "anchor_id": "Q02",
+          "char_end": 1023,
+          "char_start": 939,
+          "occurrences": 1,
+          "source_line_number": 9,
+          "span_sha256": "ad43574d2fbe71b2a16cc89d7b5061c341c77c3df3be59db744324a6edc4264f"
+        },
+        {
+          "anchor_id": "Q03",
+          "char_end": 1223,
+          "char_start": 1146,
+          "occurrences": 1,
+          "source_line_number": 10,
+          "span_sha256": "4b2726348c1b9c43ed0c8d0d411ddf15e176494596c3c9179ab1ddced6f00310"
+        },
+        {
+          "anchor_id": "Q04",
+          "char_end": 20152,
+          "char_start": 20031,
+          "occurrences": 1,
+          "source_line_number": 172,
+          "span_sha256": "088f96ae3d3be31361da2ee0b89e91b0df9794d5fa93b3a89aabdbbd5b27ba21"
+        },
+        {
+          "anchor_id": "Q05",
+          "char_end": 21220,
+          "char_start": 21114,
+          "occurrences": 1,
+          "source_line_number": 183,
+          "span_sha256": "03e1e086ec9bed45232e25ddb1c73d07f4ac7bec6f19c5428fb1d956d5406813"
+        },
+        {
+          "anchor_id": "Q6",
+          "char_end": 24756,
+          "char_start": 24675,
+          "occurrences": 1,
+          "source_line_number": 217,
+          "span_sha256": "d4b52cb5696c3dc423b2b9224495aae1a93929f8b3f1e7141f36d5d58f1c2318"
+        },
+        {
+          "anchor_id": "Q7",
+          "char_end": 24846,
+          "char_start": 24757,
+          "occurrences": 1,
+          "source_line_number": 218,
+          "span_sha256": "99a3893403c0dcc785a31ec40455933ae2bdd99b9ee7df986a0d98f958fa1f5b"
+        },
+        {
+          "anchor_id": "Q8",
+          "char_end": 25041,
+          "char_start": 24975,
+          "occurrences": 1,
+          "source_line_number": 220,
+          "span_sha256": "c2441b4ca6b11c5aa39343b012638f016f9b10d5590facb8af0319706411f0a6"
+        },
+        {
+          "anchor_id": "Q9",
+          "char_end": 25101,
+          "char_start": 25042,
+          "occurrences": 1,
+          "source_line_number": 221,
+          "span_sha256": "adb41c9cf15c7fc0af170e3f9a8ed2af98e5559bc9a3b489db0d58aabdceea63"
+        },
+        {
+          "anchor_id": "Q10",
+          "char_end": 25166,
+          "char_start": 25102,
+          "occurrences": 1,
+          "source_line_number": 222,
+          "span_sha256": "d4cd53f3580f1c20a1b5e9bf8f80bafa7b102d788ffae3e90b8eac8c44f88f9d"
+        },
+        {
+          "anchor_id": "Q11",
+          "char_end": 25395,
+          "char_start": 25329,
+          "occurrences": 1,
+          "source_line_number": 224,
+          "span_sha256": "1b7aae7dcfe14428278c3883e38cdfd83c23ce74416c730c33e140717e7b1cb3"
+        },
+        {
+          "anchor_id": "Q12",
+          "char_end": 25486,
+          "char_start": 25396,
+          "occurrences": 1,
+          "source_line_number": 225,
+          "span_sha256": "823139fb8b1d3c1f9fda1054a51b6eebc195cec9a086ad5d871cba949f3dd137"
+        }
+      ],
+      "decoded_original_sha256": "925f6b1391142df6d829b965b9427f09d77d0edcd9d11564f26bd20c7f1ed563",
+      "raw_bytes_sha256": "925f6b1391142df6d829b965b9427f09d77d0edcd9d11564f26bd20c7f1ed563",
+      "report_id": "quoteintelligence_2020-04-20_winnti-group-insights-from-the",
+      "source_text_char_count": 26702,
+      "source_text_sha256": "f35eb1fc7314de99fa4ddd52883f09f61b8f26151c230ed1549c6b0bcf48f825",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "e523caf0e926e83fdcd53d433f6054a817494138c58c4b6a2ff8729f3c15fa96",
+      "raw_bytes_sha256": "e523caf0e926e83fdcd53d433f6054a817494138c58c4b6a2ff8729f3c15fa96",
+      "report_id": "quoteintelligence_2020-09-22_apt28-zebrocy-malware-campaign-nato",
+      "source_text_char_count": 14633,
+      "source_text_sha256": "96be28afd2f1c1f0270a4ce0383b50e717c38616a752793373db48b9ca833d00",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "f588553fb70676b0d03eb24dabbcb97f7ae70556995e45366bdc60ca75897637",
+      "raw_bytes_sha256": "f588553fb70676b0d03eb24dabbcb97f7ae70556995e45366bdc60ca75897637",
+      "report_id": "quoteintelligence_2021-01-27_supply-chain-attacks-cybersecurity-regulations",
+      "source_text_char_count": 14370,
+      "source_text_sha256": "73af969668aa69314d621643ff7ae3b968aac25c0623fc0a3a49677de17dcb95",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "13373c0d334e5a216d7f298e9d717d41d5f591bcadc9afe017bd6e24ba8f95b4",
+      "raw_bytes_sha256": "13373c0d334e5a216d7f298e9d717d41d5f591bcadc9afe017bd6e24ba8f95b4",
+      "report_id": "quoteintelligence_2021-06-30_daily-operations-of-a-nigerian",
+      "source_text_char_count": 19235,
+      "source_text_sha256": "09d3cc90888f2a2722df08c2f8ec4ee154ba8ca6169e565f852eeea5773a8ff6",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "11ac467891253db973045d0d1ef1d8917ad0d9071076bc2e4f5a28dcc24bf9fe",
+      "raw_bytes_sha256": "11ac467891253db973045d0d1ef1d8917ad0d9071076bc2e4f5a28dcc24bf9fe",
+      "report_id": "quoteintelligence_2021-02-16_dns-over-https-doh",
+      "source_text_char_count": 9008,
+      "source_text_sha256": "f00b04cc1c97988be2646b0d4c40a5383d81cde9dd0b5188bb3981cee9c87248",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "dfd238f30db210fc56cb70f493331fc744d2f341cff931d8985e93098500caf2",
+      "raw_bytes_sha256": "dfd238f30db210fc56cb70f493331fc744d2f341cff931d8985e93098500caf2",
+      "report_id": "quoteintelligence_2019-01-21_new-evidence-might-link-lazarus",
+      "source_text_char_count": 11275,
+      "source_text_sha256": "04837ef8975e44a42f2228c48c4f009a3fbb701b9c39dd39eb44f3a83b45509a",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "7ac9ab946807ae44a33059208e2b8695ce6742d38cfb29ddf3f29959bda69ae7",
+      "raw_bytes_sha256": "7ac9ab946807ae44a33059208e2b8695ce6742d38cfb29ddf3f29959bda69ae7",
+      "report_id": "quoteintelligence_2020-07-09_what-is-tiber-eu-and",
+      "source_text_char_count": 9666,
+      "source_text_sha256": "3d42974b233e1f0d250b4ff402bccdfb0b85f472334e9660612598541add9e6b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "cba70d8fed22a9e361a05142877d5f543dd00e79ff7ab9867a291acbde4035a0",
+      "raw_bytes_sha256": "cba70d8fed22a9e361a05142877d5f543dd00e79ff7ab9867a291acbde4035a0",
+      "report_id": "quoteintelligence_2021-05-20_how-the-demise-of-third",
+      "source_text_char_count": 9236,
+      "source_text_sha256": "f3856c6e35a37ca84c8d4da74b0bd041678f44e08f32bcbe798f0acfd2f6a403",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "fa169e4a94d8a04e33f8694460d119ffe970cfb4fed76daadc16ce33d20977be",
+      "raw_bytes_sha256": "fa169e4a94d8a04e33f8694460d119ffe970cfb4fed76daadc16ce33d20977be",
+      "report_id": "quoteintelligence_2021-01-06_reconhellcat-uses-nist-theme-as",
+      "source_text_char_count": 12310,
+      "source_text_sha256": "19b90430a170dbab6c1758c9009373ddc12836a60e981c456ce9ce1d44229ddf",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "e691b31be0c8233f6eab2a194430cfeae3ca895799be91b827cfffd31b5cac98",
+      "raw_bytes_sha256": "e691b31be0c8233f6eab2a194430cfeae3ca895799be91b827cfffd31b5cac98",
+      "report_id": "quoteintelligence_2018-11-29_golden-chickens-uncovering-a-malware",
+      "source_text_char_count": 23474,
+      "source_text_sha256": "b92ddcbe294f96c274197376d413aff28447466266864a512d018efc69d2ca90",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "bc9400e7ffa631440aef13264ec18235fda64596167f1e57411d7a2cb4395974",
+      "raw_bytes_sha256": "bc9400e7ffa631440aef13264ec18235fda64596167f1e57411d7a2cb4395974",
+      "report_id": "quoteintelligence_2020-08-07_blackwater-malware-leveraging-beirut-tragedy",
+      "source_text_char_count": 7520,
+      "source_text_sha256": "8acdc4cd0505a3413a554947bfd06f3417e305774c5aff47a78a2f70ff45cc6e",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "49efca0fe931601ec4748226f77380b9269b2b41242f9ece21ac7198f0904e4f",
+      "raw_bytes_sha256": "49efca0fe931601ec4748226f77380b9269b2b41242f9ece21ac7198f0904e4f",
+      "report_id": "quoteintelligence_2021-04-28_us-sanctions-against-russias-cyber",
+      "source_text_char_count": 9887,
+      "source_text_sha256": "3f12d658218bc56a666ac6991c90f70b3d58e7323ed1152253ac4ab9843c9cbd",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "anchors": [
+        {
+          "anchor_id": "Z01",
+          "char_end": 258,
+          "char_start": 79,
+          "occurrences": 1,
+          "source_line_number": 3,
+          "span_sha256": "957dca844877bd2acbb521bd3ce68596fe2abb5668744a24af4265444724cf2e"
+        },
+        {
+          "anchor_id": "Z02",
+          "char_end": 2265,
+          "char_start": 2187,
+          "occurrences": 1,
+          "source_line_number": 19,
+          "span_sha256": "bd483b6cd0026e25081deb9be89efc6eb26cd07ddde03866850c54cbfe45146f"
+        },
+        {
+          "anchor_id": "Z03",
+          "char_end": 3707,
+          "char_start": 3605,
+          "occurrences": 1,
+          "source_line_number": 30,
+          "span_sha256": "d362578c2c8be58252525364c2604355c50620e2725d19567e2c4100ff6b15a8"
+        },
+        {
+          "anchor_id": "Z04",
+          "char_end": 6775,
+          "char_start": 6644,
+          "occurrences": 1,
+          "source_line_number": 63,
+          "span_sha256": "cc9b5752a1b9cd3106b08aae235257a9e57e3312d0f806f5963c322ad2b14164"
+        },
+        {
+          "anchor_id": "Z05",
+          "char_end": 11642,
+          "char_start": 11523,
+          "occurrences": 1,
+          "source_line_number": 116,
+          "span_sha256": "40270d48a2f20be676fb2e8c366ba8835945236ed277c06337a6db0458c10195"
+        }
+      ],
+      "decoded_original_sha256": "00c10b2648c22556f8affce66773e471c8c7c5d35d1b924477b730c7ae2a448d",
+      "raw_bytes_sha256": "00c10b2648c22556f8affce66773e471c8c7c5d35d1b924477b730c7ae2a448d",
+      "report_id": "zscaler_2021-07-14_targeted-attack-government-organizations-delivers",
+      "source_text_char_count": 14041,
+      "source_text_sha256": "fb95cbd80a60f2aa41a29bd453bf6215b601c061e7fa64bb4bf1bddc18d0c989",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "a6cf976c92dd2b0af2a85caf7ff78b9fefb78d186642628a784869a11088c7eb",
+      "raw_bytes_sha256": "a6cf976c92dd2b0af2a85caf7ff78b9fefb78d186642628a784869a11088c7eb",
+      "report_id": "zscaler_2020-08-14_purplewave-new-infostealer-russia",
+      "source_text_char_count": 12733,
+      "source_text_sha256": "669620a7f034011b9ceaaf9dd71464304089e16883c57281de0157fe38f88cc8",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "ccfcfb587c95dc81a71cb68630c18659f5afa0fa027debeea02e6f71b3179b10",
+      "raw_bytes_sha256": "ccfcfb587c95dc81a71cb68630c18659f5afa0fa027debeea02e6f71b3179b10",
+      "report_id": "zscaler_2020-07-10_deep-dive-m00nd3v-logger",
+      "source_text_char_count": 15833,
+      "source_text_sha256": "a127bdbc8f5d7df5872ba986897605c73eaefff01fa70b0149da1a266ff976fe",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "e2fcfa74ea39a483ed93b442f242ba148cf921993818b846f0dded8ef1a84b8f",
+      "raw_bytes_sha256": "e2fcfa74ea39a483ed93b442f242ba148cf921993818b846f0dded8ef1a84b8f",
+      "report_id": "zscaler_2021-02-09_discord-cdn-popular-choice-hosting",
+      "source_text_char_count": 18381,
+      "source_text_sha256": "43732d7343ee03c01e5ce9251cb3bc8fae712d7497ea4fdfb4f67e5afe924b57",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "c1738f25c53decec84d8f3197d03ac23f0a5077e2b6c5f0e8bcc0583a966e261",
+      "raw_bytes_sha256": "c1738f25c53decec84d8f3197d03ac23f0a5077e2b6c5f0e8bcc0583a966e261",
+      "report_id": "zscaler_2021-05-11_magecart-attacks-2021",
+      "source_text_char_count": 9289,
+      "source_text_sha256": "fc338e9495818b78a1ea23042ec8f9eb1b60e8ad7cc0023baf33c051bcb2bf15",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "2399aaac9ee2ef4363358697624a1376a429e3670a5c7168217c7c92e66ab780",
+      "raw_bytes_sha256": "2399aaac9ee2ef4363358697624a1376a429e3670a5c7168217c7c92e66ab780",
+      "report_id": "zscaler_2021-05-21_threat-actors-distribute-malicious-vpn",
+      "source_text_char_count": 23642,
+      "source_text_sha256": "163628bc7207f7c27a00d83d7fa5c5932112e621856f4b126c00fdf25ec2529b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "ec65746f54b16da7bb924987c21c0917a88a73d6cfc466788836af4dd3f3e218",
+      "raw_bytes_sha256": "ec65746f54b16da7bb924987c21c0917a88a73d6cfc466788836af4dd3f3e218",
+      "report_id": "zscaler_2021-11-16_return-emotet-malware",
+      "source_text_char_count": 5728,
+      "source_text_sha256": "f1320d266e3dcdd896a166453addae212e34e7551ddf11c8f6e16117e502f818",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "19cbbacdb27abe8f3e802b539e405f1b166f06881ed77dfc11ac1fde98aa3558",
+      "raw_bytes_sha256": "19cbbacdb27abe8f3e802b539e405f1b166f06881ed77dfc11ac1fde98aa3558",
+      "report_id": "zscaler_2021-10-08_new-trickbot-and-bazarloader-campaigns",
+      "source_text_char_count": 11629,
+      "source_text_sha256": "a30dcbe26655401884ca60b91cda6a5d50fde503bfb8bb38d7ca8723a99749bb",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "dfbaa7f420faec14b90164816c0ca4543613fc0fdb108b6909db6703aea63786",
+      "raw_bytes_sha256": "dfbaa7f420faec14b90164816c0ca4543613fc0fdb108b6909db6703aea63786",
+      "report_id": "zscaler_2021-11-05_spike-danabot-malware-activity",
+      "source_text_char_count": 9974,
+      "source_text_sha256": "68eea9e58437fb3d988390f42c4d981757b8717be8f2653ff1c5c1799832dc57",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "d2282a4301428be9bfc114294377f99725c503308904690a3357ceb730eb2f3a",
+      "raw_bytes_sha256": "d2282a4301428be9bfc114294377f99725c503308904690a3357ceb730eb2f3a",
+      "report_id": "zscaler_2021-01-08_ransomware-delivered-using-rdp-brute",
+      "source_text_char_count": 7206,
+      "source_text_sha256": "c35fa4b2cc86ef9529b078dd636b3e96ca7ab925edd5060a9631799eebcf5ba0",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "9d5495603ea666cbae448f21f3cd7048ac9fa1adcf7bd52b9c74ad6924db79d6",
+      "raw_bytes_sha256": "9d5495603ea666cbae448f21f3cd7048ac9fa1adcf7bd52b9c74ad6924db79d6",
+      "report_id": "zscaler_2021-04-14_look-hydrojiin-campaign",
+      "source_text_char_count": 19641,
+      "source_text_sha256": "991851f98cd5a421f4cb1f3227fdcb253cacf7e3515bcac3eca3690c5f0f99c3",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "1b0dbc9caf9c37ed02e4f4200e6df544f0d7fcc2196f58285a38b82da3e67134",
+      "raw_bytes_sha256": "1b0dbc9caf9c37ed02e4f4200e6df544f0d7fcc2196f58285a38b82da3e67134",
+      "report_id": "zscaler_2021-07-12_threatlabz-june-2021-report-deconstructing",
+      "source_text_char_count": 205201,
+      "source_text_sha256": "0757339d6f7214ad2af05b0290a83250c60fed417a5783c3bfb7a3147ef7e40b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "db6df0c80652e20ce0b64ac5b550adb5d46260a906b39a9354e550f974c71d64",
+      "raw_bytes_sha256": "db6df0c80652e20ce0b64ac5b550adb5d46260a906b39a9354e550f974c71d64",
+      "report_id": "zscaler_2021-07-04_coverage-advisory-kaseya-vsa-supply",
+      "source_text_char_count": 6509,
+      "source_text_sha256": "e36af9e8e6bf048423eda33e39d0c50f270cf0d9083bcae89481efd13e66b51d",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "bfb2583fac63cceb083a6fe0f721476a0b3ee21555a7605122296277442cf3b3",
+      "raw_bytes_sha256": "bfb2583fac63cceb083a6fe0f721476a0b3ee21555a7605122296277442cf3b3",
+      "report_id": "zscaler_2020-06-26_taurus-new-stealer-town",
+      "source_text_char_count": 11545,
+      "source_text_sha256": "90e407d20e90d85bbc9224c4dbaa962404e67ffad56faefc69b11ff7c51f2daf",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "8a9ee5c488966bc07a429ec503e059bc2c6d2328869fdceb2c5b62e88f97d017",
+      "raw_bytes_sha256": "8a9ee5c488966bc07a429ec503e059bc2c6d2328869fdceb2c5b62e88f97d017",
+      "report_id": "zscaler_2021-09-09_cloudfall-targets-researchers-and-scientists",
+      "source_text_char_count": 20922,
+      "source_text_sha256": "6d78d19e545d9325551344a2f9525926c90e7bad991baeed4ea07f351c8d10d4",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "0a10eb33bc7b04ec69c3f5a5bda9f22992b34865ef83f23a3d859fd4e55c37db",
+      "raw_bytes_sha256": "0a10eb33bc7b04ec69c3f5a5bda9f22992b34865ef83f23a3d859fd4e55c37db",
+      "report_id": "zscaler_2020-09-16_malware-leveraging-xml-rpc-vulnerability",
+      "source_text_char_count": 10144,
+      "source_text_sha256": "7bd795b9beef6d7040f2ac1ac6ec95e833fd2321cd9b4da38926c024ff2f156d",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "f532150de47307deb5a75273ab66ed89059677cbb7bc5d798172493525ba29d1",
+      "raw_bytes_sha256": "f532150de47307deb5a75273ab66ed89059677cbb7bc5d798172493525ba29d1",
+      "report_id": "zscaler_2020-09-29_targeted-attacks-oil-and-gas",
+      "source_text_char_count": 24939,
+      "source_text_sha256": "b725013ca52adae10954486cb3813bb489cfea340e2c0c8be34a6a9690223155",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "3db115ab3a64bccaeca637f37f6b116e5001198919d7d7fa8775214475ec99dc",
+      "raw_bytes_sha256": "3db115ab3a64bccaeca637f37f6b116e5001198919d7d7fa8775214475ec99dc",
+      "report_id": "zscaler_2021-05-05_catching-rats-over-custom-protocols",
+      "source_text_char_count": 24742,
+      "source_text_sha256": "2e55ddf8db45e383cf9e0a2c10e82174e21d55c058c26fcefac3558eeed8dc93",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "eeb796a7db635504de210d4b52550c23597720cb14d86c844767e94b5131bba9",
+      "raw_bytes_sha256": "eeb796a7db635504de210d4b52550c23597720cb14d86c844767e94b5131bba9",
+      "report_id": "zscaler_2021-10-15_atomsilo-ransomware-enters-league-double",
+      "source_text_char_count": 5667,
+      "source_text_sha256": "2827c813751066bf9835b364598ce6c86ec575724d89f6641acd56869b098423",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "8725866ddcb1e36778229abc68a9994abbe3a8bd874dce1fbc0178ab6797e853",
+      "raw_bytes_sha256": "8725866ddcb1e36778229abc68a9994abbe3a8bd874dce1fbc0178ab6797e853",
+      "report_id": "zscaler_2021-01-29_did-covid-cancel-christmas-cybercriminals",
+      "source_text_char_count": 8488,
+      "source_text_sha256": "a2300a3050067b920b7c956ad2f06ed729e7a0363ba52e18e79b3204b1c29f64",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "f2bf23c3bd1c8680b2f4364012c656553dd31f8add43883b0c8d397c560043a0",
+      "raw_bytes_sha256": "f2bf23c3bd1c8680b2f4364012c656553dd31f8add43883b0c8d397c560043a0",
+      "report_id": "zscaler_2020-11-03_election-2020-themed-scams-and",
+      "source_text_char_count": 13737,
+      "source_text_sha256": "4e16b51963059f28d25c9bce9fd6a996c58397c86cdd84b7cadcac079ed5c515",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "abbde8e0e1a0c95712518cbc8b92f762bdec77eb6a9975d56c5c3b5235160c68",
+      "raw_bytes_sha256": "abbde8e0e1a0c95712518cbc8b92f762bdec77eb6a9975d56c5c3b5235160c68",
+      "report_id": "zscaler_2020-07-17_new-voicemail-themed-phishing-attacks",
+      "source_text_char_count": 16375,
+      "source_text_sha256": "ce1ad327c0a5325622513f95852baadc49f7aff4b3d54d66d0f615030f73023b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "bb1baec4f63bc00ba91cc4ee221aff45327b766129b5c8f9ecf5f51b0be4d477",
+      "raw_bytes_sha256": "bb1baec4f63bc00ba91cc4ee221aff45327b766129b5c8f9ecf5f51b0be4d477",
+      "report_id": "zscaler_2021-09-28_squirrelwaffle-new-loader-delivering-cobalt",
+      "source_text_char_count": 19640,
+      "source_text_sha256": "1c1fc821d184ab3a1d6ac00a16c71d89bd1a67697eb11e3e1f50bbdc4b6c35ec",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "3743f47dd542e424cc27507f134722e9eba279d463777477db845dc781459634",
+      "raw_bytes_sha256": "3743f47dd542e424cc27507f134722e9eba279d463777477db845dc781459634",
+      "report_id": "zscaler_2021-03-30_ares-malware-grandson-kronos-banking",
+      "source_text_char_count": 23421,
+      "source_text_sha256": "93a352adb58e8a2415615b82bedc550b04cae0723e39f9977c6ce423dac0a85a",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "e1009697a2615487217779d60ac8a48c570cd3e5d771c97b8f29efd5615b1ccd",
+      "raw_bytes_sha256": "e1009697a2615487217779d60ac8a48c570cd3e5d771c97b8f29efd5615b1ccd",
+      "report_id": "zscaler_2020-09-29_spear-phishing-campaign-delivers-buer",
+      "source_text_char_count": 16828,
+      "source_text_sha256": "06bab77b0e189134e51b55197999c36552e361c15d306b1c8b839ef1432045ef",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "3ccc0cded30a5296718157647051585f4f4627afcf6e09973140312f33d363d7",
+      "raw_bytes_sha256": "3ccc0cded30a5296718157647051585f4f4627afcf6e09973140312f33d363d7",
+      "report_id": "zscaler_2020-12-22_hitchhikers-guide-solarwinds-incident-response",
+      "source_text_char_count": 9596,
+      "source_text_sha256": "e2bd8d2c5292bebd1337c537f3af38ba00379a451f9f3497ddd3fd2104d2550f",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    },
+    {
+      "decoded_original_sha256": "05e6d983136bbefdfe806f7ca4dea184cb8bc5e349c86d1d214792bd9e37f667",
+      "raw_bytes_sha256": "05e6d983136bbefdfe806f7ca4dea184cb8bc5e349c86d1d214792bd9e37f667",
+      "report_id": "zscaler_2021-10-22_new-multiloginbot-phishing-campaign",
+      "source_text_char_count": 11980,
+      "source_text_sha256": "c5d6814ab2fa47f9d89ca1da9a2e48d3a7e460facd7fc69bcb11d24a7adc95e1",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME"
+    }
+  ],
+  "status": "SOURCE_INTEGRITY_ONLY_NOT_SEMANTIC_VALIDATION"
+}

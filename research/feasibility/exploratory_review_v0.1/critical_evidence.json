@@ -1,0 +1,181 @@
+{
+  "status": "SOURCE_LOCATORS_NOT_GOLD_LABELS",
+  "spans": [
+    {
+      "report_id": "intel471_2021-09-09_groove-gang-ransomware-babuk-revil",
+      "source_text_sha256": "87e1e45070dffc9ae446013754ae6466c28cc5910c56501c4d8f1dcb573e7d56",
+      "char_start": 16056,
+      "char_end": 16122,
+      "source_line_number": 140,
+      "span_sha256": "c092dacb80cf11acd7e816cf9eef9e68621457de33b328aa0666bc4a02474196"
+    },
+    {
+      "report_id": "intel471_2021-09-09_groove-gang-ransomware-babuk-revil",
+      "source_text_sha256": "87e1e45070dffc9ae446013754ae6466c28cc5910c56501c4d8f1dcb573e7d56",
+      "char_start": 18003,
+      "char_end": 18092,
+      "source_line_number": 159,
+      "span_sha256": "70b99cac9f02a9946987ac35610b6e362628570e97cab5640386b6f66803fcd5"
+    },
+    {
+      "report_id": "intel471_2021-09-09_groove-gang-ransomware-babuk-revil",
+      "source_text_sha256": "87e1e45070dffc9ae446013754ae6466c28cc5910c56501c4d8f1dcb573e7d56",
+      "char_start": 20073,
+      "char_end": 20184,
+      "source_line_number": 185,
+      "span_sha256": "6d625ce5cf09990aa70750a5170f86300991653007ad7fb273fa7af1412ec3e8"
+    },
+    {
+      "report_id": "intel471_2021-09-09_groove-gang-ransomware-babuk-revil",
+      "source_text_sha256": "87e1e45070dffc9ae446013754ae6466c28cc5910c56501c4d8f1dcb573e7d56",
+      "char_start": 23230,
+      "char_end": 23328,
+      "source_line_number": 214,
+      "span_sha256": "0365330a9982f447b0d75decebc154d38217701b5980804bbb46763114760b6e"
+    },
+    {
+      "report_id": "lab52_2022-01-12_tokyox-dll-side-loading-an",
+      "source_text_sha256": "d76b8fd4959b95c9d85a60adb8c96a14e2a46e1f5930f6323e07db74ea7d0ecc",
+      "char_start": 1290,
+      "char_end": 1367,
+      "source_line_number": 11,
+      "span_sha256": "21a768a5dede939c915a356e07523fb2d1c4e5cd00071f998f036ebb4b9cf08f"
+    },
+    {
+      "report_id": "lab52_2022-01-12_tokyox-dll-side-loading-an",
+      "source_text_sha256": "d76b8fd4959b95c9d85a60adb8c96a14e2a46e1f5930f6323e07db74ea7d0ecc",
+      "char_start": 2829,
+      "char_end": 3008,
+      "source_line_number": 21,
+      "span_sha256": "5d4e8f1fc3436ebfb6331f4d7ef0a6b3b7c6ac5348cdb4d1f3e75208d7f96947"
+    },
+    {
+      "report_id": "lab52_2022-01-12_tokyox-dll-side-loading-an",
+      "source_text_sha256": "d76b8fd4959b95c9d85a60adb8c96a14e2a46e1f5930f6323e07db74ea7d0ecc",
+      "char_start": 3405,
+      "char_end": 3576,
+      "source_line_number": 24,
+      "span_sha256": "cae1acc99321f6d935bd6361e141da0dffcbe1f6603bdbe34890ca6b9556c0a7"
+    },
+    {
+      "report_id": "lab52_2022-01-12_tokyox-dll-side-loading-an",
+      "source_text_sha256": "d76b8fd4959b95c9d85a60adb8c96a14e2a46e1f5930f6323e07db74ea7d0ecc",
+      "char_start": 4014,
+      "char_end": 4162,
+      "source_line_number": 28,
+      "span_sha256": "e024008190af6bff63072217336096a26cf3941fdb4ecb8def9fa6791011f930"
+    },
+    {
+      "report_id": "proofpoint_2021-07-01_malware-masquerades-privacy-tool",
+      "source_text_sha256": "b3653c517baef27621db962ef305875e6d71ee44e40403d0892e22fe5e76e517",
+      "char_start": 1972,
+      "char_end": 2061,
+      "source_line_number": 19,
+      "span_sha256": "6cc6accdc043cc45d69b62eb51b55cd7194668cff768a403dfac1cfd18653a32"
+    },
+    {
+      "report_id": "proofpoint_2021-07-01_malware-masquerades-privacy-tool",
+      "source_text_sha256": "b3653c517baef27621db962ef305875e6d71ee44e40403d0892e22fe5e76e517",
+      "char_start": 2185,
+      "char_end": 2294,
+      "source_line_number": 22,
+      "span_sha256": "6db16f8509b8b3e44c574ad6b05e46f2d4fd1cd9504737391830964a59a825e0"
+    },
+    {
+      "report_id": "proofpoint_2021-07-01_malware-masquerades-privacy-tool",
+      "source_text_sha256": "b3653c517baef27621db962ef305875e6d71ee44e40403d0892e22fe5e76e517",
+      "char_start": 2518,
+      "char_end": 2611,
+      "source_line_number": 26,
+      "span_sha256": "631d94b0e5398e816838a8ac527d2c8aabac79ee07b52f35181502c326fab59e"
+    },
+    {
+      "report_id": "proofpoint_2021-07-01_malware-masquerades-privacy-tool",
+      "source_text_sha256": "b3653c517baef27621db962ef305875e6d71ee44e40403d0892e22fe5e76e517",
+      "char_start": 2784,
+      "char_end": 2933,
+      "source_line_number": 29,
+      "span_sha256": "10ae896530656fc3eba4515cadf813c34aec7f8c0fa66871fec1a08b7aa14f2c"
+    },
+    {
+      "report_id": "proofpoint_2021-07-01_malware-masquerades-privacy-tool",
+      "source_text_sha256": "b3653c517baef27621db962ef305875e6d71ee44e40403d0892e22fe5e76e517",
+      "char_start": 2934,
+      "char_end": 3011,
+      "source_line_number": 30,
+      "span_sha256": "4d88de944a45c8c9a1d0c1110135b4c73b463f55fdb24313b108311c575853c5"
+    },
+    {
+      "report_id": "quoteintelligence_2020-04-20_winnti-group-insights-from-the",
+      "source_text_sha256": "f35eb1fc7314de99fa4ddd52883f09f61b8f26151c230ed1549c6b0bcf48f825",
+      "char_start": 425,
+      "char_end": 577,
+      "source_line_number": 7,
+      "span_sha256": "d7bc472a894d958e131329fc4de7a227f931f9b3a383e2ad1950616ef4531810"
+    },
+    {
+      "report_id": "quoteintelligence_2020-04-20_winnti-group-insights-from-the",
+      "source_text_sha256": "f35eb1fc7314de99fa4ddd52883f09f61b8f26151c230ed1549c6b0bcf48f825",
+      "char_start": 2672,
+      "char_end": 2824,
+      "source_line_number": 19,
+      "span_sha256": "d7bc472a894d958e131329fc4de7a227f931f9b3a383e2ad1950616ef4531810"
+    },
+    {
+      "report_id": "quoteintelligence_2020-04-20_winnti-group-insights-from-the",
+      "source_text_sha256": "f35eb1fc7314de99fa4ddd52883f09f61b8f26151c230ed1549c6b0bcf48f825",
+      "char_start": 18132,
+      "char_end": 18444,
+      "source_line_number": 159,
+      "span_sha256": "f2161ee5d6ad077267325714de21e25e43d1fad0d0f6cff33ccbe3919e95e89b"
+    },
+    {
+      "report_id": "quoteintelligence_2020-04-20_winnti-group-insights-from-the",
+      "source_text_sha256": "f35eb1fc7314de99fa4ddd52883f09f61b8f26151c230ed1549c6b0bcf48f825",
+      "char_start": 19475,
+      "char_end": 19691,
+      "source_line_number": 165,
+      "span_sha256": "e2d41ed7d3586bc2559eef1282e969048af94b524fb8f69e1f66aa199cf5c593"
+    },
+    {
+      "report_id": "quoteintelligence_2020-04-20_winnti-group-insights-from-the",
+      "source_text_sha256": "f35eb1fc7314de99fa4ddd52883f09f61b8f26151c230ed1549c6b0bcf48f825",
+      "char_start": 20626,
+      "char_end": 20715,
+      "source_line_number": 178,
+      "span_sha256": "321e8bb9f93d2ee49b1ad1b8d7e4125ba28db7aaab304d7aa10198dbaf01c795"
+    },
+    {
+      "report_id": "zscaler_2021-07-14_targeted-attack-government-organizations-delivers",
+      "source_text_sha256": "fb95cbd80a60f2aa41a29bd453bf6215b601c061e7fa64bb4bf1bddc18d0c989",
+      "char_start": 2187,
+      "char_end": 2405,
+      "source_line_number": 19,
+      "span_sha256": "8839691994066da05b2cdcf651bc4644a29018649a60c1a9e4c5d4b0926e7516"
+    },
+    {
+      "report_id": "zscaler_2021-07-14_targeted-attack-government-organizations-delivers",
+      "source_text_sha256": "fb95cbd80a60f2aa41a29bd453bf6215b601c061e7fa64bb4bf1bddc18d0c989",
+      "char_start": 3519,
+      "char_end": 3604,
+      "source_line_number": 29,
+      "span_sha256": "25162aa76c9b234c4626548d7cf9f6a9592b25154d183c9f6ec0fdab3cb589b9"
+    },
+    {
+      "report_id": "zscaler_2021-07-14_targeted-attack-government-organizations-delivers",
+      "source_text_sha256": "fb95cbd80a60f2aa41a29bd453bf6215b601c061e7fa64bb4bf1bddc18d0c989",
+      "char_start": 8322,
+      "char_end": 8454,
+      "source_line_number": 79,
+      "span_sha256": "1888e31aead8ccac9fca76a14e0926cdb9d393cf82705a13292677ee5d19f104"
+    },
+    {
+      "report_id": "zscaler_2021-07-14_targeted-attack-government-organizations-delivers",
+      "source_text_sha256": "fb95cbd80a60f2aa41a29bd453bf6215b601c061e7fa64bb4bf1bddc18d0c989",
+      "char_start": 11523,
+      "char_end": 11690,
+      "source_line_number": 116,
+      "span_sha256": "1972a86869aeb83ece8b3c299b81ea22316a1774e56e297e937428a538e5333c"
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 
 A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
 
+**Latest deliverable — 17 November 2026:** Read the [exploratory feasibility report](research/FEASIBILITY_REPORT_v0.1.md). It combines a source-bound review of the fixed five reports, a [critical second pass](research/feasibility/exploratory_review_v0.1/CRITICAL_REVIEW.md), a reproducible 120-report source audit with 33 verified pilot pointers, and seven [representation controls](research/experiments/representation_controls_v0.1/README.md). The controls are synthetic and the source judgments are exploratory. The analysis proceeds without external reviewers; [review packets](research/reviewer_kit/COORDINATOR.md) remain optional future resources. No prevalence estimate or completed gold annotation is claimed.
+
 **Status (14 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The five fixed rank-one reports remain feasibility candidates, not human-approved selected reports. The primary analytical stratum is incident-linked attack-action occurrences; the primary pair rule is the nearest shared resolved incident. A working timestamp rule now restricts timestamp-only positives to invariant strict BEFORE/AFTER, reserves OVERLAP/SIMULTANEOUS/CONCURRENT_UNSPECIFIED for explicit source assertions, and requires UTC-normalized occurrence-time bounds with explicit timezone evidence. RECON v0.4 carries evidence-backed activity strata. These are draft method/tooling decisions, not a frozen schema or empirical findings. No novelty claim is established.
 
 ## Provisional primary research question
