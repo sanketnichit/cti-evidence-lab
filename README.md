@@ -37,6 +37,14 @@ data/raw/   local source corpus only; never commit raw reports or full source te
 data/processed/annoctr_screening/  three allow-listed, text-free screening metadata files only
 ```
 
+## Research progress and next work
+
+The project is past initial software setup, but it has not yet produced a verified report-level scientific result. The five fixed AnnoCTR reports have preliminary source-first assessments; their complete human annotation, selection and independent review are still open. See the [current research roadmap](docs/ROADMAP.md), the [workstream completion matrix](research/PROJECT_COMPLETION_MATRIX_v0.1.md), and the [five-report feasibility synthesis](research/feasibility/FIVE_REPORT_FEASIBILITY_SYNTHESIS_v0.1.md).
+
+A [separate RDP case illustration](research/exploratory/DFIR_Repeated_RDP_Source_Contrast_v0.1.md) explains the conditional projection mathematics without adding any case to the primary sample or claiming a measured result.
+
+Run the illustration from the repository root with `python -m examples.exploratory_rdp_projection`. It is not a substitute for validated and locked source annotations.
+
 ## Current phase
 
 With the dataset-maintainer permission clarification recorded, a source-first pre-annotation pass has been prepared for the five fixed rank-one candidates. The adopted primary universe is incident-linked attack-action occurrences; auxiliary communications, analyst observations and generic capabilities remain separately visible. Individual report eligibility, event boundaries, scope and mapping decisions remain unapproved. RECON v0.4 now enforces the boundary through a required one-to-one activity_unit_strata.csv companion register, complete-evidence validator, lock, and primary projection/pair-opportunity filter. The extension leaves v0.1 unchanged and remains a draft. Formal annotation remains blocked pending review of v0.4 and resolution of the remaining scope/semantic decisions before a complete protocol/schema freeze. The primary comparison-scope working rule is the nearest shared RESOLVED INCIDENT ancestor, with the positive relation required to cite that exact scope; the legacy broad-ancestor and v0.3 explicit-assignment rules remain separate sensitivities. The five-report scope candidates currently contain no accepted INCIDENT nodes, so none may be invented to create pair opportunity. The current source of truth is `docs/PROJECT_STATE.md`. See the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and the researcher decision register in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
