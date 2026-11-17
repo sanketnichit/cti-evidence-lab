@@ -433,8 +433,23 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
                         "code": "CONSENSUS_INDEPENDENT_PARTITIONS_MISSING",
                         "message": f"line {line}: CONSENSUS requires at least two distinct, registered, completed INDEPENDENT input partitions marked NOT_SELECTED",
                     })
-            if role == "ADJUDICATED_FINAL" and p not in adjudicated:
-                errors.append({"code": "ADJUDICATED_FINAL_WITHOUT_LOG", "message": f"line {line}: selected partition requires an ADJUDICATED log row resolving a target record in the same report/annotator/pass partition"})
+            if role == "ADJUDICATED_FINAL":
+                if p not in adjudicated:
+                    errors.append({"code": "ADJUDICATED_FINAL_WITHOUT_LOG", "message": f"line {line}: selected partition requires an ADJUDICATED log row resolving a target record in the same report/annotator/pass partition"})
+                # A valid change to one field establishes neither whole-record review
+                # nor complete review of the selected partition. No approved coverage
+                # universe, terminal DEFERRED rule, or roll-up contract exists yet.
+                # Fail closed until a versioned, researcher-approved coverage model
+                # and its validator are implemented; do not infer completeness from
+                # the existence of a valid field-level adjudication.
+                errors.append({
+                    "code": "ADJUDICATED_FINAL_COVERAGE_UNDEFINED",
+                    "message": (
+                        f"line {line}: ADJUDICATED_FINAL cannot be selected until an "
+                        "approved record/field review-coverage and completeness policy "
+                        "is implemented and verified for the entire partition"
+                    ),
+                })
         else:
             if row.get("lock_reference", "").strip():
                 errors.append({"code": "NONFINAL_PARTITION_HAS_LOCK", "message": f"line {line}: lock_reference is reserved for SELECTED_FINAL"})
