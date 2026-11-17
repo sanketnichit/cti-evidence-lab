@@ -66,6 +66,8 @@ The selected-final validator checks that `ADJUDICATED`, `AGREED`, and `DEFERRED`
 
 Field-level adjudication may change annotation content, but not partition identity or the target register's primary record ID. Those fields are immutable through this path because changing them would invalidate record keys and dependent references. Identity corrections require a separately controlled migration.
 
+**Coverage safeguard (17 November 2026; pending CI on this change):** `ADJUDICATED_FINAL` selection now fails closed with `ADJUDICATED_FINAL_COVERAGE_UNDEFINED` even if the field-history integrity prerequisites pass. The earlier single-valid-field gate could not establish full record/partition coverage. No coverage definition, record-level status roll-up or terminal DEFERRED semantics have been adopted; those remain researcher-owned freeze blockers. The status enum is retained for backwards-compatible draft data representation, but the selected-final role is not executable until a separately versioned, approved coverage contract exists.
+
 ## Report-level aggregation
 
 - Module: analysis/report_level_aggregation.py.
