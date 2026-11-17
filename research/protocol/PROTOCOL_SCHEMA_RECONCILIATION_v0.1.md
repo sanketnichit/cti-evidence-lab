@@ -140,6 +140,16 @@ The v0.2 aggregator now defaults to `SHARED_RESOLVED_INCIDENT_SCOPE_v0.1`, selec
 
 The required `event_mentions.mention_kind` field is a string in RECON v0.1. The exact enum in the unrecovered v0.4.2 package cannot be verified, and the recovered Protocol v0.4-draft does not supply a controlled list. The working decision is to keep it as a short descriptive free-text tag, not invent a closed vocabulary. It must not determine event identity, stratum, ATT&CK mapping or metric eligibility. If future analysis requires category-level comparison of mention forms, develop a separately versioned codebook and add its validation before collecting those labels. This resolves the initial-pilot representation without claiming to recover the original enum.
 
+### 3.14 Record-level adjudication status versus field-level history — open semantic contract
+
+The base annotation registers carry one `adjudication_status` value per annotation record (`UNREVIEWED`, `AGREED`, or `ADJUDICATED`). By contrast, `adjudication_log.csv` records decisions at the target-field level, with potentially multiple rows for one record and outcomes `AGREED`, `ADJUDICATED`, or `DEFERRED`.
+
+The current combined validation path checks the record-level status against its enum and separately checks field-level log targets, date ordering, value changes and append-only history. It does not define or enforce a cross-register rule that derives the single record-level status from a set of field-level outcomes. Consequently, structurally valid data may contain a record marked `ADJUDICATED` without a corresponding `ADJUDICATED` field-history row, a record still marked `UNREVIEWED` while a field history exists, or mixed field outcomes (`AGREED`, `DEFERRED`, and `ADJUDICATED`) without a defined record-level summary.
+
+This is not safely resolved by assuming that one field-level `ADJUDICATED` row promotes the whole record, or that a record-level status must equal every individual field outcome. The reconstructed package does not specify how to summarize partially reviewed records or mixed outcomes. A related coverage gap exists in the selected-final gate: `ADJUDICATED_FINAL` currently requires any one valid `ADJUDICATED` field-history entry in the selected partition, not a defined minimum set of records/fields or proof that the complete annotation was reviewed. The role label therefore must not be interpreted as full-partition adjudication coverage. The v0.4 activity-stratum extension avoids this ambiguity for its own rows by requiring `UNREVIEWED` only and supporting `SINGLE_ANNOTATOR_FINAL` only.
+
+**Researcher decision required before formal freeze:** choose and document whether (a) `adjudication_status` is a record-level summary with explicit aggregation/completeness rules (including `DEFERRED` and partially reviewed fields), (b) field-level history is authoritative and the record-level status is retired or made explicitly non-authoritative in a versioned design, or (c) a separate record-review/coverage register is needed. Until resolved, do not use record-level status alone as proof that all fields were reviewed or adjudicated, and do not infer record-level completion from a single field-level decision.
+
 ## 4. Requirements already represented
 
 The following protocol concepts have a clear representation and synthetic structural checks:
