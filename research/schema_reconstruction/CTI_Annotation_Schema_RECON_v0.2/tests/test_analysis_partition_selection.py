@@ -169,6 +169,34 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.save()
         self.assertEqual(set(), self.codes())
 
+    def test_adjudication_history_requires_reviewer_id(self):
+        for status in ("AGREED", "ADJUDICATED", "DEFERRED"):
+            with self.subTest(status=status):
+                self.adjudications = [{
+                    "reviewer_id": "",
+                    "decision_status": status,
+                    "original_value": "UNRESOLVED",
+                    "final_value": "RESOLVED" if status == "ADJUDICATED" else "UNRESOLVED",
+                }]
+                self.rows = [self.selection()]
+                self.save()
+                self.assertIn("ADJUDICATION_REVIEWER_ID_MISSING", self.codes())
+
+    def test_adjudicated_final_requires_reviewer_distinct_from_target_annotator(self):
+        self.adjudications = [{
+            "reviewer_id": "human-1",
+            "target_annotator_id": "human-1",
+            "decision_status": "ADJUDICATED",
+            "original_value": "UNRESOLVED",
+            "proposed_value": "RESOLVED",
+            "final_value": "RESOLVED",
+        }]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        codes = self.codes()
+        self.assertIn("ADJUDICATION_REVIEWER_NOT_INDEPENDENT", codes)
+        self.assertIn("ADJUDICATED_FINAL_WITHOUT_LOG", codes)
+
     def test_adjudicated_final_rejects_final_value_not_persisted_on_target(self):
         self.adjudications = [{
             "final_value": "UNRESOLVED",
