@@ -205,7 +205,25 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
                 ),
             })
             continue
-        if decision.get("decision_status") not in {"AGREED", "ADJUDICATED", "DEFERRED"}:
+        decision_status = decision.get("decision_status", "")
+        if decision_status not in {"AGREED", "ADJUDICATED", "DEFERRED"}:
+            continue
+        reviewer_id = decision.get("reviewer_id", "").strip()
+        target_annotator_id = decision.get("target_annotator_id", "").strip()
+        if not reviewer_id:
+            errors.append({
+                "code": "ADJUDICATION_REVIEWER_ID_MISSING",
+                "message": f"adjudication_log row {line}: reviewer_id is required for a recorded field-level review outcome",
+            })
+            continue
+        if decision_status == "ADJUDICATED" and reviewer_id == target_annotator_id:
+            errors.append({
+                "code": "ADJUDICATION_REVIEWER_NOT_INDEPENDENT",
+                "message": (
+                    f"adjudication_log row {line}: ADJUDICATED requires a reviewer_id "
+                    "different from target_annotator_id; an annotator cannot adjudicate their own field"
+                ),
+            })
             continue
         try:
             decision_date = date.fromisoformat(decision.get("decision_date", ""))
