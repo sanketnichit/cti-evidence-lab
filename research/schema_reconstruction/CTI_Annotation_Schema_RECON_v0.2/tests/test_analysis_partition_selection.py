@@ -238,6 +238,19 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.save()
         self.assertIn("ADJUDICATION_HISTORY_ORDER_AMBIGUOUS", self.codes())
 
+    def test_adjudicated_decision_must_change_field_value(self):
+        self.adjudications = [{
+            "decision_status": "ADJUDICATED",
+            "original_value": "RESOLVED",
+            "proposed_value": "UNRESOLVED",
+            "final_value": "RESOLVED",
+        }]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        codes = self.codes()
+        self.assertIn("ADJUDICATION_VALUE_NOT_CHANGED", codes)
+        self.assertIn("ADJUDICATED_FINAL_WITHOUT_LOG", codes)
+
     def test_agreed_and_deferred_decisions_cannot_change_field_value(self):
         for status in ("AGREED", "DEFERRED"):
             with self.subTest(status=status):
