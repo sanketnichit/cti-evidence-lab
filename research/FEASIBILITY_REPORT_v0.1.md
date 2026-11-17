@@ -44,7 +44,7 @@ The primary working rules require distinct resolved attack occurrences, supporte
 | QuoIntelligence Winnti | Target assessments, sample metadata and DNS behavior | Separate target contexts and uncertain compromise timing prevent an accepted occurrence pair |
 | Zscaler Netwire | A particular email send with a reported timestamp | Subsequent sample behavior is not tied to a second resolved occurrence in the same incident |
 
-This pass identifies one candidate attack occurrence and no established qualifying within-technique pair. The count describes this exploratory interpretation, not an exhaustive validated inventory. In particular, Proofpoint's reported observations are stronger than a mere capability list; rejecting its atomicity without explaining that distinction would lose useful evidence. Zscaler also reports observed activity, but its text does not resolve the required connection to the named email.
+This pass retains one identifiable attack-occurrence candidate and no established qualifying within-technique pair. This is not a census of all asserted actions. The [critical second pass](feasibility/exploratory_review_v0.1/CRITICAL_REVIEW.md) checks 22 source passages, including evidence outside the initial anchor set. It preserves Proofpoint's observed chain and website creation, considers QuoIntelligence's code signing as a possible preparatory action, and distinguishes Zscaler's email exemplar from a recipient-level transmission count. These checks strengthen the unresolved interpretation without turning missing occurrence or incident linkage into evidence of absence.
 
 No formal denominator is computed. Pending or unresolved review is not a negative label. The formal annotation registers and selection gates remain unchanged. Full judgments and source bindings are in [the review package](feasibility/exploratory_review_v0.1/README.md).
 
@@ -64,9 +64,9 @@ These are consequences of defined inputs and mappings. They provide no estimate 
 
 The sample is small, the protocol is still a draft, the review was exposed to earlier interpretations, and independent review has not yet been returned. Source extraction can omit image evidence. Conservative incident and atomicity rules may reduce usable coverage; broader campaign-level rules answer a different question. The literature comparison is not a completed novelty review.
 
-Two separate answer-free packets now support independent source review of the same fixed five reports. They collect complete-read status, time, uncertainty, candidate activities, temporal evidence and optional technique mappings. Returned first passes must be preserved before reconciliation. Agreement requires aligned units and an explicit scoring rule; two reviewer names alone are not a reliability measurement.
+Independent review is not available for this deliverable. The critical second pass is a challenge to the existing interpretation with prior exposure, not an independent replication. The exploratory analysis and report can therefore be delivered now with these limitations. Two answer-free packets remain optional resources for future validation; they are not a prerequisite for reproducing the representation controls or inspecting the source assessments.
 
-After calibration, revise and accept the protocol, complete the applicable annotation gates, and analyze any genuinely supported pairs. If independent review still cannot resolve such pairs, report the feasibility limitation. A larger incident-narrative study would need its own declared selection method and denominator; it must not replace these five retroactively.
+For a future formal annotation study, revise and accept the protocol, complete the applicable annotation gates, and analyze genuinely supported pairs. The present result is already reportable as an exploratory feasibility limitation. A larger incident-narrative study would need its own declared selection method and denominator; it must not replace these five retroactively.
 
 ## 7. Reproduction
 

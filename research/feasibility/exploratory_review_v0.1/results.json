@@ -1,13 +1,14 @@
 {
   "candidate_attack_occurrences": 1,
+  "count_interpretation": "candidate_attack_occurrences counts retained identifiable candidates in this pass, not all asserted actions or a validated census; zero is not evidence of absence.",
   "empirical_prevalence": null,
   "formal_annotation_partitions_created": 0,
   "input_sha256": {
-    "review_decisions.json": "eb7471e5585bcdd500e55bdfc36ef8c4782646aaedddeaf10205c6906e9ba2c7",
+    "review_decisions.json": "f08027eed0cc0d826e13f65f725946cf564bf4ea8119597650ff49005c26416a",
     "source_integrity.json": "434fe28039453f84e0909617a44ccfbee2f26c38eed58e06d36ac2f9a00185c6"
   },
   "inter_annotator_agreement": null,
-  "interpretation": "No qualifying pair established in this exploratory reading. This is not a measured 0/5 prevalence or a completed human annotation study.",
+  "interpretation": "Exploratory candidate counts describe recorded judgments, not validated absence or prevalence. Formal annotation and inter-annotator agreement are not supplied by this summary.",
   "reports": [
     {
       "anchors": [
@@ -52,7 +53,7 @@
         "P04",
         "P05"
       ],
-      "assessment": "Retain the report and its ordered delivery-chain candidate. The source describes Smoke Loader arriving before follow-on malware. The text does not resolve which individual infection or host supplies the two occurrences. RedLine and Raccoon are payload families, not proof of two executions on one host. Both endpoint mappings are not accepted, so a shared-technique relation cannot yet be asserted.",
+      "assessment": "Retain the explicitly observed ordered delivery-chain candidate and the asserted website-creation action. The source reports initial Smoke Loader delivery and subsequent follow-on downloads. It does not clearly individuate one particular chain execution or bind it to an incident. Both endpoint mappings are not accepted, so the stronger shared-technique claim remains unresolved separately from the temporal evidence. RedLine and Raccoon are payload families, not proof of two executions on one host.",
       "candidate_attack_occurrences": 0,
       "genre": "Campaign delivery-chain report",
       "qualifying_pair": "NOT_ESTABLISHED",
@@ -81,7 +82,7 @@
       "genre": "Multi-target malware investigation",
       "qualifying_pair": "NOT_ESTABLISHED",
       "report_id": "quoteintelligence_2020-04-20_winnti-group-insights-from-the",
-      "required_resolution": "Preserve uncertain dates and target assessments. Do not join target contexts, turn compilation dates into execution times, or propagate the report-level ATT&CK table onto every activity.",
+      "required_resolution": "Preserve uncertain dates and target assessments. Consider code signing as a potential preparatory action, but do not infer that other related signed drivers belong to the same incident. Do not join target contexts, turn compilation dates into execution times, or propagate the report-level ATT&CK table onto every activity.",
       "source_text_sha256": "f35eb1fc7314de99fa4ddd52883f09f61b8f26151c230ed1549c6b0bcf48f825",
       "strongest_counterargument": "The German compromise assessment is substantive evidence, and the report gives detailed DNS tunneling behavior. It still does not identify two particular attack executions and a relation between them; target attribution is not the same as event resolution."
     },
@@ -98,12 +99,14 @@
       "genre": "Phishing campaign and malware analysis",
       "qualifying_pair": "NOT_ESTABLISHED",
       "report_id": "zscaler_2021-07-14_targeted-attack-government-organizations-delivers",
-      "required_resolution": "Keep the send candidate, campaign repetition and sample behavior separate. Preserve the June email versus July campaign-start tension. The source's report-level technique table does not establish event-level mappings.",
+      "required_resolution": "Keep the message-send candidate, campaign repetition and sample observations separate. One email exemplar does not establish a recipient-level transmission count. Preserve the June email versus July campaign-start tension. Report-level technique mappings do not establish event-level mappings.",
       "source_text_sha256": "fb95cbd80a60f2aa41a29bd453bf6215b601c061e7fa64bb4bf1bddc18d0c989",
       "strongest_counterargument": "The source says its team observed multiple deliveries and information transfer. Those statements should not be discarded as wholly hypothetical. They remain unresolved at the individual occurrence level and cannot be connected to the named email solely by their position in the article."
     }
   ],
   "reports_with_qualifying_pair_not_established": 5,
+  "reports_with_temporal_pair_candidate_mapping_unresolved": 0,
+  "reports_with_within_technique_pair_candidate": 0,
   "reviewed_text_reports": 5,
   "source_verified_anchors": 33,
   "status": "EXPLORATORY_NOT_INDEPENDENTLY_VALIDATED"

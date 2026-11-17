@@ -8,6 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT = ROOT / "research/feasibility/exploratory_review_v0.1"
+PAIR_STATES = {"NOT_ESTABLISHED", "TEMPORAL_PAIR_CANDIDATE_MAPPING_UNRESOLVED", "WITHIN_TECHNIQUE_PAIR_CANDIDATE"}
 
 
 def summarize(decisions, audit):
@@ -26,8 +27,8 @@ def summarize(decisions, audit):
         anchors = {a["anchor_id"] for a in source["anchors"]}
         if not row["anchors"] or not set(row["anchors"]) <= anchors:
             raise ValueError("Review cites unknown evidence anchors")
-        if row["qualifying_pair"] != "NOT_ESTABLISHED":
-            raise ValueError("Positive findings require a versioned annotation analysis, not this summary")
+        if row["qualifying_pair"] not in PAIR_STATES:
+            raise ValueError("Unsupported exploratory pair state; formal confirmations require annotation analysis")
         if type(row["candidate_attack_occurrences"]) is not int or row["candidate_attack_occurrences"] < 0:
             raise ValueError("Candidate occurrence count must be a nonnegative integer")
     return {
@@ -35,11 +36,14 @@ def summarize(decisions, audit):
         "reviewed_text_reports": len(reports),
         "source_verified_anchors": sum(len(r["anchors"]) for r in sources.values()),
         "candidate_attack_occurrences": sum(r["candidate_attack_occurrences"] for r in reports),
-        "reports_with_qualifying_pair_not_established": len(reports),
+        "count_interpretation": decisions["count_interpretation"],
+        "reports_with_qualifying_pair_not_established": sum(r["qualifying_pair"] == "NOT_ESTABLISHED" for r in reports),
+        "reports_with_temporal_pair_candidate_mapping_unresolved": sum(r["qualifying_pair"] == "TEMPORAL_PAIR_CANDIDATE_MAPPING_UNRESOLVED" for r in reports),
+        "reports_with_within_technique_pair_candidate": sum(r["qualifying_pair"] == "WITHIN_TECHNIQUE_PAIR_CANDIDATE" for r in reports),
         "formal_annotation_partitions_created": 0,
         "empirical_prevalence": None,
         "inter_annotator_agreement": None,
-        "interpretation": "No qualifying pair established in this exploratory reading. This is not a measured 0/5 prevalence or a completed human annotation study.",
+        "interpretation": "Exploratory candidate counts describe recorded judgments, not validated absence or prevalence. Formal annotation and inter-annotator agreement are not supplied by this summary.",
         "reports": reports,
     }
 

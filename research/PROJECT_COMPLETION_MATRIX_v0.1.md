@@ -31,7 +31,7 @@ A functioning validator is not itself a finding. The study needs evidence that t
 
 ## Focus for the next phase
 
-An [exploratory feasibility report](FEASIBILITY_REPORT_v0.1.md), source-integrity audit, curated five-report dispositions and seven reproducible representation controls are now delivered. [Two separate review packets](reviewer_kit/COORDINATOR.md) provide the same sources with blank forms and no proposed answers. The immediate next step is independent calibration review, followed by unit alignment and documented reconciliation. The original completion conditions below still apply to the formal empirical study.
+An [exploratory feasibility report](FEASIBILITY_REPORT_v0.1.md), source-integrity audit, curated five-report dispositions, [critical second pass](feasibility/exploratory_review_v0.1/CRITICAL_REVIEW.md) and seven reproducible representation controls are now delivered. External review is unavailable, so the exploratory deliverable proceeds with explicit limits rather than waiting for reviewers. [Two separate review packets](reviewer_kit/COORDINATOR.md) remain optional future resources. The original completion conditions below still apply to the formal empirical study, which is a separate, unfinished milestone.
 
 The next deliverable should be **a completed evidence-first pilot**, not another collection of schema extensions. The smallest adequate pilot uses the existing fixed five, a single approved event/scope/mapping/temporal protocol and one real recorded reviewer per report. The researcher can choose a single-annotator feasibility pass first; independent agreement then requires a second genuinely independent human reader.
 

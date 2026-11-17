@@ -34,6 +34,15 @@ class ExploratoryReviewTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             summarize(self.decisions, self.audit)
 
+    def test_positive_candidate_does_not_become_a_negative_or_formal_result(self):
+        self.decisions["reports"][0]["qualifying_pair"] = "WITHIN_TECHNIQUE_PAIR_CANDIDATE"
+        self.decisions["reports"][1]["qualifying_pair"] = "TEMPORAL_PAIR_CANDIDATE_MAPPING_UNRESOLVED"
+        result = summarize(self.decisions, self.audit)
+        self.assertEqual(result["reports_with_qualifying_pair_not_established"], 3)
+        self.assertEqual(result["reports_with_within_technique_pair_candidate"], 1)
+        self.assertEqual(result["reports_with_temporal_pair_candidate_mapping_unresolved"], 1)
+        self.assertIsNone(result["empirical_prevalence"])
+
 
 if __name__ == "__main__":
     unittest.main()

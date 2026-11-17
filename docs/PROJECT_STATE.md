@@ -11,7 +11,7 @@ The local 120-report corpus was rechecked. All 120 CRLF-origin texts reproduce t
 
 Seven [synthetic representation controls](../research/experiments/representation_controls_v0.1/README.md) compare distinct pairs, loop-permitting pairs and occurrence-preserving graphs. They distinguish diagonal loss, unmapped endpoints, loop collisions and two different projected-cycle causes. They do not run ChronoCTI or estimate effects in the corpus.
 
-The next external input is independent first-pass review. [The coordinator guide](../research/reviewer_kit/COORDINATOR.md) explains the two answer-free packets, preserved submissions and reconciliation. They use a simplified calibration guide, not an approved gold schema. Formal selection and adjudication gates remain unchanged. Earlier entries below are dated historical checkpoints, not current test-count claims.
+External reviewers are unavailable. A [critical second pass](../research/feasibility/exploratory_review_v0.1/CRITICAL_REVIEW.md) now challenges the initial exclusions against 22 source passages and corrects the interpretation of retained-candidate counts. The exploratory study proceeds without waiting for returned forms; no independent review or agreement is claimed. [The optional reviewer packets](../research/reviewer_kit/COORDINATOR.md) remain available for future calibration. Formal selection and adjudication gates remain unchanged. Earlier entries below are dated historical checkpoints, not current test-count claims.
 
 ## Research question
 

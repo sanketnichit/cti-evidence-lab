@@ -14,7 +14,9 @@ This pass reads the fixed five AnnoCTR report texts against the current draft ev
 | QuoIntelligence Winnti | Multi-target investigation and sample analysis | Artifact dates and analysis observations do not establish attack chronology |
 | Zscaler Netwire | One identifiable email-send candidate | No second resolved occurrence linked to that send and a shared incident |
 
-There is **one candidate attack occurrence** in this reading, not one final annotated event. A qualifying within-technique temporal pair is not established in any report. This is not a 0/5 prevalence estimate or proof that the sources contain no such relation. No selected-final partition or real-report projection is created.
+There is **one retained identifiable attack-occurrence candidate** in this reading, not one final annotated event or a census of all asserted actions. A qualifying within-technique temporal pair is not established in any report. This is not a 0/5 prevalence estimate or proof that the sources contain no such relation. No selected-final partition or real-report projection is created.
+
+The [critical second pass](CRITICAL_REVIEW.md) challenges exclusions using 22 source passages, including material outside the initial anchor set. `critical_evidence.json` records their exact source and substring hashes. It sharpens the distinctions between observed activity, particular occurrences, incident linkage and shared mappings. This is an exposed second analysis, not independent replication.
 
 `review_decisions.json` records each judgment, source hash, evidence pointers, strongest counterargument and remaining resolution. `results.json` is generated from those decisions and the integrity audit; it is not automatic semantic verification. Evidence references use the existing [anchor index](../../annotation_drafts/AnnoCTR_Pilot_v0.1/source_anchor_index_draft.csv). Its section labels are navigational hints: for example, P03's recorded offsets are in Campaign Details despite its older Overview label. The verified offsets and line number take precedence.
 
@@ -38,4 +40,4 @@ An already exact LF corpus needs no recovery. Its canonical hashes and pointer r
 
 Source-derived review decisions in this directory are adaptations of the AnnoCTR report collection and are provided under **CC BY-SA 4.0**, retaining AnnoCTR and publisher attribution. See the source URLs/titles in the [candidate register](../../annotation_drafts/AnnoCTR_Pilot_v0.1/report_assessment_draft.csv), [AnnoCTR](https://github.com/boschresearch/anno-ctr-lrec-coling-2024), and the [licence](https://creativecommons.org/licenses/by-sa/4.0/). No raw reports or extended quotations are included here. The repository MIT licence does not replace these source-derived data terms.
 
-The next evidence is an independent calibration review using the [reviewer kit](../../reviewer_kit/COORDINATOR.md). Keep this assessment out of the reviewers' packets until their first passes are returned.
+The exploratory deliverable does not wait for external reviewers. The [reviewer kit](../../reviewer_kit/COORDINATOR.md) remains optional for future validation. If used, keep this assessment out of the packets until first passes are returned. No inter-annotator agreement is available in the present study.
