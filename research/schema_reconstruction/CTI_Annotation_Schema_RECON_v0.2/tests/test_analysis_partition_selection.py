@@ -158,7 +158,7 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         self.save()
         self.assertIn("ADJUDICATED_FINAL_WITHOUT_LOG", self.codes())
 
-    def test_adjudicated_final_accepts_matching_adjudication_record(self):
+    def test_adjudicated_final_cannot_be_selected_from_one_valid_field_decision(self):
         self.adjudications = [{
             "report_id": "r1", "annotation_pass_id": "pass-2",
             "target_annotator_id": "human-1", "target_register": "event_mentions",
@@ -167,7 +167,46 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         }]
         self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
         self.save()
-        self.assertEqual(set(), self.codes())
+        self.assertEqual({"ADJUDICATED_FINAL_COVERAGE_UNDEFINED"}, self.codes())
+
+    def test_adjudicated_final_rejects_partial_record_coverage(self):
+        self.target_records.append({
+            "report_id": "r1", "annotator_id": "human-1",
+            "annotation_pass_id": "pass-2", "mention_id": "mention-2",
+            "instance_status": "RESOLVED",
+        })
+        self.adjudications = [{
+            "target_record_id": "mention-1",
+            "field_name": "instance_status",
+            "original_value": "UNRESOLVED",
+            "final_value": "RESOLVED",
+        }]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        self.assertEqual({"ADJUDICATED_FINAL_COVERAGE_UNDEFINED"}, self.codes())
+
+    def test_adjudicated_final_rejects_unresolved_deferred_review(self):
+        self.adjudications = [
+            {
+                "adjudication_id": "adj-1",
+                "original_value": "UNRESOLVED",
+                "proposed_value": "RESOLVED",
+                "final_value": "RESOLVED",
+                "decision_status": "ADJUDICATED",
+                "decision_date": "2026-11-05",
+            },
+            {
+                "adjudication_id": "adj-2",
+                "original_value": "RESOLVED",
+                "proposed_value": "UNRESOLVED",
+                "final_value": "RESOLVED",
+                "decision_status": "DEFERRED",
+                "decision_date": "2026-11-06",
+            },
+        ]
+        self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
+        self.save()
+        self.assertEqual({"ADJUDICATED_FINAL_COVERAGE_UNDEFINED"}, self.codes())
 
     def test_adjudication_history_requires_reviewer_id(self):
         for status in ("AGREED", "ADJUDICATED", "DEFERRED"):
@@ -226,7 +265,7 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         ]
         self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
         self.save()
-        self.assertEqual(set(), self.codes())
+        self.assertEqual({"ADJUDICATED_FINAL_COVERAGE_UNDEFINED"}, self.codes())
 
     def test_append_only_adjudication_history_rejects_broken_value_chain(self):
         self.adjudications = [
@@ -334,7 +373,7 @@ class AnalysisPartitionSelectionTests(unittest.TestCase):
         ]
         self.rows = [self.selection(partition_role="ADJUDICATED_FINAL")]
         self.save()
-        self.assertEqual(set(), self.codes())
+        self.assertEqual({"ADJUDICATED_FINAL_COVERAGE_UNDEFINED"}, self.codes())
 
     def test_nonvalue_outcome_cannot_break_history_chain(self):
         self.adjudications = [
