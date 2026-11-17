@@ -38,15 +38,15 @@ The following are adopted working defaults for the pilot. They are not represent
 
 ## 3. Implementation evidence
 
-The latest verified main-branch workflow is GitHub Actions run [#306](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/44031832696), on 17 November 2026, commit `70dfa733b760d0d2f183ee0cf8956448bec4fe48`. It passed **284 synthetic test executions**:
+The latest verified main-branch workflow is GitHub Actions run [#314](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/44034097876), on 17 November 2026, commit `b71bb03f9375cc6cae966b17201c01cc9bc77ae7`. It passed **286 synthetic test executions**:
 
 - Root repository: 60
 - RECON v0.1: 81
-- RECON v0.2: 100
+- RECON v0.2: 102
 - RECON v0.3: 15
 - RECON v0.4: 28
 
-The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.1 suite includes direction-aware positive pair-assessment checks; v0.2 covers mention-only timestamp targets, endpoint-target matching, field-level adjudication target validation, append-only history across ADJUDICATED/AGREED/DEFERRED outcomes, strict value-change enforcement for ADJUDICATED, non-value-changing outcome enforcement, and immutable target identity checks; v0.4 covers selected-final lock preconditions and the single-annotator-only stratum adjudication boundary alongside base metadata enums, required-cell checks and conditional report-registry reasons.
+The workflow also passed the RECON v0.1 package checksum verification, blank-bundle and extension validators, projection smoke test, and source snapshot packaging. The v0.1 suite includes direction-aware positive pair-assessment checks; v0.2 covers mention-only timestamp targets, endpoint-target matching, field-level adjudication target validation, append-only history across ADJUDICATED/AGREED/DEFERRED outcomes, strict value-change enforcement for ADJUDICATED, non-empty reviewer IDs, rejection of self-adjudication, non-value-changing outcome enforcement, and immutable target identity checks; v0.4 covers selected-final lock preconditions and the single-annotator-only stratum adjudication boundary alongside base metadata enums, required-cell checks and conditional report-registry reasons.
 
 These tests validate code paths and synthetic fixtures only. They do not establish semantic validity, human agreement, source eligibility, report findings, or empirical research results.
 

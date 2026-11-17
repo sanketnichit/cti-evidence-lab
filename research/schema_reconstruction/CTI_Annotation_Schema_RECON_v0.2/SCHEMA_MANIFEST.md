@@ -3,7 +3,7 @@
 - Version: 0.2
 - Prepared: 5 November 2026
 - Updated: 16 November 2026
-- Latest main-branch verification: GitHub Actions run [#306](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/44031832696) passed 100 RECON v0.2 synthetic tests as part of 284 total tests; base package checksums and all workflow steps passed. The selected-final suite includes append-only field history across ADJUDICATED/AGREED/DEFERRED outcomes, strict value-change enforcement for ADJUDICATED, non-value-changing outcome enforcement and immutable identity-field regressions.
+- Latest main-branch verification: GitHub Actions run [#314](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/44034097876) passed 102 RECON v0.2 synthetic tests as part of 286 total tests; base package checksums and all workflow steps passed. The selected-final suite includes append-only field history across ADJUDICATED/AGREED/DEFERRED outcomes, strict value-change enforcement for ADJUDICATED, required reviewer IDs, rejection of self-adjudication, non-value-changing outcome enforcement and immutable identity-field regressions.
 - Status: draft; researcher review required; not approved or frozen
 - Type: additive extension
 - Parent: ../CTI_Annotation_Schema_RECON_v0.1
