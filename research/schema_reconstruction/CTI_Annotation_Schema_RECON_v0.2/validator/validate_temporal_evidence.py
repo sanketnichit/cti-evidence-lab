@@ -263,6 +263,17 @@ def validate_analysis_partition_selection(base_bundle: Path, selection_file: Pat
                 history_valid = False
 
         for index, current in enumerate(entries):
+            if current["decision_status"] == "ADJUDICATED":
+                if current["original_value"] == current["final_value"]:
+                    errors.append({
+                        "code": "ADJUDICATION_VALUE_NOT_CHANGED",
+                        "message": (
+                            f"adjudication_log row {current['line']}: "
+                            "ADJUDICATED must change the target field value; "
+                            "use AGREED when the original value is retained"
+                        ),
+                    })
+                    history_valid = False
             if current["decision_status"] in {"AGREED", "DEFERRED"}:
                 if current["original_value"] != current["final_value"]:
                     errors.append({
