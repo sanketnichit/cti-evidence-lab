@@ -6,6 +6,8 @@ The research question is whether a graph whose nodes are ATT&CK techniques and e
 
 The detailed status of each workstream is in [the completion matrix](../research/PROJECT_COMPLETION_MATRIX_v0.1.md). This roadmap is deliberately short so that the next piece of work is easy to identify.
 
+**Delivered 17 November:** [Exploratory feasibility report](../research/FEASIBILITY_REPORT_v0.1.md), [verified source review](../research/feasibility/exploratory_review_v0.1/README.md), seven [representation controls](../research/experiments/representation_controls_v0.1/README.md), and two independent [review packets](../research/reviewer_kit/COORDINATOR.md). The next input is completed first-pass forms from reviewers. Preserve those before comparing answers; do not treat this exploratory pass as completed human annotation.
+
 ## 1. Research and data foundations — mostly prepared
 
 - [x] Define the descriptive event-instance versus technique-pair comparison question.

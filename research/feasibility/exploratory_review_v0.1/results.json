@@ -1,0 +1,110 @@
+{
+  "candidate_attack_occurrences": 1,
+  "empirical_prevalence": null,
+  "formal_annotation_partitions_created": 0,
+  "input_sha256": {
+    "review_decisions.json": "eb7471e5585bcdd500e55bdfc36ef8c4782646aaedddeaf10205c6906e9ba2c7",
+    "source_integrity.json": "434fe28039453f84e0909617a44ccfbee2f26c38eed58e06d36ac2f9a00185c6"
+  },
+  "inter_annotator_agreement": null,
+  "interpretation": "No qualifying pair established in this exploratory reading. This is not a measured 0/5 prevalence or a completed human annotation study.",
+  "reports": [
+    {
+      "anchors": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ],
+      "assessment": "Retain the report. Dated forum and publication activity is distinguishable, but it belongs to communications or infrastructure context. The exploitation, lateral movement and exfiltration sections describe an actor-level pattern across cases. The Thai and German victim references do not establish a shared incident or an ordered pair of atomic attack actions.",
+      "candidate_attack_occurrences": 0,
+      "genre": "Actor ecosystem and multi-victim activity profile",
+      "qualifying_pair": "NOT_ESTABLISHED",
+      "report_id": "intel471_2021-09-09_groove-gang-ransomware-babuk-revil",
+      "required_resolution": "Keep communications and victim contexts separate. Do not use the September publication dates as attack-action times or the report-wide TTP list as event-level mappings.",
+      "source_text_sha256": "87e1e45070dffc9ae446013754ae6466c28cc5910c56501c4d8f1dcb573e7d56",
+      "strongest_counterargument": "The narrative contains explicit sequencing and named victims. This can support a generic procedure graph, but the text does not bind that whole procedure to two identified executions in one incident."
+    },
+    {
+      "anchors": [
+        "L01",
+        "L02",
+        "L03",
+        "L04",
+        "L05"
+      ],
+      "assessment": "Retain the report. The mutex check, packet construction, file transfer and shell commands describe program behavior. Command order in a switch statement does not establish an execution order in an intrusion. The unavailable C2 further limits what the analysis observed.",
+      "candidate_attack_occurrences": 0,
+      "genre": "Malware reverse engineering",
+      "qualifying_pair": "NOT_ESTABLISHED",
+      "report_id": "lab52_2022-01-12_tokyox-dll-side-loading-an",
+      "required_resolution": "Preserve capability sequences in an auxiliary description. Do not infer that all listed commands were invoked or pull unreviewed evidence from Part 1 into this fixed report.",
+      "source_text_sha256": "d76b8fd4959b95c9d85a60adb8c96a14e2a46e1f5930f6323e07db74ea7d0ecc",
+      "strongest_counterargument": "The article repeatedly describes what happens first and then. Those cues support control-flow or capability relations, not by themselves distinct victim-side occurrences. Lack of C2 access alone does not prove that the malware never executed."
+    },
+    {
+      "anchors": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05"
+      ],
+      "assessment": "Retain the report and its ordered delivery-chain candidate. The source describes Smoke Loader arriving before follow-on malware. The text does not resolve which individual infection or host supplies the two occurrences. RedLine and Raccoon are payload families, not proof of two executions on one host. Both endpoint mappings are not accepted, so a shared-technique relation cannot yet be asserted.",
+      "candidate_attack_occurrences": 0,
+      "genre": "Campaign delivery-chain report",
+      "qualifying_pair": "NOT_ESTABLISHED",
+      "report_id": "proofpoint_2021-07-01_malware-masquerades-privacy-tool",
+      "required_resolution": "Keep the ordering as a campaign-level candidate. Reconsider atomicity only with evidence identifying the occurrences; do not require a named victim as an extra rule, and do not turn a missing initial mapping into a fully omitted edge.",
+      "source_text_sha256": "b3653c517baef27621db962ef305875e6d71ee44e40403d0892e22fe5e76e517",
+      "strongest_counterargument": "The source explicitly attributes follow-on download observations to its researchers. This is stronger than merely listing capabilities. The unresolved issue is occurrence and incident identity under the strict primary protocol, not an absence of any observed malicious behavior."
+    },
+    {
+      "anchors": [
+        "Q01",
+        "Q02",
+        "Q03",
+        "Q04",
+        "Q05",
+        "Q6",
+        "Q7",
+        "Q8",
+        "Q9",
+        "Q10",
+        "Q11",
+        "Q12"
+      ],
+      "assessment": "Retain the report and separate German and South Korean contexts. Detection, submission, compilation and victim awareness are distinct from attack occurrence times. The source explicitly limits knowledge of compromise duration and reports that the South Korean payload was not found. DNS protocol steps and the appendix technique table do not resolve a primary occurrence pair.",
+      "candidate_attack_occurrences": 0,
+      "genre": "Multi-target malware investigation",
+      "qualifying_pair": "NOT_ESTABLISHED",
+      "report_id": "quoteintelligence_2020-04-20_winnti-group-insights-from-the",
+      "required_resolution": "Preserve uncertain dates and target assessments. Do not join target contexts, turn compilation dates into execution times, or propagate the report-level ATT&CK table onto every activity.",
+      "source_text_sha256": "f35eb1fc7314de99fa4ddd52883f09f61b8f26151c230ed1549c6b0bcf48f825",
+      "strongest_counterargument": "The German compromise assessment is substantive evidence, and the report gives detailed DNS tunneling behavior. It still does not identify two particular attack executions and a relation between them; target attribution is not the same as event resolution."
+    },
+    {
+      "anchors": [
+        "Z01",
+        "Z02",
+        "Z03",
+        "Z04",
+        "Z05"
+      ],
+      "assessment": "Retain one identifiable email-send candidate with a source-reported date and timezone. Three document hashes describe sample variants, not three timestamped deliveries. The subsequent macro, payload and exfiltration discussion mixes conditional behavior with analysis observations and does not establish a second incident-linked occurrence paired with that send.",
+      "candidate_attack_occurrences": 1,
+      "genre": "Phishing campaign and malware analysis",
+      "qualifying_pair": "NOT_ESTABLISHED",
+      "report_id": "zscaler_2021-07-14_targeted-attack-government-organizations-delivers",
+      "required_resolution": "Keep the send candidate, campaign repetition and sample behavior separate. Preserve the June email versus July campaign-start tension. The source's report-level technique table does not establish event-level mappings.",
+      "source_text_sha256": "fb95cbd80a60f2aa41a29bd453bf6215b601c061e7fa64bb4bf1bddc18d0c989",
+      "strongest_counterargument": "The source says its team observed multiple deliveries and information transfer. Those statements should not be discarded as wholly hypothetical. They remain unresolved at the individual occurrence level and cannot be connected to the named email solely by their position in the article."
+    }
+  ],
+  "reports_with_qualifying_pair_not_established": 5,
+  "reviewed_text_reports": 5,
+  "source_verified_anchors": 33,
+  "status": "EXPLORATORY_NOT_INDEPENDENTLY_VALIDATED"
+}

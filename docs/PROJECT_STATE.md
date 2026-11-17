@@ -1,7 +1,17 @@
 # CTI Evidence Lab — Project State
 
 **Snapshot date:** 17 November 2026  
-**Status:** Research design and tooling preparation; no human-locked AnnoCTR annotations or real-report projection results exist.
+**Status:** Exploratory feasibility report and independent calibration packets prepared; no human-locked AnnoCTR annotations or real-report projection results exist.
+
+## Latest deliverable — 17 November 2026
+
+The [feasibility report](../research/FEASIBILITY_REPORT_v0.1.md) now consolidates the research question, source review, representation controls and limits. The fixed five reports have a source-bound exploratory disposition with explicit counterarguments. This is not independent validation or formal annotation. One identifiable attack-occurrence candidate remains; no qualifying within-technique pair is established, and no prevalence rate is computed.
+
+The local 120-report corpus was rechecked. All 120 CRLF-origin texts reproduce the existing frame hashes after explicit CRLF-to-LF recovery; originals and expected hashes are unchanged. All 33 pilot anchors passed bounds, line and uniqueness checks. [Audit records](../research/feasibility/exploratory_review_v0.1/README.md) retain original hashes and transformations without raw text. The audit is not a fresh upstream archive verification.
+
+Seven [synthetic representation controls](../research/experiments/representation_controls_v0.1/README.md) compare distinct pairs, loop-permitting pairs and occurrence-preserving graphs. They distinguish diagonal loss, unmapped endpoints, loop collisions and two different projected-cycle causes. They do not run ChronoCTI or estimate effects in the corpus.
+
+The next external input is independent first-pass review. [The coordinator guide](../research/reviewer_kit/COORDINATOR.md) explains the two answer-free packets, preserved submissions and reconciliation. They use a simplified calibration guide, not an approved gold schema. Formal selection and adjudication gates remain unchanged. Earlier entries below are dated historical checkpoints, not current test-count claims.
 
 ## Research question
 
