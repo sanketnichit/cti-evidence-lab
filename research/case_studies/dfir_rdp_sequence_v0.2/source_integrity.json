@@ -1,0 +1,15 @@
+{
+  "evidence_verified": [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6",
+    "E7"
+  ],
+  "paragraph_text_sha256": "6fe3b066aee55752729f50ec0de0e4b24db7105b435a7d0dabad3c6cd44a89e0",
+  "raw_html_matches_retrieval": true,
+  "raw_html_sha256": "418ca34270d7a48e069b787596b613357324f5885ccb2fd29730c623070c9536",
+  "status": "SOURCE_BINDINGS_VERIFIED_NOT_SEMANTIC_VALIDATION"
+}

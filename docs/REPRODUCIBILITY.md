@@ -10,7 +10,7 @@ From a clean checkout:
 python scripts/reproduce_study.py
 ```
 
-The command runs five test suites, verifies 31 immutable RECON v0.1 package checksums, regenerates representation controls and query-fidelity experiments, and evaluates the recorded exploratory RDP case. It records the Git commit, runtime, source-verification modes and SHA-256 file manifest. A dirty tree is rejected unless `--allow-dirty` is explicitly supplied; such runs are marked as development builds.
+The command runs five test suites, verifies 31 immutable RECON v0.1 package checksums, regenerates representation controls and query-fidelity experiments, and evaluates the recorded exploratory RDP case and its sequence extension. It records the Git commit, runtime, source-verification modes and SHA-256 file manifest. A dirty tree is rejected unless `--allow-dirty` is explicitly supplied; such runs are marked as development builds.
 
 The output archive is `outputs/submission/CTI_Evidence_Lab_Submission.zip`. The filename is retained for compatibility; this is a reproducible artifact snapshot, not a publication or peer-review status. It contains repository files under `cti-evidence-lab/`, generated results under `generated/`, and `manifest.json`. Git history, raw source reports and private review packets are excluded.
 
@@ -23,7 +23,7 @@ python scripts/reproduce_study.py --corpus-root /path/to/AnnoCTR/all --recover-c
 python scripts/audit_rdp_case.py --source-html /path/to/saved/publisher.html
 ```
 
-The AnnoCTR audit checks 120 source identities, 33 pilot pointers and 22 critical-review passages. `--recover-crlf` accepts line-ending recovery only when it exactly matches the previously recorded source hash; original files are unchanged. The separate RDP audit verifies three passages against its publisher-paragraph snapshot convention. Both checks can be included in one reproduction run by adding `--rdp-source-html /path/to/saved/publisher.html`.
+The AnnoCTR audit checks 120 source identities, 33 pilot pointers and 22 critical-review passages. `--recover-crlf` accepts line-ending recovery only when it exactly matches the previously recorded source hash; original files are unchanged. The separate RDP audit verifies three passages against its publisher-paragraph snapshot convention. Its sequence extension verifies seven bindings, including those original three, against the same snapshot. All checks can be included in one reproduction run by adding `--rdp-source-html /path/to/saved/publisher.html`.
 
 Hash equality verifies source identity and evidence locations, not semantic correctness. Source acquisition and attribution are documented in the [research index](../research/README.md).
 
@@ -34,6 +34,7 @@ python -m examples.representation_controls
 python -m examples.exhaustive_projection_checks
 python -m examples.query_fidelity_benchmark
 python scripts/analyze_rdp_case.py
+python scripts/analyze_sequence_case.py
 ```
 
 The original conditional RDP illustration remains a historical method-development example. The source-bound case is analyzed by `analyze_rdp_case.py`.
@@ -47,6 +48,8 @@ The original conditional RDP illustration remains a historical method-developmen
 | `query_fidelity.json` / `.md` | Four representations, full confusion matrices, query strata and counterexamples |
 | `rdp_case_results.json` | Outcome and mapping sensitivities for the separate exploratory case |
 | `rdp_source_integrity.json` | Publisher snapshot and passage-binding verification |
+| `sequence_case_results.json` | Mapping coverage and conditional sequence comparison for the same intrusion |
+| `sequence_source_integrity.json` | Seven passage bindings against the same publisher snapshot |
 | `exploratory_review.json` | Recorded five-report feasibility judgments |
 | `source_integrity.json` | AnnoCTR source and evidence-pointer audit |
 | `validation.json` | Suite results, commit, runtime and verification modes |

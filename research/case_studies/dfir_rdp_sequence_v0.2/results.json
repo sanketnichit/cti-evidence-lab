@@ -1,0 +1,371 @@
+{
+  "case_id": "DFIR_2023_06_12_ACCOUNT_LIFECYCLE_SEQUENCE",
+  "case_record_sha256": "50381db2e60cf298499b59caf3e9b744bf0436dbb867dc51318a581db68f37ef",
+  "negative_answer_semantics": "Unsupported by the retained interpreted graph, not proven absent from the intrusion.",
+  "profiles": {
+    "proposed_cleanup_full_edges": {
+      "assessment_status": "CONDITIONAL_ON_INTERPRETED_GRAPH",
+      "assume_cleanup_mapping": true,
+      "fully_mapped_source_paths": [
+        [
+          "account_removal_1",
+          "rdp_attempt_2",
+          "account_removal_2"
+        ],
+        [
+          "rdp_attempt_1",
+          "account_removal_1",
+          "rdp_attempt_2"
+        ],
+        [
+          "rdp_attempt_1",
+          "rdp_attempt_2",
+          "account_removal_2"
+        ]
+      ],
+      "included_before_edges": 4,
+      "included_occurrences": 4,
+      "path_mapping_coverage": 1.0,
+      "representations": {
+        "distinct_pairs": {
+          "missed_queries": [
+            [
+              "T1021",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "returned_queries": [
+            [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "unsupported_queries": []
+        },
+        "distinct_pairs_with_endpoint_join": {
+          "missed_queries": [
+            [
+              "T1021",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "returned_queries": [
+            [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "unsupported_queries": []
+        },
+        "loop_pairs": {
+          "missed_queries": [],
+          "returned_queries": [
+            [
+              "T1021",
+              "T1021",
+              "T1021"
+            ],
+            [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "unsupported_queries": [
+            [
+              "T1021",
+              "T1021",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1021"
+            ]
+          ]
+        },
+        "loop_pairs_with_endpoint_join": {
+          "missed_queries": [],
+          "returned_queries": [
+            [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "unsupported_queries": []
+        }
+      },
+      "source_paths": [
+        [
+          "account_removal_1",
+          "rdp_attempt_2",
+          "account_removal_2"
+        ],
+        [
+          "rdp_attempt_1",
+          "account_removal_1",
+          "rdp_attempt_2"
+        ],
+        [
+          "rdp_attempt_1",
+          "rdp_attempt_2",
+          "account_removal_2"
+        ]
+      ],
+      "supported_queries_from_mapped_paths": [
+        [
+          "T1021",
+          "T1021",
+          "T1070"
+        ],
+        [
+          "T1021",
+          "T1070",
+          "T1021"
+        ],
+        [
+          "T1070",
+          "T1021",
+          "T1070"
+        ]
+      ]
+    },
+    "proposed_cleanup_local_edges": {
+      "assessment_status": "CONDITIONAL_ON_INTERPRETED_GRAPH",
+      "assume_cleanup_mapping": true,
+      "fully_mapped_source_paths": [
+        [
+          "account_removal_1",
+          "rdp_attempt_2",
+          "account_removal_2"
+        ],
+        [
+          "rdp_attempt_1",
+          "account_removal_1",
+          "rdp_attempt_2"
+        ]
+      ],
+      "included_before_edges": 3,
+      "included_occurrences": 4,
+      "path_mapping_coverage": 1.0,
+      "representations": {
+        "distinct_pairs": {
+          "missed_queries": [],
+          "returned_queries": [
+            [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "unsupported_queries": []
+        },
+        "distinct_pairs_with_endpoint_join": {
+          "missed_queries": [],
+          "returned_queries": [
+            [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "unsupported_queries": []
+        },
+        "loop_pairs": {
+          "missed_queries": [],
+          "returned_queries": [
+            [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "unsupported_queries": []
+        },
+        "loop_pairs_with_endpoint_join": {
+          "missed_queries": [],
+          "returned_queries": [
+            [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            [
+              "T1070",
+              "T1021",
+              "T1070"
+            ]
+          ],
+          "unsupported_queries": []
+        }
+      },
+      "source_paths": [
+        [
+          "account_removal_1",
+          "rdp_attempt_2",
+          "account_removal_2"
+        ],
+        [
+          "rdp_attempt_1",
+          "account_removal_1",
+          "rdp_attempt_2"
+        ]
+      ],
+      "supported_queries_from_mapped_paths": [
+        [
+          "T1021",
+          "T1070",
+          "T1021"
+        ],
+        [
+          "T1070",
+          "T1021",
+          "T1070"
+        ]
+      ]
+    },
+    "reported_completed_actions": {
+      "assessment_status": "NOT_ASSESSED_INCOMPLETE_MAPPING_OR_NO_PATHS",
+      "assume_cleanup_mapping": true,
+      "fully_mapped_source_paths": [],
+      "included_before_edges": 0,
+      "included_occurrences": 2,
+      "path_mapping_coverage": null,
+      "representations": {
+        "distinct_pairs": {
+          "missed_queries": null,
+          "returned_queries": [],
+          "unsupported_queries": null
+        },
+        "distinct_pairs_with_endpoint_join": {
+          "missed_queries": null,
+          "returned_queries": [],
+          "unsupported_queries": null
+        },
+        "loop_pairs": {
+          "missed_queries": null,
+          "returned_queries": [],
+          "unsupported_queries": null
+        },
+        "loop_pairs_with_endpoint_join": {
+          "missed_queries": null,
+          "returned_queries": [],
+          "unsupported_queries": null
+        }
+      },
+      "source_paths": [],
+      "supported_queries_from_mapped_paths": []
+    },
+    "unresolved_cleanup": {
+      "assessment_status": "NOT_ASSESSED_INCOMPLETE_MAPPING_OR_NO_PATHS",
+      "assume_cleanup_mapping": false,
+      "fully_mapped_source_paths": [],
+      "included_before_edges": 4,
+      "included_occurrences": 4,
+      "path_mapping_coverage": 0.0,
+      "representations": {
+        "distinct_pairs": {
+          "missed_queries": null,
+          "returned_queries": [],
+          "unsupported_queries": null
+        },
+        "distinct_pairs_with_endpoint_join": {
+          "missed_queries": null,
+          "returned_queries": [],
+          "unsupported_queries": null
+        },
+        "loop_pairs": {
+          "missed_queries": null,
+          "returned_queries": [
+            [
+              "T1021",
+              "T1021",
+              "T1021"
+            ]
+          ],
+          "unsupported_queries": null
+        },
+        "loop_pairs_with_endpoint_join": {
+          "missed_queries": null,
+          "returned_queries": [],
+          "unsupported_queries": null
+        }
+      },
+      "source_paths": [
+        [
+          "account_removal_1",
+          "rdp_attempt_2",
+          "account_removal_2"
+        ],
+        [
+          "rdp_attempt_1",
+          "account_removal_1",
+          "rdp_attempt_2"
+        ],
+        [
+          "rdp_attempt_1",
+          "rdp_attempt_2",
+          "account_removal_2"
+        ]
+      ],
+      "supported_queries_from_mapped_paths": []
+    }
+  },
+  "query_semantics": "Two supplied BEFORE edges sharing an intermediate occurrence; not necessarily adjacent actions; no transitive closure added.",
+  "status": "EXPLORATORY_SEQUENCE_SENSITIVITY"
+}

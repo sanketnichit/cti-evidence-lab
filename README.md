@@ -27,6 +27,7 @@ The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 se
 | [Research report](research/FEASIBILITY_REPORT_v0.1.md) | Question, source feasibility, representation experiments and limitations |
 | [Query-fidelity study](research/QUERY_FIDELITY_STUDY_v0.1.md) | Counterexample, proof, four-way comparison and full confusion matrices |
 | [RDP case study](research/case_studies/dfir_rdp_v0.1/README.md) | Source-bound occurrence interpretation and outcome/mapping sensitivities |
+| [RDP sequence extension](research/case_studies/dfir_rdp_sequence_v0.2/README.md) | Four actions from the same intrusion; conditional sequence results and unresolved mapping coverage |
 | [AnnoCTR feasibility review](research/feasibility/exploratory_review_v0.1/README.md) | Five fixed reports, source bindings and unresolved judgments |
 | [Research index](research/README.md) | Data access, protocols, sampling and provenance records |
 | [Study status](docs/PROJECT_STATE.md) | Current evidence and remaining research limitations |

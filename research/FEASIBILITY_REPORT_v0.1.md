@@ -50,6 +50,12 @@ This pass retains one identifiable attack-occurrence candidate and no establishe
 
 No formal denominator is computed. Pending or unresolved review is not a negative label. The formal annotation registers and selection gates remain unchanged. Full judgments and source bindings are in [the review package](feasibility/exploratory_review_v0.1/README.md).
 
+### Separate source-bound sequence case
+
+A purposive extension of the previously examined DFIR intrusion distinguishes two RDP attempts and their associated account removals. Four narrated ordering relations yield three paths containing two supplied BEFORE edges. The case is outside AnnoCTR and is not an independent validation sample. Seven source-passage bindings, occurrence decisions, mapping alternatives and unresolved candidate chains are recorded in the [sequence case study](case_studies/dfir_rdp_sequence_v0.2/README.md).
+
+The conservative interpretation leaves the cleanup technique mapping unresolved, so none of the three paths is fully mapped and technique-query errors are not assessed. If the proposed cleanup mapping is adopted, distinct pairs miss one supported query, while loop-inclusive pairs return two unsupported queries. Endpoint-compatible joins with loops retain the three supported answers. Removing the original attempt-order shortcut in a declared local-edge sensitivity yields two supported queries that all four representations answer correctly. These are conditional results for the recorded graph, not an unqualified empirical error rate. The pinned v12.1 taxonomy definition, rather than newer wording, governs the mapping assessment.
+
 ## 5. Representation experiment
 
 Let M(u) and M(v) be the accepted technique sets for two distinct occurrences. The mapping combinations are M(u) × M(v). The primary projection discards diagonal combinations (t,t); the loop-permitting control retains them. The occurrence-preserving control keeps the original event endpoints and relation labels.

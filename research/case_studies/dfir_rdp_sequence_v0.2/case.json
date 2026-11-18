@@ -1,0 +1,276 @@
+{
+  "case_id": "DFIR_2023_06_12_ACCOUNT_LIFECYCLE_SEQUENCE",
+  "edge_policy": "Full-edge profiles retain the direct attempt_order judgment from v0.1 and three local order links. The local-edge sensitivity removes that shortcut explicitly; neither profile adds transitive closure. Relations need not imply immediate adjacency.",
+  "eligible_for_corpus_denominator": false,
+  "evidence": [
+    {
+      "char_end": 2015,
+      "char_start": 1302,
+      "evidence_id": "E1",
+      "paragraph_number": 5,
+      "section_and_role": "Case Summary: repetition, outcome and ordering",
+      "span_sha256": "846a99980161437448fbdbc0ea653d6edec490e3f2d706f21a617ea67fd4d8ea"
+    },
+    {
+      "char_end": 12895,
+      "char_start": 12501,
+      "evidence_id": "E2",
+      "paragraph_number": 55,
+      "section_and_role": "Persistence: account lifecycle and same-host context",
+      "span_sha256": "7c331576e368905242cee7fb1bfb35d69392c07d9fb190928f124580ff95c351"
+    },
+    {
+      "char_end": 22368,
+      "char_start": 22110,
+      "evidence_id": "E3",
+      "paragraph_number": 98,
+      "section_and_role": "Command and Control: network observation and lack of follow-up",
+      "span_sha256": "34588220942e26c98cd8def669a6bea129353c5ac534693ec48c4be1b3d6c788"
+    },
+    {
+      "char_end": 1788,
+      "char_start": 1577,
+      "evidence_id": "E4",
+      "paragraph_number": 5,
+      "section_and_role": "Case Summary: first attempt, first removal and repetition",
+      "span_sha256": "02e72927136abe5fce9b67eed9aac02c6126924f7287100246776f01487cf80e"
+    },
+    {
+      "char_end": 1904,
+      "char_start": 1789,
+      "evidence_id": "E5",
+      "paragraph_number": 5,
+      "section_and_role": "Case Summary: second attempt and second removal",
+      "span_sha256": "4b94d96fba591e0296f46ed087f712d22ea69b0bdcbfe20eb640f18d90803b46"
+    },
+    {
+      "char_end": 1301,
+      "char_start": 689,
+      "evidence_id": "E6",
+      "paragraph_number": 4,
+      "section_and_role": "Initial payload-chain candidate; grouped actions",
+      "span_sha256": "3b4e5d8e199d17c635da296553174b10910e5a25aa9d79d7d6d1403fc3d277d9"
+    },
+    {
+      "char_end": 3089,
+      "char_start": 2488,
+      "evidence_id": "E7",
+      "paragraph_number": 7,
+      "section_and_role": "Lateral-movement discovery candidate; multiple commands and hosts",
+      "span_sha256": "a2e633ab8d009693e67703d11c3c84cdb0ed27cfe872daec09e48b9054c78817"
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "candidate_id": "initial_payload_sequence",
+      "disposition": "UNRESOLVED_ATOMICITY_AND_MAPPING",
+      "evidence_ids": [
+        "E6"
+      ],
+      "reason": "Copying and renaming are grouped in the summary; execution context and mappings for a three-node chain need separate support."
+    },
+    {
+      "candidate_id": "discovery_lateral_movement_sequence",
+      "disposition": "UNRESOLVED_OCCURRENCE_IDENTITY",
+      "evidence_ids": [
+        "E7"
+      ],
+      "reason": "Multiple commands and remote hosts are described; the summary does not individuate three selected atomic actions without additional evidence."
+    }
+  ],
+  "extends": "research/case_studies/dfir_rdp_v0.1/case.json",
+  "identity_rationale": "Removal following the first attempt and removal following the second are distinct action occurrences even if the account name repeats. Unspecified additional account changes and the network alert are not additional nodes.",
+  "independently_validated": false,
+  "interpretation_date": "2026-11-18",
+  "occurrences": [
+    {
+      "candidate_exact_mapping": "T1021.001",
+      "candidate_parent_mapping": "T1021",
+      "description": "First attempted tunneled RDP connection using the temporary account.",
+      "event_id": "rdp_attempt_1",
+      "evidence_ids": [
+        "E1"
+      ],
+      "incident_id": "DFIR_21619_INTRUSION",
+      "mapping_status": "PROPOSED_ATTEMPTED_BEHAVIOR",
+      "outcome": "SUCCESS_NOT_ESTABLISHED"
+    },
+    {
+      "candidate_exact_mapping": "T1021.001",
+      "candidate_parent_mapping": "T1021",
+      "description": "Second attempt following removal and repetition of the account procedure.",
+      "event_id": "rdp_attempt_2",
+      "evidence_ids": [
+        "E1"
+      ],
+      "incident_id": "DFIR_21619_INTRUSION",
+      "mapping_status": "PROPOSED_ATTEMPTED_BEHAVIOR",
+      "outcome": "FAILURE_REPORTED"
+    },
+    {
+      "candidate_exact_mapping": "T1070.009",
+      "candidate_parent_mapping": "T1070",
+      "description": "Removal associated with the first narrated attempt.",
+      "event_id": "account_removal_1",
+      "evidence_ids": [
+        "E4",
+        "E2"
+      ],
+      "incident_id": "DFIR_21619_INTRUSION",
+      "mapping_caveat": "A temporary account is removed, but anti-forensic or persistence-cleanup purpose is not explicitly established. Retry housekeeping is an alternative interpretation.",
+      "mapping_status": "UNRESOLVED_CLEANUP_PURPOSE",
+      "outcome": "COMPLETION_REPORTED"
+    },
+    {
+      "candidate_exact_mapping": "T1070.009",
+      "candidate_parent_mapping": "T1070",
+      "description": "Removal associated with the second narrated attempt.",
+      "event_id": "account_removal_2",
+      "evidence_ids": [
+        "E5",
+        "E2"
+      ],
+      "incident_id": "DFIR_21619_INTRUSION",
+      "mapping_caveat": "A temporary account is removed, but anti-forensic or persistence-cleanup purpose is not explicitly established. Retry housekeeping is an alternative interpretation.",
+      "mapping_status": "UNRESOLVED_CLEANUP_PURPOSE",
+      "outcome": "COMPLETION_REPORTED"
+    }
+  ],
+  "profiles": [
+    {
+      "assume_cleanup_mapping": false,
+      "name": "unresolved_cleanup",
+      "occurrence_ids": [
+        "rdp_attempt_1",
+        "rdp_attempt_2",
+        "account_removal_1",
+        "account_removal_2"
+      ],
+      "relation_ids": [
+        "attempt_order",
+        "first_attempt_to_removal",
+        "first_removal_to_second_attempt",
+        "second_attempt_to_removal"
+      ]
+    },
+    {
+      "assume_cleanup_mapping": true,
+      "name": "proposed_cleanup_full_edges",
+      "occurrence_ids": [
+        "rdp_attempt_1",
+        "rdp_attempt_2",
+        "account_removal_1",
+        "account_removal_2"
+      ],
+      "relation_ids": [
+        "attempt_order",
+        "first_attempt_to_removal",
+        "first_removal_to_second_attempt",
+        "second_attempt_to_removal"
+      ]
+    },
+    {
+      "assume_cleanup_mapping": true,
+      "name": "proposed_cleanup_local_edges",
+      "occurrence_ids": [
+        "rdp_attempt_1",
+        "rdp_attempt_2",
+        "account_removal_1",
+        "account_removal_2"
+      ],
+      "relation_ids": [
+        "first_attempt_to_removal",
+        "first_removal_to_second_attempt",
+        "second_attempt_to_removal"
+      ]
+    },
+    {
+      "assume_cleanup_mapping": true,
+      "name": "reported_completed_actions",
+      "occurrence_ids": [
+        "account_removal_1",
+        "account_removal_2"
+      ],
+      "relation_ids": []
+    }
+  ],
+  "relations": [
+    {
+      "basis": "DIRECT_NARRATIVE_ORDERING",
+      "evidence_ids": [
+        "E1"
+      ],
+      "incident_id": "DFIR_21619_INTRUSION",
+      "relation": "BEFORE",
+      "relation_id": "attempt_order",
+      "source_event": "rdp_attempt_1",
+      "target_event": "rdp_attempt_2"
+    },
+    {
+      "basis": "DIRECT_NARRATIVE_ORDERING",
+      "evidence_ids": [
+        "E4"
+      ],
+      "incident_id": "DFIR_21619_INTRUSION",
+      "relation": "BEFORE",
+      "relation_id": "first_attempt_to_removal",
+      "source_event": "rdp_attempt_1",
+      "target_event": "account_removal_1"
+    },
+    {
+      "basis": "DIRECT_NARRATIVE_ORDERING",
+      "evidence_ids": [
+        "E4",
+        "E5"
+      ],
+      "incident_id": "DFIR_21619_INTRUSION",
+      "relation": "BEFORE",
+      "relation_id": "first_removal_to_second_attempt",
+      "source_event": "account_removal_1",
+      "target_event": "rdp_attempt_2"
+    },
+    {
+      "basis": "DIRECT_NARRATIVE_ORDERING",
+      "evidence_ids": [
+        "E5"
+      ],
+      "incident_id": "DFIR_21619_INTRUSION",
+      "relation": "BEFORE",
+      "relation_id": "second_attempt_to_removal",
+      "source_event": "rdp_attempt_2",
+      "target_event": "account_removal_2"
+    }
+  ],
+  "sample_membership": "PURPOSIVE_OUTSIDE_ANNOCTR",
+  "selection_reason": "Extension of the same exposed, purposively selected intrusion narrative; not another report or an independent observation.",
+  "source": {
+    "canonicalization": "HTMLParser UTF-8 paragraph text; entities decoded; whitespace collapsed within each nonempty p; paragraphs joined by LF with final LF. scripts/audit_rdp_case.py",
+    "paragraph_text_sha256": "6fe3b066aee55752729f50ec0de0e4b24db7105b435a7d0dabad3c6cd44a89e0",
+    "publication_date": "2023-06-12",
+    "publisher": "The DFIR Report",
+    "raw_html_sha256": "418ca34270d7a48e069b787596b613357324f5885ccb2fd29730c623070c9536",
+    "retrieved_at_utc": "2026-11-18T10:13:38.992759+00:00",
+    "scope": "Published narrative only; images and underlying telemetry not independently validated.",
+    "title": "A Truly Graceful Wipe Out",
+    "url": "https://thedfirreport.com/2023/06/12/a-truly-graceful-wipe-out/"
+  },
+  "status": "EXPLORATORY_SOURCE_INTERPRETATION",
+  "taxonomy": {
+    "crosswalk_path": "research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/vocabulary/A_120_Exact_to_Parent_Crosswalk_v0.1.csv",
+    "crosswalk_sha256": "f449ff8bd1551b6d6656d2f25a82b7c55a0b134bbecd4215f0f10330ec85be29",
+    "definition_check": {
+      "commit": "4cbf8cc4bdf2121ee987a23bfe5aac4fe4d2f5b1",
+      "description_sha256": "50b8ba3f74b4e8503cae12e6ab3624933dcec217b0b6a985d77853fbf5749253",
+      "finding": "The pinned definition describes removal of persistence artifacts but lacks the account-deletion example in the current definition. Newer wording is not treated as pinned evidence.",
+      "modified": "2022-10-18T23:40:32.055Z",
+      "object_id": "attack-pattern--d2c4e5ea-dbdf-4113-805a-b1e2a337fb33",
+      "object_version": "1.0",
+      "release_tag": "ATT&CK-v12.1",
+      "repository": "https://github.com/mitre/cti",
+      "url": "https://github.com/mitre/cti/blob/4cbf8cc4bdf2121ee987a23bfe5aac4fe4d2f5b1/enterprise-attack/attack-pattern/attack-pattern--d2c4e5ea-dbdf-4113-805a-b1e2a337fb33.json"
+    },
+    "mapping_rule": "RDP attempted-behavior mappings follow the v0.1 interpretation. Cleanup mapping is unresolved in the conservative profile and proposed only in named sensitivity profiles.",
+    "release": "Enterprise ATT&CK v12.1"
+  },
+  "time_rationale": "No absolute attempt or removal timestamps are assigned. No exact inter-attempt duration is inferred from account lifetime."
+}

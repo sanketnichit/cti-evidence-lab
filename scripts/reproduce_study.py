@@ -23,6 +23,7 @@ from scripts.audit_pilot_sources import audit, verified_text
 from scripts.summarize_exploratory_review import DEFAULT, summarize
 from scripts.audit_rdp_case import CASE as RDP_CASE, verify as verify_rdp_source
 from scripts.analyze_rdp_case import analyze as analyze_rdp_case
+from scripts.analyze_sequence_case import CASE as SEQUENCE_CASE, analyze as analyze_sequence_case
 
 
 def write_json(path, value):
@@ -114,12 +115,21 @@ def main():
         rdp_audit = verify_rdp_source(args.rdp_source_html.read_bytes(), rdp_case)
         result["rdp_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
     write_json(destination / "rdp_source_integrity.json", rdp_audit)
+    sequence_case = json.loads(SEQUENCE_CASE.read_text(encoding="utf-8"))
+    write_json(destination / "sequence_case_results.json", analyze_sequence_case(sequence_case))
+    sequence_audit = json.loads((SEQUENCE_CASE.parent / "source_integrity.json").read_text(encoding="utf-8"))
+    result["sequence_source_audit_mode"] = "RECORDED_AUDIT_ONLY"
+    if args.rdp_source_html:
+        sequence_audit = verify_rdp_source(args.rdp_source_html.read_bytes(), sequence_case)
+        result["sequence_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
+    write_json(destination / "sequence_source_integrity.json", sequence_audit)
     result["status"] = "PASS_EXPLORATORY_REPRODUCTION_NOT_GOLD_VALIDATION"
     write_json(destination / "validation.json", result)
     generated_names = ["representation_controls.json", "representation_controls.md", "finite_checks.json",
                        "source_integrity.json", "exploratory_review.json", "validation.json",
                        "query_fidelity.json", "query_fidelity.md",
-                       "rdp_case_results.json", "rdp_source_integrity.json"]
+                       "rdp_case_results.json", "rdp_source_integrity.json",
+                       "sequence_case_results.json", "sequence_source_integrity.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")

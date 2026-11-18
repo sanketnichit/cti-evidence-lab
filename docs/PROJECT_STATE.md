@@ -14,13 +14,14 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | Fixed feasibility cohort | Five rank-one donor candidates with recorded interpretations and counterarguments | No independently validated occurrence-pair dataset |
 | Source audit | 120 identities, 33 pilot pointers and 22 critical-review passages checked | Hash identity does not establish semantic correctness |
 | RDP case | Two provisional attempt-level occurrences, one BEFORE edge, three verified passages | Purposive selection; outside AnnoCTR; only one edge |
-| Software verification | 322 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
+| RDP sequence extension | Same intrusion; four actions, four ordering links and seven verified passage bindings | Cleanup mapping unresolved; query comparison conditional on that mapping |
+| Software verification | 329 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
 
 ## Interpretation and sampling
 
 The five AnnoCTR candidates are retained regardless of apparent event yield. Their source review does not establish a qualifying same-technique temporal pair under the current primary rules. Unresolved evidence is not a negative occurrence label or a zero-prevalence estimate.
 
-The RDP case uses a separate publisher snapshot and exposed, purposive selection. Its analysis distinguishes attempt-inclusive eligibility, confirmed-success eligibility and withheld mappings. It contributes no corpus denominator, independent agreement statistic or three-occurrence sequence evaluation.
+The RDP case uses a separate publisher snapshot and exposed, purposive selection. Its analysis distinguishes attempt-inclusive eligibility, confirmed-success eligibility and withheld mappings. The sequence extension adds two account-removal occurrences from the same intrusion. Its conservative profile has no fully mapped paths and does not assess query errors. Assuming the proposed cleanup mapping permits a conditional comparison of three two-edge paths; the local-edge sensitivity retains two paths that all four representations answer correctly. Neither version contributes a corpus denominator or independent agreement statistic.
 
 ## Method and implementation
 
@@ -31,7 +32,7 @@ Protocol v0.5 and RECON extensions remain drafts. RECON v0.1 is a reconstructed 
 ## Open research questions
 
 - How often suitable source narratives support stable occurrence identity, mappings and connected sequence queries remains unmeasured.
-- Source-supported three-occurrence cases, ordinary successful projection cases and interpretation-error analysis are incomplete.
+- Source-bound sequence evaluation currently consists of one mapping-sensitive case and its successful local-edge comparison; broader source coverage and interpretation-error analysis remain incomplete.
 - Independent annotation reliability, population prevalence, learned extraction performance and superiority over published systems are not established.
 - The contribution requires continued comparison with existing action-based and temporal graph methods; occurrence graphs themselves are established prior art.
 

@@ -9,6 +9,7 @@
 | Representation controls | Seven specified graph comparisons and a 4,096-case oracle check | [Controls](experiments/representation_controls_v0.1/README.md), [finite check](experiments/representation_controls_v0.1/finite_checks.json) |
 | AnnoCTR feasibility | Five fixed donor-stratified candidates; exposed exploratory review | [Review](feasibility/exploratory_review_v0.1/README.md), [critical assessment](feasibility/exploratory_review_v0.1/CRITICAL_REVIEW.md) |
 | Repeated RDP attempts | Purposive source-bound case with outcome and mapping sensitivities | [Case study](case_studies/dfir_rdp_v0.1/README.md) |
+| RDP and account lifecycle | Same-case extension with four actions and explicit unresolved cleanup mapping | [Sequence sensitivity](case_studies/dfir_rdp_sequence_v0.2/README.md) |
 
 The finite constructions are synthetic. The source studies are exploratory and have no independent agreement estimate. The purposive case is not part of the AnnoCTR sampling frame or a held-out evaluation set.
 
