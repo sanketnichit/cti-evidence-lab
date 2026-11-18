@@ -2,7 +2,11 @@
 
 A student research project on occurrence identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) graphs.
 
-**Completed exploratory deliverable — 18 November 2026:** Read the [report](research/FEASIBILITY_REPORT_v0.1.md) and [submission guide](docs/SUBMISSION_GUIDE.md). The project combines a source-bound five-report review, 120-report source audit, 33 verified pilot pointers, 22 critical-review passages, seven graph controls and an exhaustive 4,096-graph check. All 306 software tests pass locally. The source judgments remain exploratory; no gold annotations, agreement scores or corpus prevalence are claimed.
+**Current research checkpoint — 18 November 2026:** The [report](research/FEASIBILITY_REPORT_v0.1.md) now tests a practical consequence of technique collapse: whether a technique path supports a connected occurrence sequence. The [query-fidelity study](research/QUERY_FIDELITY_STUDY_v0.1.md) compares four representations and demonstrates two different occurrence graphs with identical technique projections but different correct query answers. Its generated results separate unsupported sequences from missed same-technique sequences. These are controlled experiments, not extraction scores or incident prevalence.
+
+![Same technique graph, different supported sequence](research/experiments/query_fidelity_v0.1/sequence_counterexample.svg)
+
+The source component retains the fixed five-report exploratory review, a 120-report identity audit, 33 pilot pointers and 22 critical-review passages. No gold annotations or independent agreement are claimed. Packaging is a reproducibility checkpoint, not the project's research-quality finish line. See the [submission guide](docs/SUBMISSION_GUIDE.md).
 
 ```sh
 python scripts/reproduce_study.py
@@ -10,7 +14,7 @@ python scripts/reproduce_study.py
 
 This single command verifies the implementation and builds a submission ZIP with generated results and a file-hash manifest. Use `--corpus-root /path/to/AnnoCTR/all --recover-crlf` for a fresh local source check, and `--pdf` after installing ReportLab to include the PDF report. See the guide for a five-minute demonstration. Work continues directly on `main`.
 
-**Historical method checkpoint:** The remaining sections document the original empirical-study design and its unfinished formal annotation gates. They are not prerequisites for delivering the exploratory study above.
+**Historical method checkpoint:** The sections below document the original empirical-study design and its unfinished formal annotation gates. They are not prerequisites for delivering the exploratory study above.
 
 **Status (14 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The five fixed rank-one reports remain feasibility candidates, not human-approved selected reports. The primary analytical stratum is incident-linked attack-action occurrences; the primary pair rule is the nearest shared resolved incident. A working timestamp rule now restricts timestamp-only positives to invariant strict BEFORE/AFTER, reserves OVERLAP/SIMULTANEOUS/CONCURRENT_UNSPECIFIED for explicit source assertions, and requires UTC-normalized occurrence-time bounds with explicit timezone evidence. RECON v0.4 carries evidence-backed activity strata. These are draft method/tooling decisions, not a frozen schema or empirical findings. No novelty claim is established.
 
@@ -83,7 +87,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest local verification on 18 November 2026: **76 root tests**, **81 RECON v0.1 tests**, **104 v0.2 tests**, **15 v0.3 tests**, and **30 v0.4 tests** — **306 passing tests**, plus 31 immutable base-package checksum checks. The standalone v0.4 metadata validator also rejects self-adjudication, including whitespace-padded reviewer IDs. See [GitHub Actions](https://github.com/sanketnichit/cti-evidence-lab/actions/workflows/projection-tests.yml) for remote checks. These verify software behavior, not source interpretations.
+Latest local verification on 18 November 2026: **84 root tests**, **81 RECON v0.1 tests**, **104 v0.2 tests**, **15 v0.3 tests**, and **30 v0.4 tests** — **314 passing tests**, plus 31 immutable base-package checksum checks. The standalone v0.4 metadata validator also rejects self-adjudication, including whitespace-padded reviewer IDs. See [GitHub Actions](https://github.com/sanketnichit/cti-evidence-lab/actions/workflows/projection-tests.yml) for remote checks. These verify software behavior, not source interpretations.
 
 Run from the repository root:
 

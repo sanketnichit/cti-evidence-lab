@@ -1,6 +1,6 @@
 # CTI Evidence Lab: submission and demonstration
 
-This submission completes the exploratory feasibility study of occurrence identity in technique-level CTI graphs. Start with the [report](../research/FEASIBILITY_REPORT_v0.1.md). It contains the question, related work, source procedure, findings, projection argument, experiments and limitations. The original gold-annotation/prevalence study remains future work; this submission does not claim that result.
+This package records the exploratory feasibility study and controlled query evaluation of occurrence identity in technique-level CTI graphs. It is a reproducible research checkpoint, not a claim that the full research project is complete. Start with the [report](../research/FEASIBILITY_REPORT_v0.1.md). It contains the question, related work, source procedure, findings, projection argument, experiments and limitations. The original gold-annotation/prevalence study remains future work; this submission does not claim that result.
 
 ## Reproduce the submission
 
@@ -10,7 +10,7 @@ Requirements: Git and Python 3.11 or later. Run from a clean repository checkout
 python scripts/reproduce_study.py
 ```
 
-The command runs all five test suites (306 tests at this checkpoint), checks 31 base-package hashes, regenerates seven controls and 4,096 finite graph cases, and builds `outputs/submission/CTI_Evidence_Lab_Submission.zip`. It records the exact Git commit, Python version, test output, source-audit mode and file hashes. Outputs do not change tracked study records. A dirty checkout is rejected by default; `--allow-dirty` is only for development and marks the package accordingly.
+The command runs all five test suites (314 tests at this checkpoint), checks 31 base-package hashes, regenerates seven controls and 4,096 finite graph cases, and builds `outputs/submission/CTI_Evidence_Lab_Submission.zip`. It records the exact Git commit, Python version, test output, source-audit mode and file hashes. Outputs do not change tracked study records. A dirty checkout is rejected by default; `--allow-dirty` is only for development and marks the package accordingly.
 
 The basic run uses the committed source audit. For a fresh source check, use the official AnnoCTR checkout's `AnnoCTR/all` directory:
 
@@ -35,6 +35,7 @@ The report can also be rendered separately with `python scripts/build_report_pdf
 |---|---|
 | `CTI_Evidence_Lab_Report.pdf` (with `--pdf`) | Readable report with clickable references |
 | `representation_controls.md` and `.json` | Seven worked graph comparisons and their provenance |
+| `query_fidelity.md` and `.json` | Four-representation comparison of connected-sequence answers, full confusion matrices and counterexamples |
 | `finite_checks.json` | Exhaustive finite check: 4,096 graphs, 6,144 edges, zero oracle disagreements |
 | `exploratory_review.json` | Five-report dispositions; unresolved evidence stays unresolved |
 | `source_integrity.json` | Source identities and evidence-pointer checks without report text |
@@ -48,7 +49,7 @@ After extracting the ZIP, use `generated/` to inspect this run. To rerun, clone 
 
 1. State the question: a technique is a behavior category; two occurrences of the same behavior are still distinct events.
 2. Open the report's projection argument. When two endpoints have the same single mapping, excluding diagonal technique pairs removes their relation.
-3. Open the seven-control table. Show that allowing a self-loop still merges occurrence endpoints, and that mapping fan-out can create a projected cycle from one source edge.
+3. Open the query-fidelity study and its diagram. Explain how disconnected occurrence edges and a connected source sequence can produce the same technique path. Show the separate effects of retaining diagonal images and joining original occurrence endpoints. Then open the seven-control table. Show that allowing a self-loop still merges occurrence endpoints, and that mapping fan-out can create a projected cycle from one source edge.
 4. Open `finite_checks.json`. Explain the exhaustive construction before discussing its counts; these are controlled inputs, not incident frequencies.
 5. Open the five-report source findings. Explain the unresolved mappings and incident linkage. The retained occurrence candidate is not a census, and no qualifying within-technique pair is established.
 6. Open `validation.json` and the manifest. Show that the implementation and reported artifacts can be reproduced from the identified commit.

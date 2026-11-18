@@ -4,17 +4,17 @@
 
 **CTI Evidence Lab · Sanket Nichit · 18 November 2026**
 
-**Status:** Completed exploratory feasibility deliverable. Source review is not independently validated. The representation experiments use synthetic inputs. This is not a completed gold-annotation or prevalence study.
+**Status:** Exploratory feasibility and controlled query-fidelity study. Source review is not independently validated. The representation experiments use synthetic inputs. This is not a completed gold-annotation or prevalence study.
 
 ## Abstract
 
-Cyber threat reports mix incident descriptions, campaign summaries, malware capabilities and analyst observations. Representing these statements with ATT&CK technique nodes can obscure the distinction between a behavior category and a particular occurrence. This study examines the prerequisites for measuring that loss. It combines an exploratory reading of five fixed AnnoCTR reports, source-integrity checks against a 120-report frame, and seven deterministic representation controls. All 120 source hashes were reproduced after an explicitly verified line-ending recovery, and 33 pilot evidence pointers passed structural checks. The exploratory reading retains one identifiable attack-occurrence candidate but does not establish a qualifying same-technique temporal pair. Synthetic controls show that distinct-pair projection can omit relations, that self-loops do not preserve occurrence identity, and that projected cycles have more than one cause. These findings support a bounded feasibility study, not a population estimate or a claim of improved extraction accuracy.
+Cyber threat reports mix incident descriptions, campaign summaries, malware capabilities and analyst observations. Representing these statements with ATT&CK technique nodes can obscure the distinction between a behavior category and a particular occurrence. This study examines the prerequisites for measuring that loss. It combines an exploratory reading of five fixed AnnoCTR reports, source-integrity checks against a 120-report frame, and seven deterministic representation controls. All 120 source hashes were reproduced after an explicitly verified line-ending recovery, and 33 pilot evidence pointers passed structural checks. The exploratory reading retains one identifiable attack-occurrence candidate but does not establish a qualifying same-technique temporal pair. Synthetic controls show that distinct-pair projection can omit relations, that self-loops do not preserve occurrence identity, and that projected cycles have more than one cause. A connected-sequence query experiment further demonstrates unsupported paths in acyclic technique graphs and separates the effects of diagonal retention and occurrence-compatible joins. These findings support a bounded representation and feasibility study, not a population estimate or a claim of improved extraction accuracy.
 
 ## 1. Question and contribution
 
 The question is: **what occurrence identity and temporal information can a distinct-technique-pair graph retain from source-supported attack occurrences?** Two issues must be separated. The mathematical behavior of a specified projection can be tested directly. The frequency and importance of its effects in CTI reports require source-backed annotations and an appropriate sample.
 
-The present deliverable provides reproducible controls, a traceable exploratory source assessment and an independent-review packet. It does not introduce event graphs, claim new ATT&CK extraction methods, train a model, or establish novelty.
+The present study provides reproducible controls, a traceable exploratory source assessment and a connected-sequence query benchmark. It tests not only what edges disappear, but whether a projected path supports the same answer as the source occurrence graph. It does not introduce event graphs, claim new ATT&CK extraction methods, train a model, or establish novelty.
 
 ## 2. Closest methodological context
 
@@ -22,7 +22,9 @@ ChronoCTI already extracts temporal attack patterns and represents attack action
 
 AnnoCTR provides document-level entity, temporal-expression and cybersecurity concept annotations. Those resources support source retrieval and technique-link inspection; they do not make our proposed occurrence-pair labels gold. See [Lange et al., 2024](https://aclanthology.org/2024.lrec-main.103/).
 
-MATRES demonstrates the importance of defining temporal annotation units carefully, including event axes and start points. Its general-domain scheme is relevant precedent, not a directly interchangeable CTI codebook. See [Ning et al., 2018](https://aclanthology.org/P18-1122/). The broader [related-work matrix](RELATED_WORK_MATRIX.md) remains a working literature map; a complete novelty assessment is still open.
+MATRES demonstrates the importance of defining temporal annotation units carefully, including event axes and start points. Its general-domain scheme is relevant precedent, not a directly interchangeable CTI codebook. See [Ning et al., 2018](https://aclanthology.org/P18-1122/).
+
+[Attack Flow](https://center-for-threat-informed-defense.github.io/attack-flow/language/) already distinguishes individual actions from technique identifiers. Its effect edges describe dependencies and outcomes; we do not reinterpret them as source-observed BEFORE relations. [AttacKG+](https://doi.org/10.1016/j.cose.2024.104220) also organizes behavior and technique labels across temporal steps. Keeping occurrence identity is therefore established prior art. Our comparison concerns query fidelity under a specified abstraction, not superiority over these systems. The broader [related-work matrix](RELATED_WORK_MATRIX.md) remains a working literature map; a complete novelty assessment is still open.
 
 ## 3. Data and procedure
 
@@ -71,7 +73,26 @@ To test beyond the seven illustrations, we enumerate three ordered event vertice
 | No diagonal mapping | 1,152 |
 | Unmapped endpoint | 1,440 |
 
-Of the 4,096 constructed acyclic source graphs, 1,102 produce a technique-level cycle. These counts describe this finite construction only: they are neither a corpus prevalence estimate nor a general coverage claim for larger graphs or other temporal relations. The [finite check output](experiments/representation_controls_v0.1/finite_checks.json) records the scope and exact totals. The full software verification run passes 306 tests across the five suites and verifies all 31 immutable base-package checksums.
+Of the 4,096 constructed acyclic source graphs, 1,102 produce a technique-level cycle. These counts describe this finite construction only: they are neither a corpus prevalence estimate nor a general coverage claim for larger graphs or other temporal relations. The [finite check output](experiments/representation_controls_v0.1/finite_checks.json) records the scope and exact totals. These are implementation checks; the following experiment examines a consequence for queries.
+
+### Connected-sequence queries
+
+Ask whether three distinct occurrences u,v,w support two supplied BEFORE edges u→v and v→w with technique labels A,B,C. Two disconnected edges u:A→v:B and w:B→x:C produce the same technique graph A→B→C as the connected edges u:A→v:B→x:C. The former has no connected source sequence; the latter does. Both technique graphs are acyclic and have the same pair multiplicities. Thus a technique path, even with edge counts, is insufficient evidence of a connected occurrence sequence.
+
+![Two occurrence graphs with the same technique projection](experiments/query_fidelity_v0.1/sequence_counterexample.svg)
+
+A two-factor comparison tests whether to retain diagonal images and whether to join edge images only when their intermediate occurrence IDs match. An independent oracle enumerates occurrence triples. With four ordered occurrences, three singleton technique choices per vertex and all forward edge subsets, there are 5,184 graphs and 139,968 graph-query instances. The complete triple universe includes repeated labels.
+
+| Representation | Unsupported answers (FP) | Missed answers (FN) |
+|---|---|---|
+| Distinct technique pairs | 1,416 | 2,538 |
+| Loop-inclusive technique pairs | 7,527 | 0 |
+| Distinct pairs + endpoint join | 0 | 2,538 |
+| Loop-inclusive pairs + endpoint join | 0 | 0 |
+
+These comparisons isolate different mechanisms: retaining diagonals recovers valid repeated-technique queries, while endpoint compatibility prevents disconnected occurrences from being joined. The loop-inclusive graph can also reuse one edge image as two hops when only two source occurrences exist. A second construction with three occurrences and all set-valued mappings, including empty sets, yields 4,096 graphs and confirms the same qualitative distinction. Results restricted to distinct adjacent query labels isolate joining errors from diagonal removal.
+
+Exact endpoint joins preserve this query by construction: every returned pair of edges shares a source occurrence, and every source witness has retained edge images when loops are allowed. This is a conditional fidelity guarantee, not perfect extraction or a new event representation. Source errors remain errors, and missing mappings can remove entire paths from the technique-query universe. [The full study](QUERY_FIDELITY_STUDY_v0.1.md) gives the proof, denominators, confusion matrices, storage tradeoff, counterexamples and scope limits.
 
 ## 6. Limitations and next evidence
 
@@ -83,7 +104,7 @@ For a future formal annotation study, revise and accept the protocol, complete t
 
 ## 7. Reproduction
 
-Use Python 3.11 or later and Git. From a clean checkout, the standard-library command below runs all five test suites, verifies the base-package checksums, regenerates the seven controls and 4,096-case check, checks the curated review bindings, and packages the repository and generated results with a SHA-256 manifest.
+Use Python 3.11 or later and Git. From a clean checkout, the standard-library command below runs all five test suites, verifies the base-package checksums, regenerates the seven controls, 4,096-case check and two query-fidelity constructions, checks the curated review bindings, and packages the repository and generated results with a SHA-256 manifest.
 
 ```text
 python scripts/reproduce_study.py

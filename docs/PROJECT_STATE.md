@@ -1,5 +1,10 @@
 # CTI Evidence Lab — Project State
 
+## Current quality checkpoint — 18 November 2026
+
+Submission packaging does not close the research project. The [connected-sequence query study](../research/QUERY_FIDELITY_STUDY_v0.1.md) adds a practical evaluation: identical acyclic technique graphs can have different supported occurrence-sequence answers. A four-way comparison separates diagonal retention from endpoint-compatible joins, with finite singleton and set-valued mapping experiments, full confusion matrices, explicit query denominators, a proof and inspectable counterexamples. It does not establish extraction quality, corpus prevalence or novelty of occurrence graphs. The next substantive gap is source-backed evaluation of these queries and review of interpretation errors; adding more schema gates or packaging alone does not address it.
+
+
 ## Completed exploratory submission — 18 November 2026
 
 The [report](../research/FEASIBILITY_REPORT_v0.1.md) and [submission guide](SUBMISSION_GUIDE.md) are the current entry points. The delivered scope includes the fixed five-report source review, 120 source identities, 33 pilot pointers, 22 critical-review passages, seven representation controls and 4,096 exhaustive finite graph cases. Local verification passes all 306 tests and 31 base-package checksums. A single reproduction command creates a source-text-free submission ZIP with commit and file hashes; optional PDF rendering is included. The useful standalone v0.4 independent-reviewer check from an old branch is preserved on main.

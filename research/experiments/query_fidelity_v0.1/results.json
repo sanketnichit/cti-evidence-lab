@@ -1,0 +1,391 @@
+{
+  "counterexamples": {
+    "connected_occurrences_same_technique_graph": {
+      "answers": {
+        "distinct_pairs": [
+          [
+            "T1059",
+            "T1105",
+            "T1021"
+          ]
+        ],
+        "distinct_pairs_with_endpoint_join": [
+          [
+            "T1059",
+            "T1105",
+            "T1021"
+          ]
+        ],
+        "loop_pairs": [
+          [
+            "T1059",
+            "T1105",
+            "T1021"
+          ]
+        ],
+        "loop_pairs_with_endpoint_join": [
+          [
+            "T1059",
+            "T1105",
+            "T1021"
+          ]
+        ]
+      },
+      "before_edges": [
+        [
+          "u",
+          "v"
+        ],
+        [
+          "v",
+          "x"
+        ]
+      ],
+      "mappings": {
+        "u": [
+          "T1059"
+        ],
+        "v": [
+          "T1105"
+        ],
+        "w": [
+          "T1105"
+        ],
+        "x": [
+          "T1021"
+        ]
+      },
+      "source_answers": [
+        [
+          "T1059",
+          "T1105",
+          "T1021"
+        ]
+      ],
+      "storage": {
+        "distinct_pair_keys": 2,
+        "endpoint_rows": 2,
+        "loop_pair_keys": 2,
+        "source_edges": 2
+      }
+    },
+    "disconnected_occurrences": {
+      "answers": {
+        "distinct_pairs": [
+          [
+            "T1059",
+            "T1105",
+            "T1021"
+          ]
+        ],
+        "distinct_pairs_with_endpoint_join": [],
+        "loop_pairs": [
+          [
+            "T1059",
+            "T1105",
+            "T1021"
+          ]
+        ],
+        "loop_pairs_with_endpoint_join": []
+      },
+      "before_edges": [
+        [
+          "u",
+          "v"
+        ],
+        [
+          "w",
+          "x"
+        ]
+      ],
+      "mappings": {
+        "u": [
+          "T1059"
+        ],
+        "v": [
+          "T1105"
+        ],
+        "w": [
+          "T1105"
+        ],
+        "x": [
+          "T1021"
+        ]
+      },
+      "source_answers": [],
+      "storage": {
+        "distinct_pair_keys": 2,
+        "endpoint_rows": 2,
+        "loop_pair_keys": 2,
+        "source_edges": 2
+      }
+    },
+    "genuine_repeated_technique_chain": {
+      "answers": {
+        "distinct_pairs": [],
+        "distinct_pairs_with_endpoint_join": [],
+        "loop_pairs": [
+          [
+            "T1059",
+            "T1059",
+            "T1059"
+          ]
+        ],
+        "loop_pairs_with_endpoint_join": [
+          [
+            "T1059",
+            "T1059",
+            "T1059"
+          ]
+        ]
+      },
+      "before_edges": [
+        [
+          "u",
+          "v"
+        ],
+        [
+          "v",
+          "w"
+        ]
+      ],
+      "mappings": {
+        "u": [
+          "T1059"
+        ],
+        "v": [
+          "T1059"
+        ],
+        "w": [
+          "T1059"
+        ]
+      },
+      "source_answers": [
+        [
+          "T1059",
+          "T1059",
+          "T1059"
+        ]
+      ],
+      "storage": {
+        "distinct_pair_keys": 0,
+        "endpoint_rows": 2,
+        "loop_pair_keys": 1,
+        "source_edges": 2
+      }
+    },
+    "single_edge_reused_as_two_hops": {
+      "answers": {
+        "distinct_pairs": [],
+        "distinct_pairs_with_endpoint_join": [],
+        "loop_pairs": [
+          [
+            "T1059",
+            "T1059",
+            "T1059"
+          ]
+        ],
+        "loop_pairs_with_endpoint_join": []
+      },
+      "before_edges": [
+        [
+          "u",
+          "v"
+        ]
+      ],
+      "mappings": {
+        "u": [
+          "T1059"
+        ],
+        "v": [
+          "T1059"
+        ]
+      },
+      "source_answers": [],
+      "storage": {
+        "distinct_pair_keys": 0,
+        "endpoint_rows": 1,
+        "loop_pair_keys": 1,
+        "source_edges": 1
+      }
+    }
+  },
+  "designs": {
+    "four_vertices_singleton_mappings": {
+      "confusion": {
+        "all_queries": {
+          "distinct_pairs": {
+            "fn": 2538,
+            "fp": 1416,
+            "precision": 0.593103448275862,
+            "recall": 0.4485006518904824,
+            "tn": 133950,
+            "tp": 2064
+          },
+          "distinct_pairs_with_endpoint_join": {
+            "fn": 2538,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 0.4485006518904824,
+            "tn": 135366,
+            "tp": 2064
+          },
+          "loop_pairs": {
+            "fn": 0,
+            "fp": 7527,
+            "precision": 0.37942122186495175,
+            "recall": 1.0,
+            "tn": 127839,
+            "tp": 4602
+          },
+          "loop_pairs_with_endpoint_join": {
+            "fn": 0,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "tn": 135366,
+            "tp": 4602
+          }
+        },
+        "distinct_adjacent_labels": {
+          "distinct_pairs": {
+            "fn": 0,
+            "fp": 1416,
+            "precision": 0.593103448275862,
+            "recall": 1.0,
+            "tn": 58728,
+            "tp": 2064
+          },
+          "distinct_pairs_with_endpoint_join": {
+            "fn": 0,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "tn": 60144,
+            "tp": 2064
+          },
+          "loop_pairs": {
+            "fn": 0,
+            "fp": 1416,
+            "precision": 0.593103448275862,
+            "recall": 1.0,
+            "tn": 58728,
+            "tp": 2064
+          },
+          "loop_pairs_with_endpoint_join": {
+            "fn": 0,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "tn": 60144,
+            "tp": 2064
+          }
+        }
+      },
+      "graphs": 5184,
+      "queries_per_graph": {
+        "all_queries": 27,
+        "distinct_adjacent_labels": 12
+      },
+      "storage_row_totals": {
+        "distinct_pair_keys": 8088,
+        "endpoint_rows": 15552,
+        "loop_pair_keys": 11925,
+        "source_edges": 15552
+      }
+    },
+    "three_vertices_set_valued_mappings": {
+      "confusion": {
+        "all_queries": {
+          "distinct_pairs": {
+            "fn": 1920,
+            "fp": 4536,
+            "precision": 0.25296442687747034,
+            "recall": 0.4444444444444444,
+            "tn": 102600,
+            "tp": 1536
+          },
+          "distinct_pairs_with_endpoint_join": {
+            "fn": 1920,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 0.4444444444444444,
+            "tn": 107136,
+            "tp": 1536
+          },
+          "loop_pairs": {
+            "fn": 0,
+            "fp": 15096,
+            "precision": 0.18628719275549807,
+            "recall": 1.0,
+            "tn": 92040,
+            "tp": 3456
+          },
+          "loop_pairs_with_endpoint_join": {
+            "fn": 0,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "tn": 107136,
+            "tp": 3456
+          }
+        },
+        "distinct_adjacent_labels": {
+          "distinct_pairs": {
+            "fn": 0,
+            "fp": 4536,
+            "precision": 0.25296442687747034,
+            "recall": 1.0,
+            "tn": 43080,
+            "tp": 1536
+          },
+          "distinct_pairs_with_endpoint_join": {
+            "fn": 0,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "tn": 47616,
+            "tp": 1536
+          },
+          "loop_pairs": {
+            "fn": 0,
+            "fp": 4536,
+            "precision": 0.25296442687747034,
+            "recall": 1.0,
+            "tn": 43080,
+            "tp": 1536
+          },
+          "loop_pairs_with_endpoint_join": {
+            "fn": 0,
+            "fp": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "tn": 47616,
+            "tp": 1536
+          }
+        }
+      },
+      "graphs": 4096,
+      "queries_per_graph": {
+        "all_queries": 27,
+        "distinct_adjacent_labels": 12
+      },
+      "storage_row_totals": {
+        "distinct_pair_keys": 7488,
+        "endpoint_rows": 13824,
+        "loop_pair_keys": 11136,
+        "source_edges": 6144
+      }
+    }
+  },
+  "limits": [
+    "Supplied occurrences, mappings and BEFORE edges are assumed correct; no extraction or semantic validation is evaluated.",
+    "Only length-two paths in finite DAGs with three technique IDs are covered.",
+    "Exact endpoint joins preserve the defined query by construction; perfect fidelity is not a novel prediction result.",
+    "Storage counts are logical records, not measured memory or runtime.",
+    "Empty mapping sets cannot answer technique queries; zero query error is not full source coverage."
+  ],
+  "query": "Existence of three distinct occurrences u,v,w with supplied BEFORE edges u->v and v->w and respective technique labels A,B,C. No inferred transitive edges.",
+  "status": "CONTROLLED_QUERY_FIDELITY_NOT_EXTRACTION_PERFORMANCE",
+  "weighting": "One vote per (generated graph, technique triple); graphs are exhaustive under a fixed vertex order, not sampled CTI incidents or uniformly weighted isomorphism classes."
+}

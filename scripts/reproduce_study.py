@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from examples.exhaustive_projection_checks import run_checks
 from examples.representation_controls import markdown, run_controls
+from examples.query_fidelity_benchmark import markdown as query_markdown, run_benchmark
 from scripts.audit_pilot_sources import audit, verified_text
 from scripts.summarize_exploratory_review import DEFAULT, summarize
 
@@ -90,6 +91,9 @@ def main():
     write_json(destination / "representation_controls.json", controls)
     (destination / "representation_controls.md").write_text(markdown(controls), encoding="utf-8", newline="")
     write_json(destination / "finite_checks.json", run_checks())
+    query_results = run_benchmark()
+    write_json(destination / "query_fidelity.json", query_results)
+    (destination / "query_fidelity.md").write_text(query_markdown(query_results), encoding="utf-8", newline="")
     decisions = json.loads((DEFAULT / "review_decisions.json").read_text(encoding="utf-8"))
     source_audit = json.loads((DEFAULT / "source_integrity.json").read_text(encoding="utf-8"))
     result["source_audit_mode"] = "RECORDED_AUDIT_ONLY"
@@ -102,7 +106,8 @@ def main():
     result["status"] = "PASS_EXPLORATORY_REPRODUCTION_NOT_GOLD_VALIDATION"
     write_json(destination / "validation.json", result)
     generated_names = ["representation_controls.json", "representation_controls.md", "finite_checks.json",
-                       "source_integrity.json", "exploratory_review.json", "validation.json"]
+                       "source_integrity.json", "exploratory_review.json", "validation.json",
+                       "query_fidelity.json", "query_fidelity.md"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")

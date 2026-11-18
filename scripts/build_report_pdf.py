@@ -19,7 +19,7 @@ def inline(text):
     text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", link, text)
     text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
     text = re.sub(r"`([^`]+)`", r'<font name="Courier">\1</font>', text)
-    return text.replace("×", " x ").replace("—", " - ").replace("–", "-")
+    return text.replace("×", " x ").replace("—", " - ").replace("–", "-").replace("→", "-&gt;")
 
 
 def build(destination):
@@ -31,7 +31,7 @@ def build(destination):
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle("ReportBody", fontName="Helvetica", fontSize=10, leading=15, spaceAfter=9))
+    styles.add(ParagraphStyle("ReportBody", fontName="Helvetica", fontSize=10, leading=15, spaceAfter=9, allowWidows=0, allowOrphans=0))
     styles.add(ParagraphStyle("ReportTitle", fontName="Helvetica-Bold", fontSize=25, leading=30, textColor=colors.HexColor("#153746"), spaceAfter=15))
     styles.add(ParagraphStyle("ReportHeading", fontName="Helvetica-Bold", fontSize=14, leading=19, spaceBefore=15, spaceAfter=9, keepWithNext=True))
     styles.add(ParagraphStyle("Cell", fontName="Helvetica", fontSize=8.4, leading=12, alignment=TA_LEFT))
@@ -44,7 +44,13 @@ def build(destination):
         if not line.strip():
             i += 1
             continue
-        if line.startswith("```"):
+        if line.startswith("![") and "sequence_counterexample.svg" in line:
+            if __package__:
+                from .build_query_figure import drawing
+            else:
+                from build_query_figure import drawing
+            story.extend([drawing(), Spacer(1, 12)])
+        elif line.startswith("```"):
             i += 1
             code = []
             while i < len(lines) and not lines[i].startswith("```"):
@@ -58,6 +64,8 @@ def build(destination):
                     rows.append([Paragraph(inline(c), styles["Cell"]) for c in cells])
                 i += 1
             widths = [100, 180, 215] if len(rows[0]) == 3 else [495 / len(rows[0])] * len(rows[0])
+            if len(rows[0]) == 3 and rows[0][0].getPlainText() == "Representation":
+                widths = [235, 130, 130]
             table = Table(rows, colWidths=widths, repeatRows=1, hAlign="LEFT")
             table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e4eef1")),
                                       ("VALIGN", (0, 0), (-1, -1), "TOP"),

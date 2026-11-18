@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="495" height="234" preserveAspectRatio="xMinYMin meet" viewBox="0 0 495 234" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="495" height="234"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-234)" style="clip-path: url(#clip)">
+		<g transform="">
+			<text x="52.09" y="219" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,438) scale(1,-1)">Disconnected occurrences</text>
+			<text x="318.04" y="219" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,438) scale(1,-1)">Connected occurrences</text>
+			<rect x="24" y="173" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="38.7435" y="181" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,362) scale(1,-1)">u : A</text>
+			<rect x="161" y="173" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="175.9955" y="181" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,362) scale(1,-1)">v : B</text>
+			<rect x="24" y="129" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="37.9965" y="137" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,274) scale(1,-1)">w : B</text>
+			<rect x="161" y="129" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="175.748" y="137" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,274) scale(1,-1)">x : C</text>
+			<rect x="270" y="173" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="284.7435" y="181" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,362) scale(1,-1)">u : A</text>
+			<rect x="351" y="173" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="365.9955" y="181" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,362) scale(1,-1)">v : B</text>
+			<rect x="432" y="173" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="446.748" y="181" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,362) scale(1,-1)">x : C</text>
+			<rect x="351" y="129" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="364.9965" y="137" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,274) scale(1,-1)">w : B</text>
+			<path d="M 73,184 L 157,184 Z" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="160 184, 154 187, 154 181" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(8%,38%,46%); fill-rule: evenodd;"/>
+			<path d="M 73,140 L 157,140 Z" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="160 140, 154 143, 154 137" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(8%,38%,46%); fill-rule: evenodd;"/>
+			<path d="M 319,184 L 347,184 Z" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="350 184, 344 187, 344 181" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(8%,38%,46%); fill-rule: evenodd;"/>
+			<path d="M 400,184 L 428,184 Z" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="431 184, 425 187, 425 181" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(8%,38%,46%); fill-rule: evenodd;"/>
+			<text x="340.32" y="119" style="font-family: Helvetica; font-size: 8px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,238) scale(1,-1)">isolated occurrence</text>
+			<text x="56.2445" y="96" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,192) scale(1,-1)">Connected A,B,C query: NO</text>
+			<text x="312.99" y="96" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,192) scale(1,-1)">Connected A,B,C query: YES</text>
+			<path d="M 247,90 L 247,224 Z" style="stroke: rgb(80%,84%,87%); stroke-linecap: butt; stroke-width: 1;"/>
+			<text x="148.095" y="67" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,134) scale(1,-1)">Both project to the same technique graph</text>
+			<rect x="142" y="32" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="162.9985" y="40" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,80) scale(1,-1)">A</text>
+			<rect x="223" y="32" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="243.9985" y="40" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,80) scale(1,-1)">B</text>
+			<rect x="304" y="32" width="48" height="22" rx="4" ry="0" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,95%,96%); fill-rule: evenodd;"/>
+			<text x="324.751" y="40" style="font-family: Helvetica; font-size: 9px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,80) scale(1,-1)">C</text>
+			<path d="M 191,43 L 219,43 Z" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="222 43, 216 46, 216 40" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(8%,38%,46%); fill-rule: evenodd;"/>
+			<path d="M 272,43 L 300,43 Z" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="303 43, 297 46, 297 40" style="stroke: rgb(8%,38%,46%); stroke-linecap: butt; stroke-width: 1; fill: rgb(8%,38%,46%); fill-rule: evenodd;"/>
+			<text x="60.91999999999999" y="10" style="font-family: Helvetica; font-size: 8px;fill: rgb(9%,23%,29%); stroke:none;" transform="translate(0,20) scale(1,-1)">All arrows are supplied BEFORE edges. Identical technique labels do not establish identical occurrences.</text>
+		</g>
+	</g>
+</svg>
