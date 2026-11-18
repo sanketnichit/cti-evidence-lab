@@ -1,0 +1,67 @@
+{
+  "declared_date": "2026-11-18",
+  "frame_path": "research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv",
+  "frame_sha256": "bdcb94ccba961a5f4421a026560d1ef1b7e2f0085532dfde613071cd71b882b2",
+  "rank": 2,
+  "reports": [
+    {
+      "canonical_source_url": "",
+      "donor": "Intel471",
+      "official_split": "DEV",
+      "random_priority_sha256": "0e5eef5fa7a68241cf63a8908ee93119455db05424974b1e3757b7866d12a96e",
+      "random_rank_within_vendor": "2",
+      "report_id": "intel471_2021-05-10_darkside-ransomware-colonial-pipeline-attack",
+      "source_publication_date": "2021-05-10",
+      "source_text_sha256": "680d54866e1d2d63414b0db9da27d71e2d384486b69ebd1f78d5cdd7394ddf78",
+      "source_title": "Here\u2019s what we know about DarkSide ransomware"
+    },
+    {
+      "canonical_source_url": "",
+      "donor": "Lab52 / S2 Grupo",
+      "official_split": "TRAIN",
+      "random_priority_sha256": "1414d141ff58cbf96fcf3ed3c4d6956dff68b501893f913599fb5ee8af3b0b37",
+      "random_rank_within_vendor": "2",
+      "report_id": "lab52_2020-02-18_the-role-of-china-in",
+      "source_publication_date": "2020-02-18",
+      "source_text_sha256": "8d98b4118cb745a0ae189967f2ebc0fe125b7fdeee4f0cbffcdacd545253b57c",
+      "source_title": "The role of China in the Persian Gulf and potential cyberthreats:"
+    },
+    {
+      "canonical_source_url": "",
+      "donor": "Proofpoint",
+      "official_split": "DEV",
+      "random_priority_sha256": "1c86b3dc8526adfab3373d48c81b93dacace5c987dcc0a0e982801cc0379c099",
+      "random_rank_within_vendor": "2",
+      "report_id": "proofpoint_2021-10-19_whatta-ta-ta505-ramps-activity",
+      "source_publication_date": "2021-10-19",
+      "source_text_sha256": "fd7e538942814ef1fab0b950ea2ac7c522cb342c1fb1338182a5872e786b9e5b",
+      "source_title": "Whatta TA: TA505 Ramps Up Activity, Delivers New FlawedGrace Variant"
+    },
+    {
+      "canonical_source_url": "",
+      "donor": "QuoIntelligence",
+      "official_split": "TRAIN",
+      "random_priority_sha256": "18c7f2b2ff6d29f4f4428b5c1574d1103beb83289d845c2bd0d85e4b89efde6c",
+      "random_rank_within_vendor": "2",
+      "report_id": "quoteintelligence_2020-09-22_apt28-zebrocy-malware-campaign-nato",
+      "source_publication_date": "2020-09-22",
+      "source_text_sha256": "96be28afd2f1c1f0270a4ce0383b50e717c38616a752793373db48b9ca833d00",
+      "source_title": "APT28 Delivers Zebrocy Malware Campaign using NATO Theme as Lure"
+    },
+    {
+      "canonical_source_url": "",
+      "donor": "ZScaler",
+      "official_split": "TRAIN",
+      "random_priority_sha256": "10c5006ffae19b89768a296029acc53da7d18d52cb03732ff5c84d6cd77aca88",
+      "random_rank_within_vendor": "2",
+      "report_id": "zscaler_2020-08-14_purplewave-new-infostealer-russia",
+      "source_publication_date": "2020-08-14",
+      "source_text_sha256": "669620a7f034011b9ceaaf9dd71464304089e16883c57281de0157fe38f88cc8",
+      "source_title": "PurpleWave\u2014A New Infostealer from Russia"
+    }
+  ],
+  "repository_parent_commit": "08bcbfb89d2c736985f5a91d4c0fe004aa656b79",
+  "seed": "CTI-EVIDENCE-LAB-ANNOCTR-PILOT-2026-11-03-v1",
+  "selection_rule": "All five donor rank-two entries, regardless of source yield; no replacements.",
+  "status": "FIXED_EXPLORATORY_EXTENSION_NOT_BASE_REPLACEMENT"
+}
