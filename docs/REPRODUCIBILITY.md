@@ -1,0 +1,68 @@
+# Reproducibility
+
+The experiments require Python 3.11 or later and Git. Analysis and validation use the Python standard library. PDF rendering optionally requires ReportLab.
+
+## Complete reproduction
+
+From a clean checkout:
+
+```sh
+python scripts/reproduce_study.py
+```
+
+The command runs five test suites, verifies 31 immutable RECON v0.1 package checksums, regenerates representation controls and query-fidelity experiments, and evaluates the recorded exploratory RDP case. It records the Git commit, runtime, source-verification modes and SHA-256 file manifest. A dirty tree is rejected unless `--allow-dirty` is explicitly supplied; such runs are marked as development builds.
+
+The output archive is `outputs/submission/CTI_Evidence_Lab_Submission.zip`. The filename is retained for compatibility; this is a reproducible artifact snapshot, not a publication or peer-review status. It contains repository files under `cti-evidence-lab/`, generated results under `generated/`, and `manifest.json`. Git history, raw source reports and private review packets are excluded.
+
+## Source verification
+
+Without source paths, reproduction uses the recorded audits and reports `RECORDED_AUDIT_ONLY`. Fresh checks require local copies:
+
+```sh
+python scripts/reproduce_study.py --corpus-root /path/to/AnnoCTR/all --recover-crlf
+python scripts/audit_rdp_case.py --source-html /path/to/saved/publisher.html
+```
+
+The AnnoCTR audit checks 120 source identities, 33 pilot pointers and 22 critical-review passages. `--recover-crlf` accepts line-ending recovery only when it exactly matches the previously recorded source hash; original files are unchanged. The separate RDP audit verifies three passages against its publisher-paragraph snapshot convention. Both checks can be included in one reproduction run by adding `--rdp-source-html /path/to/saved/publisher.html`.
+
+Hash equality verifies source identity and evidence locations, not semantic correctness. Source acquisition and attribution are documented in the [research index](../research/README.md).
+
+## Individual analyses
+
+```sh
+python -m examples.representation_controls
+python -m examples.exhaustive_projection_checks
+python -m examples.query_fidelity_benchmark
+python scripts/analyze_rdp_case.py
+```
+
+The original conditional RDP illustration remains a historical method-development example. The source-bound case is analyzed by `analyze_rdp_case.py`.
+
+## Generated artifacts
+
+| Artifact | Contents |
+|---|---|
+| `representation_controls.json` / `.md` | Seven controlled representation comparisons |
+| `finite_checks.json` | Edge-state and cycle-oracle checks over 4,096 graphs |
+| `query_fidelity.json` / `.md` | Four representations, full confusion matrices, query strata and counterexamples |
+| `rdp_case_results.json` | Outcome and mapping sensitivities for the separate exploratory case |
+| `rdp_source_integrity.json` | Publisher snapshot and passage-binding verification |
+| `exploratory_review.json` | Recorded five-report feasibility judgments |
+| `source_integrity.json` | AnnoCTR source and evidence-pointer audit |
+| `validation.json` | Suite results, commit, runtime and verification modes |
+| `manifest.json` | SHA-256 for every packaged file except the manifest itself |
+
+The archive contains no `.git` directory. Reproduction from the identified revision requires cloning the repository and checking out the manifest's commit.
+
+## Report rendering
+
+```sh
+python -m pip install reportlab
+python scripts/build_report_pdf.py
+```
+
+`--pdf` on the complete reproduction command includes the rendered report in the archive. `scripts/build_query_figure.py` generates the vector counterexample figure. Rendered PDFs require visual inspection in addition to text and file-integrity checks.
+
+## Continuous integration
+
+[GitHub Actions](https://github.com/sanketnichit/cti-evidence-lab/actions/workflows/projection-tests.yml) runs the root and RECON v0.1–v0.4 suites, verifies base-package checksums, validates blank schema bundles and packages the tested source revision. Software checks do not establish the accuracy of source interpretations or independent annotation agreement.

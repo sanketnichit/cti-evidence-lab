@@ -98,9 +98,9 @@ Exact endpoint joins preserve this query by construction: every returned pair of
 
 The sample is small, the protocol is still a draft, the review was exposed to earlier interpretations, and independent review has not yet been returned. Source extraction can omit image evidence. Conservative incident and atomicity rules may reduce usable coverage; broader campaign-level rules answer a different question. The literature comparison is not a completed novelty review.
 
-Independent review is not available for this deliverable. The critical second pass is a challenge to the existing interpretation with prior exposure, not an independent replication. The exploratory analysis and report can therefore be delivered now with these limitations. Two answer-free packets remain optional resources for future validation; they are not a prerequisite for reproducing the representation controls or inspecting the source assessments.
+Independent review has not been completed. The critical second pass challenges the existing interpretation with prior exposure and does not constitute independent replication. Calibration packets are available as research instruments; no completed review or agreement statistic is inferred from their existence.
 
-For a future formal annotation study, revise and accept the protocol, complete the applicable annotation gates, and analyze genuinely supported pairs. The present result is already reportable as an exploratory feasibility limitation. A larger incident-narrative study would need its own declared selection method and denominator; it must not replace these five retroactively.
+Further formal annotation requires an accepted protocol, completed annotation checks and source-supported occurrence pairs. The current evidence supports an exploratory feasibility conclusion. A larger incident-narrative study requires a separately declared selection method and denominator; the original five-report cohort remains unchanged.
 
 ## 7. Reproduction
 
@@ -110,4 +110,4 @@ Use Python 3.11 or later and Git. From a clean checkout, the standard-library co
 python scripts/reproduce_study.py
 ```
 
-Without a corpus path, source verification is explicitly recorded as a reused audit. To recheck the 120 source files, 33 pilot pointers and 22 critical-review passages locally, append `--corpus-root /path/to/AnnoCTR/all --recover-crlf`. To include a rendered report, install ReportLab and append `--pdf`. The output is `outputs/submission/CTI_Evidence_Lab_Submission.zip`; raw report text and private review packets are excluded. See the [submission guide](../docs/SUBMISSION_GUIDE.md) for artifact contents and a short demonstration. Passing checks establish reproducibility and code integrity, not semantic truth or independent review.
+Without a corpus path, source verification is explicitly recorded as a reused audit. To recheck the 120 source files, 33 pilot pointers and 22 critical-review passages locally, append `--corpus-root /path/to/AnnoCTR/all --recover-crlf`. To include a rendered report, install ReportLab and append `--pdf`. The output is `outputs/submission/CTI_Evidence_Lab_Submission.zip`; raw report text and private review packets are excluded. See the [reproduction documentation](../docs/REPRODUCIBILITY.md) for commands and artifact formats. Passing checks establish reproducibility and code integrity, not semantic truth or independent review.

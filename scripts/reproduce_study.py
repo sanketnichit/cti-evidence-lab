@@ -21,6 +21,8 @@ from examples.representation_controls import markdown, run_controls
 from examples.query_fidelity_benchmark import markdown as query_markdown, run_benchmark
 from scripts.audit_pilot_sources import audit, verified_text
 from scripts.summarize_exploratory_review import DEFAULT, summarize
+from scripts.audit_rdp_case import CASE as RDP_CASE, verify as verify_rdp_source
+from scripts.analyze_rdp_case import analyze as analyze_rdp_case
 
 
 def write_json(path, value):
@@ -65,6 +67,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "outputs/submission")
     parser.add_argument("--corpus-root", type=Path)
+    parser.add_argument("--rdp-source-html", type=Path, help="Optional saved publisher HTML for the separate RDP case")
     parser.add_argument("--recover-crlf", action="store_true")
     parser.add_argument("--allow-dirty", action="store_true", help="Development only; manifest records uncommitted inputs")
     parser.add_argument("--pdf", action="store_true", help="Render the report; requires reportlab")
@@ -103,11 +106,20 @@ def main():
         result["critical_review_spans_verified"] = verify_critical_evidence(args.corpus_root, args.recover_crlf)
     write_json(destination / "source_integrity.json", source_audit)
     write_json(destination / "exploratory_review.json", summarize(decisions, source_audit))
+    rdp_case = json.loads(RDP_CASE.read_text(encoding="utf-8"))
+    write_json(destination / "rdp_case_results.json", analyze_rdp_case(rdp_case))
+    rdp_audit = json.loads((RDP_CASE.parent / "source_integrity.json").read_text(encoding="utf-8"))
+    result["rdp_source_audit_mode"] = "RECORDED_AUDIT_ONLY"
+    if args.rdp_source_html:
+        rdp_audit = verify_rdp_source(args.rdp_source_html.read_bytes(), rdp_case)
+        result["rdp_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
+    write_json(destination / "rdp_source_integrity.json", rdp_audit)
     result["status"] = "PASS_EXPLORATORY_REPRODUCTION_NOT_GOLD_VALIDATION"
     write_json(destination / "validation.json", result)
     generated_names = ["representation_controls.json", "representation_controls.md", "finite_checks.json",
                        "source_integrity.json", "exploratory_review.json", "validation.json",
-                       "query_fidelity.json", "query_fidelity.md"]
+                       "query_fidelity.json", "query_fidelity.md",
+                       "rdp_case_results.json", "rdp_source_integrity.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")
@@ -115,7 +127,7 @@ def main():
     files = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True).splitlines()
     if args.allow_dirty:
         files += subprocess.check_output(["git", "ls-files", "--others", "--exclude-standard"], cwd=ROOT, text=True).splitlines()
-    files = sorted(set(files))
+    files = sorted(p for p in set(files) if (ROOT / p).is_file())
     if any(p.startswith(("data/raw/", "outputs/")) and not p.endswith(".gitkeep") for p in files):
         raise ValueError("Refusing to package tracked raw sources or private outputs")
     package = destination / "CTI_Evidence_Lab_Submission.zip"

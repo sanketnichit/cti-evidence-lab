@@ -33,7 +33,6 @@ This is a hypothesis to test—not a validated gap, novel method, implemented sy
 ## New working artifact
 
 - Drafted `research/ANNOTATION_PROTOCOL_v0.3.md` to separate text mentions, event instances, ATT&CK concepts, temporal relations, and non-temporal dependencies. It supports multiple ATT&CK mappings per event instance and clarifies the candidate-pair/negative-label frame. It remains a draft for human review, not a validated annotation standard.
-- Confirmed the repository citation metadata already encodes the author's name correctly: given name `Sanket`, family name `Nichit`. The generated abbreviated citation `Nichit, S.` is the normal family-name-first bibliographic rendering; the README also gives the full-name form `Sanket Nichit`. No author-field correction is required.
 
 ## Blocking gates
 
@@ -48,9 +47,9 @@ This is a hypothesis to test—not a validated gap, novel method, implemented sy
 
 If repeated distinct occurrences are rare, source text cannot lawfully be used, or event-instance distinctions cannot be annotated consistently, do not force the hypothesis. Pivot to a benchmark audit or another data-supported CTI question.
 
-## Student-led research
+## Annotation validity
 
-The researcher owns final research decisions, human annotations, experiment execution/reproduction, interpretation and conclusions. Evaluation labels must be created and verified by humans against the original source evidence.
+The status of evaluation labels depends on their recorded source review and validation procedures. Software verification does not establish semantic annotation accuracy.
 
 
 ## Follow-up audit — 1 November 2026

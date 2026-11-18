@@ -2,6 +2,8 @@
 
 **17 November 2026 — method-development example, not accepted annotation.**
 
+**18 November follow-up:** A [source-bound exploratory case](../case_studies/dfir_rdp_v0.1/README.md) now records the occurrence interpretation, three exact passage bindings and outcome/mapping sensitivities. This earlier conditional example is retained as history. Neither record is a formal selected-final annotation or part of the AnnoCTR sample.
+
 **Source:** The DFIR Report, [A Truly Graceful Wipe Out](https://thedfirreport.com/2023/06/12/a-truly-graceful-wipe-out/), 12 June 2023. Refer to the **Case Summary**, paragraphs describing the temporary Remote Desktop Users account, the attempted tunneled RDP connection, its removal after approximately 15 minutes, and a second unsuccessful attempt. The Command and Control section contains a separate network-signature observation: that is not automatically a third attempt.
 
 ## Reason for using this case

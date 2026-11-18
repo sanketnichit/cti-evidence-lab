@@ -1,0 +1,51 @@
+{
+  "case_id": "DFIR_2023_06_12_RDP_ATTEMPTS",
+  "case_record_sha256": "676ec5b0b991de145fdcc11a7055497a4523d05945387d5cfc137cfc42639a0e",
+  "independently_validated": false,
+  "profiles": {
+    "attempts_included": {
+      "distinct_technique_pairs": 0,
+      "fully_omitted_edges": 1,
+      "included_before_edges": 1,
+      "included_occurrences": 2,
+      "loop_inclusive_pairs": 1,
+      "occurrence_endpoints": [
+        {
+          "edge_id": "attempt_order",
+          "relation": "BEFORE",
+          "source_event": "rdp_attempt_1",
+          "target_event": "rdp_attempt_2"
+        }
+      ],
+      "unmapped_endpoint_edges": 0
+    },
+    "mapping_withheld": {
+      "distinct_technique_pairs": 0,
+      "fully_omitted_edges": 0,
+      "included_before_edges": 1,
+      "included_occurrences": 2,
+      "loop_inclusive_pairs": 0,
+      "occurrence_endpoints": [
+        {
+          "edge_id": "attempt_order",
+          "relation": "BEFORE",
+          "source_event": "rdp_attempt_1",
+          "target_event": "rdp_attempt_2"
+        }
+      ],
+      "unmapped_endpoint_edges": 1
+    },
+    "successful_actions_only": {
+      "distinct_technique_pairs": 0,
+      "fully_omitted_edges": 0,
+      "included_before_edges": 0,
+      "included_occurrences": 0,
+      "loop_inclusive_pairs": 0,
+      "occurrence_endpoints": [],
+      "unmapped_endpoint_edges": 0
+    }
+  },
+  "source_verification": "RECORDED_BINDINGS; recheck the saved publisher HTML with audit_rdp_case.py",
+  "status": "EXPLORATORY_CASE_SENSITIVITY_NOT_POPULATION_ESTIMATE",
+  "two_step_query_evaluation": "NOT_APPLICABLE: the retained case has two occurrences and one supplied edge, not a three-occurrence chain"
+}

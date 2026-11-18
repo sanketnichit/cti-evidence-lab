@@ -2,7 +2,7 @@
 
 17 November 2026. **Not independently validated; not formal annotation.**
 
-This pass reads the fixed five AnnoCTR report texts against the current draft event/scope rules. It preserves the sample and records counterarguments rather than treating previous draft decisions as ground truth. The source texts, not chat history, are the evidence. Prior project drafts were available, so this is not a blind assessment.
+This pass reads the fixed five AnnoCTR report texts against the current draft event/scope rules. It preserves the sample and records counterarguments rather than treating previous draft decisions as ground truth. Judgments are bound to the source texts. Prior project drafts were available, so this is not a blind assessment.
 
 ## Findings
 
@@ -40,4 +40,4 @@ An already exact LF corpus needs no recovery. Its canonical hashes and pointer r
 
 Source-derived review decisions in this directory are adaptations of the AnnoCTR report collection and are provided under **CC BY-SA 4.0**, retaining AnnoCTR and publisher attribution. See the source URLs/titles in the [candidate register](../../annotation_drafts/AnnoCTR_Pilot_v0.1/report_assessment_draft.csv), [AnnoCTR](https://github.com/boschresearch/anno-ctr-lrec-coling-2024), and the [licence](https://creativecommons.org/licenses/by-sa/4.0/). No raw reports or extended quotations are included here. The repository MIT licence does not replace these source-derived data terms.
 
-The exploratory deliverable does not wait for external reviewers. The [reviewer kit](../../reviewer_kit/COORDINATOR.md) remains optional for future validation. If used, keep this assessment out of the packets until first passes are returned. No inter-annotator agreement is available in the present study.
+No independent annotation agreement is available. The [calibration workflow](../../reviewer_kit/COORDINATOR.md) specifies separate first passes, prior-exposure records and reconciliation procedures for future validation.

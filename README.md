@@ -1,165 +1,61 @@
 # CTI Evidence Lab
 
-A student research project on occurrence identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) graphs.
+**Occurrence identity and temporal information loss in cyber threat intelligence graphs.**
 
-**Current research checkpoint — 18 November 2026:** The [report](research/FEASIBILITY_REPORT_v0.1.md) now tests a practical consequence of technique collapse: whether a technique path supports a connected occurrence sequence. The [query-fidelity study](research/QUERY_FIDELITY_STUDY_v0.1.md) compares four representations and demonstrates two different occurrence graphs with identical technique projections but different correct query answers. Its generated results separate unsupported sequences from missed same-technique sequences. These are controlled experiments, not extraction scores or incident prevalence.
+CTI Evidence Lab studies how replacing individual attack occurrences with ATT&CK technique nodes changes temporal relations and sequence-query answers. It combines controlled graph experiments, source-bound exploratory cases, and evidence-validation software.
 
-![Same technique graph, different supported sequence](research/experiments/query_fidelity_v0.1/sequence_counterexample.svg)
+## Research question
 
-The source component retains the fixed five-report exploratory review, a 120-report identity audit, 33 pilot pointers and 22 critical-review passages. No gold annotations or independent agreement are claimed. Packaging is a reproducibility checkpoint, not the project's research-quality finish line. See the [submission guide](docs/SUBMISSION_GUIDE.md).
+Can a technique-level path establish a connected sequence of source-supported attack occurrences?
+
+Two occurrence graphs can have identical technique projections while supporting different sequence answers. The example below has no projected cycle: the ambiguity comes from merging distinct occurrences with the same technique label.
+
+![Identical technique projections with different occurrence-sequence answers](research/experiments/query_fidelity_v0.1/sequence_counterexample.svg)
+
+## Findings and evidence
+
+- **Edge loss:** a relation between two occurrences mapped exclusively to the same technique disappears when diagonal technique pairs are excluded.
+- **Sequence ambiguity:** retaining self-loops does not recover occurrence identity. Endpoint-compatible joins and diagonal retention address different query failures.
+- **Source sensitivity:** the exploratory RDP case separates attempted actions, confirmed successes and withheld mappings, producing different eligible graphs.
+
+The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 set-valued-mapping graphs for connected-sequence queries. Their rates describe the constructed inputs, not incident prevalence or extraction accuracy. The five-report AnnoCTR review and separately selected RDP case remain exploratory; independent annotation agreement and population-level conclusions are not established.
+
+## Research artifacts
+
+| Artifact | Contents |
+|---|---|
+| [Research report](research/FEASIBILITY_REPORT_v0.1.md) | Question, source feasibility, representation experiments and limitations |
+| [Query-fidelity study](research/QUERY_FIDELITY_STUDY_v0.1.md) | Counterexample, proof, four-way comparison and full confusion matrices |
+| [RDP case study](research/case_studies/dfir_rdp_v0.1/README.md) | Source-bound occurrence interpretation and outcome/mapping sensitivities |
+| [AnnoCTR feasibility review](research/feasibility/exploratory_review_v0.1/README.md) | Five fixed reports, source bindings and unresolved judgments |
+| [Research index](research/README.md) | Data access, protocols, sampling and provenance records |
+| [Study status](docs/PROJECT_STATE.md) | Current evidence and remaining research limitations |
+
+## Reproduction
+
+Python 3.11+ and Git are required. From a clean checkout:
 
 ```sh
 python scripts/reproduce_study.py
 ```
 
-This single command verifies the implementation and builds a submission ZIP with generated results and a file-hash manifest. Use `--corpus-root /path/to/AnnoCTR/all --recover-crlf` for a fresh local source check, and `--pdf` after installing ReportLab to include the PDF report. See the guide for a five-minute demonstration. Work continues directly on `main`.
+This runs the test suites, regenerates experiments and case sensitivities, and produces a versioned artifact archive with file hashes. Source rechecks require local source copies; PDF rendering optionally requires ReportLab. Commands, data-access details and artifact formats are documented in [Reproducibility](docs/REPRODUCIBILITY.md).
 
-**Historical method checkpoint:** The sections below document the original empirical-study design and its unfinished formal annotation gates. They are not prerequisites for delivering the exploratory study above.
+[Continuous integration](https://github.com/sanketnichit/cti-evidence-lab/actions/workflows/projection-tests.yml) verifies the software, schema checksums and blank annotation bundles. These checks do not validate the meaning of source interpretations.
 
-**Status (14 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The five fixed rank-one reports remain feasibility candidates, not human-approved selected reports. The primary analytical stratum is incident-linked attack-action occurrences; the primary pair rule is the nearest shared resolved incident. A working timestamp rule now restricts timestamp-only positives to invariant strict BEFORE/AFTER, reserves OVERLAP/SIMULTANEOUS/CONCURRENT_UNSPECIFIED for explicit source assertions, and requires UTC-normalized occurrence-time bounds with explicit timezone evidence. RECON v0.4 carries evidence-backed activity strata. These are draft method/tooling decisions, not a frozen schema or empirical findings. No novelty claim is established.
-
-## Provisional primary research question
-
-> Across a transparently sampled set of CTI reports, how often does a report explicitly support a temporal relation between two distinct, resolved activity occurrences that share one or more ATT&CK technique mappings, and what occurrence identity or temporal information is retained, partially represented, or lost when those occurrences are projected to a representation that permits only distinct technique pairs?
-
-This is a candidate report-level estimand, not a validated research gap. ChronoCTI uses a 120-technique pair universe that excludes same-technique diagonal pairs, and its paper identifies Enterprise ATT&CK v12.1. Existing work already covers CTI event extraction, temporal attack graphs, ATT&CK mapping and technique-pair temporal prediction. The possible contribution is narrower: human source-evidenced measurement of what occurrence-level relations are supported in a named CTI sample and what a specified distinct-technique-pair projection retains, conflates or omits. We have not run ChronoCTI's learned model on AnnoCTR and must not describe our projection as its measured error rate.
-
-## Research integrity
-
-- Distinguish event mentions, event instances, event coreference, and ATT&CK taxonomy concepts.
-- Do not infer physical chronology from narrative order alone.
-- Do not treat an Attack Flow dependency edge as a temporal BEFORE relation.
-- Keep `NO_TEMPORAL_CLAIM`, `UNRESOLVED`, and model `ABSTAIN` distinct.
-- Every positive temporal edge must link to source evidence that supports the relation, not merely mention both endpoints.
-- Preserve source offsets, report versions, dataset versions, ATT&CK release, model revisions, splits, and experiment configs.
-- Keep raw AnnoCTR reports and extended verbatim excerpts out of Git. Adapted annotation material derived from AnnoCTR must retain source attribution and be published under the same CC BY-SA licence; the repository MIT licence applies to project software, not source reports or adapted annotation data.
-- Group report families, syndicated copies, and near-duplicates across train/test splits.
-- Report coverage and errors together; abstention must not hide poor recall.
-- Gold evaluation labels must be created and adjudicated by human annotators against the original source evidence; automated suggestions are not ground truth.
-- The researcher is responsible for methodological decisions, annotations, experiments, interpretation, and conclusions.
-
-## Repository layout
+## Repository structure
 
 ```text
-docs/       research charter, audits, architecture, methodology, decisions, roadmap, project state
-research/   related work, evidence ledger, protocols, sampling, schema reconstruction, metric contracts and annotation drafts
-src/        legacy v0.3 projection and annotation-validation utilities (synthetic checks only)
-tests/      synthetic unit tests
-examples/   synthetic examples only
-scripts/    local data-screening utilities
-data/raw/   local source corpus only; never commit raw reports or full source text
-data/processed/annoctr_screening/  three allow-listed, text-free screening metadata files only
+research/   studies, results, source records, protocols and schema reconstruction
+src/        occurrence queries and projection/validation utilities
+examples/   controlled experiments and historical illustrations
+scripts/    source audits, case analysis and reproduction
+tests/     regression and finite-oracle checks
+docs/       methodology, architecture, status and reproducibility
 ```
 
-## Research progress and next work
+## Citation and license
 
-The project is past initial software setup, but it has not yet produced a verified report-level scientific result. The five fixed AnnoCTR reports have preliminary source-first assessments; their complete human annotation, selection and independent review are still open. See the [current research roadmap](docs/ROADMAP.md), the [workstream completion matrix](research/PROJECT_COMPLETION_MATRIX_v0.1.md), and the [five-report feasibility synthesis](research/feasibility/FIVE_REPORT_FEASIBILITY_SYNTHESIS_v0.1.md).
+Sanket Nichit (2026). *CTI Evidence Lab*. Citation metadata is available in [CITATION.cff](CITATION.cff) and [CITATION.bib](CITATION.bib).
 
-A [separate RDP case illustration](research/exploratory/DFIR_Repeated_RDP_Source_Contrast_v0.1.md) explains the conditional projection mathematics without adding any case to the primary sample or claiming a measured result.
-
-Run the illustration from the repository root with `python -m examples.exploratory_rdp_projection`. It is not a substitute for validated and locked source annotations.
-
-## Current phase
-
-With the dataset-maintainer permission clarification recorded, a source-first pre-annotation pass has been prepared for the five fixed rank-one candidates. The adopted primary universe is incident-linked attack-action occurrences; auxiliary communications, analyst observations and generic capabilities remain separately visible. Individual report eligibility, event boundaries, scope and mapping decisions remain unapproved. RECON v0.4 now enforces the boundary through a required one-to-one activity_unit_strata.csv companion register, complete-evidence validator, lock, and primary projection/pair-opportunity filter. The extension leaves v0.1 unchanged and remains a draft. Formal annotation remains blocked pending review of v0.4 and resolution of the remaining scope/semantic decisions before a complete protocol/schema freeze. The primary comparison-scope working rule is the nearest shared RESOLVED INCIDENT ancestor, with the positive relation required to cite that exact scope; the legacy broad-ancestor and v0.3 explicit-assignment rules remain separate sensitivities. The five-report scope candidates currently contain no accepted INCIDENT nodes, so none may be invented to create pair opportunity. The current source of truth is `docs/PROJECT_STATE.md`. See the latest consistency review in `docs/audits/CTI_Evidence_Lab_Project_Wide_Consistency_Audit_v1.4.md` and the researcher decision register in `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. Earlier gap, roadmap, and pilot documents remain part of the project history.
-
-## Citation and author name
-
-The machine-readable author fields in `CITATION.cff` intentionally store the given name and family name separately: given name **Sanket**, family name **Nichit**. GitHub's generated citation may render a conventional abbreviated form such as **Nichit, S.**; that is a citation-style choice, not a different author name.
-
-For a human-readable reference with the full name, use:
-
-> **Sanket Nichit** (2026). *CTI Evidence Lab* (Version 0.1.0) [Computer software]. https://github.com/sanketnichit/cti-evidence-lab
-
-For BibTeX, use the full-name-preserving entry in `CITATION.bib`.
-
-## License
-
-The repository's original software and documentation are under the MIT License. This does not grant rights to third-party CTI reports, datasets, papers, trademarks, or model weights referenced by the project.
-
-
-## Small prototype
-
-The current code is deliberately limited to synthetic and annotation-quality checks:
-- `src/projection_metrics.py`: project event-instance relation edges to ATT&CK technique pairs and calculate coverage, mapping collisions, diagonal omissions and cycle diagnostics.
-- `src/annotation_validation.py`: validate CSV annotation offsets, event references and relation evidence.
-- `tests/`: synthetic tests only; do not interpret them as results on CTI reports.
-
-The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
-
-Latest local verification on 18 November 2026: **84 root tests**, **81 RECON v0.1 tests**, **104 v0.2 tests**, **15 v0.3 tests**, and **30 v0.4 tests** — **314 passing tests**, plus 31 immutable base-package checksum checks. The standalone v0.4 metadata validator also rejects self-adjudication, including whitespace-padded reviewer IDs. See [GitHub Actions](https://github.com/sanketnichit/cti-evidence-lab/actions/workflows/projection-tests.yml) for remote checks. These verify software behavior, not source interpretations.
-
-Run from the repository root:
-
-```bash
-python -m unittest discover -s tests -v
-python -m examples.toy_projection_demo
-```
-
-The structured five-report pre-annotation draft is in `research/annotation_drafts/AnnoCTR_Pilot_v0.1/`; the earlier first-report dry-run starter remains in `research/PILOT_REPORT_01_STARTER.md`. This repository contains no completed report-level human annotations or gold partitions.
-
-## AnnoCTR screening utility
-
-After downloading the official AnnoCTR repository, inventory the full corpus locally:
-
-```bash
-python scripts/screen_annoctr.py \
-  --root /path/to/anno-ctr-lrec-coling-2024/AnnoCTR/all \
-  --output data/annoctr_screening.csv \
-  --top-per-vendor 5
-```
-
-The scanner reads the official `splits.tsv` document-level manifest (120 GNE+CyNE reports in `train`/`dev`/`test`; 280 GNE-only reports in `ext`). It detects cybersecurity-specific annotation types in the full `linking/` export, while counting canonical ATT&CK technique links from `linking_mitre_only/`. It recognizes the QuoIntelligence filename alias and ignores context/negative-linking variants. It also reports the presence of both linking exports separately. Repeated mentions remain candidate locators, not event-instance labels. Synthetic tests are in `tests/test_annoctr_screening.py`.
-
-
-## Dataset, sampling and schema checkpoint — 4 November 2026
-
-The official AnnoCTR archive has been screened locally. Its SHA-256 is recorded in
-`data/processed/annoctr_screening/screening_summary.json`. The inventory covers all
-400 manifest reports; the official train/dev/test GNE+CyNE frame contains 120 reports
-(30 Intel471, 23 Lab52/S2 Grupo, 28 Proofpoint, 12 QuoIntelligence and 27 ZScaler).
-All expected text/linking/TimeML paired files are present. 118/120 GNE+CyNE reports
-have cyber-specific rows in the full linking export; 112/120 have a valid canonical
-ATT&CK technique link. These link counts are descriptive inventory only and do not
-filter the 120-report frame. The two no-CyNE-row documents remain in the inventory
-pending a researcher content-scope decision.
-
-The tracked screening CSV contains report-level metadata only (IDs, split/vendor,
-counts, flags and hashes); it contains no report text or long source excerpts. The
-`.gitignore` allow-list names only this CSV, `SCREENING_REPORT_v0.1.md`, and
-`screening_summary.json`; other files under `data/processed/` remain ignored.
-The raw AnnoCTR corpus is not included in this repository. The source-hash convention is strict UTF-8, optional leading BOM removal, preserved CRLF/LF, no Unicode normalization, and zero-based end-exclusive Python code-point offsets. On 4 November 2026, all 120 frame `source_text_sha256` values were independently recomputed from the official AnnoCTR repository text files at pinned commit `d510b6949e1938d47c93a43eedd562dc538439dc`; all 120 matched. This verifies the hashes against that source revision, not the separate downloaded-archive SHA-256. To reproduce from a local corpus, use `python scripts/hash_annoctr_sources.py --corpus-root /path/to/AnnoCTR/all` (add `--write` only after reviewing any mismatches). Raw report text remains excluded from Git.
-
-### Annotation schema reconstruction
-
-`research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1/` is a new
-reconstruction based on the recovered Protocol v0.4 draft, its migration note, the
-v0.4.2 conformance audit and the public v0.3 templates. It is **not** the missing
-original `CTI_Annotation_Schema_v0.4.2-draft.zip`, and it is not approved or frozen
-for formal annotation. The exact v0.4.1 protocol and original v0.4.2 ZIP were not
-recovered. The package contains 12 blank registers, a field dictionary, controlled
-vocabularies, a structural validator, a projection module, an annotation-to-projection
-adapter, and 69 synthetic tests (41 validator, 16 projection, 12 adapter). None of these tests are results on real CTI reports.
-
-### Current evidence boundary
-
-- Five rank-1 reports remain candidates; researcher eligibility decisions are 0/5.
-- Human-locked AnnoCTR annotations: 0.
-- Real-report event projections: 0.
-- Independent human agreement: not measured.
-- Novelty: not established.
-- The five-report design is a feasibility/protocol-debugging pilot, not a prevalence sample.
-
-The 120-row sampling frame is versioned at `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv`. Automated triage and prior exposure are recorded separately from human source-scope, local research-use and public-reuse decisions. The five candidates have not received human eligibility approval. See `docs/PROJECT_STATE.md`, the project-wide audit v1.4 and the researcher decision register for current status. The RECON package remains a reconstruction, not the missing original v0.4.2 schema, and has not been approved for formal annotation.
-
-
-## AnnoCTR source use and derivative data
-
-The AnnoCTR dataset maintainer replied on 5 November 2026 that source-material licences had been checked and permit redistribution under the dataset licence, and that researchers may add annotations/change reports and publish derivative works under the same CC BY-SA licence. This is a qualified maintainer clarification, not legal advice; it did not enumerate report-level exceptions. Any adapted annotation material must retain attribution and ShareAlike. The MIT licence in this repository applies to the project's original software/documentation only; it does not relicense source reports or derivative annotation datasets. Raw AnnoCTR reports and extended verbatim excerpts are not committed. See `research/rights/AnnoCTR_Research_Use_Permission_Clarification_v0.1.md`.
-
-
-## Sampling and annotation protocol update — 5 November 2026
-
-Two no-CyNE reports—a sponsored Ponemon survey summary and a TIBER-EU framework explainer—have been dispositioned INELIGIBLE for the declared CTI-report scope based on their source content. Both remain in the historical 120-report inventory; their absence of CyNE/ATT&CK annotations was not the exclusion basis. The current text-free frame is `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv`, with the updated method in `research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sampling_Method_v0.3.3.md`.
-
-The annotation working rules are consolidated in `research/protocol/CTI_Event_Instance_Annotation_Protocol_v0.5-draft.md` and `research/metric_contract/CTI_Evidence_Lab_Researcher_Decision_Register_v0.2.md`. These remain drafts pending reconciliation with the reconstructed register schema. The five rank-one reports remain candidates, not selected reports; human-locked annotations remain at zero.
+Original project software and documentation are [MIT licensed](LICENSE). Source reports retain their own rights. Adapted AnnoCTR material retains CC BY-SA 4.0 attribution and terms; raw reports are not distributed in this repository.

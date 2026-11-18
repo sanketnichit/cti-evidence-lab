@@ -1,29 +1,26 @@
-# Sending and receiving the review packets
+# Calibration packet workflow
 
-Give R1 to one friend and R2 to the other. Both packets contain the same five reports and blank forms, with different reviewer IDs. Send the ZIP files privately; they contain source text and are deliberately excluded from Git. Do not send the exploratory decisions or results with them.
+The calibration instrument distributes the same five fixed reports and blank forms under pseudonymous reviewer IDs R1 and R2. It supports evaluation of the draft annotation rules; it is not a frozen gold-standard protocol or a completed review result.
 
-Ask each person to read `START_HERE.md`, work independently and return the completed CSVs plus `manifest.json`. One person can help if two are unavailable, but only overlapping independent completed reviews can support an inter-reviewer comparison. There is no required positive finding.
+## Independence and provenance
 
-The packets are a calibration exercise while the protocol is still a draft. They do not ask friends to sign off a frozen gold dataset. Preserve first-pass submissions unchanged under ignored `outputs/reviewer_returns/R1/` and `R2/`; work on copies for reconciliation. Record receipt dates and whether the reviewers had prior exposure. Do not publish names or contact information.
+First passes are completed separately, without access to earlier project judgments or another reviewer's answers. Source files, prior exposure, report coverage and actual completion dates are recorded. Original returns are preserved before reconciliation. Packet archives contain source text and are excluded from the public repository.
 
-## On receipt
+## Reconciliation procedure
 
-1. Verify the packet manifest and source hashes; reject changed source text.
-2. Check which reports each person actually read completely and which decisions are missing.
-3. Resolve free-text evidence locators to exact source spans, then ask the originating reviewer to confirm them. Do not silently replace their substantive decisions.
-4. Align activity units using source evidence, keeping split/merge disagreements visible. Matching local IDs is not matching events.
-5. Compare occurrence status, incident scope, temporal label and mapping separately. Report raw aligned counts and coverage before any summary score.
-6. Discuss disagreements only after the independent first passes are preserved. Record each change and reason. A shared final table is reconciliation, not another independent annotation.
-7. Use the returned work to revise and accept a versioned protocol. A formal study requires the applicable RECON validation, source and selection locks; these simple CSVs are not a bypass.
+1. Verify the packet manifest and source hashes.
+2. Establish the overlap of fully reviewed reports and identify missing decisions.
+3. Resolve free-text evidence locators against the source, with confirmation of the originating interpretation.
+4. Align activity units using evidence rather than local identifier equality; retain split/merge disagreements.
+5. Compare occurrence status, incident scope, temporal labels and mappings separately, including coverage and raw aligned counts.
+6. Record subsequent corrections and reasons without overwriting independent first passes.
 
-## Build the packets
+Agreement statistics require a specified alignment/scoring rule and overlapping independent reviews. A reconciled table is not an additional independent annotation. Formal selected-final analysis remains subject to the applicable protocol, validation and lock requirements.
 
-From the repository root, with Python 3.11 or later:
+## Packet generation
 
-```text
+```sh
 python scripts/build_reviewer_packets.py --corpus-root /path/to/AnnoCTR/all --recover-crlf
 ```
 
-The optional CRLF recovery succeeds only if it reproduces the previously recorded source hash. Without it the source check is strict. The builder writes deterministic ZIP files under `outputs/reviewer_packets/`, contains no proposed answers, and never changes the corpus.
-
-Source attribution and CC BY-SA 4.0 information are inside each packet. Keep them with any source-derived annotation material. The code and blank guide remain under the repository software/documentation licence.
+Generated packets contain the [review instrument](REVIEW_GUIDE.md), source manifest, attribution and blank forms. AnnoCTR-derived materials retain CC BY-SA 4.0 terms. Public project software licensing does not replace source licensing.
