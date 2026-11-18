@@ -1,5 +1,12 @@
 # Research roadmap
 
+## Completed exploratory submission — 18 November 2026
+
+The [report](../research/FEASIBILITY_REPORT_v0.1.md) and [submission guide](SUBMISSION_GUIDE.md) are the current entry points. The delivered scope includes the fixed five-report source review, 120 source identities, 33 pilot pointers, 22 critical-review passages, seven representation controls and 4,096 exhaustive finite graph cases. Local verification passes all 306 tests and 31 base-package checksums. A single reproduction command creates a source-text-free submission ZIP with commit and file hashes; optional PDF rendering is included. The useful standalone v0.4 independent-reviewer check from an old branch is preserved on main.
+
+This completes the exploratory feasibility deliverable. The original formal empirical-study requirements below remain future work, not completed gold annotation or independent review. Historical dated entries are retained for traceability.
+
+
 **Updated: 17 November 2026**
 
 The research question is whether a graph whose nodes are ATT&CK techniques and edges connect only distinct technique IDs can retain source-supported temporal relations between separate occurrences of the same technique. We are investigating this on report text, not claiming that event extraction or ATT&CK graph construction is new.

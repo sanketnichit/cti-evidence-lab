@@ -1,8 +1,16 @@
 # CTI Evidence Lab
 
-A student-led empirical study of event-instance identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) representations.
+A student research project on occurrence identity and temporal information loss in ATT&CK-normalized cyber threat intelligence (CTI) graphs.
 
-**Latest deliverable — 17 November 2026:** Read the [exploratory feasibility report](research/FEASIBILITY_REPORT_v0.1.md). It combines a source-bound review of the fixed five reports, a [critical second pass](research/feasibility/exploratory_review_v0.1/CRITICAL_REVIEW.md), a reproducible 120-report source audit with 33 verified pilot pointers, and seven [representation controls](research/experiments/representation_controls_v0.1/README.md). The controls are synthetic and the source judgments are exploratory. The analysis proceeds without external reviewers; [review packets](research/reviewer_kit/COORDINATOR.md) remain optional future resources. No prevalence estimate or completed gold annotation is claimed.
+**Completed exploratory deliverable — 18 November 2026:** Read the [report](research/FEASIBILITY_REPORT_v0.1.md) and [submission guide](docs/SUBMISSION_GUIDE.md). The project combines a source-bound five-report review, 120-report source audit, 33 verified pilot pointers, 22 critical-review passages, seven graph controls and an exhaustive 4,096-graph check. All 306 software tests pass locally. The source judgments remain exploratory; no gold annotations, agreement scores or corpus prevalence are claimed.
+
+```sh
+python scripts/reproduce_study.py
+```
+
+This single command verifies the implementation and builds a submission ZIP with generated results and a file-hash manifest. Use `--corpus-root /path/to/AnnoCTR/all --recover-crlf` for a fresh local source check, and `--pdf` after installing ReportLab to include the PDF report. See the guide for a five-minute demonstration. Work continues directly on `main`.
+
+**Historical method checkpoint:** The remaining sections document the original empirical-study design and its unfinished formal annotation gates. They are not prerequisites for delivering the exploratory study above.
 
 **Status (14 November 2026):** AnnoCTR screening and the 120-report historical frame are prepared. The five fixed rank-one reports remain feasibility candidates, not human-approved selected reports. The primary analytical stratum is incident-linked attack-action occurrences; the primary pair rule is the nearest shared resolved incident. A working timestamp rule now restricts timestamp-only positives to invariant strict BEFORE/AFTER, reserves OVERLAP/SIMULTANEOUS/CONCURRENT_UNSPECIFIED for explicit source assertions, and requires UTC-normalized occurrence-time bounds with explicit timezone evidence. RECON v0.4 carries evidence-backed activity strata. These are draft method/tooling decisions, not a frozen schema or empirical findings. No novelty claim is established.
 
@@ -75,7 +83,7 @@ The current code is deliberately limited to synthetic and annotation-quality che
 
 The projection uses a Cartesian product when an event endpoint has multiple ATT&CK mappings. This preserves all mapped pair combinations, but it can also create a technique-level cycle from a **single** source event relation. Cycle diagnostics therefore retain source-edge provenance and distinguish single-edge mapping fan-out from cycles requiring multiple source event relations.
 
-Latest executable-code CI verification on 17 November 2026: GitHub Actions run [#314](https://github.com/sanketnichit/cti-evidence-lab/actions/runs/44034097876) passed on main head `b71bb03f9375cc6cae966b17201c01cc9bc77ae7`. It executed **60 root tests**, **81 RECON v0.1 tests**, **102 RECON v0.2 tests**, **15 RECON v0.3 tests**, and **28 RECON v0.4 tests** — **286 successful synthetic test executions**. All workflow steps passed, including package checksum verification, blank-register validation, direction-aware positive pair-assessment checks, complete append-only adjudication history across ADJUDICATED/AGREED/DEFERRED outcomes, strict value-change enforcement for ADJUDICATED, required non-empty reviewer IDs and the independent-reviewer ID check, immutable-identity checks, selected-final activity-stratum lock and single-annotator adjudication gates, base confidence/adjudication/span-kind enums, required-cell and conditional report-decision rationale checks, mention-linked timestamp resolution, and source snapshot packaging. These are code-integrity checks only, not real-report findings or semantic annotation validation.
+Latest local verification on 18 November 2026: **76 root tests**, **81 RECON v0.1 tests**, **104 v0.2 tests**, **15 v0.3 tests**, and **30 v0.4 tests** — **306 passing tests**, plus 31 immutable base-package checksum checks. The standalone v0.4 metadata validator also rejects self-adjudication, including whitespace-padded reviewer IDs. See [GitHub Actions](https://github.com/sanketnichit/cti-evidence-lab/actions/workflows/projection-tests.yml) for remote checks. These verify software behavior, not source interpretations.
 
 Run from the repository root:
 

@@ -272,6 +272,18 @@ def _validate_base_metadata_enums(tables: Mapping[str, list[dict[str, str]]]) ->
                 "code": "INVALID_SPAN_KIND",
                 "message": f"evidence_spans row {line}: span_kind is not in the controlled vocabulary; got {value!r}",
             })
+    for line, row in enumerate(tables.get("adjudication_log", []), 2):
+        if row.get("decision_status") == "ADJUDICATED":
+            reviewer_id = row.get("reviewer_id", "").strip()
+            target_annotator_id = row.get("target_annotator_id", "").strip()
+            if reviewer_id and reviewer_id == target_annotator_id:
+                errors.append({
+                    "code": "ADJUDICATION_REVIEWER_NOT_INDEPENDENT",
+                    "message": (
+                        f"adjudication_log row {line}: reviewer_id must differ from "
+                        "target_annotator_id for an ADJUDICATED decision"
+                    ),
+                })
     return errors
 
 

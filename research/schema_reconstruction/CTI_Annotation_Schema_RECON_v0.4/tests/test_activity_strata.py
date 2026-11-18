@@ -18,6 +18,7 @@ sys.path.insert(0, str(PACKAGE_ROOT / "analysis"))
 from test_validator import PARTITION, SOURCE_TEXT, make_fixture  # noqa: E402
 from validate_temporal_evidence import SELECTION_HEADERS  # noqa: E402
 from validate_activity_strata import (  # noqa: E402
+    _validate_base_metadata_enums,
     LOCK_HEADERS,
     STRATUM_HEADERS,
     build_activity_stratum_lock_rows,
@@ -47,6 +48,15 @@ def write_rows(path: Path, headers: list[str], rows: list[dict[str, str]]) -> No
 
 
 class ActivityStratumValidationTests(unittest.TestCase):
+    def test_base_metadata_rejects_self_adjudication(self):
+        rows = {"adjudication_log": [{"decision_status": "ADJUDICATED", "reviewer_id": " ann-1 ", "target_annotator_id": "ann-1"}]}
+        errors = _validate_base_metadata_enums(rows)
+        self.assertIn("ADJUDICATION_REVIEWER_NOT_INDEPENDENT", {e["code"] for e in errors})
+
+    def test_base_metadata_does_not_call_distinct_ids_self_adjudication(self):
+        rows = {"adjudication_log": [{"decision_status": "ADJUDICATED", "reviewer_id": "ann-2", "target_annotator_id": "ann-1"}]}
+        self.assertEqual(_validate_base_metadata_enums(rows), [])
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)

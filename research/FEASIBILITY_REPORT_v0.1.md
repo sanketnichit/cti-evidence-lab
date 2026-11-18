@@ -2,9 +2,9 @@
 
 ## An exploratory feasibility study
 
-**CTI Evidence Lab · Sanket Nichit · 17 November 2026**
+**CTI Evidence Lab · Sanket Nichit · 18 November 2026**
 
-**Status:** Research draft. Source review is not independently validated. The representation experiments use synthetic inputs. This is not a completed gold-annotation or prevalence study.
+**Status:** Completed exploratory feasibility deliverable. Source review is not independently validated. The representation experiments use synthetic inputs. This is not a completed gold-annotation or prevalence study.
 
 ## Abstract
 
@@ -60,6 +60,19 @@ Three results matter. First, two successive same-technique relations vanish in t
 
 These are consequences of defined inputs and mappings. They provide no estimate of their frequency in CTI and no performance comparison with published systems. Exact-sub-technique sensitivity on accepted real annotations remains unrun.
 
+### Exhaustive finite check
+
+To test beyond the seven illustrations, we enumerate three ordered event vertices, all eight subsets of their forward BEFORE edges, and all eight subsets of a three-technique vocabulary independently assigned to each vertex. This includes empty mappings and yields 8 x 8^3 = 4,096 graph inputs with 6,144 source-edge instances. A separate set-based classification oracle and a reachability-based cycle oracle agree with the projection implementation in every case.
+
+| Source-edge state | Instances |
+|---|---|
+| Fully omitted | 288 |
+| Partially represented | 3,264 |
+| No diagonal mapping | 1,152 |
+| Unmapped endpoint | 1,440 |
+
+Of the 4,096 constructed acyclic source graphs, 1,102 produce a technique-level cycle. These counts describe this finite construction only: they are neither a corpus prevalence estimate nor a general coverage claim for larger graphs or other temporal relations. The [finite check output](experiments/representation_controls_v0.1/finite_checks.json) records the scope and exact totals. The full software verification run passes 306 tests across the five suites and verifies all 31 immutable base-package checksums.
+
 ## 6. Limitations and next evidence
 
 The sample is small, the protocol is still a draft, the review was exposed to earlier interpretations, and independent review has not yet been returned. Source extraction can omit image evidence. Conservative incident and atomicity rules may reduce usable coverage; broader campaign-level rules answer a different question. The literature comparison is not a completed novelty review.
@@ -70,14 +83,10 @@ For a future formal annotation study, revise and accept the protocol, complete t
 
 ## 7. Reproduction
 
-Use Python 3.11 or later and the local AnnoCTR corpus. The new analysis uses the standard library only.
+Use Python 3.11 or later and Git. From a clean checkout, the standard-library command below runs all five test suites, verifies the base-package checksums, regenerates the seven controls and 4,096-case check, checks the curated review bindings, and packages the repository and generated results with a SHA-256 manifest.
 
 ```text
-python scripts/audit_pilot_sources.py --corpus-root /path/to/AnnoCTR/all --recover-crlf --output research/feasibility/exploratory_review_v0.1/source_integrity.json
-python scripts/summarize_exploratory_review.py
-python -m examples.representation_controls --output-dir research/experiments/representation_controls_v0.1
-python -m unittest discover -s tests -v
-python scripts/build_reviewer_packets.py --corpus-root /path/to/AnnoCTR/all --recover-crlf
+python scripts/reproduce_study.py
 ```
 
-The first command verifies bytes and pointers, the second checks the source binding of curated judgments, and the third reruns synthetic controls. None automates semantic truth or independent review. See [the coordinator guide](reviewer_kit/COORDINATOR.md) for handling returned packets and the repository workflow for all RECON test suites.
+Without a corpus path, source verification is explicitly recorded as a reused audit. To recheck the 120 source files, 33 pilot pointers and 22 critical-review passages locally, append `--corpus-root /path/to/AnnoCTR/all --recover-crlf`. To include a rendered report, install ReportLab and append `--pdf`. The output is `outputs/submission/CTI_Evidence_Lab_Submission.zip`; raw report text and private review packets are excluded. See the [submission guide](../docs/SUBMISSION_GUIDE.md) for artifact contents and a short demonstration. Passing checks establish reproducibility and code integrity, not semantic truth or independent review.

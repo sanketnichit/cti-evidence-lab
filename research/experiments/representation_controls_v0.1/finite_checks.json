@@ -1,0 +1,16 @@
+{
+  "cycle_oracle_disagreements": 0,
+  "design": "Three ordered event vertices; all eight subsets of forward BEFORE edges; all eight subsets of three technique IDs independently assigned to each event, including empty mappings.",
+  "edge_state_oracle_disagreements": 0,
+  "edge_states": {
+    "fully_omitted": 288,
+    "no_diagonal_mapping": 1152,
+    "partially_represented": 3264,
+    "unmapped_endpoint": 1440
+  },
+  "graphs_checked": 4096,
+  "graphs_with_projected_cycles": 1102,
+  "scope_limit": "No assertion about larger graphs, other temporal labels, annotation accuracy, or CTI prevalence. Frequencies depend on this deliberately exhaustive construction.",
+  "source_edge_instances_checked": 6144,
+  "status": "EXHAUSTIVE_FINITE_CONTROLS_NOT_REPORT_MEASUREMENTS"
+}
