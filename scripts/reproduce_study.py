@@ -26,6 +26,8 @@ from scripts.analyze_rdp_case import analyze as analyze_rdp_case
 from scripts.analyze_sequence_case import CASE as SEQUENCE_CASE, analyze as analyze_sequence_case
 from scripts.audit_rank_two_review import DIRECTORY as RANK_TWO, audit as audit_rank_two, summarize as summarize_rank_two, validate_recorded_audit
 from scripts.analyze_incident_sequences import CASE as INCIDENT_CASE, analyze as analyze_incident_case
+from examples.investigation_benchmark import run_checks as run_investigation_checks
+from scripts.build_investigation import build as build_investigator
 
 
 def write_json(path, value):
@@ -144,6 +146,8 @@ def main():
         incident_audit = verify_rdp_source(args.incident_source_html.read_bytes(), incident_case)
         result["incident_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
     write_json(destination / "incident_source_integrity.json", incident_audit)
+    write_json(destination / "investigation_checks.json", run_investigation_checks())
+    build_investigator(destination / "sequence_investigator.html")
     result["status"] = "PASS_EXPLORATORY_REPRODUCTION_NOT_GOLD_VALIDATION"
     write_json(destination / "validation.json", result)
     generated_names = ["representation_controls.json", "representation_controls.md", "finite_checks.json",
@@ -152,7 +156,8 @@ def main():
                        "rdp_case_results.json", "rdp_source_integrity.json",
                        "sequence_case_results.json", "sequence_source_integrity.json",
                        "rank_two_review.json", "rank_two_source_integrity.json",
-                       "incident_sequence_results.json", "incident_source_integrity.json"]
+                       "incident_sequence_results.json", "incident_source_integrity.json",
+                       "investigation_checks.json", "sequence_investigator.html"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")

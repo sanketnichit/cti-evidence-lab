@@ -4,6 +4,16 @@
 
 CTI Evidence Lab studies how replacing individual attack occurrences with ATT&CK technique nodes changes temporal relations and sequence-query answers. It combines controlled graph experiments, source-bound exploratory cases, and evidence-validation software.
 
+## Sequence investigator
+
+Ask whether three techniques form one connected occurrence sequence. Inspect the supporting actions, locate incompatible joins in a technique graph, compare interpretation profiles and export a recomputable answer record.
+
+```sh
+python scripts/build_investigation.py
+```
+
+Open `outputs/investigation/index.html` in a browser. The artifact runs offline and includes both recorded intrusion cases. Optional local source loading reveals passages only after a snapshot-hash match. [Workflow, comparison with prior work and evaluation](research/INVESTIGATION_WORKFLOW_v0.1.md) define what the answers establish and what remains untested.
+
 ## Research question
 
 Can a technique-level path establish a connected sequence of source-supported attack occurrences?

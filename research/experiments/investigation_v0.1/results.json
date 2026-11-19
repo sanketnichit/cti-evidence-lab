@@ -1,0 +1,70 @@
+{
+  "finite_query_checks": 1728,
+  "finite_status_counts": {
+    "NOT_SUPPORTED": 1600,
+    "SUPPORTED": 16,
+    "UNRESOLVED_MAPPING": 112
+  },
+  "scope": "Three ordered vertices, two labels, singleton-or-unknown mappings and every forward-edge subset. Case queries enumerate each case's candidate-label vocabulary for every recorded profile. These are constructed checks, not independent semantic validation or analyst task outcomes.",
+  "source_cases": {
+    "domain-controller": {
+      "profiles": {
+        "archive_mapping_withheld": {
+          "NOT_SUPPORTED": 113,
+          "SUPPORTED": 2,
+          "UNRESOLVED_MAPPING": 10
+        },
+        "core_transfer_execution": {
+          "NOT_SUPPORTED": 124,
+          "SUPPORTED": 1,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "extended_exact_techniques": {
+          "NOT_SUPPORTED": 121,
+          "SUPPORTED": 4,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "extended_script_sequence": {
+          "NOT_SUPPORTED": 121,
+          "SUPPORTED": 4,
+          "UNRESOLVED_MAPPING": 0
+        }
+      },
+      "totals": {
+        "NOT_SUPPORTED": 479,
+        "SUPPORTED": 11,
+        "UNRESOLVED_MAPPING": 10
+      }
+    },
+    "rdp": {
+      "profiles": {
+        "proposed_cleanup_full_edges": {
+          "NOT_SUPPORTED": 5,
+          "SUPPORTED": 3,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "proposed_cleanup_local_edges": {
+          "NOT_SUPPORTED": 6,
+          "SUPPORTED": 2,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "reported_completed_actions": {
+          "NOT_SUPPORTED": 8,
+          "SUPPORTED": 0,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "unresolved_cleanup": {
+          "NOT_SUPPORTED": 3,
+          "SUPPORTED": 0,
+          "UNRESOLVED_MAPPING": 5
+        }
+      },
+      "totals": {
+        "NOT_SUPPORTED": 22,
+        "SUPPORTED": 5,
+        "UNRESOLVED_MAPPING": 5
+      }
+    }
+  },
+  "status": "PASS_IMPLEMENTATION_AND_RECORD_COVERAGE_NOT_FIELD_EFFICACY"
+}

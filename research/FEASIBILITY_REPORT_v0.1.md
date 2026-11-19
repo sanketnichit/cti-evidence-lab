@@ -110,6 +110,8 @@ Exact endpoint joins preserve this query by construction: every returned pair of
 
 ## 6. Limitations and next evidence
 
+The [investigation prototype](INVESTIGATION_WORKFLOW_v0.1.md) makes the query comparison inspectable: each answer exposes occurrence witnesses, incompatible projected joins, source locators and mapping requirements. It distinguishes a query with a known witness from one that could be supported only after unknown mappings are resolved. Thus the core transfer/execution query remains supported when the separate archive mapping is withheld, while the aggregate profile error score remains unassessed. An independent completion enumeration checks 1,728 finite graph-query inputs; the interface covers 532 case/profile/query combinations. These are implementation and record-coverage checks, not independent observations or evidence of analyst time savings. Exported answer records can be recomputed against the repository. Action identities and source references already exist in Attack Flow; no novelty is claimed for those features alone.
+
 The sample is small, the protocol is still a draft, the review was exposed to earlier interpretations, and independent review has not yet been returned. Source extraction can omit image evidence. Conservative incident and atomicity rules may reduce usable coverage; broader campaign-level rules answer a different question. The literature comparison is not a completed novelty review.
 
 Independent review has not been completed. The critical second pass challenges the existing interpretation with prior exposure and does not constitute independent replication. Calibration packets are available as research instruments; no completed review or agreement statistic is inferred from their existence.
