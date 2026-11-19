@@ -1,0 +1,17 @@
+{
+  "evidence_bindings": 22,
+  "interpretation": "No qualifying three-occurrence intrusion sequence established in this text-only pass; not evidence of absence or a prevalence estimate.",
+  "primary_blockers": {
+    "AGGREGATED_OCCURRENCE_AND_INCIDENT_IDENTITY": 2,
+    "ANALYSIS_ENVIRONMENT_NOT_VICTIM_EXECUTION": 1,
+    "MULTIPLE_SAMPLE_CONFIGURATIONS_AND_UNRESOLVED_RUN_IDENTITY": 1,
+    "PARTIAL_CHAIN_AND_UNRESOLVED_OCCURRENCE_SCOPE": 1
+  },
+  "primary_sequences_established": 0,
+  "query_error_count": null,
+  "review_sha256": "f8ed114ffdccbce8f07e0581eefc6ec2dda7e24ebd44ad594d3bc3eb8720dcfc",
+  "reviewed_reports": 5,
+  "selected_reports": 5,
+  "selection_sha256": "1d9030b35cf36a4464d704a727ec89599687bacd99be1b5b51205164d7bbd5bc",
+  "status": "EXPLORATORY_REVIEW_NOT_GOLD_VALIDATION"
+}

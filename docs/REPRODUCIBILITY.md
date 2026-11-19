@@ -27,6 +27,8 @@ The AnnoCTR audit checks 120 source identities, 33 pilot pointers and 22 critica
 
 Hash equality verifies source identity and evidence locations, not semantic correctness. Source acquisition and attribution are documented in the [research index](../research/README.md).
 
+The fixed rank-two extension adds five source readings and 22 passage bindings. With `--corpus-root`, reproduction rechecks those bindings against the same corpus; without it, the recorded audit must match the exact selection and review records. `python scripts/audit_rank_two_review.py --corpus-root /path/to/AnnoCTR/all --recover-crlf` runs that audit separately.
+
 ## Individual analyses
 
 ```sh
@@ -35,6 +37,7 @@ python -m examples.exhaustive_projection_checks
 python -m examples.query_fidelity_benchmark
 python scripts/analyze_rdp_case.py
 python scripts/analyze_sequence_case.py
+python scripts/audit_rank_two_review.py
 ```
 
 The original conditional RDP illustration remains a historical method-development example. The source-bound case is analyzed by `analyze_rdp_case.py`.
@@ -51,6 +54,8 @@ The original conditional RDP illustration remains a historical method-developmen
 | `sequence_case_results.json` | Mapping coverage and conditional sequence comparison for the same intrusion |
 | `sequence_source_integrity.json` | Seven passage bindings against the same publisher snapshot |
 | `exploratory_review.json` | Recorded five-report feasibility judgments |
+| `rank_two_review.json` | Complete five-report extension coverage and unassessed query status |
+| `rank_two_source_integrity.json` | Source hashes and 22 extension passage bindings |
 | `source_integrity.json` | AnnoCTR source and evidence-pointer audit |
 | `validation.json` | Suite results, commit, runtime and verification modes |
 | `manifest.json` | SHA-256 for every packaged file except the manifest itself |

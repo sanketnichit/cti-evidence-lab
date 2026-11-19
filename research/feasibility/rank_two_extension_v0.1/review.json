@@ -1,0 +1,381 @@
+{
+  "attribution": "Adapted from the AnnoCTR corpus (Bosch Research) and the five named publishers; source-derived review records CC BY-SA 4.0. Raw text not redistributed.",
+  "independently_validated": false,
+  "provenance_limit": "The selected frame rows have empty canonical_source_url fields. Corpus identities and titles are retained; publisher URLs have not been independently resolved in this pass.",
+  "reports": [
+    {
+      "counterinterpretation": {
+        "assessment": "The report names a real Colonial Pipeline incident and attributes affiliate behavior to observations. That is stronger than a hypothetical capability list, but does not bind the affiliate procedure or the two actor examples to that named incident. Public announcements and product changes are not its intrusion timeline.",
+        "evidence_ids": [
+          "I1",
+          "I3",
+          "I4"
+        ]
+      },
+      "dimensions": {
+        "incident_scope": "Colonial incident reference is separate from generalized affiliate procedures",
+        "mapping": "Event-level mappings not assigned",
+        "occurrence_identity": "No particular three-action chain individuated",
+        "ordering": "Exfiltration before deployment is asserted at procedure level"
+      },
+      "evidence": [
+        {
+          "char_end": 1540,
+          "char_start": 59,
+          "evidence_id": "I1",
+          "line_end": 8,
+          "line_start": 3,
+          "role": "Named incident and broader history",
+          "span_sha256": "dbf86e1e05fc50679f5c9a4aad3f4c52e560c0425957c8b23f6fcc1c14ff1c99"
+        },
+        {
+          "char_end": 2820,
+          "char_start": 1984,
+          "evidence_id": "I2",
+          "line_end": 14,
+          "line_start": 11,
+          "role": "Delivery and post-exploitation procedures",
+          "span_sha256": "d591152be08b9249348ca4e3e767e8231f6193803b44405651f08db0f16de59f"
+        },
+        {
+          "char_end": 3393,
+          "char_start": 2821,
+          "evidence_id": "I3",
+          "line_end": 16,
+          "line_start": 15,
+          "role": "Two affiliate examples",
+          "span_sha256": "452894f462961c551cfa8f94ca5d6e9fe7e4902bcba31be8d5b9b318d4fd964c"
+        },
+        {
+          "char_end": 4554,
+          "char_start": 3394,
+          "evidence_id": "I4",
+          "line_end": 22,
+          "line_start": 17,
+          "role": "Public communications distinct from intrusion actions",
+          "span_sha256": "b4d501d43baf9d6f2986daa1339d9fccf3f1b617d1c9fe5ec008284386d54bfb"
+        }
+      ],
+      "full_corpus_text_read": true,
+      "genre": "Actor ecosystem overview with a named incident reference",
+      "observation_level": "MULTI_INCIDENT_ACTOR_PROCEDURES",
+      "primary_blocker": "AGGREGATED_OCCURRENCE_AND_INCIDENT_IDENTITY",
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "query_errors": null,
+      "remaining_resolution": "Resolve a particular affiliate execution and source-supported shared scope before joining its access, exfiltration and deployment actions. Retain the procedure ordering without importing facts from the linked news article.",
+      "report_id": "intel471_2021-05-10_darkside-ransomware-colonial-pipeline-attack",
+      "source_text_sha256": "680d54866e1d2d63414b0db9da27d71e2d384486b69ebd1f78d5cdd7394ddf78",
+      "strongest_candidate": {
+        "assessment": "The delivery discussion orders data theft before ransomware deployment and describes initial access and lateral movement. These are meaningful procedure-level ordering claims, but the source groups affiliates and victims rather than identifying one three-action execution.",
+        "evidence_ids": [
+          "I2",
+          "I3"
+        ]
+      }
+    },
+    {
+      "counterinterpretation": {
+        "assessment": "A substantial geopolitical discussion does not erase the report's concrete cybercampaign observations. The author identifies a reconnaissance phase and a related phishing campaign. This can support an aggregate two-stage relation, but selecting a particular scan, email and execution would require additional occurrence and scope evidence.",
+        "evidence_ids": [
+          "L1",
+          "L2",
+          "L3"
+        ]
+      },
+      "dimensions": {
+        "incident_scope": "Campaign-level linkage exists; one execution chain remains unresolved",
+        "mapping": "Event-level mappings not assigned",
+        "occurrence_identity": "Reconnaissance and phishing are described as plural or phase-level activity",
+        "ordering": "Explicit two-week reconnaissance-before-phishing statement; third action conditional"
+      },
+      "evidence": [
+        {
+          "char_end": 8820,
+          "char_start": 7646,
+          "evidence_id": "L1",
+          "line_end": 74,
+          "line_start": 65,
+          "role": "Geopolitical framing and observed cybercampaign",
+          "span_sha256": "cf163866787fc2e9a1bb45e0333327729bcb8eb584f9be5354c86ce76ed578e7"
+        },
+        {
+          "char_end": 9434,
+          "char_start": 8690,
+          "evidence_id": "L2",
+          "line_end": 78,
+          "line_start": 74,
+          "role": "Multiple messages and conditional execution",
+          "span_sha256": "5ba975d97e2a41d905b0d330b8565dd4f9b6e4c03bf70abfc7afe850797b7a8a"
+        },
+        {
+          "char_end": 9778,
+          "char_start": 9435,
+          "evidence_id": "L3",
+          "line_end": 81,
+          "line_start": 79,
+          "role": "Explicit reconnaissance-before-phishing relation",
+          "span_sha256": "4b1999ffc4a57fe3055c73eb32194d677854873bd06fb526ec1d0a8d4c4857e3"
+        },
+        {
+          "char_end": 11850,
+          "char_start": 9890,
+          "evidence_id": "L4",
+          "line_end": 100,
+          "line_start": 84,
+          "role": "Infrastructure dates and campaign-level conclusion",
+          "span_sha256": "c274d81b6132510374a05abd45dd29ab527b0024211f07f3845681c0b19ed2b2"
+        }
+      ],
+      "full_corpus_text_read": true,
+      "genre": "Geopolitical analysis with a historical cybercampaign section",
+      "observation_level": "REPORTED_CAMPAIGN_ORDERING_WITH_CONDITIONAL_INFECTION",
+      "primary_blocker": "PARTIAL_CHAIN_AND_UNRESOLVED_OCCURRENCE_SCOPE",
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "query_errors": null,
+      "remaining_resolution": "Retain the report in the declared extension. Resolve the granularity and incident linkage of scans and messages and establish a third action before constructing a two-edge occurrence path. Domain dates and shared infrastructure cannot fill that gap.",
+      "report_id": "lab52_2020-02-18_the-role-of-china-in",
+      "source_text_sha256": "8d98b4118cb745a0ae189967f2ebc0fe125b7fdeee4f0cbffcdacd545253b57c",
+      "strongest_candidate": {
+        "assessment": "The cybercampaign section reports SMB reconnaissance two weeks before receipt of phishing messages. Preserve this explicit relative ordering; the prose position of the reconnaissance passage does not reverse it. The attached-document infection description depends on download and execution, so it does not establish a third observed intrusion action.",
+        "evidence_ids": [
+          "L2",
+          "L3"
+        ]
+      }
+    },
+    {
+      "counterinterpretation": {
+        "assessment": "The campaigns and delivery activity were observed, and captions identify dated exemplars. It would be too strong to dismiss the whole sequence as hypothetical. However, the source also states that KiXtart is not always present; combining all stages and examples as one victim execution would remove a documented path alternative.",
+        "evidence_ids": [
+          "P1",
+          "P3",
+          "P4"
+        ]
+      },
+      "dimensions": {
+        "incident_scope": "Multiple waves, dates and regions; optional loader path",
+        "mapping": "Event-level mappings not assigned",
+        "occurrence_identity": "No particular execution of the multi-loader sequence individuated",
+        "ordering": "Explicit stage-order descriptions retained at attack-path level"
+      },
+      "evidence": [
+        {
+          "char_end": 2957,
+          "char_start": 557,
+          "evidence_id": "P1",
+          "line_end": 26,
+          "line_start": 9,
+          "role": "Observed waves and conditional attachment behavior",
+          "span_sha256": "13a4f9dd4c382cf702b4432d7fa157a911df6b482d4c8819584746a74901f451"
+        },
+        {
+          "char_end": 4351,
+          "char_start": 3369,
+          "evidence_id": "P2",
+          "line_end": 44,
+          "line_start": 32,
+          "role": "October attack-path stages",
+          "span_sha256": "41af4e9f93e28ec5be8ca428a8658145d822c340181939b74ad4895964260e96"
+        },
+        {
+          "char_end": 5654,
+          "char_start": 4675,
+          "evidence_id": "P3",
+          "line_end": 58,
+          "line_start": 48,
+          "role": "Dated exemplars across campaigns",
+          "span_sha256": "722868c76eaad7fde222d44311e029169499fdcd6b507ae296835e60c3ec2bb1"
+        },
+        {
+          "char_end": 10315,
+          "char_start": 7984,
+          "evidence_id": "P4",
+          "line_end": 98,
+          "line_start": 79,
+          "role": "Loader transitions and optional KiXtart stage",
+          "span_sha256": "ffcfd186ac805f38a483cf81708a387257127f13fa219f2414f498d90dbd4cc5"
+        }
+      ],
+      "full_corpus_text_read": true,
+      "genre": "Multi-wave campaign report and loader analysis",
+      "observation_level": "OBSERVED_CAMPAIGNS_AND_DESCRIBED_ATTACK_PATHS",
+      "primary_blocker": "AGGREGATED_OCCURRENCE_AND_INCIDENT_IDENTITY",
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "query_errors": null,
+      "remaining_resolution": "Preserve the campaign path and optional stage. Resolve a specific occurrence chain and separate compound actions before assigning event mappings or scoring sequence queries. Dated email exemplars do not by themselves show downstream execution.",
+      "report_id": "proofpoint_2021-10-19_whatta-ta-ta505-ramps-activity",
+      "source_text_sha256": "fd7e538942814ef1fab0b950ea2ac7c522cb342c1fb1338182a5872e786b9e5b",
+      "strongest_candidate": {
+        "assessment": "The October chain describes macros, MSI execution, KiXtart, MirrorBlast, Rebol stagers and subsequent payloads. Several explicit transitions support an ordered attack-path description. The text does not bind a chosen three-stage execution to one particular observed intrusion, and some stages group downloading with execution.",
+        "evidence_ids": [
+          "P2",
+          "P4"
+        ]
+      }
+    },
+    {
+      "counterinterpretation": {
+        "assessment": "A specific executable and plausible target are identified, which supports more precise sample identity than a family-level summary. Nevertheless, the lab traffic is not automatically evidence of those actions on the target. The suggested XLS-then-EXE user behavior is explicitly hypothetical, and the other campaign has no established technical linkage.",
+        "evidence_ids": [
+          "Q1",
+          "Q3",
+          "Q4",
+          "Q5"
+        ]
+      },
+      "dimensions": {
+        "incident_scope": "Analyst execution is explicit; victim-side linkage unresolved",
+        "mapping": "Report-level technique table not propagated to occurrences",
+        "occurrence_identity": "Concrete sample hash and repeated analysis traffic; selected action executions not fully individuated",
+        "ordering": "Copy then task creation is described; repeated POST traffic is observed during analysis"
+      },
+      "evidence": [
+        {
+          "char_end": 2386,
+          "char_start": 1146,
+          "evidence_id": "Q1",
+          "line_end": 27,
+          "line_start": 15,
+          "role": "Sample identity and initial target claim",
+          "span_sha256": "00d9608f53cc0ab3bd3030fcf6bdf2c1832ef95aeb0e2a8b86d6826b51361327"
+        },
+        {
+          "char_end": 6762,
+          "char_start": 5079,
+          "evidence_id": "Q2",
+          "line_end": 60,
+          "line_start": 45,
+          "role": "Hypothetical user actions and copy/task sequence",
+          "span_sha256": "47110b5eb83678d20eebc8f5e8ea2eec60db483ad6805f077c1a40bd0624066a"
+        },
+        {
+          "char_end": 8409,
+          "char_start": 6952,
+          "evidence_id": "Q3",
+          "line_end": 77,
+          "line_start": 63,
+          "role": "Explicit live analysis traffic and absent responses",
+          "span_sha256": "762da40898f58493496d61784944cf5b4d29a022a9cd6cd43dbb0f1a8d88acba"
+        },
+        {
+          "char_end": 10214,
+          "char_start": 8466,
+          "evidence_id": "Q4",
+          "line_end": 93,
+          "line_start": 80,
+          "role": "Victimology and limits of cross-campaign correlation",
+          "span_sha256": "362db7d121c1a3a436d9875dbd03af4077bbcbba390c1e496fd64c483539af1a"
+        },
+        {
+          "char_end": 13608,
+          "char_start": 11873,
+          "evidence_id": "Q5",
+          "line_end": 124,
+          "line_start": 116,
+          "role": "Report-level technique table",
+          "span_sha256": "474b701248450fbd0b48144bfa6bb1e86c89bd122db6b1a0c633c8db56b49d4b"
+        }
+      ],
+      "full_corpus_text_read": true,
+      "genre": "Targeted campaign investigation and live sample analysis",
+      "observation_level": "EXPLICIT_SAMPLE_EXECUTION_WITH_SEPARATE_VICTIMOLOGY",
+      "primary_blocker": "ANALYSIS_ENVIRONMENT_NOT_VICTIM_EXECUTION",
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "query_errors": null,
+      "remaining_resolution": "Keep an auxiliary sample-analysis candidate. Establish individual action boundaries and relation support for that activity stratum before evaluating it separately; do not relabel it as victim-side execution or infer request counts from an approximate period.",
+      "report_id": "quoteintelligence_2020-09-22_apt28-zebrocy-malware-campaign-nato",
+      "source_text_sha256": "96be28afd2f1c1f0270a4ce0383b50e717c38616a752793373db48b9ca833d00",
+      "strongest_candidate": {
+        "assessment": "The behavior section describes copying with padding, then scheduled-task creation, followed by recurring POST attempts. The analysts explicitly allowed the sample to contact its real server and observed unanswered requests during analysis. This is execution evidence in an analysis environment, not merely an untested capability description.",
+        "evidence_ids": [
+          "Q2",
+          "Q3"
+        ]
+      }
+    },
+    {
+      "counterinterpretation": {
+        "assessment": "Network examples, differing observed configurations and a reported downloaded module are stronger evidence than the seller's capability claims alone. The sample-analysis setting and configuration alternatives still matter: combining one configuration's file collection with another's module retrieval would create an unsupported composite chain.",
+        "evidence_ids": [
+          "Z2",
+          "Z3",
+          "Z5"
+        ]
+      },
+      "dimensions": {
+        "incident_scope": "No selected victim-side execution binds the described chain",
+        "mapping": "Report-level technique table not propagated to occurrences",
+        "occurrence_identity": "Observed artifacts span several binaries and configurations",
+        "ordering": "Configuration then module retrieval and execution described conditionally"
+      },
+      "evidence": [
+        {
+          "char_end": 4474,
+          "char_start": 2503,
+          "evidence_id": "Z1",
+          "line_end": 46,
+          "line_start": 28,
+          "role": "Execution and initial configuration request",
+          "span_sha256": "7abc5168a9410b4cddeff399869e5d1bf3971b2d1a6fc3c16c9234ec8e8b92d9"
+        },
+        {
+          "char_end": 5398,
+          "char_start": 4475,
+          "evidence_id": "Z2",
+          "line_end": 55,
+          "line_start": 47,
+          "role": "Three observed configurations and differing actions",
+          "span_sha256": "8e256aa24e3819762a9028fd3fbfa9ced36b3bd4aaf4094240a911d3fdb278de"
+        },
+        {
+          "char_end": 6618,
+          "char_start": 5399,
+          "evidence_id": "Z3",
+          "line_end": 65,
+          "line_start": 56,
+          "role": "Module request, execution description and observed payload",
+          "span_sha256": "86cb09be94ffe9cc5309e0d0bcda098bf79a993f1dd8b78aa93c2adffb1104ae"
+        },
+        {
+          "char_end": 9361,
+          "char_start": 7662,
+          "evidence_id": "Z4",
+          "line_end": 90,
+          "line_start": 76,
+          "role": "Collection and exfiltration description",
+          "span_sha256": "0fc1df934456d49f593be3d38a3f600fdf78c6e834cd63060bbc73703d79ddac"
+        },
+        {
+          "char_end": 11462,
+          "char_start": 9540,
+          "evidence_id": "Z5",
+          "line_end": 120,
+          "line_start": 93,
+          "role": "Sandbox context and report-level mappings",
+          "span_sha256": "17c0eb3050f0409f3d8158a49dbfc355ba3b7d607ee64f37d9a3dc403473a8e0"
+        }
+      ],
+      "full_corpus_text_read": true,
+      "genre": "Infostealer product and multi-configuration sample analysis",
+      "observation_level": "CONFIGURATION_AND_NETWORK_OBSERVATIONS_WITH_UNRESOLVED_RUN_IDENTITY",
+      "primary_blocker": "MULTIPLE_SAMPLE_CONFIGURATIONS_AND_UNRESOLVED_RUN_IDENTITY",
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "query_errors": null,
+      "remaining_resolution": "Bind the request, module retrieval and execution to the same sample and run, and assess their activity stratum explicitly. Preserve data-collection ordering as a separate candidate; do not turn the technique list or approximate prose order into temporal gold.",
+      "report_id": "zscaler_2020-08-14_purplewave-new-infostealer-russia",
+      "source_text_sha256": "669620a7f034011b9ceaaf9dd71464304089e16883c57281de0157fe38f88cc8",
+      "strongest_candidate": {
+        "assessment": "The report describes a configuration request followed by a further request for an additional module, then storage and execution. It identifies an observed downloaded wallet-stealing module. Those observations support a sample-analysis candidate, but the article discusses several binaries and configurations without identifying one complete three-action victim execution.",
+        "evidence_ids": [
+          "Z1",
+          "Z2",
+          "Z3"
+        ]
+      }
+    }
+  ],
+  "review_date": "2026-11-18",
+  "scope": "Complete corpus text, including captions and tables. Linked images, upstream pages and telemetry not inspected. No new event-level mappings accepted.",
+  "selection_declaration_commit": "14c0355bb478eb23e613ce018d387815b50891d6",
+  "status": "EXPLORATORY_TEXT_REVIEW"
+}

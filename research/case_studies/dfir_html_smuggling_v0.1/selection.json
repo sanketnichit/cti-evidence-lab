@@ -1,0 +1,59 @@
+{
+  "declared_date": "2026-11-19",
+  "limitation": "Order is from the current API response, not a verified historical census of all publisher output.",
+  "metadata_sha256": "8495a0763754305b47a9b20b742857aad238c143eb844ec0320b508ec4552ee5",
+  "metadata_url": "https://thedfirreport.com/wp-json/wp/v2/posts?after=2023-06-12T23:59:59&before=2024-01-01T00:00:00&orderby=date&order=asc&per_page=30&_fields=id,date,slug,link,title",
+  "returned_posts": [
+    {
+      "date": "2023-08-28T00:22:33",
+      "id": 20566,
+      "link": "https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/",
+      "slug": "html-smuggling-leads-to-domain-wide-ransomware",
+      "title": {
+        "rendered": "HTML Smuggling Leads to Domain Wide Ransomware"
+      }
+    },
+    {
+      "date": "2023-09-25T00:58:24",
+      "id": 21520,
+      "link": "https://thedfirreport.com/2023/09/25/from-screenconnect-to-hive-ransomware-in-61-hours/",
+      "slug": "from-screenconnect-to-hive-ransomware-in-61-hours",
+      "title": {
+        "rendered": "From ScreenConnect to Hive Ransomware in 61 hours"
+      }
+    },
+    {
+      "date": "2023-10-30T00:38:56",
+      "id": 22587,
+      "link": "https://thedfirreport.com/2023/10/30/netsupport-intrusion-results-in-domain-compromise/",
+      "slug": "netsupport-intrusion-results-in-domain-compromise",
+      "title": {
+        "rendered": "NetSupport Intrusion Results in Domain Compromise"
+      }
+    },
+    {
+      "date": "2023-12-04T01:55:56",
+      "id": 23963,
+      "link": "https://thedfirreport.com/2023/12/04/sql-brute-force-leads-to-bluesky-ransomware/",
+      "slug": "sql-brute-force-leads-to-bluesky-ransomware",
+      "title": {
+        "rendered": "SQL Brute Force Leads to BlueSky Ransomware"
+      }
+    },
+    {
+      "date": "2023-12-18T01:06:14",
+      "id": 24499,
+      "link": "https://thedfirreport.com/2023/12/18/lets-opendir-some-presents-an-analysis-of-a-persistent-actors-activity/",
+      "slug": "lets-opendir-some-presents-an-analysis-of-a-persistent-actors-activity",
+      "title": {
+        "rendered": "Lets Open(Dir) Some Presents: An Analysis of a Persistent Actor\u2019s Activity"
+      }
+    }
+  ],
+  "rule": "Select the earliest post returned by the publisher metadata API after 2023-06-12, ordered by publication date ascending. No substitution for low sequence yield.",
+  "scope": "Source-text interpretation of distinct incident-linked actions and explicit BEFORE evidence; include successful and failed query answers, withheld mappings and excluded candidate chains. No transitive closure or report-level mapping propagation. Raw source text stays local.",
+  "selected_post_id": 20566,
+  "selected_url": "https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/",
+  "selection_basis": "Publisher metadata only; title and search-result mention exposed, full report not read for this selection. Same publisher as the prior case; not independent annotation or probability sampling.",
+  "status": "FIXED_NEXT_REPORT_BEFORE_CONTENT_REVIEW"
+}

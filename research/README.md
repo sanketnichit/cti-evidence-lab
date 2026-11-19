@@ -8,6 +8,7 @@
 | Connected-sequence query fidelity | Two exhaustive finite constructions; four representations | [Methods](QUERY_FIDELITY_STUDY_v0.1.md), [results](experiments/query_fidelity_v0.1/README.md) |
 | Representation controls | Seven specified graph comparisons and a 4,096-case oracle check | [Controls](experiments/representation_controls_v0.1/README.md), [finite check](experiments/representation_controls_v0.1/finite_checks.json) |
 | AnnoCTR feasibility | Five fixed donor-stratified candidates; exposed exploratory review | [Review](feasibility/exploratory_review_v0.1/README.md), [critical assessment](feasibility/exploratory_review_v0.1/CRITICAL_REVIEW.md) |
+| Fixed source extension | All five rank-two donor reports; selection committed before this text review | [Review and coverage](feasibility/rank_two_extension_v0.1/README.md), [protocol](feasibility/rank_two_extension_v0.1/PROTOCOL.md) |
 | Repeated RDP attempts | Purposive source-bound case with outcome and mapping sensitivities | [Case study](case_studies/dfir_rdp_v0.1/README.md) |
 | RDP and account lifecycle | Same-case extension with four actions and explicit unresolved cleanup mapping | [Sequence sensitivity](case_studies/dfir_rdp_sequence_v0.2/README.md) |
 

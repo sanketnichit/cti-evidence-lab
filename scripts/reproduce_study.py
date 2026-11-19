@@ -24,6 +24,7 @@ from scripts.summarize_exploratory_review import DEFAULT, summarize
 from scripts.audit_rdp_case import CASE as RDP_CASE, verify as verify_rdp_source
 from scripts.analyze_rdp_case import analyze as analyze_rdp_case
 from scripts.analyze_sequence_case import CASE as SEQUENCE_CASE, analyze as analyze_sequence_case
+from scripts.audit_rank_two_review import DIRECTORY as RANK_TWO, audit as audit_rank_two, summarize as summarize_rank_two, validate_recorded_audit
 
 
 def write_json(path, value):
@@ -107,6 +108,15 @@ def main():
         result["critical_review_spans_verified"] = verify_critical_evidence(args.corpus_root, args.recover_crlf)
     write_json(destination / "source_integrity.json", source_audit)
     write_json(destination / "exploratory_review.json", summarize(decisions, source_audit))
+    extension_selection = json.loads((RANK_TWO / "selection.json").read_text(encoding="utf-8"))
+    extension_review = json.loads((RANK_TWO / "review.json").read_text(encoding="utf-8"))
+    write_json(destination / "rank_two_review.json", summarize_rank_two(extension_selection, extension_review))
+    extension_audit = validate_recorded_audit(extension_selection, extension_review, json.loads((RANK_TWO / "source_integrity.json").read_text(encoding="utf-8")))
+    result["rank_two_source_audit_mode"] = "RECORDED_AUDIT_ONLY"
+    if args.corpus_root:
+        extension_audit = audit_rank_two(args.corpus_root, extension_selection, extension_review, recover_crlf=args.recover_crlf)
+        result["rank_two_source_audit_mode"] = "LOCAL_CORPUS_RECHECKED"
+    write_json(destination / "rank_two_source_integrity.json", extension_audit)
     rdp_case = json.loads(RDP_CASE.read_text(encoding="utf-8"))
     write_json(destination / "rdp_case_results.json", analyze_rdp_case(rdp_case))
     rdp_audit = json.loads((RDP_CASE.parent / "source_integrity.json").read_text(encoding="utf-8"))
@@ -129,7 +139,8 @@ def main():
                        "source_integrity.json", "exploratory_review.json", "validation.json",
                        "query_fidelity.json", "query_fidelity.md",
                        "rdp_case_results.json", "rdp_source_integrity.json",
-                       "sequence_case_results.json", "sequence_source_integrity.json"]
+                       "sequence_case_results.json", "sequence_source_integrity.json",
+                       "rank_two_review.json", "rank_two_source_integrity.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")

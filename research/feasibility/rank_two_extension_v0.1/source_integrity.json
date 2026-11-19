@@ -1,0 +1,80 @@
+{
+  "review_sha256": "f8ed114ffdccbce8f07e0581eefc6ec2dda7e24ebd44ad594d3bc3eb8720dcfc",
+  "selection_sha256": "1d9030b35cf36a4464d704a727ec89599687bacd99be1b5b51205164d7bbd5bc",
+  "source_text_exported": false,
+  "sources": [
+    {
+      "decoded_original_sha256": "5799adb6eecc4a3fe4e109fbb93af06c958cf8ed6c160dbd8336d83915fbd612",
+      "raw_bytes_sha256": "5799adb6eecc4a3fe4e109fbb93af06c958cf8ed6c160dbd8336d83915fbd612",
+      "report_id": "intel471_2021-05-10_darkside-ransomware-colonial-pipeline-attack",
+      "source_text_char_count": 5620,
+      "source_text_sha256": "680d54866e1d2d63414b0db9da27d71e2d384486b69ebd1f78d5cdd7394ddf78",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence": [
+        "I1",
+        "I2",
+        "I3",
+        "I4"
+      ]
+    },
+    {
+      "decoded_original_sha256": "b79287058b9526cce3b40b9e6a00a7a8c21206ec0eaa8ee7d770420a0a622e33",
+      "raw_bytes_sha256": "b79287058b9526cce3b40b9e6a00a7a8c21206ec0eaa8ee7d770420a0a622e33",
+      "report_id": "lab52_2020-02-18_the-role-of-china-in",
+      "source_text_char_count": 14643,
+      "source_text_sha256": "8d98b4118cb745a0ae189967f2ebc0fe125b7fdeee4f0cbffcdacd545253b57c",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ]
+    },
+    {
+      "decoded_original_sha256": "949a9bfae223f40900ac34bfc74333f6a3070e126d89f415da5585e23769768a",
+      "raw_bytes_sha256": "949a9bfae223f40900ac34bfc74333f6a3070e126d89f415da5585e23769768a",
+      "report_id": "proofpoint_2021-10-19_whatta-ta-ta505-ramps-activity",
+      "source_text_char_count": 16165,
+      "source_text_sha256": "fd7e538942814ef1fab0b950ea2ac7c522cb342c1fb1338182a5872e786b9e5b",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ]
+    },
+    {
+      "decoded_original_sha256": "e523caf0e926e83fdcd53d433f6054a817494138c58c4b6a2ff8729f3c15fa96",
+      "raw_bytes_sha256": "e523caf0e926e83fdcd53d433f6054a817494138c58c4b6a2ff8729f3c15fa96",
+      "report_id": "quoteintelligence_2020-09-22_apt28-zebrocy-malware-campaign-nato",
+      "source_text_char_count": 14633,
+      "source_text_sha256": "96be28afd2f1c1f0270a4ce0383b50e717c38616a752793373db48b9ca833d00",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "Q5"
+      ]
+    },
+    {
+      "decoded_original_sha256": "a6cf976c92dd2b0af2a85caf7ff78b9fefb78d186642628a784869a11088c7eb",
+      "raw_bytes_sha256": "a6cf976c92dd2b0af2a85caf7ff78b9fefb78d186642628a784869a11088c7eb",
+      "report_id": "zscaler_2020-08-14_purplewave-new-infostealer-russia",
+      "source_text_char_count": 12733,
+      "source_text_sha256": "669620a7f034011b9ceaaf9dd71464304089e16883c57281de0157fe38f88cc8",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence": [
+        "Z1",
+        "Z2",
+        "Z3",
+        "Z4",
+        "Z5"
+      ]
+    }
+  ],
+  "status": "SOURCE_BINDINGS_VERIFIED_NOT_SEMANTIC_VALIDATION"
+}

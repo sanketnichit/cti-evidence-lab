@@ -27,7 +27,7 @@ def build(destination):
     from reportlab.lib.enums import TA_LEFT
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.pagesizes import A4
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Preformatted
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Preformatted, KeepTogether, CondPageBreak
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     styles = getSampleStyleSheet()
@@ -75,11 +75,20 @@ def build(destination):
                                       ("RIGHTPADDING", (0, 0), (-1, -1), 7),
                                       ("TOPPADDING", (0, 0), (-1, -1), 7),
                                       ("BOTTOMPADDING", (0, 0), (-1, -1), 7)]))
-            story.extend([table, Spacer(1, 12)])
+            if len(rows) <= 8:
+                group = [table]
+                if story and isinstance(story[-1], Paragraph) and story[-1].style.name == "ReportHeading":
+                    group.insert(0, story.pop())
+                story.append(KeepTogether(group))
+            else:
+                story.append(table)
+            story.append(Spacer(1, 12))
             continue
         elif line.startswith("# "):
             story.append(Paragraph(inline(line[2:]), styles["ReportTitle"]))
         elif line.startswith(("## ", "### ")):
+            if line.startswith("## 7."):
+                story.append(CondPageBreak(250))
             story.append(Paragraph(inline(line.lstrip("# ")), styles["ReportHeading"]))
         else:
             story.append(Paragraph(inline(line), styles["ReportBody"]))

@@ -12,14 +12,17 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | Connected-sequence queries | Four representations; 5,184 singleton and 4,096 set-valued mapping graphs | Fidelity to supplied graphs, not extraction accuracy |
 | AnnoCTR source inventory | 400-report inventory; fixed 120-report cybersecurity frame | Annotation counts are not occurrence counts |
 | Fixed feasibility cohort | Five rank-one donor candidates with recorded interpretations and counterarguments | No independently validated occurrence-pair dataset |
+| Fixed source extension | Five rank-two reports; all texts read and 22 additional passage bindings verified | No qualifying primary three-occurrence sequence established; query errors unassessed |
 | Source audit | 120 identities, 33 pilot pointers and 22 critical-review passages checked | Hash identity does not establish semantic correctness |
 | RDP case | Two provisional attempt-level occurrences, one BEFORE edge, three verified passages | Purposive selection; outside AnnoCTR; only one edge |
 | RDP sequence extension | Same intrusion; four actions, four ordering links and seven verified passage bindings | Cleanup mapping unresolved; query comparison conditional on that mapping |
-| Software verification | 329 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
+| Software verification | 337 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
 
 ## Interpretation and sampling
 
 The five AnnoCTR candidates are retained regardless of apparent event yield. Their source review does not establish a qualifying same-technique temporal pair under the current primary rules. Unresolved evidence is not a negative occurrence label or a zero-prevalence estimate.
+
+The separate rank-two extension retains all five additional reports selected by the existing donor order. Selection was committed before this review. Explicit reconnaissance-before-phishing evidence and live sample-analysis execution are retained, but neither resolves a primary three-occurrence intrusion sequence. The original cohort, this extension and the external case are not pooled into a prevalence denominator.
 
 The RDP case uses a separate publisher snapshot and exposed, purposive selection. Its analysis distinguishes attempt-inclusive eligibility, confirmed-success eligibility and withheld mappings. The sequence extension adds two account-removal occurrences from the same intrusion. Its conservative profile has no fully mapped paths and does not assess query errors. Assuming the proposed cleanup mapping permits a conditional comparison of three two-edge paths; the local-edge sensitivity retains two paths that all four representations answer correctly. Neither version contributes a corpus denominator or independent agreement statistic.
 
