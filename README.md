@@ -18,7 +18,7 @@ Two occurrence graphs can have identical technique projections while supporting 
 - **Sequence ambiguity:** retaining self-loops does not recover occurrence identity. Endpoint-compatible joins and diagonal retention address different query failures.
 - **Source sensitivity:** the exploratory RDP case separates attempted actions, confirmed successes and withheld mappings, producing different eligible graphs.
 
-The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 set-valued-mapping graphs for connected-sequence queries. Their rates describe the constructed inputs, not incident prevalence or extraction accuracy. The original five-report AnnoCTR review, fixed five-report extension and separately selected RDP case remain exploratory; independent annotation agreement and population-level conclusions are not established.
+The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 set-valued-mapping graphs for connected-sequence queries. Their rates describe the constructed inputs, not incident prevalence or extraction accuracy. The original five-report AnnoCTR review, fixed five-report extension and two external intrusion cases remain exploratory; independent annotation agreement and population-level conclusions are not established.
 
 ## Research artifacts
 
@@ -28,6 +28,7 @@ The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 se
 | [Query-fidelity study](research/QUERY_FIDELITY_STUDY_v0.1.md) | Counterexample, proof, four-way comparison and full confusion matrices |
 | [RDP case study](research/case_studies/dfir_rdp_v0.1/README.md) | Source-bound occurrence interpretation and outcome/mapping sensitivities |
 | [RDP sequence extension](research/case_studies/dfir_rdp_sequence_v0.2/README.md) | Four actions from the same intrusion; conditional sequence results and unresolved mapping coverage |
+| [Domain-controller sequence](research/case_studies/dfir_html_smuggling_v0.1/README.md) | Second intrusion; successful core query, join error and exact-technique sensitivity |
 | [AnnoCTR feasibility review](research/feasibility/exploratory_review_v0.1/README.md) | Five fixed reports, source bindings and unresolved judgments |
 | [Fixed source extension](research/feasibility/rank_two_extension_v0.1/README.md) | Five additional reports selected before review; ordering, execution context and coverage |
 | [Research index](research/README.md) | Data access, protocols, sampling and provenance records |

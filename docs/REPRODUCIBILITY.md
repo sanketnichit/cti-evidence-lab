@@ -29,6 +29,8 @@ Hash equality verifies source identity and evidence locations, not semantic corr
 
 The fixed rank-two extension adds five source readings and 22 passage bindings. With `--corpus-root`, reproduction rechecks those bindings against the same corpus; without it, the recorded audit must match the exact selection and review records. `python scripts/audit_rank_two_review.py --corpus-root /path/to/AnnoCTR/all --recover-crlf` runs that audit separately.
 
+The second external intrusion has a separate publisher snapshot and 13 passage bindings. Supply it with `--incident-source-html /path/to/saved/source.html`; this option is distinct from `--rdp-source-html`, which verifies the original intrusion and its same-case extension.
+
 ## Individual analyses
 
 ```sh
@@ -37,6 +39,7 @@ python -m examples.exhaustive_projection_checks
 python -m examples.query_fidelity_benchmark
 python scripts/analyze_rdp_case.py
 python scripts/analyze_sequence_case.py
+python scripts/analyze_incident_sequences.py
 python scripts/audit_rank_two_review.py
 ```
 
@@ -53,6 +56,8 @@ The original conditional RDP illustration remains a historical method-developmen
 | `rdp_source_integrity.json` | Publisher snapshot and passage-binding verification |
 | `sequence_case_results.json` | Mapping coverage and conditional sequence comparison for the same intrusion |
 | `sequence_source_integrity.json` | Seven passage bindings against the same publisher snapshot |
+| `incident_sequence_results.json` | Core, extended, exact-technique and withheld-mapping profiles for the second intrusion |
+| `incident_source_integrity.json` | Thirteen bindings against the second publisher snapshot |
 | `exploratory_review.json` | Recorded five-report feasibility judgments |
 | `rank_two_review.json` | Complete five-report extension coverage and unassessed query status |
 | `rank_two_source_integrity.json` | Source hashes and 22 extension passage bindings |

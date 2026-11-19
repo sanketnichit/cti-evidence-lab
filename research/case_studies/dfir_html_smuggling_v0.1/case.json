@@ -1,0 +1,435 @@
+{
+  "case_id": "DFIR_18543_DOMAIN_CONTROLLER_SEQUENCE",
+  "eligible_for_corpus_denominator": false,
+  "evidence": [
+    {
+      "char_end": 1137,
+      "char_start": 676,
+      "evidence_id": "E1",
+      "paragraph_number": 4,
+      "section_and_role": "Incident date and initial access context",
+      "span_sha256": "523880995372fdfc3313c2d84404da5c5672ab5e4c4d1a38417de1503ad2f660"
+    },
+    {
+      "char_end": 3087,
+      "char_start": 2662,
+      "evidence_id": "E2",
+      "paragraph_number": 9,
+      "section_and_role": "RDP session, beacon transfer and execution",
+      "span_sha256": "2b3e3f7453a11a914b4edaa3bd5e87a98e9738a506d260ac9e095593b89136b4"
+    },
+    {
+      "char_end": 3517,
+      "char_start": 3088,
+      "evidence_id": "E3",
+      "paragraph_number": 10,
+      "section_and_role": "Subsequent script, archive and second script order",
+      "span_sha256": "2d6f032f860c1ca42a7d9317aff83fc774d36adfc4d15eaa0e7a90aadbd8fecc"
+    },
+    {
+      "char_end": 6827,
+      "char_start": 6581,
+      "evidence_id": "E4",
+      "paragraph_number": 25,
+      "section_and_role": "Specific DLL and rundll32 execution after transfer",
+      "span_sha256": "597fe4696a30959597af57587bdc22d9e6786365bc0915773d436e5f9d532551"
+    },
+    {
+      "char_end": 9598,
+      "char_start": 9465,
+      "evidence_id": "E5",
+      "paragraph_number": 46,
+      "section_and_role": "AdFind batch-file identity",
+      "span_sha256": "649660bd1d5684024dc8f8fcecfde363b21175ea4a775b3c2503fc3c94f98920"
+    },
+    {
+      "char_end": 9758,
+      "char_start": 9599,
+      "evidence_id": "E6",
+      "paragraph_number": 47,
+      "section_and_role": "Second batch-file identity",
+      "span_sha256": "de3b7c15f0d7ae19b56af13af37d2612a5f71c1fc4e128f1a77e58b08a9877b7"
+    },
+    {
+      "char_end": 10601,
+      "char_start": 10486,
+      "evidence_id": "E7",
+      "paragraph_number": 54,
+      "section_and_role": "Transfer through the RDP session",
+      "span_sha256": "6491d1ab8ff736ce1d149b51883c3d00a2cd65c508b458dd1111e9082ce5c98c"
+    },
+    {
+      "char_end": 12020,
+      "char_start": 11941,
+      "evidence_id": "E8",
+      "paragraph_number": 63,
+      "section_and_role": "Archiving after AdFind execution",
+      "span_sha256": "e923480fbf1fc42d7f9de30240edf3c6ccb412703c619fcd70c84b82bab3bb98"
+    },
+    {
+      "char_end": 12721,
+      "char_start": 12328,
+      "evidence_id": "E9",
+      "paragraph_number": 66,
+      "section_and_role": "Cross-section confirmation of transfer and execution",
+      "span_sha256": "616165460e7d35b2e613bf938f14efe9522173ddc8845b7b338db36eb42d5137"
+    },
+    {
+      "char_end": 11019,
+      "char_start": 10784,
+      "evidence_id": "E10",
+      "paragraph_number": 56,
+      "section_and_role": "Later ransomware-copy candidate",
+      "span_sha256": "9c4dcda71fa584438160c79ffb5515e5960350bef4a455e29138ecc3fccac8ab"
+    },
+    {
+      "char_end": 11276,
+      "char_start": 11020,
+      "evidence_id": "E11",
+      "paragraph_number": 57,
+      "section_and_role": "Uncertain copy failure or redundancy",
+      "span_sha256": "8faeae3ffdd2ac62a06154393863bdc55651653a0b865642d134a8d6da04fb5a"
+    },
+    {
+      "char_end": 11424,
+      "char_start": 11277,
+      "evidence_id": "E12",
+      "paragraph_number": 58,
+      "section_and_role": "Repeated copy across files; scripting alternative",
+      "span_sha256": "6506664bb53fcdcf33bf20e1fdccb99d4cb167997cb07f9f21bb8874d8b418da"
+    },
+    {
+      "char_end": 13882,
+      "char_start": 13861,
+      "evidence_id": "E13",
+      "paragraph_number": 80,
+      "section_and_role": "Publisher internal case identifier",
+      "span_sha256": "6d8b5d469eed28176896d6e6c2304e1eb5eff77e1b88cf3c621d8980483fe73c"
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "candidate_id": "later_redundant_ransomware_copy",
+      "disposition": "UNRESOLVED_HOST_LEVEL_MULTIPLICITY_AND_OUTCOME",
+      "evidence_ids": [
+        "E10",
+        "E11",
+        "E12"
+      ],
+      "reason": "Source considers redundancy as well as failure, spans several hosts and two files; no additional failure or transfer count is inferred."
+    }
+  ],
+  "identity_rationale": "Specific session, DLL path across two hosts and two named script invocations identify the retained actions. Each batch invocation is a node; child commands and host-loop iterations are not expanded.",
+  "independently_validated": false,
+  "interpretation_date": "2026-11-19",
+  "limitations": [
+    "A second intrusion report from the same publisher is not an independent annotation replication.",
+    "Profiles are conditional on the recorded occurrence boundaries, mappings and edges; they are not extraction scores.",
+    "Single candidate mappings are selected for the tested facets, not an exhaustive set-valued annotation of each action.",
+    "Core sequence membership was chosen after reading the preselected report; within-report case construction is exposed."
+  ],
+  "occurrences": [
+    {
+      "activity_stratum": "REPORTED_INTRUSION_ACTION",
+      "candidate_exact_mapping": "T1021.001",
+      "candidate_parent_mapping": "T1021",
+      "description": "Initiation of the narrated RDP session to a domain controller.",
+      "event_id": "rdp_dc",
+      "evidence_ids": [
+        "E2",
+        "E7"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "mapping_caveat": "The session initiation is one occurrence; later unrelated RDP sessions are not merged.",
+      "mapping_rationale": "Source explicitly reports an RDP session used to access the domain controller.",
+      "mapping_status": "PROPOSED_SOURCE_BEHAVIOR",
+      "outcome": "EXECUTION_OR_COMPLETION_REPORTED"
+    },
+    {
+      "activity_stratum": "REPORTED_INTRUSION_ACTION",
+      "candidate_exact_mapping": "T1570",
+      "candidate_parent_mapping": "T1570",
+      "description": "Transfer of 1.dll from the beachhead to that domain controller.",
+      "event_id": "transfer_beacon",
+      "evidence_ids": [
+        "E2",
+        "E4",
+        "E7",
+        "E9"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "mapping_caveat": "Transfer is separated from execution; not classified as external ingress.",
+      "mapping_rationale": "A specific tool is transferred between compromised internal hosts, matching lateral tool transfer.",
+      "mapping_status": "PROPOSED_SOURCE_BEHAVIOR",
+      "outcome": "EXECUTION_OR_COMPLETION_REPORTED"
+    },
+    {
+      "activity_stratum": "REPORTED_INTRUSION_ACTION",
+      "candidate_exact_mapping": "T1218.011",
+      "candidate_parent_mapping": "T1218",
+      "description": "Execution of the transferred 1.dll through rundll32 on the domain controller.",
+      "event_id": "execute_beacon",
+      "evidence_ids": [
+        "E2",
+        "E4",
+        "E9"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "mapping_caveat": "This invocation is distinct from the earlier renamed rundll32 invocation on the beachhead.",
+      "mapping_rationale": "The source specifies rundll32 executing the malicious DLL on the destination host.",
+      "mapping_status": "PROPOSED_SOURCE_BEHAVIOR",
+      "outcome": "EXECUTION_OR_COMPLETION_REPORTED"
+    },
+    {
+      "activity_stratum": "REPORTED_INTRUSION_ACTION",
+      "candidate_exact_mapping": "T1059.003",
+      "candidate_parent_mapping": "T1059",
+      "description": "Invocation of adfind.bat on the domain controller.",
+      "event_id": "run_adfind_batch",
+      "evidence_ids": [
+        "E3",
+        "E5"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "mapping_caveat": "One script invocation is represented, not every child discovery command; discovery facets are not claimed exhaustive.",
+      "mapping_rationale": "The pinned Windows Command Shell definition explicitly includes batch-file execution.",
+      "mapping_status": "PROPOSED_SOURCE_BEHAVIOR",
+      "outcome": "EXECUTION_OR_COMPLETION_REPORTED"
+    },
+    {
+      "activity_stratum": "REPORTED_INTRUSION_ACTION",
+      "candidate_exact_mapping": "T1560.001",
+      "candidate_parent_mapping": "T1560",
+      "description": "Archiving of the discovery results using 7-Zip.",
+      "event_id": "archive_results",
+      "evidence_ids": [
+        "E3",
+        "E8"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "mapping_caveat": "The pinned definition describes preparation before exfiltration. Exfiltration purpose or a later transfer of this archive is not established; a withheld-mapping profile preserves this uncertainty.",
+      "mapping_rationale": "Source explicitly reports a utility archiving collected discovery results.",
+      "mapping_status": "PROPOSED_PURPOSE_SENSITIVE",
+      "outcome": "EXECUTION_OR_COMPLETION_REPORTED"
+    },
+    {
+      "activity_stratum": "REPORTED_INTRUSION_ACTION",
+      "candidate_exact_mapping": "T1059.003",
+      "candidate_parent_mapping": "T1059",
+      "description": "Invocation of the second batch file, ns.bat.",
+      "event_id": "run_nslookup_batch",
+      "evidence_ids": [
+        "E3",
+        "E6"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "mapping_caveat": "Its iterations are not counted as individually resolved host-level actions.",
+      "mapping_rationale": "The second Windows batch-file invocation is a distinct execution occurrence.",
+      "mapping_status": "PROPOSED_SOURCE_BEHAVIOR",
+      "outcome": "EXECUTION_OR_COMPLETION_REPORTED"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "core_transfer_execution",
+      "occurrence_ids": [
+        "rdp_dc",
+        "transfer_beacon",
+        "execute_beacon"
+      ],
+      "relation_ids": [
+        "B1",
+        "B2"
+      ],
+      "taxonomy_level": "parent",
+      "withheld_mapping_ids": []
+    },
+    {
+      "name": "extended_script_sequence",
+      "occurrence_ids": [
+        "rdp_dc",
+        "transfer_beacon",
+        "execute_beacon",
+        "run_adfind_batch",
+        "archive_results",
+        "run_nslookup_batch"
+      ],
+      "relation_ids": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5"
+      ],
+      "taxonomy_level": "parent",
+      "withheld_mapping_ids": []
+    },
+    {
+      "name": "extended_exact_techniques",
+      "occurrence_ids": [
+        "rdp_dc",
+        "transfer_beacon",
+        "execute_beacon",
+        "run_adfind_batch",
+        "archive_results",
+        "run_nslookup_batch"
+      ],
+      "relation_ids": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5"
+      ],
+      "taxonomy_level": "exact",
+      "withheld_mapping_ids": []
+    },
+    {
+      "name": "archive_mapping_withheld",
+      "occurrence_ids": [
+        "rdp_dc",
+        "transfer_beacon",
+        "execute_beacon",
+        "run_adfind_batch",
+        "archive_results",
+        "run_nslookup_batch"
+      ],
+      "relation_ids": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5"
+      ],
+      "taxonomy_level": "parent",
+      "withheld_mapping_ids": [
+        "archive_results"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "basis": "EXPLICIT_SOURCE_ORDERING",
+      "evidence_ids": [
+        "E2",
+        "E7"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "relation": "BEFORE",
+      "relation_id": "B1",
+      "source_event": "rdp_dc",
+      "target_event": "transfer_beacon"
+    },
+    {
+      "basis": "EXPLICIT_SOURCE_ORDERING",
+      "evidence_ids": [
+        "E2",
+        "E4",
+        "E9"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "relation": "BEFORE",
+      "relation_id": "B2",
+      "source_event": "transfer_beacon",
+      "target_event": "execute_beacon"
+    },
+    {
+      "basis": "EXPLICIT_SOURCE_ORDERING",
+      "evidence_ids": [
+        "E2",
+        "E3"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "relation": "BEFORE",
+      "relation_id": "B3",
+      "source_event": "execute_beacon",
+      "target_event": "run_adfind_batch"
+    },
+    {
+      "basis": "EXPLICIT_SOURCE_ORDERING",
+      "evidence_ids": [
+        "E3",
+        "E8"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "relation": "BEFORE",
+      "relation_id": "B4",
+      "source_event": "run_adfind_batch",
+      "target_event": "archive_results"
+    },
+    {
+      "basis": "EXPLICIT_SOURCE_ORDERING",
+      "evidence_ids": [
+        "E3"
+      ],
+      "incident_id": "DFIR_18543_NOVEMBER_2022",
+      "relation": "BEFORE",
+      "relation_id": "B5",
+      "source_event": "archive_results",
+      "target_event": "run_nslookup_batch"
+    }
+  ],
+  "sample_membership": "EXTERNAL_CHRONOLOGICAL_EXTENSION_OUTSIDE_ANNOCTR",
+  "selection_declaration_commit": "0077af886adfed5de7ceee15ef7510ef31a3f917",
+  "selection_record": "selection.json",
+  "source": {
+    "canonicalization": "Strict UTF-8 HTML paragraph text with entities decoded and whitespace collapsed; nonempty p elements joined by LF, final LF. scripts/audit_rdp_case.py",
+    "paragraph_text_sha256": "485e40243ca288c30827231e51f6057bafb60def55604113a9b8c71c57a508c4",
+    "publication_date": "2023-08-28",
+    "publisher": "The DFIR Report",
+    "raw_html_sha256": "506ac92a6cf282bf15d61c70658fe274e5cc1af9259175de0d3c71f8720319cd",
+    "retrieved_at_utc": "2026-11-19T03:58:53.083057+00:00",
+    "scope": "Paragraph narrative; images and underlying telemetry not independently validated. Code blocks and lists are not included in the paragraph hash.",
+    "title": "HTML Smuggling Leads to Domain Wide Ransomware",
+    "url": "https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/"
+  },
+  "status": "EXPLORATORY_SOURCE_INTERPRETATION",
+  "taxonomy": {
+    "crosswalk_sha256": "f449ff8bd1551b6d6656d2f25a82b7c55a0b134bbecd4215f0f10330ec85be29",
+    "definition_checks": [
+      {
+        "description_sha256": "417a855ebe639a045d483f825b4074e24b93be85d2f8b910cf6139e6fa4cfb42",
+        "modified": "2022-03-28T16:07:44.605Z",
+        "object_id": "attack-pattern--eb062747-2193-45de-8fa2-e62549c37ddf",
+        "object_version": "1.1",
+        "technique_id": "T1021.001",
+        "url": "https://github.com/mitre/cti/blob/4cbf8cc4bdf2121ee987a23bfe5aac4fe4d2f5b1/enterprise-attack/attack-pattern/attack-pattern--eb062747-2193-45de-8fa2-e62549c37ddf.json"
+      },
+      {
+        "description_sha256": "74e6007be7b63bf10705e1b3a7db903ff56227a05260f61cd277dd6235080e69",
+        "modified": "2021-07-26T17:13:07.345Z",
+        "object_id": "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62",
+        "object_version": "1.2",
+        "technique_id": "T1059.003",
+        "url": "https://github.com/mitre/cti/blob/4cbf8cc4bdf2121ee987a23bfe5aac4fe4d2f5b1/enterprise-attack/attack-pattern/attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62.json"
+      },
+      {
+        "description_sha256": "74e0ef0d9409ab8d664bc0adc59d46003f297a02ce1fdce3827ab8cef9975279",
+        "modified": "2022-04-19T18:12:39.357Z",
+        "object_id": "attack-pattern--045d0922-2310-4e60-b5e4-3302302cb3c5",
+        "object_version": "2.0",
+        "technique_id": "T1218.011",
+        "url": "https://github.com/mitre/cti/blob/4cbf8cc4bdf2121ee987a23bfe5aac4fe4d2f5b1/enterprise-attack/attack-pattern/attack-pattern--045d0922-2310-4e60-b5e4-3302302cb3c5.json"
+      },
+      {
+        "description_sha256": "0ac6155ab205394d3b5574e8d5d6cca82534b31bb1a726fe65c5237865db30da",
+        "modified": "2022-04-20T17:17:48.612Z",
+        "object_id": "attack-pattern--00f90846-cbd1-4fc5-9233-df5c2bf2a662",
+        "object_version": "1.1",
+        "technique_id": "T1560.001",
+        "url": "https://github.com/mitre/cti/blob/4cbf8cc4bdf2121ee987a23bfe5aac4fe4d2f5b1/enterprise-attack/attack-pattern/attack-pattern--00f90846-cbd1-4fc5-9233-df5c2bf2a662.json"
+      },
+      {
+        "description_sha256": "5aedaa179116d7b0915e1b41e9251c79ce95efdab055402d70424a7c73ae5fd2",
+        "modified": "2022-04-19T15:34:49.016Z",
+        "object_id": "attack-pattern--bf90d72c-c00b-45e3-b3aa-68560560d4c5",
+        "object_version": "1.2",
+        "technique_id": "T1570",
+        "url": "https://github.com/mitre/cti/blob/4cbf8cc4bdf2121ee987a23bfe5aac4fe4d2f5b1/enterprise-attack/attack-pattern/attack-pattern--bf90d72c-c00b-45e3-b3aa-68560560d4c5.json"
+      }
+    ],
+    "definition_commit": "4cbf8cc4bdf2121ee987a23bfe5aac4fe4d2f5b1",
+    "release": "Enterprise ATT&CK v12.1"
+  },
+  "time_rationale": "Explicit narrated ordering only. No transitive closure, exact timestamps or immediate-action adjacency inferred."
+}

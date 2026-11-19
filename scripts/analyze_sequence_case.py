@@ -9,14 +9,13 @@ import argparse
 import csv
 import json
 import sys
-from itertools import permutations
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.audit_rdp_case import digest
 from scripts.analyze_rdp_case import CROSSWALK
-from src.occurrence_queries import evaluate, validate
+from src.occurrence_queries import evaluate_with_coverage, validate
 
 CASE = ROOT / "research/case_studies/dfir_rdp_sequence_v0.2/case.json"
 
@@ -69,24 +68,9 @@ def analyze(case):
             unresolved = n["mapping_status"] == "UNRESOLVED_CLEANUP_PURPOSE"
             mappings[key] = set() if unresolved and not profile["assume_cleanup_mapping"] else {n["candidate_parent_mapping"]}
         edges = {(relations[k]["source_event"], relations[k]["target_event"]) for k in edge_ids}
-        result = evaluate(mappings, edges)
-        paths = sorted((u, v, w) for u, v, w in permutations(ids, 3) if (u, v) in edges and (v, w) in edges)
-        mapped = [p for p in paths if all(mappings[v] for v in p)]
-        complete = bool(paths) and len(mapped) == len(paths)
-        answers = {}
-        for model, predicted in result["answers"].items():
-            answers[model] = {
-                "returned_queries": sorted(predicted),
-                "unsupported_queries": sorted(predicted - result["truth"]) if complete else None,
-                "missed_queries": sorted(result["truth"] - predicted) if complete else None,
-            }
         profiles[profile["name"]] = {
             "assume_cleanup_mapping": profile["assume_cleanup_mapping"],
-            "included_occurrences": len(ids), "included_before_edges": len(edges),
-            "source_paths": paths, "fully_mapped_source_paths": mapped,
-            "path_mapping_coverage": len(mapped) / len(paths) if paths else None,
-            "assessment_status": "CONDITIONAL_ON_INTERPRETED_GRAPH" if complete else "NOT_ASSESSED_INCOMPLETE_MAPPING_OR_NO_PATHS",
-            "supported_queries_from_mapped_paths": sorted(result["truth"]), "representations": answers,
+            **evaluate_with_coverage(mappings, edges),
         }
     return {"case_id": case["case_id"], "status": "EXPLORATORY_SEQUENCE_SENSITIVITY",
             "case_record_sha256": digest(json.dumps(case, sort_keys=True, separators=(",", ":"))),

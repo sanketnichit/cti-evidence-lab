@@ -2,7 +2,7 @@
 
 ## An exploratory feasibility study
 
-**CTI Evidence Lab · Sanket Nichit · 18 November 2026**
+**CTI Evidence Lab · Sanket Nichit · 19 November 2026**
 
 **Status:** Exploratory feasibility and controlled query-fidelity study. Source review is not independently validated. The representation experiments use synthetic inputs. This is not a completed gold-annotation or prevalence study.
 
@@ -61,6 +61,8 @@ No primary three-occurrence intrusion sequence is established in this pass. Inte
 A purposive extension of the previously examined DFIR intrusion distinguishes two RDP attempts and their associated account removals. Four narrated ordering relations yield three paths containing two supplied BEFORE edges. The case is outside AnnoCTR and is not an independent validation sample. Seven source-passage bindings, occurrence decisions, mapping alternatives and unresolved candidate chains are recorded in the [sequence case study](case_studies/dfir_rdp_sequence_v0.2/README.md).
 
 The conservative interpretation leaves the cleanup technique mapping unresolved, so none of the three paths is fully mapped and technique-query errors are not assessed. If the proposed cleanup mapping is adopted, distinct pairs miss one supported query, while loop-inclusive pairs return two unsupported queries. Endpoint-compatible joins with loops retain the three supported answers. Removing the original attempt-order shortcut in a declared local-edge sensitivity yields two supported queries that all four representations answer correctly. These are conditional results for the recorded graph, not an unqualified empirical error rate. The pinned v12.1 taxonomy definition, rather than newer wording, governs the mapping assessment.
+
+The second external case was selected as the next report in the publisher's chronological metadata before content review. It supports a core chain of RDP session initiation, internal DLL transfer and rundll32 execution. All four representations preserve its one connected-sequence answer. A six-action extension adds two distinct batch invocations separated by archiving. Ordinary pair graphs return four supported answers and one unsupported archive-script-archive query, while endpoint-compatible joins return only the four supported answers. The failure remains with exact technique IDs and involves no diagonal loss. The archive mapping is purpose-sensitive: withholding it leaves two of four paths fully mapped and errors unassessed. Thirteen source bindings and all sensitivities are recorded in the [second case study](case_studies/dfir_html_smuggling_v0.1/README.md). This adds a separate intrusion, not independent annotation validation.
 
 ## 5. Representation experiment
 

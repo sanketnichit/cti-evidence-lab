@@ -25,6 +25,7 @@ from scripts.audit_rdp_case import CASE as RDP_CASE, verify as verify_rdp_source
 from scripts.analyze_rdp_case import analyze as analyze_rdp_case
 from scripts.analyze_sequence_case import CASE as SEQUENCE_CASE, analyze as analyze_sequence_case
 from scripts.audit_rank_two_review import DIRECTORY as RANK_TWO, audit as audit_rank_two, summarize as summarize_rank_two, validate_recorded_audit
+from scripts.analyze_incident_sequences import CASE as INCIDENT_CASE, analyze as analyze_incident_case
 
 
 def write_json(path, value):
@@ -70,6 +71,7 @@ def main():
     parser.add_argument("--output-dir", type=Path, default=ROOT / "outputs/submission")
     parser.add_argument("--corpus-root", type=Path)
     parser.add_argument("--rdp-source-html", type=Path, help="Optional saved publisher HTML for the separate RDP case")
+    parser.add_argument("--incident-source-html", type=Path, help="Optional saved publisher HTML for the next chronological incident case")
     parser.add_argument("--recover-crlf", action="store_true")
     parser.add_argument("--allow-dirty", action="store_true", help="Development only; manifest records uncommitted inputs")
     parser.add_argument("--pdf", action="store_true", help="Render the report; requires reportlab")
@@ -133,6 +135,15 @@ def main():
         sequence_audit = verify_rdp_source(args.rdp_source_html.read_bytes(), sequence_case)
         result["sequence_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
     write_json(destination / "sequence_source_integrity.json", sequence_audit)
+    incident_case = json.loads(INCIDENT_CASE.read_text(encoding="utf-8"))
+    incident_selection = json.loads((INCIDENT_CASE.parent / "selection.json").read_text(encoding="utf-8"))
+    write_json(destination / "incident_sequence_results.json", analyze_incident_case(incident_case, incident_selection))
+    incident_audit = json.loads((INCIDENT_CASE.parent / "source_integrity.json").read_text(encoding="utf-8"))
+    result["incident_source_audit_mode"] = "RECORDED_AUDIT_ONLY"
+    if args.incident_source_html:
+        incident_audit = verify_rdp_source(args.incident_source_html.read_bytes(), incident_case)
+        result["incident_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
+    write_json(destination / "incident_source_integrity.json", incident_audit)
     result["status"] = "PASS_EXPLORATORY_REPRODUCTION_NOT_GOLD_VALIDATION"
     write_json(destination / "validation.json", result)
     generated_names = ["representation_controls.json", "representation_controls.md", "finite_checks.json",
@@ -140,7 +151,8 @@ def main():
                        "query_fidelity.json", "query_fidelity.md",
                        "rdp_case_results.json", "rdp_source_integrity.json",
                        "sequence_case_results.json", "sequence_source_integrity.json",
-                       "rank_two_review.json", "rank_two_source_integrity.json"]
+                       "rank_two_review.json", "rank_two_source_integrity.json",
+                       "incident_sequence_results.json", "incident_source_integrity.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")
