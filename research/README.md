@@ -31,3 +31,5 @@ The RDP case uses a separately retrieved publisher page. Its [case record](case_
 - [Calibration protocol](reviewer_kit/COORDINATOR.md) and [review instrument](reviewer_kit/REVIEW_GUIDE.md). These are research materials, not completed review results.
 
 Earlier versioned documents and audits record methodological history. Current results and limitations are summarized in [study status](../docs/PROJECT_STATE.md). Execution commands and artifact formats are documented in [reproducibility](../docs/REPRODUCIBILITY.md).
+
+The [fixed five-publisher evaluation](experiments/external_sequence_evaluation_v0.1/README.md) adds a separate rank-three cohort. Its four conditional procedure graphs show no accuracy advantage on decidable queries; primary incident-sequence errors remain unassessed.

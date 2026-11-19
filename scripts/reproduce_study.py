@@ -28,6 +28,7 @@ from scripts.audit_rank_two_review import DIRECTORY as RANK_TWO, audit as audit_
 from scripts.analyze_incident_sequences import CASE as INCIDENT_CASE, analyze as analyze_incident_case
 from examples.investigation_benchmark import run_checks as run_investigation_checks
 from scripts.build_investigation import build as build_investigator
+from scripts.evaluate_external_sequences import DIRECTORY as EXTERNAL, load_records as load_external_records, run_evaluation, audit_sources as audit_external_sources, validate_recorded_source_audit
 
 
 def write_json(path, value):
@@ -147,6 +148,14 @@ def main():
         result["incident_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
     write_json(destination / "incident_source_integrity.json", incident_audit)
     write_json(destination / "investigation_checks.json", run_investigation_checks())
+    external_selection, external_review = load_external_records()
+    write_json(destination / "external_sequence_results.json", run_evaluation(external_selection, external_review))
+    external_audit = validate_recorded_source_audit(external_selection, external_review, json.loads((EXTERNAL / "source_integrity.json").read_text(encoding="utf-8")))
+    result["external_source_audit_mode"] = "RECORDED_AUDIT_ONLY"
+    if args.corpus_root:
+        external_audit = audit_external_sources(external_selection, external_review, args.corpus_root, args.recover_crlf)
+        result["external_source_audit_mode"] = "LOCAL_CORPUS_RECHECKED"
+    write_json(destination / "external_sequence_source_integrity.json", external_audit)
     build_investigator(destination / "sequence_investigator.html")
     result["status"] = "PASS_EXPLORATORY_REPRODUCTION_NOT_GOLD_VALIDATION"
     write_json(destination / "validation.json", result)
@@ -157,7 +166,8 @@ def main():
                        "sequence_case_results.json", "sequence_source_integrity.json",
                        "rank_two_review.json", "rank_two_source_integrity.json",
                        "incident_sequence_results.json", "incident_source_integrity.json",
-                       "investigation_checks.json", "sequence_investigator.html"]
+                       "investigation_checks.json", "sequence_investigator.html",
+                       "external_sequence_results.json", "external_sequence_source_integrity.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")

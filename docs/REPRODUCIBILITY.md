@@ -83,3 +83,7 @@ python scripts/build_report_pdf.py
 ## Continuous integration
 
 [GitHub Actions](https://github.com/sanketnichit/cti-evidence-lab/actions/workflows/projection-tests.yml) runs the root and RECON v0.1–v0.4 suites, verifies base-package checksums, validates blank schema bundles and packages the tested source revision. Software checks do not establish the accuracy of source interpretations or independent annotation agreement.
+
+## Fixed five-publisher comparison
+
+`python scripts/evaluate_external_sequences.py` recomputes the committed rank-three results without source files. Add `--corpus-root /path/to/AnnoCTR/all --recover-crlf` to verify all five texts and 17 evidence bindings. Full reproduction includes `external_sequence_results.json` and `external_sequence_source_integrity.json`; the validation record distinguishes a reused source audit from a fresh local check.

@@ -1,0 +1,74 @@
+{
+  "review_sha256": "2d80a135570ffa44ad2af043c156385b629de8d1268daf9a51e0763aa9f3311d",
+  "selection_sha256": "559093235837458f02d85cd9a46b36cad82fcfc57323edc9695ef86265df4522",
+  "sources": [
+    {
+      "decoded_original_sha256": "0a1bb924d72b89102cc4fd0421316fed49e9aa4239c1bd01a47ed92197ff06d0",
+      "raw_bytes_sha256": "0a1bb924d72b89102cc4fd0421316fed49e9aa4239c1bd01a47ed92197ff06d0",
+      "report_id": "intel471_2020-11-10_trickbot-update-november-2020-bazar",
+      "source_text_char_count": 6352,
+      "source_text_sha256": "9eb6945c928f5a1a0520e98c4ddb7e943add1a75389db30b3c14554eb511e3de",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence_ids": [
+        "I1",
+        "I2",
+        "I3"
+      ]
+    },
+    {
+      "decoded_original_sha256": "81885b606428814a7d98e861993db9c2df0ddfc4571720340c895427f25a0522",
+      "raw_bytes_sha256": "81885b606428814a7d98e861993db9c2df0ddfc4571720340c895427f25a0522",
+      "report_id": "lab52_2020-05-14_the-energy-reserves-in-the",
+      "source_text_char_count": 13884,
+      "source_text_sha256": "6f0a7b6d32fa89d8d09a9f0dff8bd88faf173147ad736b4f82a71e276356c455",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence_ids": [
+        "L1",
+        "L2"
+      ]
+    },
+    {
+      "decoded_original_sha256": "941a2ca2c8319b860cd8c5429b2b13bc46dcb8845abcfd17522f4802dbae06df",
+      "raw_bytes_sha256": "941a2ca2c8319b860cd8c5429b2b13bc46dcb8845abcfd17522f4802dbae06df",
+      "report_id": "proofpoint_2021-04-15_threat-actors-pair-tax-themed",
+      "source_text_char_count": 11456,
+      "source_text_sha256": "40f9ea6fb686f1526031603e75b926c40fd4c1a677ceaec534fab67ec7cc5aed",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence_ids": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ]
+    },
+    {
+      "decoded_original_sha256": "f588553fb70676b0d03eb24dabbcb97f7ae70556995e45366bdc60ca75897637",
+      "raw_bytes_sha256": "f588553fb70676b0d03eb24dabbcb97f7ae70556995e45366bdc60ca75897637",
+      "report_id": "quoteintelligence_2021-01-27_supply-chain-attacks-cybersecurity-regulations",
+      "source_text_char_count": 14370,
+      "source_text_sha256": "73af969668aa69314d621643ff7ae3b968aac25c0623fc0a3a49677de17dcb95",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence_ids": [
+        "Q1",
+        "Q2"
+      ]
+    },
+    {
+      "decoded_original_sha256": "ccfcfb587c95dc81a71cb68630c18659f5afa0fa027debeea02e6f71b3179b10",
+      "raw_bytes_sha256": "ccfcfb587c95dc81a71cb68630c18659f5afa0fa027debeea02e6f71b3179b10",
+      "report_id": "zscaler_2020-07-10_deep-dive-m00nd3v-logger",
+      "source_text_char_count": 15833,
+      "source_text_sha256": "a127bdbc8f5d7df5872ba986897605c73eaefff01fa70b0149da1a266ff976fe",
+      "transformation": "CRLF_TO_LF_VERIFIED_AGAINST_FRAME",
+      "verified_evidence_ids": [
+        "Z1",
+        "Z2",
+        "Z3",
+        "Z4",
+        "Z5",
+        "Z6"
+      ]
+    }
+  ],
+  "status": "SOURCE_BYTES_AND_OFFSETS_VERIFIED_NOT_SEMANTIC_VALIDATION"
+}

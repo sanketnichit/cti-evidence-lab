@@ -2,7 +2,7 @@
 
 **Updated: 19 November 2026. Research in progress.**
 
-CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query fidelity under technique-level projection. The current evidence comprises controlled experiments, two separate five-report source reviews and two external intrusion cases. It is not a completed gold-annotation or prevalence study.
+CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query fidelity under technique-level projection. The current evidence comprises controlled experiments, three separate five-report source reviews and two external intrusion cases. It is not a completed gold-annotation or prevalence study.
 
 ## Available evidence
 
@@ -13,12 +13,13 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | AnnoCTR source inventory | 400-report inventory; fixed 120-report cybersecurity frame | Annotation counts are not occurrence counts |
 | Fixed feasibility cohort | Five rank-one donor candidates with recorded interpretations and counterarguments | No independently validated occurrence-pair dataset |
 | Fixed source extension | Five rank-two reports; all texts read and 22 additional passage bindings verified | No qualifying primary three-occurrence sequence established; query errors unassessed |
+| Fixed five-publisher evaluation | Rank-three selection frozen before review; 17 verified bindings; four conditional procedure graphs, 70 queries | No qualifying primary incident sequence; no accuracy advantage on decidable queries |
 | Source audit | 120 identities, 33 pilot pointers and 22 critical-review passages checked | Hash identity does not establish semantic correctness |
 | RDP case | Two provisional attempt-level occurrences, one BEFORE edge, three verified passages | Purposive selection; outside AnnoCTR; only one edge |
 | RDP sequence extension | Same intrusion; four actions, four ordering links and seven verified passage bindings | Cleanup mapping unresolved; query comparison conditional on that mapping |
 | Second intrusion | Three-action core query; six-action extension, exact-technique comparison and 13 verified bindings | Ordinary success in the core; extended join error conditional on the archive mapping |
 | Investigation prototype | Offline query inspection; 1,728 completion-oracle checks and 532 case/profile/query states | Practical analyst benefit and visual browser QA not established |
-| Software verification | 355 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
+| Software verification | 362 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
 
 ## Interpretation and sampling
 

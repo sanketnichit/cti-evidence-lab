@@ -52,6 +52,8 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Smoke-test synthetic projection demo
         run: python -m examples.toy_projection_demo
+      - name: Reproduce the frozen five-publisher evaluation
+        run: python scripts/evaluate_external_sequences.py
       - name: Verify reconstructed schema package checksums
         working-directory: research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1
         run: sha256sum --check SHA256SUMS.txt
@@ -87,6 +89,8 @@ jobs:
         run: node scripts/test_investigation_ui.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/jsdom"
       - name: Verify the exported answer against source records
         run: python scripts/investigate_sequence.py --verify outputs/investigation/ui-export.json
+      - name: Reproduce the full study from the clean checkout
+        run: python scripts/reproduce_study.py --output-dir outputs/ci-reproduction
       - name: Upload the offline investigator
         uses: actions/upload-artifact@v4
         with:

@@ -47,6 +47,10 @@ All **532** case/profile/query combinations in the two cases and eight profiles 
 
 The case queries produce 16 supported, 15 mapping-unresolved and 501 not-supported answers. These totals are constructed coverage counts over overlapping profiles, not 532 independent observations, accuracy scores or prevalence estimates. [Machine-readable results](experiments/investigation_v0.1/results.json) retain the denominators and per-profile breakdown.
 
+## Fixed external comparison
+
+A [five-publisher extension](experiments/external_sequence_evaluation_v0.1/README.md), selected before content review, retains all five reports and separates incident evidence from conditional procedures. Four procedure graphs yield 70 constructed queries: two supported, four unresolved and 64 not supported in the retained graphs. All four representations agree on the decidable queries. No qualifying incident sequence is established in this group. The password fallback exposes an overbroad possibility under open mapping completion; it is not scored as a proven false positive. These results constrain the prototype claim and do not measure analyst efficacy.
+
 ## Remaining efficacy test
 
 The consequential claim is that witnesses and targeted abstention help resolve an investigation question more accurately or with less effort than a technique-only view. That claim requires a fixed task set and separate scoring for answer correctness, source support, warranted abstention and interpretation errors. Analyst time savings and independent reliability have not been measured. No performance superiority is claimed from a functional interface or passing software checks.

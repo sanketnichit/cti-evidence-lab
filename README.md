@@ -28,12 +28,13 @@ Two occurrence graphs can have identical technique projections while supporting 
 - **Sequence ambiguity:** retaining self-loops does not recover occurrence identity. Endpoint-compatible joins and diagonal retention address different query failures.
 - **Source sensitivity:** the exploratory RDP case separates attempted actions, confirmed successes and withheld mappings, producing different eligible graphs.
 
-The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 set-valued-mapping graphs for connected-sequence queries. Their rates describe the constructed inputs, not incident prevalence or extraction accuracy. The original five-report AnnoCTR review, fixed five-report extension and two external intrusion cases remain exploratory; independent annotation agreement and population-level conclusions are not established.
+The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 set-valued-mapping graphs for connected-sequence queries. Their rates describe the constructed inputs, not incident prevalence or extraction accuracy. The original five-report AnnoCTR review, two separately fixed five-report extensions and two external intrusion cases remain exploratory; independent annotation agreement and population-level conclusions are not established.
 
 ## Research artifacts
 
 | Artifact | Contents |
 |---|---|
+| [Five-publisher evaluation](research/experiments/external_sequence_evaluation_v0.1/README.md) | Frozen selection, conditional procedures and no-advantage results |
 | [Research report](research/FEASIBILITY_REPORT_v0.1.md) | Question, source feasibility, representation experiments and limitations |
 | [Query-fidelity study](research/QUERY_FIDELITY_STUDY_v0.1.md) | Counterexample, proof, four-way comparison and full confusion matrices |
 | [RDP case study](research/case_studies/dfir_rdp_v0.1/README.md) | Source-bound occurrence interpretation and outcome/mapping sensitivities |

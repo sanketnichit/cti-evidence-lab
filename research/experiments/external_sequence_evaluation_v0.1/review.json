@@ -1,0 +1,579 @@
+{
+  "status": "EXPLORATORY_SOURCE_INTERPRETATIONS",
+  "independently_validated": false,
+  "selection_commit": "12033e21e821df2cc65e077274b9e987d96c1659",
+  "taxonomy": {
+    "release": "Enterprise ATT&CK v12.1",
+    "stix_sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+    "source_url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-12.1.json"
+  },
+  "scope": "Bounded source interpretations, not exhaustive event annotation or independent ground truth. No source text redistributed. Existing DFIR cases and earlier corpus ranks excluded from these denominators.",
+  "reports": [
+    {
+      "report_id": "intel471_2020-11-10_trickbot-update-november-2020-bazar",
+      "source_text_sha256": "9eb6945c928f5a1a0520e98c4ddb7e943add1a75389db30b3c14554eb511e3de",
+      "full_corpus_text_read": true,
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "primary_assessment": "Disruption chronology mixes defensive intervention and operator restoration; ransomware discussion aggregates incidents. No source-bound three-action adversary intrusion path established.",
+      "evidence": [
+        {
+          "evidence_id": "I1",
+          "char_start": 698,
+          "char_end": 2073,
+          "line_start": 12,
+          "line_end": 20,
+          "span_sha256": "84673b5229dad100fe65a3caf2b7ddfbb7930156ee1606597f3e0e895428435c"
+        },
+        {
+          "evidence_id": "I2",
+          "char_start": 3204,
+          "char_end": 4448,
+          "line_start": 30,
+          "line_end": 39,
+          "span_sha256": "f228ec29a37af93877b4d5e916a7b3251d98da33a156e498904ab0652c66a829"
+        },
+        {
+          "evidence_id": "I3",
+          "char_start": 4662,
+          "char_end": 5778,
+          "line_start": 44,
+          "line_end": 50,
+          "span_sha256": "4defeae4a89215e3ac11d79c73a2544485240dbf4f6a76dc1f068e52a25db1d5"
+        }
+      ],
+      "exclusions": [
+        {
+          "evidence_ids": [
+            "I1"
+          ],
+          "assessment": "Poisoning and restoration are ordered but alternate defensive and criminal actors; do not label a defensive action as an adversary intrusion step."
+        },
+        {
+          "evidence_ids": [
+            "I2",
+            "I3"
+          ],
+          "assessment": "Campaign reconstitution and Ryuk observations do not identify three linked actions in one intrusion. Do not import the cited reports into this frozen text review."
+        }
+      ],
+      "graphs": []
+    },
+    {
+      "report_id": "lab52_2020-05-14_the-energy-reserves-in-the",
+      "source_text_sha256": "6f0a7b6d32fa89d8d09a9f0dff8bd88faf173147ad736b4f82a71e276356c455",
+      "full_corpus_text_read": true,
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "primary_assessment": "Campaign summary lists many actions but no qualifying two-edge chain is explicit in the retained text under the no-prose-order rule.",
+      "evidence": [
+        {
+          "evidence_id": "L1",
+          "char_start": 7289,
+          "char_end": 8874,
+          "line_start": 55,
+          "line_end": 68,
+          "span_sha256": "c43fda6a532970577d33cef3b24c118119f3206899b5d9bf56bb60c7026cc171"
+        },
+        {
+          "evidence_id": "L2",
+          "char_start": 8874,
+          "char_end": 9814,
+          "line_start": 69,
+          "line_end": 78,
+          "span_sha256": "2b103d561e8872add9833f5d6acc872edc1c8abbbbc6921da4dd66133873ce9d"
+        }
+      ],
+      "exclusions": [
+        {
+          "evidence_ids": [
+            "L1"
+          ],
+          "assessment": "Exploit, webshell, reconnaissance, injection and credential theft are tempting chains, but kill-chain headings and prose order alone do not establish the two required BEFORE edges."
+        },
+        {
+          "evidence_ids": [
+            "L2"
+          ],
+          "assessment": "The explicit exploit-before-terminal-server-movement statement supplies one edge. Installing an SMB beacon is described by purpose; temporal order relative to movement is not explicit enough for a second retained edge. A less strict execution-dependency interpretation would admit a candidate chain."
+        }
+      ],
+      "graphs": []
+    },
+    {
+      "report_id": "proofpoint_2021-04-15_threat-actors-pair-tax-themed",
+      "source_text_sha256": "40f9ea6fb686f1526031603e75b926c40fd4c1a677ceaec534fab67ec7cc5aed",
+      "full_corpus_text_read": true,
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "primary_assessment": "Delivery campaigns are observed, but victim enablement and subsequent execution are conditional; retained chains belong only to the procedure stratum.",
+      "evidence": [
+        {
+          "evidence_id": "P1",
+          "char_start": 3985,
+          "char_end": 5409,
+          "line_start": 37,
+          "line_end": 45,
+          "span_sha256": "5bf11d79d992943fdb44d3baf21ef152d5bbb0d49026b1c7a58ed4a990e1f505"
+        },
+        {
+          "evidence_id": "P2",
+          "char_start": 5420,
+          "char_end": 6415,
+          "line_start": 47,
+          "line_end": 53,
+          "span_sha256": "9702d43ba538c6f5f7568e199cf064966118eb34416338fd846ad1fb698bbde6"
+        },
+        {
+          "evidence_id": "P3",
+          "char_start": 6448,
+          "char_end": 8075,
+          "line_start": 55,
+          "line_end": 65,
+          "span_sha256": "392ebb1e8bf37515d5ad29ed2ae56ecb3e9438274692acdaff5e387ec1868829"
+        },
+        {
+          "evidence_id": "P4",
+          "char_start": 8202,
+          "char_end": 9392,
+          "line_start": 69,
+          "line_end": 78,
+          "span_sha256": "d75078475b2d5edbdfe8831514142083881494ea68c1fa0697784b33e142cb2f"
+        }
+      ],
+      "exclusions": [
+        {
+          "evidence_ids": [
+            "P1"
+          ],
+          "assessment": "General TrickBot/Ryuk capability history is not appended to the observed XLSB campaign."
+        },
+        {
+          "evidence_ids": [
+            "P3"
+          ],
+          "assessment": "The HMRC authentication page is designed to harvest credentials; no successful credential submission is established. TA574 payload execution does not identify a further execution technique, so it is not added as a mapped fourth node."
+        },
+        {
+          "evidence_ids": [
+            "P4"
+          ],
+          "assessment": "A dropped downloader is not automatically an externally transferred file; its mapping remains unknown."
+        }
+      ],
+      "graphs": [
+        {
+          "graph_id": "dridex",
+          "stratum": "PROCEDURE_CONDITIONAL",
+          "condition": "User enables the delivered document macros; described behavior is not a confirmed victim execution.",
+          "occurrences": [
+            {
+              "event_id": "enable",
+              "description": "User enables malicious document macros",
+              "mappings": [
+                "T1204"
+              ],
+              "candidate_mappings": [
+                "T1204"
+              ],
+              "mapping_rationale": "User action enables execution of malicious document content.",
+              "evidence_ids": [
+                "P2"
+              ]
+            },
+            {
+              "event_id": "macro",
+              "description": "Document macro executes",
+              "mappings": [
+                "T1059"
+              ],
+              "candidate_mappings": [
+                "T1059"
+              ],
+              "mapping_rationale": "Document macro interpreter executes the download instruction; parent mapping does not infer a specific macro language.",
+              "evidence_ids": [
+                "P2"
+              ]
+            },
+            {
+              "event_id": "download",
+              "description": "Macro downloads Dridex",
+              "mappings": [
+                "T1105"
+              ],
+              "candidate_mappings": [
+                "T1105"
+              ],
+              "mapping_rationale": "Malicious macro transfers the subsequent malware into the environment.",
+              "evidence_ids": [
+                "P2"
+              ]
+            }
+          ],
+          "relations": [
+            {
+              "relation_id": "dridex-B1",
+              "source_event": "enable",
+              "target_event": "macro",
+              "relation": "BEFORE",
+              "evidence_ids": [
+                "P2"
+              ],
+              "temporal_rationale": "Enabled macros perform the download; enablement precedes running the macro."
+            },
+            {
+              "relation_id": "dridex-B2",
+              "source_event": "macro",
+              "target_event": "download",
+              "relation": "BEFORE",
+              "evidence_ids": [
+                "P2"
+              ],
+              "temporal_rationale": "The running macro performs the stated subsequent download."
+            }
+          ],
+          "alternative_reading": "Enablement and macro execution can be represented as one coarser action; that would leave a two-action sequence and remove the query. This record explicitly separates the user action from interpreter execution."
+        },
+        {
+          "graph_id": "zloader",
+          "stratum": "PROCEDURE_CONDITIONAL",
+          "condition": "User enables the delivered document macros; described behavior is not a confirmed victim execution.",
+          "occurrences": [
+            {
+              "event_id": "enable",
+              "description": "User enables malicious document macros",
+              "mappings": [
+                "T1204"
+              ],
+              "candidate_mappings": [
+                "T1204"
+              ],
+              "mapping_rationale": "User action enables execution of malicious document content.",
+              "evidence_ids": [
+                "P3"
+              ]
+            },
+            {
+              "event_id": "macro",
+              "description": "Document macro executes",
+              "mappings": [
+                "T1059"
+              ],
+              "candidate_mappings": [
+                "T1059"
+              ],
+              "mapping_rationale": "Document macro interpreter executes the download instruction; parent mapping does not infer a specific macro language.",
+              "evidence_ids": [
+                "P3"
+              ]
+            },
+            {
+              "event_id": "download",
+              "description": "Macro downloads ZLoader",
+              "mappings": [
+                "T1105"
+              ],
+              "candidate_mappings": [
+                "T1105"
+              ],
+              "mapping_rationale": "Malicious macro transfers the subsequent malware into the environment.",
+              "evidence_ids": [
+                "P3"
+              ]
+            }
+          ],
+          "relations": [
+            {
+              "relation_id": "zloader-B1",
+              "source_event": "enable",
+              "target_event": "macro",
+              "relation": "BEFORE",
+              "evidence_ids": [
+                "P3"
+              ],
+              "temporal_rationale": "Enabled macros perform the download; enablement precedes running the macro."
+            },
+            {
+              "relation_id": "zloader-B2",
+              "source_event": "macro",
+              "target_event": "download",
+              "relation": "BEFORE",
+              "evidence_ids": [
+                "P3"
+              ],
+              "temporal_rationale": "The running macro performs the stated subsequent download."
+            }
+          ],
+          "alternative_reading": "Enablement and macro execution can be represented as one coarser action; that would leave a two-action sequence and remove the query. This record explicitly separates the user action from interpreter execution."
+        },
+        {
+          "graph_id": "netwire",
+          "stratum": "PROCEDURE_CONDITIONAL",
+          "condition": "Recipient replies and follows the document chain; conditional campaign description.",
+          "occurrences": [
+            {
+              "event_id": "macro",
+              "description": "Macro runs in linked document",
+              "mappings": [
+                "T1059"
+              ],
+              "candidate_mappings": [
+                "T1059"
+              ],
+              "mapping_rationale": "Document macros execute the drop operation.",
+              "evidence_ids": [
+                "P4"
+              ]
+            },
+            {
+              "event_id": "drop",
+              "description": "Macro drops a downloader",
+              "mappings": [],
+              "candidate_mappings": [
+                "T1105"
+              ],
+              "mapping_rationale": "Drop does not establish external ingress; candidate T1105 is withheld.",
+              "evidence_ids": [
+                "P4"
+              ]
+            },
+            {
+              "event_id": "retrieve",
+              "description": "Downloader retrieves NetWire",
+              "mappings": [
+                "T1105"
+              ],
+              "candidate_mappings": [
+                "T1105"
+              ],
+              "mapping_rationale": "The downloader pulls in the next payload.",
+              "evidence_ids": [
+                "P4"
+              ]
+            }
+          ],
+          "relations": [
+            {
+              "relation_id": "netwire-B1",
+              "source_event": "macro",
+              "target_event": "drop",
+              "relation": "BEFORE",
+              "evidence_ids": [
+                "P4"
+              ],
+              "temporal_rationale": "Macros perform the drop."
+            },
+            {
+              "relation_id": "netwire-B2",
+              "source_event": "drop",
+              "target_event": "retrieve",
+              "relation": "BEFORE",
+              "evidence_ids": [
+                "P4"
+              ],
+              "temporal_rationale": "The dropped downloader then pulls in NetWire; separate payload stages are explicit."
+            }
+          ],
+          "alternative_reading": "The source compresses execution and transfer details. Do not turn the local drop into an ingress label merely because another payload is downloaded."
+        }
+      ]
+    },
+    {
+      "report_id": "quoteintelligence_2021-01-27_supply-chain-attacks-cybersecurity-regulations",
+      "source_text_sha256": "73af969668aa69314d621643ff7ae3b968aac25c0623fc0a3a49677de17dcb95",
+      "full_corpus_text_read": true,
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "primary_assessment": "Broad supply-chain commentary mixes separate examples, hypotheticals and defensive responses; no three-action adversary path established.",
+      "evidence": [
+        {
+          "evidence_id": "Q1",
+          "char_start": 87,
+          "char_end": 926,
+          "line_start": 3,
+          "line_end": 4,
+          "span_sha256": "7d6c10bca8c93ea9a859d8bc525e03433a99117e37ee9d48b3b776fbab27460c"
+        },
+        {
+          "evidence_id": "Q2",
+          "char_start": 2600,
+          "char_end": 5345,
+          "line_start": 24,
+          "line_end": 41,
+          "span_sha256": "d1b1f50228f23a7abcae137110c30578b9558a81f1aca461d672a30720b27bc5"
+        }
+      ],
+      "exclusions": [
+        {
+          "evidence_ids": [
+            "Q1"
+          ],
+          "assessment": "Compromise and data access do not supply a third distinct action with two explicit edges."
+        },
+        {
+          "evidence_ids": [
+            "Q2"
+          ],
+          "assessment": "The mobile developer compromise and malicious update provide at most two adversary steps. Google blocking deployment is a defensive response; hypothetical employer access is not a third observed intrusion action. Do not connect the Winnti and mobile examples."
+        }
+      ],
+      "graphs": []
+    },
+    {
+      "report_id": "zscaler_2020-07-10_deep-dive-m00nd3v-logger",
+      "source_text_sha256": "a127bdbc8f5d7df5872ba986897605c73eaefff01fa70b0149da1a266ff976fe",
+      "full_corpus_text_read": true,
+      "primary_sequence_status": "NOT_ESTABLISHED",
+      "primary_assessment": "Technical malware analysis describes branches and concurrent modules, without establishing a victim-linked incident path. Retain the explicit password fallback only as a conditional procedure.",
+      "evidence": [
+        {
+          "evidence_id": "Z1",
+          "char_start": 1427,
+          "char_end": 2911,
+          "line_start": 13,
+          "line_end": 30,
+          "span_sha256": "c1a40252fb710f3ed00273c78e5db06a2c299cfbe822bba39e4ede4988b3ea6d"
+        },
+        {
+          "evidence_id": "Z2",
+          "char_start": 3159,
+          "char_end": 4390,
+          "line_start": 35,
+          "line_end": 50,
+          "span_sha256": "6968775a2ee52d1eca575065e82e94fab1ab1c03d02347e5a54010355201bde9"
+        },
+        {
+          "evidence_id": "Z3",
+          "char_start": 4671,
+          "char_end": 8543,
+          "line_start": 55,
+          "line_end": 91,
+          "span_sha256": "27103fa345f5bfd653560f08b36fe780293c689148add49c93f5cd6e28a8771c"
+        },
+        {
+          "evidence_id": "Z4",
+          "char_start": 8668,
+          "char_end": 9485,
+          "line_start": 94,
+          "line_end": 101,
+          "span_sha256": "63bc0d0267ef278a2fb8bcdf2cb274a8ba1cf84ac78d81945a19250c37c16485"
+        },
+        {
+          "evidence_id": "Z5",
+          "char_start": 11132,
+          "char_end": 12521,
+          "line_start": 125,
+          "line_end": 138,
+          "span_sha256": "a517eb640d0c0f093ba6cecc92ee4296d183ecd0ec4bed35afc860f45422de92"
+        },
+        {
+          "evidence_id": "Z6",
+          "char_start": 12684,
+          "char_end": 13504,
+          "line_start": 141,
+          "line_end": 147,
+          "span_sha256": "6481b8a5914d94243b0fd168247721988d7c8e5297597292d6af6afb896616a6"
+        }
+      ],
+      "exclusions": [
+        {
+          "evidence_ids": [
+            "Z1",
+            "Z2"
+          ],
+          "assessment": "Observed delivery and static unpacking layers do not establish a single victim execution; do not import an observed intrusion from the sample hashes."
+        },
+        {
+          "evidence_ids": [
+            "Z3"
+          ],
+          "assessment": "Initialization lists multiple checks, not a serial order among all checks. Bot-killer scan/classify/delete could be a procedure but tagging and competitive-malware deletion lack defensible technique mappings here; it remains unscored."
+        },
+        {
+          "evidence_ids": [
+            "Z4",
+            "Z6"
+          ],
+          "assessment": "Webcam behavior is described but disabled in the analyzed configuration; do not append it to active stealing. Its capture/copy/extract/save/send chain includes a clipboard-write action that is not the clipboard-read technique. No mapped graph is claimed for that branch."
+        },
+        {
+          "evidence_ids": [
+            "Z5",
+            "Z6"
+          ],
+          "assessment": "Stealing modules run on separate threads. No BEFORE edges are inferred between modules or from the repeated-loop description without distinct iteration identities."
+        }
+      ],
+      "graphs": [
+        {
+          "graph_id": "password_fallback",
+          "stratum": "PROCEDURE_CONDITIONAL",
+          "condition": "DPAPI attempt fails, fallback decryption succeeds, and the resulting credentials are sent.",
+          "occurrences": [
+            {
+              "event_id": "dpapi",
+              "description": "Attempt password decryption with DPAPI",
+              "mappings": [
+                "T1555"
+              ],
+              "candidate_mappings": [
+                "T1555"
+              ],
+              "mapping_rationale": "Attempt to recover stored application credentials; unsuccessful attempts retained.",
+              "evidence_ids": [
+                "Z5"
+              ]
+            },
+            {
+              "event_id": "fallback",
+              "description": "Attempt password decryption with BouncyCastle",
+              "mappings": [
+                "T1555"
+              ],
+              "candidate_mappings": [
+                "T1555"
+              ],
+              "mapping_rationale": "Distinct fallback attempt to recover the same stored credentials after failure.",
+              "evidence_ids": [
+                "Z5"
+              ]
+            },
+            {
+              "event_id": "send",
+              "description": "Send recovered passwords over SMTP",
+              "mappings": [],
+              "candidate_mappings": [
+                "T1048"
+              ],
+              "mapping_rationale": "Source reports SMTP exfiltration but does not establish a distinct main C2 protocol or alternate destination required by T1048; withhold mapping.",
+              "evidence_ids": [
+                "Z4",
+                "Z5"
+              ]
+            }
+          ],
+          "relations": [
+            {
+              "relation_id": "password_fallback-B1",
+              "source_event": "dpapi",
+              "target_event": "fallback",
+              "relation": "BEFORE",
+              "evidence_ids": [
+                "Z5"
+              ],
+              "temporal_rationale": "Fallback is explicitly conditional on failure of the first attempt."
+            },
+            {
+              "relation_id": "password_fallback-B2",
+              "source_event": "fallback",
+              "target_event": "send",
+              "relation": "BEFORE",
+              "evidence_ids": [
+                "Z5"
+              ],
+              "temporal_rationale": "On the successful fallback branch, recovered passwords are subsequently sent."
+            }
+          ],
+          "alternative_reading": "This is a conditional branch, not proof of two successful credential recoveries or a victim incident. The open unknown-mapping model also permits labels semantically implausible for SMTP transmission; unresolved counts are conservative graph-model possibilities."
+        }
+      ]
+    }
+  ],
+  "protocol_sha256": "37d4b190bf7048cdfcc38f19e7b4cb652dc04dad7839aa74c35e77b5ef9c243d"
+}
