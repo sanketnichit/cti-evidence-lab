@@ -38,7 +38,9 @@ def unique(items, key):
 
 
 def validate(selection, review):
-    if review['protocol_sha256'] != digest((DIRECTORY / 'PROTOCOL.md').read_bytes()) or review['selection_commit'] != '12033e21e821df2cc65e077274b9e987d96c1659':
+    # Protocol text is tracked as LF by Git; universal-newline decoding makes
+    # this record stable in Windows checkouts. Source-text hashes stay strict.
+    if review['protocol_sha256'] != digest((DIRECTORY / 'PROTOCOL.md').read_text(encoding='utf-8')) or review['selection_commit'] != '12033e21e821df2cc65e077274b9e987d96c1659':
         raise ValueError('Protocol or pre-review commit changed')
     if review['taxonomy']['release'] != 'Enterprise ATT&CK v12.1' or review['taxonomy']['stix_sha256'] != 'e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1':
         raise ValueError('Changed taxonomy release')

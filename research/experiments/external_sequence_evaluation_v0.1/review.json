@@ -575,5 +575,6 @@
       ]
     }
   ],
-  "protocol_sha256": "37d4b190bf7048cdfcc38f19e7b4cb652dc04dad7839aa74c35e77b5ef9c243d"
+  "protocol_sha256": "b056f458474b236d2a95077d76f75ba36135607b7262a3fdf7ad8b0eaaef5906",
+  "protocol_hash_encoding": "UTF-8 text with LF newlines, matching Git canonical text; source identities use the separate strict frame hashes."
 }

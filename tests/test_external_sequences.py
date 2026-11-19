@@ -1,6 +1,9 @@
 import copy
 import json
 import unittest
+import tempfile
+from pathlib import Path
+from unittest.mock import patch
 
 from scripts.evaluate_external_sequences import DIRECTORY, load_records, run_evaluation, score_graph, validate, validate_recorded_source_audit
 
@@ -76,6 +79,15 @@ class ExternalSequenceEvaluationTests(unittest.TestCase):
         audit['sources'][0]['verified_evidence_ids'].pop()
         with self.assertRaises(ValueError):
             validate_recorded_source_audit(self.selection, self.review, audit)
+
+    def test_protocol_hash_survives_git_checkout_newlines(self):
+        text = (DIRECTORY / 'PROTOCOL.md').read_text(encoding='utf-8')
+        with tempfile.TemporaryDirectory() as temporary:
+            folder = Path(temporary)
+            for newline in ('\n', '\r\n'):
+                (folder / 'PROTOCOL.md').write_bytes(text.replace('\n', newline).encode())
+                with patch('scripts.evaluate_external_sequences.DIRECTORY', folder):
+                    validate(self.selection, self.review)
 
 
 if __name__ == '__main__':
