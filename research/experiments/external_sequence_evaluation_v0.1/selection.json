@@ -1,0 +1,57 @@
+{
+  "declared_date": "2026-11-19",
+  "status": "FIXED_BEFORE_CONTENT_REVIEW",
+  "repository_parent_commit": "ea700b2f0391dbe4c69fbb71defaaf9b15e7b4dc",
+  "frame_path": "research/annoctr_sampling/AnnoCTR_Fresh_MultiVendor_Sample_Frame_v1.0.csv",
+  "frame_sha256": "bdcb94ccba961a5f4421a026560d1ef1b7e2f0085532dfde613071cd71b882b2",
+  "rank": 3,
+  "seed": "CTI-EVIDENCE-LAB-ANNOCTR-PILOT-2026-11-03-v1",
+  "rule": "All five rank-three donor reports from the existing frozen frame. No replacement for low yield; separate from previously reviewed ranks one and two and the DFIR cases. Metadata exposed before selection; full text not examined in this evaluation before this commit.",
+  "reports": [
+    {
+      "report_id": "intel471_2020-11-10_trickbot-update-november-2020-bazar",
+      "donor": "Intel471",
+      "official_split": "TRAIN",
+      "random_priority_sha256": "114e6cefac0fd1cb168754df97dd79ae83810b39bc3cc9e7d5e9f4f46bed3be1",
+      "random_rank_within_vendor": "3",
+      "source_title": "Trickbot down, but is it out?",
+      "source_text_sha256": "9eb6945c928f5a1a0520e98c4ddb7e943add1a75389db30b3c14554eb511e3de"
+    },
+    {
+      "report_id": "lab52_2020-05-14_the-energy-reserves-in-the",
+      "donor": "Lab52 / S2 Grupo",
+      "official_split": "DEV",
+      "random_priority_sha256": "237421a2a041f364320bde4f444bfb9b259569af06d0dcf6977895815b0adc09",
+      "random_rank_within_vendor": "3",
+      "source_title": "The energy reserves in the Eastern Mediterranean Sea and a malicious campaign of APT10 against Turkey",
+      "source_text_sha256": "6f0a7b6d32fa89d8d09a9f0dff8bd88faf173147ad736b4f82a71e276356c455"
+    },
+    {
+      "report_id": "proofpoint_2021-04-15_threat-actors-pair-tax-themed",
+      "donor": "Proofpoint",
+      "official_split": "TRAIN",
+      "random_priority_sha256": "28af061e892a111ebfef99a792de6c86f46eefa016421ca3208f2aabf4e6c687",
+      "random_rank_within_vendor": "3",
+      "source_title": "Security Brief: Threat Actors Pair Tax-Themed Lures With COVID-19, Healthcare Themes",
+      "source_text_sha256": "40f9ea6fb686f1526031603e75b926c40fd4c1a677ceaec534fab67ec7cc5aed"
+    },
+    {
+      "report_id": "quoteintelligence_2021-01-27_supply-chain-attacks-cybersecurity-regulations",
+      "donor": "QuoIntelligence",
+      "official_split": "DEV",
+      "random_priority_sha256": "24e4cbdf9e0059361cbff2e861a81ac58c5f9345b87da91d12a5fe8ba1151d1f",
+      "random_rank_within_vendor": "3",
+      "source_title": "Supply Chain Attacks, Cybersecurity & Regulations: What to Expect in 2021",
+      "source_text_sha256": "73af969668aa69314d621643ff7ae3b968aac25c0623fc0a3a49677de17dcb95"
+    },
+    {
+      "report_id": "zscaler_2020-07-10_deep-dive-m00nd3v-logger",
+      "donor": "ZScaler",
+      "official_split": "TRAIN",
+      "random_priority_sha256": "178682debbaab5ab075057bc7b41898fe755729c724c6f69d9c041144b94309b",
+      "random_rank_within_vendor": "3",
+      "source_title": "Deep Dive Into the M00nD3V Logger",
+      "source_text_sha256": "a127bdbc8f5d7df5872ba986897605c73eaefff01fa70b0149da1a266ff976fe"
+    }
+  ]
+}
