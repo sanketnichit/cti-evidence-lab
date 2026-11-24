@@ -18,7 +18,16 @@ Generate the packets from a clean checkout and record its commit. Give each part
 ```sh
 python scripts/analyst_pilot.py --build outputs/analyst_pilot
 python scripts/analyst_pilot.py --score path/to/completed-response.json
+python scripts/analyst_pilot.py --summarize path/to/completed-A.json path/to/completed-B.json
 ```
+
+## Participant data and analysis
+
+The generated response templates contain a blank `participant_id`. Assign a short, anonymous ID before collecting a completed packet; keep any name-to-ID linkage outside the project. Do not commit real participant responses, contact details or consent records to the public repository. Keep the script, case records and answer key outside the participant materials. The `--summarize` command accepts **explicitly named completed response JSON files**, not the blank templates. It validates unique IDs and exact eight-task ordering, and rejects malformed or incomplete packets instead of silently turning missing answers into errors. Store partial packets and withdrawals in a separate recruitment log and disclose them.
+
+The summary reports per-participant counts, each participant's occurrence-minus-technique differences, view totals, report totals, first/second block totals, packet allocation and incomplete four-person rotations. A witness correctness rate uses only the predeclared supported and unresolved questions in its denominator. Four participants provide one complete A/B/C/D rotation; an uneven or smaller sample is still displayed, never silently presented as balanced. The output is descriptive, with no significance test or ungrounded population inference. Do not interpret constructed test responses as actual participants.
+
+The technique-view packet now retains relation IDs with an explicit `UNKNOWN` marker when an endpoint mapping is missing. This marker is **not** a technique or evidence of a known mapping and must not be joined as though it were a shared action. It preserves visibility of uncertain relations without disclosing their occurrence endpoints; the occurrence view retains action identities. The change to view content requires regeneration and version pinning of all packets before the first real participant.
 
 ## Scoring and reporting
 
@@ -30,4 +39,4 @@ The answer key is conditional on the two recorded interpretations and the unrest
 
 ## Current status
 
-Packet generation and scoring have been checked with constructed responses. Participant recruitment and data collection have yet to begin.
+Packet generation, scoring and participant-level summaries have been checked with constructed responses. The current packets must be regenerated from the pinned code revision before use. Participant recruitment and data collection have yet to begin.
