@@ -199,7 +199,7 @@ def summarize(responses):
         all_items.extend(items)
 
     def aggregate(key, values):
-        return {value: _metrics([row for row in all_items if str(row[key]) == str(value)])
+        return {str(value): _metrics([row for row in all_items if str(row[key]) == str(value)])
                 for value in values}
 
     rotations = min(by_packet.get(group, 0) for group in GROUPS)
