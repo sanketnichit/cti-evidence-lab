@@ -76,7 +76,7 @@ def packet(group):
             else:
                 lines.append(
                     "UNKNOWN means the technique mapping is unconfirmed, not an accepted ATT&CK ID. "
-                    "Rows containing UNKNOWN show relation evidence only, not confirmed technique pairs. "
+                    "Rows containing UNKNOWN show relation evidence only, not confirmed technique pairs; do not join on UNKNOWN. "
                     "Occurrence endpoints are deliberately hidden in this view."
                 )
                 lines.append("")
@@ -99,7 +99,7 @@ def packet(group):
 
 
 def response_template(group, key):
-    return {"packet": group, "responses": [
+    return {"packet": group, "participant_id": "", "responses": [
         {"task": task, "status": "", "relation_ids": []} for task in key
     ]}
 
