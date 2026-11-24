@@ -1,7 +1,7 @@
 import unittest
 from collections import Counter
 
-from scripts.analyst_pilot import GROUPS, packet, response_template, score
+from scripts.analyst_pilot import GROUPS, packet, response_template, score, summarize
 
 
 class AnalystPilotTests(unittest.TestCase):
@@ -21,6 +21,72 @@ class AnalystPilotTests(unittest.TestCase):
             for task, item in key.items():
                 signature = (item["status"], item["witnesses"])
                 self.assertEqual(keys.setdefault(task, signature), signature)
+
+    def completed_response(self, group, participant, abstain=False):
+        _, key = packet(group)
+        response = response_template(group, key)
+        response["participant_id"] = participant
+        for row in response["responses"]:
+            expected = key[row["task"]]
+            row["status"] = "CANNOT_TELL" if abstain else expected["status"]
+            row["relation_ids"] = [] if abstain else next(iter(expected["witnesses"]), [])
+        return response
+
+    def test_technique_view_keeps_unknown_mapping_relation_ids(self):
+        body, _ = packet("A")
+        self.assertIn("UNKNOWN means the technique mapping is unconfirmed", body)
+        self.assertTrue("→ UNKNOWN" in body or "UNKNOWN →" in body)
+        self.assertIn("Relation locators", body)
+
+    def test_summarize_complete_counterbalanced_participants(self):
+        responses = [
+            self.completed_response(group, f"P-{index}")
+            for index, group in enumerate(GROUPS, 1)
+        ]
+        result = summarize(responses)
+        self.assertEqual(result["participants"], 4)
+        self.assertEqual(result["packet_balance"], {group: 1 for group in GROUPS})
+        self.assertEqual(result["complete_four_packet_rotations"], 1)
+        self.assertEqual(result["participants_in_incomplete_rotation"], 0)
+        self.assertEqual(result["overall"]["assigned"], 32)
+        self.assertEqual(result["overall"]["status_correct"], 32)
+        self.assertEqual(result["overall"]["witness_assigned"], 16)
+        self.assertEqual(result["overall"]["status_and_witness_correct"], 16)
+        self.assertEqual(result["by_view"]["occurrence"]["assigned"], 16)
+        self.assertEqual(result["by_view"]["technique"]["assigned"], 16)
+        self.assertEqual(result["by_case"]["rdp"]["assigned"], 16)
+        self.assertEqual(result["by_block_order"]["1"]["assigned"], 16)
+        for participant in result["per_participant"]:
+            self.assertEqual(participant["occurrence_minus_technique_status_accuracy"], 0)
+            self.assertEqual(participant["occurrence_minus_technique_witness_accuracy"], 0)
+
+    def test_summarize_keeps_abstentions_and_incomplete_rotations(self):
+        responses = [self.completed_response("A", "P1"),
+                     self.completed_response("B", "P2", abstain=True)]
+        result = summarize(responses)
+        self.assertEqual(result["participants"], 2)
+        self.assertEqual(result["complete_four_packet_rotations"], 0)
+        self.assertEqual(result["participants_in_incomplete_rotation"], 2)
+        self.assertEqual(result["overall"]["assigned"], 16)
+        self.assertEqual(result["overall"]["cannot_tell"], 8)
+        self.assertEqual(result["overall"]["status_correct"], 8)
+        self.assertEqual(result["overall"]["witness_assigned"], 8)
+        self.assertEqual(result["overall"]["status_and_witness_correct"], 4)
+
+    def test_summarize_requires_real_complete_anonymous_unique_packets(self):
+        with self.assertRaisesRegex(ValueError, "At least one"):
+            summarize([])
+        first = self.completed_response("A", "P1")
+        with self.assertRaisesRegex(ValueError, "Duplicate participant_id"):
+            summarize([first, first])
+        no_id = self.completed_response("B", "P2")
+        del no_id["participant_id"]
+        with self.assertRaisesRegex(ValueError, "anonymous participant_id"):
+            summarize([no_id])
+        incomplete = self.completed_response("C", "P3")
+        incomplete["responses"].pop()
+        with self.assertRaisesRegex(ValueError, "exactly once"):
+            summarize([incomplete])
 
     def test_scores_witnesses_and_abstention_separately(self):
         _, key = packet("A")
