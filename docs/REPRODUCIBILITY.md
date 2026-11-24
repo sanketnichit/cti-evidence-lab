@@ -87,3 +87,7 @@ python scripts/build_report_pdf.py
 ## Fixed five-publisher comparison
 
 `python scripts/evaluate_external_sequences.py` recomputes the committed rank-three results without source files. Add `--corpus-root /path/to/AnnoCTR/all --recover-crlf` to verify all five texts and 17 evidence bindings. Full reproduction includes `external_sequence_results.json` and `external_sequence_source_integrity.json`; the validation record distinguishes a reused source audit from a fresh local check.
+
+## Explicit mapping bounds
+
+The [bounded-mapping example](../research/experiments/bounded_mapping_v0.1/README.md) demonstrates `--mapping-constraints` and version 2 answer verification. Full reproduction adds `bounded_mapping_checks.json` and `bounded_mapping_assumption_example.json`. Bounds are explicit sensitivity assumptions, not newly accepted annotations. Existing unrestricted outputs remain unchanged.

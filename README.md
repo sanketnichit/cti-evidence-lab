@@ -14,6 +14,8 @@ python scripts/build_investigation.py
 
 Open `outputs/investigation/index.html` in a browser. The artifact runs offline and includes both recorded intrusion cases. Optional local source loading reveals passages only after a snapshot-hash match. [Workflow, comparison with prior work and evaluation](research/INVESTIGATION_WORKFLOW_v0.1.md) define what the answers establish and what remains untested.
 
+For unresolved mappings, the CLI can also [compare explicit candidate bounds](research/experiments/bounded_mapping_v0.1/README.md). Exports preserve the unrestricted answer and show which assumptions exclude a possible path.
+
 ## Research question
 
 Can a technique-level path establish a connected sequence of source-supported attack occurrences?

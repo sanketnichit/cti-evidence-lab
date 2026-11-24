@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "semantics": "ALLOWED_LABEL_UPPER_BOUND",
+  "constraints": [
+    {
+      "occurrence_id": "archive_results",
+      "allowed_techniques": ["T1560"],
+      "rationale": "Illustrative sensitivity assumption: restrict possible labels for the described archive operation to T1560. The cited passages locate the operation but do not establish that this list is exhaustive or that the mapping is accepted. Purpose remains unresolved; this is not a new annotation or a revision to the frozen evaluation.",
+      "evidence_ids": ["E3", "E8"]
+    }
+  ]
+}

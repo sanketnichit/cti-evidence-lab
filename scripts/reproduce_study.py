@@ -29,6 +29,8 @@ from scripts.analyze_incident_sequences import CASE as INCIDENT_CASE, analyze as
 from examples.investigation_benchmark import run_checks as run_investigation_checks
 from scripts.build_investigation import build as build_investigator
 from scripts.evaluate_external_sequences import DIRECTORY as EXTERNAL, load_records as load_external_records, run_evaluation, audit_sources as audit_external_sources, validate_recorded_source_audit
+from examples.bounded_mapping_checks import run_checks as run_bounded_mapping_checks
+from scripts.investigate_sequence import certificate as investigation_certificate, load_case as load_investigation_case
 
 
 def write_json(path, value):
@@ -148,6 +150,11 @@ def main():
         result["incident_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
     write_json(destination / "incident_source_integrity.json", incident_audit)
     write_json(destination / "investigation_checks.json", run_investigation_checks())
+    write_json(destination / "bounded_mapping_checks.json", run_bounded_mapping_checks())
+    bounds = json.loads((ROOT / "research/experiments/bounded_mapping_v0.1/archive_bound_assumption.json").read_text(encoding="utf-8"))
+    write_json(destination / "bounded_mapping_assumption_example.json", investigation_certificate(
+        "domain-controller", load_investigation_case("domain-controller"), "archive_mapping_withheld",
+        ["T1059", "T1059", "T1059"], mapping_constraints=bounds))
     external_selection, external_review = load_external_records()
     write_json(destination / "external_sequence_results.json", run_evaluation(external_selection, external_review))
     external_audit = validate_recorded_source_audit(external_selection, external_review, json.loads((EXTERNAL / "source_integrity.json").read_text(encoding="utf-8")))
@@ -167,7 +174,8 @@ def main():
                        "rank_two_review.json", "rank_two_source_integrity.json",
                        "incident_sequence_results.json", "incident_source_integrity.json",
                        "investigation_checks.json", "sequence_investigator.html",
-                       "external_sequence_results.json", "external_sequence_source_integrity.json"]
+                       "external_sequence_results.json", "external_sequence_source_integrity.json",
+                       "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")

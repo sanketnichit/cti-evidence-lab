@@ -1,0 +1,11 @@
+{
+  "finite_query_checks": 21952,
+  "scope": "Three ordered vertices, every forward-edge subset, two query labels and seven per-vertex known/unknown/domain states. Direct enumeration of unknown-label assignments checks classification; known witnesses must remain unchanged. Changes are consequences of assumed bounds, not corrected field errors.",
+  "status": "PASS_BOUNDED_IMPLEMENTATION_CHECK_NOT_FIELD_EFFICACY",
+  "status_counts": {
+    "NOT_SUPPORTED": 19952,
+    "SUPPORTED": 128,
+    "UNRESOLVED_MAPPING": 1872
+  },
+  "unresolved_to_not_supported_under_bounds": 1456
+}

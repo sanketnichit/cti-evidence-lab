@@ -8,7 +8,7 @@ from itertools import permutations
 from src.occurrence_queries import evaluate, validate
 
 
-def investigate(mappings, relations, query):
+def investigate(mappings, relations, query, *, mapping_domains=None):
     if not isinstance(query, (list, tuple)) or len(query) != 3 or any(not isinstance(t, str) or not t.strip() for t in query):
         raise ValueError("A query requires three nonempty technique identifiers")
     query = tuple(query)
@@ -22,7 +22,19 @@ def investigate(mappings, relations, query):
         by_edge.setdefault((r["source_event"], r["target_event"]), []).append(r["relation_id"])
     edges = set(by_edge)
     validate(mappings, edges)
-    witnesses, unresolved = [], []
+    domains = {}
+    if mapping_domains is not None:
+        if not isinstance(mapping_domains, dict) or not mapping_domains:
+            raise ValueError("Mapping domains must be a nonempty occurrence-to-label-set dictionary")
+        for node, labels in mapping_domains.items():
+            if node not in mappings or mappings[node]:
+                raise ValueError("Domains may constrain only retained occurrences with unknown mappings")
+            if not isinstance(labels, (set, frozenset, list, tuple)) or not labels or any(not isinstance(t, str) or not t.strip() for t in labels):
+                raise ValueError("Each domain requires a nonempty collection of technique identifiers")
+            if len(labels) != len(set(labels)):
+                raise ValueError("Duplicate domain label")
+            domains[node] = set(labels)
+    witnesses, unresolved, excluded = [], [], []
     for path in sorted(permutations(mappings, 3)):
         u, v, w = path
         if (u, v) not in edges or (v, w) not in edges:
@@ -31,6 +43,11 @@ def investigate(mappings, relations, query):
             continue
         missing = [{"occurrence_id": n, "required_technique": t} for n, t in zip(path, query) if not mappings[n]]
         item = {"occurrence_ids": list(path), "relation_ids": sorted(by_edge[(u, v)] + by_edge[(v, w)])}
+        blocked = [{"occurrence_id": n, "required_technique": t, "allowed_techniques": sorted(domains[n])}
+                   for n, t in zip(path, query) if n in domains and t not in domains[n]]
+        if blocked:
+            excluded.append({**item, "excluded_requirements": blocked})
+            continue
         if missing:
             unresolved.append({**item, "required_mappings": missing})
         else:
@@ -65,7 +82,15 @@ def investigate(mappings, relations, query):
             "unsupported_positive": returned and not witnesses and not unresolved,
         }
     status = "SUPPORTED" if witnesses else "UNRESOLVED_MAPPING" if unresolved else "NOT_SUPPORTED"
-    return {"query": list(query), "status": status, "known_witnesses": witnesses,
+    answer = {"query": list(query), "status": status, "known_witnesses": witnesses,
             "unresolved_witnesses": unresolved, "projection_comparisons": comparisons,
             "scope": "Retained occurrence graph and declared mappings only; not proof of absence in the intrusion.",
             "uncertainty_semantics": "Unknown mappings may take any queried label; known mapping sets and supplied edges remain fixed. This does not model missing events, edges, or incorrect annotations."}
+    if domains:
+        answer.update({
+            "mapping_domains": {n: sorted(ts) for n, ts in sorted(domains.items())},
+            "domain_excluded_witnesses": excluded,
+            "scope": "Retained occurrence graph, known mappings and declared allowed-label bounds only; not proof of absence in the intrusion.",
+            "uncertainty_semantics": "Listed domains are assumed upper bounds on possible labels, not accepted mappings. Unlisted unknown occurrences remain unrestricted. A singleton domain remains unresolved. Known sets and edges stay fixed; incorrect bounds may exclude a real possibility.",
+        })
+    return answer

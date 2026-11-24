@@ -1,6 +1,6 @@
 # Study status
 
-**Updated: 19 November 2026. Research in progress.**
+**Updated: 24 November 2026. Research in progress.**
 
 CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query fidelity under technique-level projection. The current evidence comprises controlled experiments, three separate five-report source reviews and two external intrusion cases. It is not a completed gold-annotation or prevalence study.
 
@@ -19,7 +19,8 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | RDP sequence extension | Same intrusion; four actions, four ordering links and seven verified passage bindings | Cleanup mapping unresolved; query comparison conditional on that mapping |
 | Second intrusion | Three-action core query; six-action extension, exact-technique comparison and 13 verified bindings | Ordinary success in the core; extended join error conditional on the archive mapping |
 | Investigation prototype | Offline query inspection; 1,728 completion-oracle checks and 532 case/profile/query states | Practical analyst benefit and visual browser QA not established |
-| Software verification | 363 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
+| Mapping-bound sensitivity | Optional CLI bounds, paired open/constrained answers and 21,952 finite query checks | Bounds remain declared assumptions; no field accuracy improvement established |
+| Software verification | 372 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
 
 ## Interpretation and sampling
 

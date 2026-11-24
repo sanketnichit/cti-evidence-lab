@@ -1,6 +1,6 @@
 # Evidence-backed sequence investigation
 
-**19 November 2026. Working prototype and evaluation contract.**
+**Updated 20 November 2026. Working prototype and evaluation contract.**
 
 ## Decision supported
 
@@ -27,6 +27,10 @@ Action graphs, provenance and reasoning under incomplete information are establi
 Unknown mapping sets may take any queried label. Known sets and supplied edges remain fixed. This is deliberately an open mapping-completion rule, not a closed list of the previously proposed candidate labels. It does not model missing actions, missing temporal edges, mistaken mappings, uncertain coreference or every alternative interpretation.
 
 Query-specific status differs from an aggregate error score. In the archive-withheld profile, only two of four source paths are fully mapped, so the case-level error score remains unassessed. The RDP → transfer → execution query nevertheless has a complete witness and can be supported. No earlier aggregate results are changed.
+
+## Optional mapping bounds
+
+The CLI now accepts explicit allowed-label bounds for unknown occurrences. A bounded export retains both the unrestricted answer and the answer under the assumptions, plus paths excluded by those bounds. A singleton candidate remains unresolved. These constraints cannot modify known mappings, and source-reference checks do not establish that a candidate list is exhaustive. The [mapping-bound contract and example](experiments/bounded_mapping_v0.1/README.md) describe the format and 21,952 finite checks. Existing case results and the five-publisher comparison retain their unrestricted semantics; the browser explorer also remains unrestricted.
 
 ## Implemented investigation tasks
 
