@@ -34,6 +34,8 @@ The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 se
 
 ## Research artifacts
 
+The [analyst pilot](research/ANALYST_PILOT_v0.1.md) provides four ready-to-run packets for comparing what reviewers can verify from technique pairs and individual occurrences.
+
 | Artifact | Contents |
 |---|---|
 | [Five-publisher evaluation](research/experiments/external_sequence_evaluation_v0.1/README.md) | Frozen selection, conditional procedures and no-advantage results |

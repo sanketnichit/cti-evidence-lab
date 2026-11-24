@@ -57,6 +57,8 @@ A [five-publisher extension](experiments/external_sequence_evaluation_v0.1/READM
 
 ## Remaining efficacy test
 
+The [analyst pilot protocol](ANALYST_PILOT_v0.1.md) fixes eight tasks and crosses the two reports, views and presentation orders. It includes packet generation and scoring for statuses, abstentions and relation witnesses. Participant data collection has yet to begin.
+
 The consequential claim is that witnesses and targeted abstention help resolve an investigation question more accurately or with less effort than a technique-only view. That claim requires a fixed task set and separate scoring for answer correctness, source support, warranted abstention and interpretation errors. Analyst time savings and independent reliability have not been measured. No performance superiority is claimed from a functional interface or passing software checks.
 
 ## Reproduction
