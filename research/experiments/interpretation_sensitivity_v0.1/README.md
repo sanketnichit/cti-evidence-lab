@@ -8,7 +8,7 @@ Generate every single intervention and every unordered pair of compatible interv
 - Withhold one occurrence's known mapping while retaining the action and its ordering. Any query label may fill the unknown under the open completion rule.
 - Exclude one occurrence and its incident relations to model a stricter reading of action eligibility.
 
-Excluding an occurrence makes withholding its mapping or independently omitting an incident relation redundant, so those pairs are skipped. Counts are by intervention, even when different interventions yield the same remaining graph. The design measures loss of recorded evidence. Incorrect added edges, inappropriate occurrence merges, mapping substitutions and source annotation disagreement need separate analyses.
+Excluding an occurrence makes withholding its mapping or independently omitting an incident relation redundant, so those pairs are skipped. Counts are by intervention, even when different interventions yield the same remaining graph. The design measures loss of recorded evidence. The next experiment measures addition, substitution and identity merge separately.
 
 ## Results
 
@@ -31,3 +31,26 @@ python -m examples.interpretation_sensitivity --summary --output outputs/interpr
 ```
 
 [Committed results](results.json) group scenarios by intervention family. The detailed output identifies the relation or occurrence changed and includes all three-way status transitions, support losses and outcomes for the original unsupported projected queries. Full study reproduction checks the committed counts and packages the detailed output. Each run checks that removing evidence creates neither a new confirmed witness nor a new ordinary projected answer.
+
+## Sensitivity to incorrect or extra assertions
+
+Use the same two complete baseline profiles and change one assertion at a time. Enumerate every missing directed ordering edge, every substitution of a known label with a different label from the baseline vocabulary, and every merge of two actions with the same label. A merge redirects all incident relations to the retained identity. Keep self-loops during validation so that collapsing ordered actions cannot silently erase their contradiction. Reject cyclic graphs before query scoring.
+
+Use two references. The baseline graph determines which queries gain or lose support under the edit. The edited graph determines which answers each representation preserves on the supplied input. A newly supported answer here is new relative to the recorded baseline. For example, an added edge may follow by transitivity but still falls outside the baseline's supplied-edge query. These interventions model possible input faults and do not assume that the baseline is independent ground truth.
+
+| Edit | Candidates | Acyclic and scored | Scenarios gaining support | New / lost supported instances |
+|---|---:|---:|---:|---:|
+| Add one ordering link | 33 | 12 | 9 | 12 / 0 |
+| Substitute one mapping | 28 | 28 | 28 | 54 / 57 |
+| Merge same-label actions | 3 | 0 | Unassessed | Unassessed |
+
+The loop-preserving endpoint join agrees with the edited occurrence oracle in every scored scenario. It therefore keeps all 66 newly supported instances relative to the baseline. Four of these instances were previously returned only by ordinary loop traversal. For example, assigning the archive label to the earlier execution action in the domain-controller graph makes the previously unsupported archive-script-archive query gain a connected witness. The edit changes the reference evidence and therefore changes how the same technique sequence is judged.
+
+All three same-label merges in the incident profiles collapse ordered actions and create cycles. The synthetic counterexample from the manuscript provides an acyclic merge control. Merge the two unrelated middle actions with label B in A → B and B → C. The resulting graph passes validation and now supports A → B → C even with endpoint joins. The control shows why structural validation cannot replace source review of action identity. The two incident graphs supply no evidence about the frequency of acyclic merges.
+
+```sh
+python -m examples.interpretation_error_study --summary --output outputs/input_error_summary.json
+python -m examples.interpretation_error_study --output outputs/interpretation_input_errors.json
+```
+
+Full reproduction compares the [committed summary](input_error_results.json) and packages all scenario details. The result describes two conditional baseline profiles and one synthetic control.

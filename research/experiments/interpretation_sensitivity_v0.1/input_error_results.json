@@ -1,0 +1,85 @@
+{
+  "cases": {
+    "rdp": {
+      "add_ordering": {
+        "candidates": 8,
+        "rejected_cycle": 6,
+        "assessed": 2,
+        "scenarios_with_new_support": 1,
+        "scenarios_with_lost_support": 0,
+        "new_supported_instances": 1,
+        "lost_supported_instances": 0,
+        "previously_projected_only_now_supported_instances": 0
+      },
+      "substitute_label": {
+        "candidates": 4,
+        "rejected_cycle": 0,
+        "assessed": 4,
+        "scenarios_with_new_support": 4,
+        "scenarios_with_lost_support": 4,
+        "new_supported_instances": 6,
+        "lost_supported_instances": 9,
+        "previously_projected_only_now_supported_instances": 3
+      },
+      "merge_same_label": {
+        "candidates": 2,
+        "rejected_cycle": 2,
+        "assessed": 0,
+        "scenarios_with_new_support": 0,
+        "scenarios_with_lost_support": 0,
+        "new_supported_instances": 0,
+        "lost_supported_instances": 0,
+        "previously_projected_only_now_supported_instances": 0
+      }
+    },
+    "domain-controller": {
+      "add_ordering": {
+        "candidates": 25,
+        "rejected_cycle": 15,
+        "assessed": 10,
+        "scenarios_with_new_support": 8,
+        "scenarios_with_lost_support": 0,
+        "new_supported_instances": 11,
+        "lost_supported_instances": 0,
+        "previously_projected_only_now_supported_instances": 0
+      },
+      "substitute_label": {
+        "candidates": 24,
+        "rejected_cycle": 0,
+        "assessed": 24,
+        "scenarios_with_new_support": 24,
+        "scenarios_with_lost_support": 24,
+        "new_supported_instances": 48,
+        "lost_supported_instances": 48,
+        "previously_projected_only_now_supported_instances": 1
+      },
+      "merge_same_label": {
+        "candidates": 1,
+        "rejected_cycle": 1,
+        "assessed": 0,
+        "scenarios_with_new_support": 0,
+        "scenarios_with_lost_support": 0,
+        "new_supported_instances": 0,
+        "lost_supported_instances": 0,
+        "previously_projected_only_now_supported_instances": 0
+      }
+    }
+  },
+  "synthetic_merge_control": {
+    "change": {
+      "kind": "merge_same_label",
+      "actions": [
+        "v",
+        "w"
+      ]
+    },
+    "query": [
+      "A",
+      "B",
+      "C"
+    ],
+    "supported_before": false,
+    "supported_after": true,
+    "merged_graph_is_acyclic": true
+  }
+}

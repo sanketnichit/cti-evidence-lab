@@ -28,6 +28,7 @@ from scripts.audit_rank_two_review import DIRECTORY as RANK_TWO, audit as audit_
 from scripts.analyze_incident_sequences import CASE as INCIDENT_CASE, analyze as analyze_incident_case
 from examples.investigation_benchmark import run_checks as run_investigation_checks
 from examples.interpretation_sensitivity import run as run_interpretation_sensitivity, summarize as summarize_sensitivity
+from examples.interpretation_error_study import run as run_input_error_study, summarize as summarize_input_errors
 from scripts.build_investigation import build as build_investigator
 from scripts.evaluate_external_sequences import DIRECTORY as EXTERNAL, load_records as load_external_records, run_evaluation, audit_sources as audit_external_sources, validate_recorded_source_audit
 from examples.bounded_mapping_checks import run_checks as run_bounded_mapping_checks
@@ -158,6 +159,11 @@ def main():
     if json.loads(json.dumps(summarize_sensitivity(sensitivity))) != json.loads(expected_sensitivity.read_text(encoding="utf-8")):
         raise ValueError("Interpretation sensitivity summary differs from the published results")
     write_json(destination / "interpretation_sensitivity.json", sensitivity)
+    input_errors = run_input_error_study()
+    expected_errors = expected_sensitivity.with_name("input_error_results.json")
+    if json.loads(json.dumps(summarize_input_errors(input_errors))) != json.loads(expected_errors.read_text(encoding="utf-8")):
+        raise ValueError("Input error summary differs from the published results")
+    write_json(destination / "interpretation_input_errors.json", input_errors)
     for filename, recorded, report in (
         ("incident_holdout_results.json", HOLDOUT, run_holdout()),
         ("cisa_extension_results.json", CISA, run_cisa()),
@@ -189,6 +195,7 @@ def main():
                        "rank_two_review.json", "rank_two_source_integrity.json",
                        "incident_sequence_results.json", "incident_source_integrity.json",
                        "investigation_checks.json", "sequence_investigator.html", "interpretation_sensitivity.json",
+                       "interpretation_input_errors.json",
                        "incident_holdout_results.json", "cisa_extension_results.json",
                        "external_sequence_results.json", "external_sequence_source_integrity.json",
                        "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json"]
