@@ -34,7 +34,7 @@ def build(destination):
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle("ReportBody", fontName="Helvetica", fontSize=10, leading=15, spaceAfter=9, allowWidows=0, allowOrphans=0))
+    styles.add(ParagraphStyle("ReportBody", fontName="Helvetica", fontSize=10, leading=14, spaceAfter=8, allowWidows=0, allowOrphans=0))
     styles.add(ParagraphStyle("ReportTitle", fontName="Helvetica-Bold", fontSize=25, leading=30, textColor=colors.HexColor("#153746"), spaceAfter=15))
     styles.add(ParagraphStyle("ReportHeading", fontName="Helvetica-Bold", fontSize=14, leading=19, spaceBefore=15, spaceAfter=9, keepWithNext=True))
     styles.add(ParagraphStyle("Cell", fontName="Helvetica", fontSize=8.4, leading=12, alignment=TA_LEFT))
@@ -52,7 +52,11 @@ def build(destination):
                 from .build_query_figure import drawing
             else:
                 from build_query_figure import drawing
-            story.extend([drawing(), Spacer(1, 12)])
+            figure = [drawing(), Spacer(1, 12)]
+            if len(story) >= 2 and isinstance(story[-2], Paragraph) and story[-2].style.name == "ReportHeading":
+                figure = story[-2:] + figure
+                del story[-2:]
+            story.append(KeepTogether(figure))
         elif line.startswith("```"):
             i += 1
             code = []
@@ -78,8 +82,8 @@ def build(destination):
                                       ("LINEBELOW", (0, 1), (-1, -1), 0.3, colors.HexColor("#d6dde0")),
                                       ("LEFTPADDING", (0, 0), (-1, -1), 7),
                                       ("RIGHTPADDING", (0, 0), (-1, -1), 7),
-                                      ("TOPPADDING", (0, 0), (-1, -1), 7),
-                                      ("BOTTOMPADDING", (0, 0), (-1, -1), 7)]))
+                                      ("TOPPADDING", (0, 0), (-1, -1), 5),
+                                      ("BOTTOMPADDING", (0, 0), (-1, -1), 5)]))
             if len(rows) <= 8:
                 group = [table]
                 if story and isinstance(story[-1], Paragraph) and story[-1].style.name == "ReportHeading":
