@@ -2,7 +2,7 @@
 
 **Sanket Nichit · CTI Evidence Lab · 25 November 2026**
 
-Research manuscript draft
+Preprint candidate · Version 0.1 RC1
 
 ## Abstract
 
@@ -16,11 +16,11 @@ This study gives a counterexample, separates two sources of query error in a con
 
 ## 2. Related work
 
-ChronoCTI predicts temporal relations over distinct technique pairs in a report. Its candidate-pair definition motivates the distinct-pair baseline. We hold the occurrence graph fixed to isolate what the pair representation retains. A comparison of learned predictions would require common inputs and independent reference annotations. See [Rahman et al., 2025](https://link.springer.com/article/10.1007/s10115-025-02491-6).
+ChronoCTI predicts temporal relations over distinct technique pairs in a report [1, §4.5]. Its candidate-pair definition motivates the distinct-pair baseline. We hold the occurrence graph fixed to isolate what the pair representation retains. A comparison of learned predictions would require common inputs and independent reference annotations.
 
-Attack Flow represents individual actions with optional technique identifiers and execution times. Its links can express potential effects and conditions. AttacKG+ represents temporal progression through behavior graphs, technique mappings and state summaries. AttackSeqBench evaluates reasoning about reconstructed sequences at tactic, technique and procedure levels. These works establish action-level graph and sequence reasoning approaches. Our evaluation targets explicit two-edge witnesses and the loss of shared endpoints under projection. See the [Attack Flow specification](https://center-for-threat-informed-defense.github.io/attack-flow/language/), [AttacKG+](https://doi.org/10.1016/j.cose.2024.104220) and [AttackSeqBench v3](https://arxiv.org/html/2503.03170v3).
+Attack Flow represents individual actions with optional technique identifiers and execution times, and links them to effects and conditions [2]. AttacKG+ represents temporal progression through behavior graphs, mappings and state summaries [3]. AttackSeqBench evaluates reasoning about reconstructed sequences at tactic, technique and procedure levels [4]. Our comparison isolates explicit two-edge witnesses and the loss of shared endpoints under projection.
 
-AnnoCTR supplies cybersecurity concepts and temporal expressions for CTI text. MATRES provides a precedent for defining temporal relations over event anchors. Work on explainable certain answers provides a broader basis for querying incomplete information. Our mapping rule is deliberately limited to fixed actions, fixed edges and unknown labels. See [AnnoCTR](https://aclanthology.org/2024.lrec-main.103/), [MATRES](https://aclanthology.org/P18-1122/) and [Amendola and Libkin, 2018](https://ijcai.org/proceedings/2018/233). The [related-work assessment](RELATED_WORK_MATRIX.md#closest-system-comparison) gives the detailed comparisons and access limitations.
+AnnoCTR supplies cybersecurity concepts and temporal expressions for CTI text [5]. MATRES defines temporal relations over event start points [6]. Explainable certain answers provide a broader basis for querying incomplete information [7]. Our rule fixes actions and edges and varies unknown labels. [Detailed comparison and access limitations](RELATED_WORK_MATRIX.md#closest-system-comparison)
 
 ## 3. Method
 
@@ -38,7 +38,7 @@ Each occurrence edge contributes the cross-product of its two known technique se
 
 Three fixed five-report groups from a 120-report AnnoCTR frame assessed whether existing reports support this kind of incident annotation. The groups used the recorded donor ranking. They remain separate from the incident cases, and conditional malware procedures are reported separately from observed incident sequences. Records and access instructions are in the [AnnoCTR feasibility review](feasibility/exploratory_review_v0.1/README.md), [rank-two extension](feasibility/rank_two_extension_v0.1/README.md) and [rank-three evaluation](experiments/external_sequence_evaluation_v0.1/README.md).
 
-The incident sample comprises a purposive DFIR RDP case followed by three next-report selections from saved publisher metadata, two CISA advisories fixed in a purposive search frame, and the first two installments of Microsoft's Cyberattack Series. Selection rules and prior exposure are documented with each sample. The DFIR holdout uses Case Summary prose, and the PDF studies use incident narrative prose. Unavailable and unassessed reports remain in their respective samples. Parent labels use Enterprise ATT&CK v12.1. Source records carry paragraph or page offsets, hashes and a rationale for each recorded action and edge. Hash checks establish locator integrity. Independent review of the interpretations is pending.
+The incident sample comprises a purposive DFIR RDP case followed by three next-report selections from saved publisher metadata, two CISA advisories fixed in a purposive search frame, and the first two installments of Microsoft's Cyberattack Series. Selection rules and prior exposure are documented with each sample. The DFIR holdout uses Case Summary prose, and the PDF studies use incident narrative prose. Unavailable and unassessed reports remain in their respective samples. Parent labels use Enterprise ATT&CK v12.1 [8]. Source records carry paragraph or page offsets, hashes and a rationale for each recorded action and edge. Hash checks establish locator integrity. Independent review of the interpretations is pending.
 
 ## 4. Representation results
 
@@ -94,7 +94,7 @@ The open rule is intentionally permissive. It may admit labels that would prove 
 
 The principal result is a representation guarantee with a practical boundary. Retaining the two endpoint identities and same-technique edges preserves this connected query on a supplied graph. The incident comparisons show concrete cases where the guarantee changes the answer and cases where the simpler view suffices. This supports keeping occurrence evidence when connected sequence verification is part of the task.
 
-## 8. Reproduction
+## 8. Artifact and reproduction
 
 Run from a clean checkout with Python 3.11 or later and Git.
 
@@ -105,4 +105,15 @@ python scripts/evaluate_cisa_extension.py
 python scripts/evaluate_microsoft_series.py
 ```
 
-The main command checks the study, regenerates its results and writes a source-text-free archive with a SHA-256 manifest. Use `--pdf` with ReportLab to render this draft. The three incident evaluation commands support rechecking source bytes against saved publisher copies. The PDF page auditor requires the recorded version of pypdf. See [reproduction documentation](../docs/REPRODUCIBILITY.md) for corpus and snapshot commands. Recorded timing samples and their rerun commands are in the scaling study.
+The archive includes code, source locators, generated results and a SHA-256 manifest that identifies the checked-out commit. Get publisher snapshots separately to verify source bytes. Use `--pdf` with ReportLab to include this manuscript in the archive. The versioned candidate and the source recheck commands are documented with the artifact. [Reproduction and data access](../docs/REPRODUCIBILITY.md)
+
+## References
+
+1. Md Rayhanur Rahman, Brandon Wroblewski, Quinn Matthews, Brantley Morgan, Timothy Menzies, and Laurie Williams. 2025. [Mining temporal attack patterns from cyberthreat intelligence reports](https://link.springer.com/article/10.1007/s10115-025-02491-6). Knowledge and Information Systems 67, 8941–8981.
+2. MITRE Center for Threat-Informed Defense. [Attack Flow language specification](https://center-for-threat-informed-defense.github.io/attack-flow/language/). Version 4.0. Accessed 25 November 2026.
+3. Yongheng Zhang, Tingwen Du, Yunshan Ma, Xiang Wang, Yi Xie, Guozheng Yang, Yuliang Lu, and Ee-Chien Chang. 2025. [AttacKG+: Boosting attack graph construction with Large Language Models](https://doi.org/10.1016/j.cose.2024.104220). Computers & Security 150, 104220.
+4. Haokai Ma, Javier Yong, Yunshan Ma, Kuei Chen, Anis Yusof, Zhenkai Liang, and Ee-Chien Chang. 2026. [AttackSeqBench: Benchmarking the Capabilities of LLMs for Attack Sequences Understanding](https://arxiv.org/abs/2503.03170v3). arXiv:2503.03170v3.
+5. Lukas Lange, Marc Müller, Ghazaleh Haratinezhad Torbati, Dragan Milchevski, Patrick Grau, Subhash Chandra Pujari, and Annemarie Friedrich. 2024. [AnnoCTR: A Dataset for Detecting and Linking Entities, Tactics, and Techniques in Cyber Threat Reports](https://aclanthology.org/2024.lrec-main.103/). LREC-COLING, 1147–1160.
+6. Qiang Ning, Hao Wu, and Dan Roth. 2018. [A Multi-Axis Annotation Scheme for Event Temporal Relations](https://aclanthology.org/P18-1122/). ACL, 1318–1328.
+7. Giovanni Amendola and Leonid Libkin. 2018. [Explainable Certain Answers](https://ijcai.org/proceedings/2018/233). IJCAI, 1683–1690.
+8. MITRE. 2022. [Enterprise ATT&CK v12.1 STIX collection](https://github.com/mitre-attack/attack-stix-data/blob/master/enterprise-attack/enterprise-attack-12.1.json). Released 8 November 2022.

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import re
+from functools import partial
 from html import escape
 from pathlib import Path
 from posixpath import normpath
@@ -10,13 +11,13 @@ from posixpath import normpath
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def inline(text):
+def inline(text, *, revision="main"):
     text = escape(text)
     def link(match):
         label, target = match.groups()
         if not target.startswith("https://"):
             location, separator, anchor = target.partition("#")
-            target = "https://github.com/sanketnichit/cti-evidence-lab/blob/main/" + normpath("research/" + location)
+            target = f"https://github.com/sanketnichit/cti-evidence-lab/blob/{revision}/" + normpath("research/" + location)
             target += separator + anchor
         return f'<link href="{target}" color="#156276">{label}</link>'
     text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", link, text)
@@ -25,7 +26,7 @@ def inline(text):
     return text.replace("×", " x ").replace("—", " - ").replace("–", "-").replace("→", "-&gt;")
 
 
-def build(destination):
+def build(destination, *, revision="main"):
     from reportlab.lib import colors
     from reportlab.lib.enums import TA_LEFT
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
@@ -33,6 +34,7 @@ def build(destination):
     from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Preformatted, KeepTogether
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
+    markup = partial(inline, revision=revision)
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle("ReportBody", fontName="Helvetica", fontSize=10, leading=14, spaceAfter=8, allowWidows=0, allowOrphans=0))
     styles.add(ParagraphStyle("ReportTitle", fontName="Helvetica-Bold", fontSize=25, leading=30, textColor=colors.HexColor("#153746"), spaceAfter=15))
@@ -68,7 +70,7 @@ def build(destination):
             while i < len(lines) and lines[i].startswith("|"):
                 cells = [c.strip() for c in lines[i].strip("|").split("|")]
                 if not all(re.fullmatch(r"[-: ]+", c) for c in cells):
-                    rows.append([Paragraph(inline(c), styles["Cell"]) for c in cells])
+                    rows.append([Paragraph(markup(c), styles["Cell"]) for c in cells])
                 i += 1
             widths = [100, 180, 215] if len(rows[0]) == 3 else [495 / len(rows[0])] * len(rows[0])
             if len(rows[0]) == 2 and rows[0][0].getPlainText() == "Source group":
@@ -94,11 +96,11 @@ def build(destination):
             story.append(Spacer(1, 12))
             continue
         elif line.startswith("# "):
-            story.append(Paragraph(inline(line[2:]), styles["ReportTitle"]))
+            story.append(Paragraph(markup(line[2:]), styles["ReportTitle"]))
         elif line.startswith(("## ", "### ")):
-            story.append(Paragraph(inline(line.lstrip("# ")), styles["ReportHeading"]))
+            story.append(Paragraph(markup(line.lstrip("# ")), styles["ReportHeading"]))
         else:
-            story.append(Paragraph(inline(line), styles["ReportBody"]))
+            story.append(Paragraph(markup(line), styles["ReportBody"]))
         i += 1
     def footer(canvas, doc):
         canvas.saveState()
@@ -106,7 +108,10 @@ def build(destination):
         canvas.line(50, 43, A4[0] - 50, 43)
         canvas.setFont("Helvetica", 8)
         canvas.setFillColor(colors.HexColor("#50616b"))
-        canvas.drawString(50, 30, "CTI Evidence Lab | Research manuscript draft | November 2026")
+        label = "CTI Evidence Lab | Preprint candidate 0.1 RC1"
+        if revision != "main":
+            label += f" | Artifact {revision[:12]}"
+        canvas.drawString(50, 30, label)
         canvas.drawRightString(A4[0] - 50, 30, str(doc.page))
         canvas.restoreState()
     doc = SimpleDocTemplate(str(destination), pagesize=A4, rightMargin=50, leftMargin=50,

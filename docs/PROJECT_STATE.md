@@ -50,6 +50,6 @@ Protocol v0.5 and RECON extensions remain drafts. RECON v0.1 is a reconstructed 
 - Independent annotation reliability, population prevalence, learned extraction performance and superiority over published systems are not established.
 - The contribution requires continued comparison with existing action-based and temporal graph methods; occurrence graphs themselves are established prior art.
 
-The methods manuscript and reproducible artifact support a paper scoped to representation fidelity on supplied graphs. Independent source verification and analyst efficacy are the two open data-collection milestones. The final manuscript pass should pin the release artifact, verify citations and incorporate any results available at that point.
+The versioned [preprint candidate](https://github.com/sanketnichit/cti-evidence-lab/tree/preprint-v0.1-rc.1) presents representation fidelity on supplied graphs. Independent source verification and analyst efficacy are the two open data-collection milestones.
 
 [Research artifacts](../research/README.md), [reproduction](REPRODUCIBILITY.md), [research directions](ROADMAP.md), and the versioned method/audit records provide the supporting detail. Earlier status snapshots are historical records; this document summarizes the current study.

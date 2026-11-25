@@ -214,7 +214,8 @@ def main():
                        "discovery_mapping_sensitivity.json", "answer_index_storage.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
-        build(destination / "CTI_Evidence_Lab_Report.pdf")
+        build(destination / "CTI_Evidence_Lab_Report.pdf",
+              revision=result["repository_commit"] if not dirty else "main")
         generated_names.append("CTI_Evidence_Lab_Report.pdf")
     files = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True).splitlines()
     if args.allow_dirty:

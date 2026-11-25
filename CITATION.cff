@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this repository, please cite it as a software artifact. See the README for the research manuscript draft."
+message: "Cite this software artifact using the metadata below. CITATION.bib also identifies the versioned preprint candidate."
 title: "CTI Evidence Lab"
 authors:
   - family-names: Nichit
