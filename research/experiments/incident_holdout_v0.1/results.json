@@ -1,0 +1,524 @@
+{
+  "cases": [
+    {
+      "actions": 17,
+      "evidence_locators": 10,
+      "post_id": 21520,
+      "query_assessment": "CONDITIONAL_ON_RECORDED_GRAPH",
+      "query_count": 1331,
+      "relations": 16,
+      "representations": {
+        "distinct_endpoint_join": {
+          "missed_supported": 0,
+          "returned": 1,
+          "unresolved": 0,
+          "unsupported": 0
+        },
+        "distinct_pairs": {
+          "missed_supported": 0,
+          "returned": 1,
+          "unresolved": 0,
+          "unsupported": 0
+        },
+        "loop_endpoint_join": {
+          "missed_supported": 0,
+          "returned": 1,
+          "unresolved": 0,
+          "unsupported": 0
+        },
+        "loop_pairs": {
+          "missed_supported": 0,
+          "returned": 1,
+          "unresolved": 0,
+          "unsupported": 0
+        }
+      },
+      "statuses": {
+        "NOT_SUPPORTED": 804,
+        "SUPPORTED": 1,
+        "UNRESOLVED_MAPPING": 526
+      },
+      "supported_witnesses": [
+        {
+          "query": [
+            "T1048",
+            "T1098",
+            "T1486"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "exfil_start",
+                "admin_change",
+                "manual_impact"
+              ],
+              "relation_ids": [
+                "B13",
+                "B14"
+              ]
+            }
+          ]
+        }
+      ],
+      "unknown_mappings": 6,
+      "unsupported_projected": [],
+      "vocabulary": [
+        "T1021",
+        "T1047",
+        "T1048",
+        "T1098",
+        "T1105",
+        "T1135",
+        "T1197",
+        "T1204",
+        "T1219",
+        "T1484",
+        "T1486"
+      ]
+    },
+    {
+      "actions": 27,
+      "evidence_locators": 18,
+      "post_id": 22587,
+      "post_review_edge_sensitivity": {
+        "omit_B12": {
+          "representations": {
+            "distinct_endpoint_join": {
+              "missed_supported": 0,
+              "returned": 7,
+              "unresolved": 0,
+              "unsupported": 0
+            },
+            "distinct_pairs": {
+              "missed_supported": 0,
+              "returned": 11,
+              "unresolved": 2,
+              "unsupported": 2
+            },
+            "loop_endpoint_join": {
+              "missed_supported": 0,
+              "returned": 7,
+              "unresolved": 0,
+              "unsupported": 0
+            },
+            "loop_pairs": {
+              "missed_supported": 0,
+              "returned": 11,
+              "unresolved": 2,
+              "unsupported": 2
+            }
+          },
+          "statuses": {
+            "NOT_SUPPORTED": 2475,
+            "SUPPORTED": 7,
+            "UNRESOLVED_MAPPING": 893
+          }
+        },
+        "omit_B21": {
+          "representations": {
+            "distinct_endpoint_join": {
+              "missed_supported": 0,
+              "returned": 6,
+              "unresolved": 0,
+              "unsupported": 0
+            },
+            "distinct_pairs": {
+              "missed_supported": 0,
+              "returned": 9,
+              "unresolved": 1,
+              "unsupported": 2
+            },
+            "loop_endpoint_join": {
+              "missed_supported": 0,
+              "returned": 6,
+              "unresolved": 0,
+              "unsupported": 0
+            },
+            "loop_pairs": {
+              "missed_supported": 0,
+              "returned": 9,
+              "unresolved": 1,
+              "unsupported": 2
+            }
+          },
+          "statuses": {
+            "NOT_SUPPORTED": 2476,
+            "SUPPORTED": 6,
+            "UNRESOLVED_MAPPING": 893
+          }
+        }
+      },
+      "query_assessment": "CONDITIONAL_ON_RECORDED_GRAPH",
+      "query_count": 3375,
+      "relations": 22,
+      "representations": {
+        "distinct_endpoint_join": {
+          "missed_supported": 0,
+          "returned": 7,
+          "unresolved": 0,
+          "unsupported": 0
+        },
+        "distinct_pairs": {
+          "missed_supported": 0,
+          "returned": 12,
+          "unresolved": 2,
+          "unsupported": 3
+        },
+        "loop_endpoint_join": {
+          "missed_supported": 0,
+          "returned": 7,
+          "unresolved": 0,
+          "unsupported": 0
+        },
+        "loop_pairs": {
+          "missed_supported": 0,
+          "returned": 12,
+          "unresolved": 2,
+          "unsupported": 3
+        }
+      },
+      "statuses": {
+        "NOT_SUPPORTED": 2461,
+        "SUPPORTED": 7,
+        "UNRESOLVED_MAPPING": 907
+      },
+      "supported_witnesses": [
+        {
+          "query": [
+            "T1003",
+            "T1059",
+            "T1560"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "memory_dump",
+                "log_collection",
+                "log_archive"
+              ],
+              "relation_ids": [
+                "B21",
+                "B22"
+              ]
+            }
+          ]
+        },
+        {
+          "query": [
+            "T1105",
+            "T1059",
+            "T1219"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "script_ingress",
+                "script_run",
+                "rat_initial"
+              ],
+              "relation_ids": [
+                "B3",
+                "B4"
+              ]
+            }
+          ]
+        },
+        {
+          "query": [
+            "T1136",
+            "T1098",
+            "T1021"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "local_account",
+                "group_add",
+                "backup_rdp"
+              ],
+              "relation_ids": [
+                "B17",
+                "B18"
+              ]
+            }
+          ]
+        },
+        {
+          "query": [
+            "T1204",
+            "T1105",
+            "T1059"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "user_execution",
+                "script_ingress",
+                "script_run"
+              ],
+              "relation_ids": [
+                "B2",
+                "B3"
+              ]
+            }
+          ]
+        },
+        {
+          "query": [
+            "T1219",
+            "T1003",
+            "T1560"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "next_day_rat",
+                "first_dump",
+                "first_archive"
+              ],
+              "relation_ids": [
+                "B15",
+                "B16"
+              ]
+            }
+          ]
+        },
+        {
+          "query": [
+            "T1566",
+            "T1204",
+            "T1105"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "email",
+                "user_execution",
+                "script_ingress"
+              ],
+              "relation_ids": [
+                "B1",
+                "B2"
+              ]
+            }
+          ]
+        },
+        {
+          "query": [
+            "T1570",
+            "T1047",
+            "T1053"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "payload_move",
+                "payload_run",
+                "persistence_task"
+              ],
+              "relation_ids": [
+                "B13",
+                "B14"
+              ]
+            }
+          ]
+        }
+      ],
+      "unknown_mappings": 5,
+      "unsupported_projected": [
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "memory_dump",
+                "log_collection"
+              ],
+              "left_relation_ids": [
+                "B21"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "script_run",
+                "rat_initial"
+              ],
+              "right_relation_ids": [
+                "B4"
+              ]
+            }
+          ],
+          "query": [
+            "T1003",
+            "T1059",
+            "T1219"
+          ],
+          "view": "distinct_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "memory_dump",
+                "log_collection"
+              ],
+              "left_relation_ids": [
+                "B21"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "script_run",
+                "rat_initial"
+              ],
+              "right_relation_ids": [
+                "B4"
+              ]
+            }
+          ],
+          "query": [
+            "T1003",
+            "T1059",
+            "T1219"
+          ],
+          "view": "loop_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "script_ingress",
+                "script_run"
+              ],
+              "left_relation_ids": [
+                "B3"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "log_collection",
+                "log_archive"
+              ],
+              "right_relation_ids": [
+                "B22"
+              ]
+            }
+          ],
+          "query": [
+            "T1105",
+            "T1059",
+            "T1560"
+          ],
+          "view": "distinct_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "script_ingress",
+                "script_run"
+              ],
+              "left_relation_ids": [
+                "B3"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "log_collection",
+                "log_archive"
+              ],
+              "right_relation_ids": [
+                "B22"
+              ]
+            }
+          ],
+          "query": [
+            "T1105",
+            "T1059",
+            "T1560"
+          ],
+          "view": "loop_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "firewall_change",
+                "remote_execution"
+              ],
+              "left_relation_ids": [
+                "B12"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "payload_run",
+                "persistence_task"
+              ],
+              "right_relation_ids": [
+                "B14"
+              ]
+            }
+          ],
+          "query": [
+            "T1562",
+            "T1047",
+            "T1053"
+          ],
+          "view": "distinct_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "firewall_change",
+                "remote_execution"
+              ],
+              "left_relation_ids": [
+                "B12"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "payload_run",
+                "persistence_task"
+              ],
+              "right_relation_ids": [
+                "B14"
+              ]
+            }
+          ],
+          "query": [
+            "T1562",
+            "T1047",
+            "T1053"
+          ],
+          "view": "loop_pairs"
+        }
+      ],
+      "vocabulary": [
+        "T1003",
+        "T1021",
+        "T1047",
+        "T1053",
+        "T1059",
+        "T1090",
+        "T1098",
+        "T1105",
+        "T1136",
+        "T1204",
+        "T1219",
+        "T1560",
+        "T1562",
+        "T1566",
+        "T1570"
+      ]
+    }
+  ],
+  "selected_reports": 2
+}

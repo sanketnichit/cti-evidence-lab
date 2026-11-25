@@ -1,0 +1,743 @@
+{
+  "post_id": 22587,
+  "independently_validated": false,
+  "source": {
+    "url": "https://thedfirreport.com/2023/10/30/netsupport-intrusion-results-in-domain-compromise/",
+    "title": "NetSupport Intrusion Results in Domain Compromise",
+    "raw_html_sha256": "4cc35a3ba98a02adb92e5bc5ed16a22d130552dc3557ebc0dd8cda023fb9a472",
+    "paragraph_text_sha256": "ed2537191d00b17f2d0339690f7f0a8d0c0361085f22e163bdbdee5f0befd8cc",
+    "retrieved_at_utc": "2026-11-25T06:13:38.738622+00:00",
+    "summary_paragraph_range": [
+      2,
+      11
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "P2",
+      "paragraph_number": 2,
+      "char_start": 484,
+      "char_end": 942,
+      "span_sha256": "35f9599c0e5bb6ef3699707ee1875b095e8e8ba2cc436aa294b12e379e45b3d5"
+    },
+    {
+      "evidence_id": "P3",
+      "paragraph_number": 3,
+      "char_start": 943,
+      "char_end": 1229,
+      "span_sha256": "8750fff86c8535c785e462cac96a2f83ff301a11f0ecb206686bcbb2dcb32216"
+    },
+    {
+      "evidence_id": "P4",
+      "paragraph_number": 4,
+      "char_start": 1230,
+      "char_end": 1546,
+      "span_sha256": "d9f5cc2a77665c56dcdf4c4569f82ef12fa138254835b7ce1fd4294a574318bd"
+    },
+    {
+      "evidence_id": "P5",
+      "paragraph_number": 5,
+      "char_start": 1547,
+      "char_end": 1878,
+      "span_sha256": "e5234244ce961624e0ceeaee60d085a2c7972ff115c14752bcb338066995a8f7"
+    },
+    {
+      "evidence_id": "P6",
+      "paragraph_number": 6,
+      "char_start": 1879,
+      "char_end": 2477,
+      "span_sha256": "0f463725719e33641a6c81fe731a9eea532f9d07b52c53b14ce4aa1246daaa7d"
+    },
+    {
+      "evidence_id": "P7",
+      "paragraph_number": 7,
+      "char_start": 2478,
+      "char_end": 2862,
+      "span_sha256": "c6f504ad0b6ea9702abe97387ac99bca635f0aceefa458e329a7552282c509cf"
+    },
+    {
+      "evidence_id": "P8",
+      "paragraph_number": 8,
+      "char_start": 2863,
+      "char_end": 3315,
+      "span_sha256": "fb19376815953af5c8d924e587c5aa73a61cff3b27c1e558f2ce2591a47cc325"
+    },
+    {
+      "evidence_id": "P9",
+      "paragraph_number": 9,
+      "char_start": 3316,
+      "char_end": 3617,
+      "span_sha256": "1c429724fca92fc4b7e55ae64824029a395edc0bdbe3e5f0c29860d9c9922099"
+    },
+    {
+      "evidence_id": "P10",
+      "paragraph_number": 10,
+      "char_start": 3618,
+      "char_end": 4204,
+      "span_sha256": "1e6caea61a5864261986881091236e08fc4bb6501eaebf33bedbba91c50da55b"
+    },
+    {
+      "evidence_id": "P11",
+      "paragraph_number": 11,
+      "char_start": 4205,
+      "char_end": 4684,
+      "span_sha256": "41e1fa14e72d1ab399e4464c46b105c03a77ba71bed6bc642ed7b84ce63a60f2"
+    },
+    {
+      "evidence_id": "P17",
+      "paragraph_number": 17,
+      "char_start": 5416,
+      "char_end": 5863,
+      "span_sha256": "bd3c3a1965fd2cb047b3627d48fedad6f264051c9b7ffe7afe479a9475a1fc07"
+    },
+    {
+      "evidence_id": "P33",
+      "paragraph_number": 33,
+      "char_start": 8383,
+      "char_end": 8644,
+      "span_sha256": "3220f0ac2ffcd1f8aa04319641dde5ff650dcdb79ae3af2aab0213009f6a75fa"
+    },
+    {
+      "evidence_id": "P39",
+      "paragraph_number": 39,
+      "char_start": 9148,
+      "char_end": 9336,
+      "span_sha256": "d34279b3837579b86379075cab54d6fc8cf385a9b959290a825785910cde4dc7"
+    },
+    {
+      "evidence_id": "P41",
+      "paragraph_number": 41,
+      "char_start": 9669,
+      "char_end": 9937,
+      "span_sha256": "7a2309fa682a8913627baa6175302ac1e755cd3b0d172088fc6b4958cf496f9c"
+    },
+    {
+      "evidence_id": "P42",
+      "paragraph_number": 42,
+      "char_start": 9938,
+      "char_end": 10068,
+      "span_sha256": "ca44b09b1763f7c3cb0b708f39a427a9ed10a6cd262a73f006f4f4bb6ff8da03"
+    },
+    {
+      "evidence_id": "P49",
+      "paragraph_number": 49,
+      "char_start": 11288,
+      "char_end": 11455,
+      "span_sha256": "7361360fc5e767d40fb6c942e4acc5e3d47672f89b29c885c3cef01d93612fde"
+    },
+    {
+      "evidence_id": "P79",
+      "paragraph_number": 79,
+      "char_start": 16727,
+      "char_end": 16845,
+      "span_sha256": "ec28ec59cf4590db7df867f02c1cd8dd7d7a24b0bca1bf6fa445b40cf45650a2"
+    },
+    {
+      "evidence_id": "P87",
+      "paragraph_number": 87,
+      "char_start": 18054,
+      "char_end": 18849,
+      "span_sha256": "16065281eb00a5d1d4e438b4c0d251ce50670d8e64901ccaafb7dc5bfeb6cd60"
+    }
+  ],
+  "occurrences": [
+    {
+      "event_id": "email",
+      "description": "Delivery of the attachment to a user",
+      "mapping": "T1566",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The attachment arrived in a malicious email.",
+      "evidence_ids": [
+        "P2"
+      ]
+    },
+    {
+      "event_id": "user_execution",
+      "description": "User execution of the attached content",
+      "mapping": "T1204",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The user executed the delivered content following delivery.",
+      "evidence_ids": [
+        "P2"
+      ]
+    },
+    {
+      "event_id": "script_ingress",
+      "description": "Download of a subsequent script",
+      "mapping": "T1105",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The initial content retrieved a distinct external script.",
+      "evidence_ids": [
+        "P2"
+      ]
+    },
+    {
+      "event_id": "script_run",
+      "description": "Execution of the retrieved PowerShell script",
+      "mapping": "T1059",
+      "outcome": "REPORTED",
+      "mapping_rationale": "Explicit execution through a scripting interpreter.",
+      "evidence_ids": [
+        "P2"
+      ]
+    },
+    {
+      "event_id": "rat_initial",
+      "description": "Initial deployment of remote access software",
+      "mapping": "T1219",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The report identifies use of remote access software for access and control.",
+      "evidence_ids": [
+        "P2",
+        "P3"
+      ]
+    },
+    {
+      "event_id": "discovery",
+      "description": "Day-five discovery activity",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "Multiple discovery topics are grouped in the summary and their internal ordering is unstated.",
+      "evidence_ids": [
+        "P3"
+      ]
+    },
+    {
+      "event_id": "reenable",
+      "description": "Attempt to reactivate the disabled account",
+      "mapping": "T1098",
+      "outcome": "ATTEMPTED",
+      "mapping_rationale": "Changing account state was attempted. Successful reactivation is unconfirmed.",
+      "evidence_ids": [
+        "P3"
+      ]
+    },
+    {
+      "event_id": "ssh_install",
+      "description": "Installation of a service for remote access",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "The summary states installation for access and persistence without a uniquely justified technique for that installation.",
+      "evidence_ids": [
+        "P4"
+      ]
+    },
+    {
+      "event_id": "reverse_proxy",
+      "description": "Establishment of the tunnel used to proxy connections",
+      "mapping": "T1090",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The tunnel forwarded later connections through an intermediary.",
+      "evidence_ids": [
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "event_id": "dc_connection",
+      "description": "Connection to the domain controller through the established tunnel",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "The destination is clear. The summary does not identify a separate remote-service protocol for the connection.",
+      "evidence_ids": [
+        "P5"
+      ]
+    },
+    {
+      "event_id": "dc_discovery",
+      "description": "Discovery of privileged groups and computers",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "The summary groups several discovery actions without ordering them.",
+      "evidence_ids": [
+        "P5"
+      ]
+    },
+    {
+      "event_id": "firewall_change",
+      "description": "Change to firewall settings",
+      "mapping": "T1562",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The source reports a firewall setting change as part of the intrusion.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "event_id": "remote_execution",
+      "description": "Further WMI-based remote execution",
+      "mapping": "T1047",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The source names WMI execution for the later lateral movement.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "event_id": "payload_move",
+      "description": "Movement of payload archives to the remote hosts",
+      "mapping": "T1570",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The report describes transfer between hosts in the environment.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "event_id": "payload_run",
+      "description": "Execution of the remote payload via WMI",
+      "mapping": "T1047",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The execution is specifically associated with WMI.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "event_id": "persistence_task",
+      "description": "Creation of a task after the payload ran",
+      "mapping": "T1053",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The summary identifies scheduled task persistence.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "event_id": "next_day_rat",
+      "description": "Deployment of remote access software on a controller",
+      "mapping": "T1219",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The next-day activity explicitly identifies another remote access deployment.",
+      "evidence_ids": [
+        "P7"
+      ]
+    },
+    {
+      "event_id": "first_dump",
+      "description": "First reported controller credential dump",
+      "mapping": "T1003",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The action targeted the directory credential database.",
+      "evidence_ids": [
+        "P7",
+        "P49"
+      ]
+    },
+    {
+      "event_id": "first_archive",
+      "description": "Compression of the first controller dump",
+      "mapping": "T1560",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The source links the compressed files to collected credential data.",
+      "evidence_ids": [
+        "P7",
+        "P79"
+      ]
+    },
+    {
+      "event_id": "local_account",
+      "description": "Creation of the backup-server account",
+      "mapping": "T1136",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The source reports creation of a distinct local account.",
+      "evidence_ids": [
+        "P8",
+        "P33"
+      ]
+    },
+    {
+      "event_id": "group_add",
+      "description": "Addition of the new account to privileged groups",
+      "mapping": "T1098",
+      "outcome": "REPORTED",
+      "mapping_rationale": "Privileges were changed on the newly created account.",
+      "evidence_ids": [
+        "P8",
+        "P33"
+      ]
+    },
+    {
+      "event_id": "backup_rdp",
+      "description": "Remote desktop login with the new account",
+      "mapping": "T1021",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The source explicitly reports a remote desktop session tied to the account.",
+      "evidence_ids": [
+        "P8"
+      ]
+    },
+    {
+      "event_id": "defender_attempt",
+      "description": "Attempt to impair endpoint protection",
+      "mapping": "T1562",
+      "outcome": "ATTEMPTED",
+      "mapping_rationale": "The summary describes disablement, while the detailed description reports attempts and typos. Keep the attempt visible.",
+      "evidence_ids": [
+        "P9",
+        "P41"
+      ]
+    },
+    {
+      "event_id": "utility_drop",
+      "description": "Drop of the credential access utility",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "The source does not resolve the transfer origin in the summary.",
+      "evidence_ids": [
+        "P9",
+        "P42"
+      ]
+    },
+    {
+      "event_id": "memory_dump",
+      "description": "Dump of process credentials",
+      "mapping": "T1003",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The report explicitly describes an LSASS dump. It does not split the order between the named hosts.",
+      "evidence_ids": [
+        "P9"
+      ]
+    },
+    {
+      "event_id": "log_collection",
+      "description": "Collection of login events via PowerShell",
+      "mapping": "T1059",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The report names the interpreter used to collect the event records.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "event_id": "log_archive",
+      "description": "Compression of collected login records",
+      "mapping": "T1560",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The event data were archived after collection.",
+      "evidence_ids": [
+        "P10"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "B1",
+      "source_event": "email",
+      "target_event": "user_execution",
+      "relation": "BEFORE",
+      "ordering_rationale": "The summary explicitly places user execution after delivery.",
+      "evidence_ids": [
+        "P2"
+      ]
+    },
+    {
+      "relation_id": "B2",
+      "source_event": "user_execution",
+      "target_event": "script_ingress",
+      "relation": "BEFORE",
+      "ordering_rationale": "Running the initial content caused the retrieval.",
+      "evidence_ids": [
+        "P2"
+      ]
+    },
+    {
+      "relation_id": "B3",
+      "source_event": "script_ingress",
+      "target_event": "script_run",
+      "relation": "BEFORE",
+      "ordering_rationale": "The downloaded script was subsequently run.",
+      "evidence_ids": [
+        "P2"
+      ]
+    },
+    {
+      "relation_id": "B4",
+      "source_event": "script_run",
+      "target_event": "rat_initial",
+      "relation": "BEFORE",
+      "ordering_rationale": "The running script deployed the remote-access software.",
+      "evidence_ids": [
+        "P2"
+      ]
+    },
+    {
+      "relation_id": "B5",
+      "source_event": "rat_initial",
+      "target_event": "discovery",
+      "relation": "BEFORE",
+      "ordering_rationale": "The discovery activity is timed from this deployment.",
+      "evidence_ids": [
+        "P3"
+      ]
+    },
+    {
+      "relation_id": "B6",
+      "source_event": "discovery",
+      "target_event": "reenable",
+      "relation": "BEFORE",
+      "ordering_rationale": "The reactivation attempt followed the earlier reconnaissance.",
+      "evidence_ids": [
+        "P3"
+      ]
+    },
+    {
+      "relation_id": "B7",
+      "source_event": "reenable",
+      "target_event": "ssh_install",
+      "relation": "BEFORE",
+      "ordering_rationale": "Installation followed the activity described in the previous paragraph.",
+      "evidence_ids": [
+        "P3",
+        "P4"
+      ]
+    },
+    {
+      "relation_id": "B8",
+      "source_event": "ssh_install",
+      "target_event": "reverse_proxy",
+      "relation": "BEFORE",
+      "ordering_rationale": "The tunnel was established for the installed service.",
+      "evidence_ids": [
+        "P4"
+      ]
+    },
+    {
+      "relation_id": "B9",
+      "source_event": "reverse_proxy",
+      "target_event": "dc_connection",
+      "relation": "BEFORE",
+      "ordering_rationale": "The controller connection used the previously established tunnel.",
+      "evidence_ids": [
+        "P5"
+      ]
+    },
+    {
+      "relation_id": "B10",
+      "source_event": "dc_connection",
+      "target_event": "dc_discovery",
+      "relation": "BEFORE",
+      "ordering_rationale": "The stated remote session was used for the discovery commands.",
+      "evidence_ids": [
+        "P5"
+      ]
+    },
+    {
+      "relation_id": "B11",
+      "source_event": "dc_discovery",
+      "target_event": "firewall_change",
+      "relation": "BEFORE",
+      "ordering_rationale": "The summary reports an eight-hour interval before the configuration change.",
+      "evidence_ids": [
+        "P5",
+        "P6"
+      ]
+    },
+    {
+      "relation_id": "B12",
+      "source_event": "firewall_change",
+      "target_event": "remote_execution",
+      "relation": "BEFORE",
+      "ordering_rationale": "The summary orders the change before subsequent movement.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "relation_id": "B13",
+      "source_event": "payload_move",
+      "target_event": "payload_run",
+      "relation": "BEFORE",
+      "ordering_rationale": "The payloads were moved before being run.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "relation_id": "B14",
+      "source_event": "payload_run",
+      "target_event": "persistence_task",
+      "relation": "BEFORE",
+      "ordering_rationale": "Task creation followed payload execution.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "relation_id": "B15",
+      "source_event": "next_day_rat",
+      "target_event": "first_dump",
+      "relation": "BEFORE",
+      "ordering_rationale": "The credential dump followed and used the new access.",
+      "evidence_ids": [
+        "P7"
+      ]
+    },
+    {
+      "relation_id": "B16",
+      "source_event": "first_dump",
+      "target_event": "first_archive",
+      "relation": "BEFORE",
+      "ordering_rationale": "The archive was collected after the dump.",
+      "evidence_ids": [
+        "P7"
+      ]
+    },
+    {
+      "relation_id": "B17",
+      "source_event": "local_account",
+      "target_event": "group_add",
+      "relation": "BEFORE",
+      "ordering_rationale": "Group addition applies to the account just created.",
+      "evidence_ids": [
+        "P8",
+        "P33"
+      ]
+    },
+    {
+      "relation_id": "B18",
+      "source_event": "group_add",
+      "target_event": "backup_rdp",
+      "relation": "BEFORE",
+      "ordering_rationale": "The ensuing login used the provisioned account.",
+      "evidence_ids": [
+        "P8"
+      ]
+    },
+    {
+      "relation_id": "B19",
+      "source_event": "defender_attempt",
+      "target_event": "utility_drop",
+      "relation": "BEFORE",
+      "ordering_rationale": "The summary places utility drop after the protection change attempt.",
+      "evidence_ids": [
+        "P9",
+        "P41"
+      ]
+    },
+    {
+      "relation_id": "B20",
+      "source_event": "utility_drop",
+      "target_event": "memory_dump",
+      "relation": "BEFORE",
+      "ordering_rationale": "The reported utility drop was followed by the dump.",
+      "evidence_ids": [
+        "P9"
+      ]
+    },
+    {
+      "relation_id": "B21",
+      "source_event": "memory_dump",
+      "target_event": "log_collection",
+      "relation": "BEFORE",
+      "ordering_rationale": "The event collection follows the preceding credential dumping passage.",
+      "evidence_ids": [
+        "P9",
+        "P10"
+      ]
+    },
+    {
+      "relation_id": "B22",
+      "source_event": "log_collection",
+      "target_event": "log_archive",
+      "relation": "BEFORE",
+      "ordering_rationale": "Collected records were compressed subsequently.",
+      "evidence_ids": [
+        "P10"
+      ]
+    }
+  ],
+  "exclusions": [
+    {
+      "observation": "Phishing campaign attribution and prior sample",
+      "rationale": "Campaign history and earlier sample details do not supply edges for this incident.",
+      "evidence_ids": [
+        "P17"
+      ]
+    },
+    {
+      "observation": "Multiple concurrent and aggregate discovery actions",
+      "rationale": "Several commands and hosts appear in aggregate. No ordering is assigned among members of such groups.",
+      "evidence_ids": [
+        "P3",
+        "P5",
+        "P6",
+        "P8",
+        "P10"
+      ]
+    },
+    {
+      "observation": "Unconfirmed archive and log exfiltration",
+      "rationale": "The publisher explicitly distinguishes inferred transfer from observed evidence. No exfiltration edge is entered.",
+      "evidence_ids": [
+        "P7",
+        "P10",
+        "P87"
+      ]
+    },
+    {
+      "observation": "Second controller dump",
+      "rationale": "The second dump is distinct, but the summary does not explicitly identify which first-controller action anchors the elapsed reference. Avoid a cross-host bridge based on narrative order.",
+      "evidence_ids": [
+        "P7",
+        "P8",
+        "P49"
+      ]
+    },
+    {
+      "observation": "Failed account creation late in the incident",
+      "rationale": "The attempt is reported without a successful account, and the summary supplies only a drop-to-attempt pair. The researcher test is a separate activity.",
+      "evidence_ids": [
+        "P11",
+        "P39"
+      ]
+    }
+  ],
+  "taxonomy": {
+    "version": "Enterprise ATT&CK v12.1",
+    "sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+    "parent_definitions": {
+      "T1003": "OS Credential Dumping",
+      "T1021": "Remote Services",
+      "T1047": "Windows Management Instrumentation",
+      "T1053": "Scheduled Task/Job",
+      "T1059": "Command and Scripting Interpreter",
+      "T1090": "Proxy",
+      "T1098": "Account Manipulation",
+      "T1105": "Ingress Tool Transfer",
+      "T1136": "Create Account",
+      "T1204": "User Execution",
+      "T1219": "Remote Access Software",
+      "T1560": "Archive Collected Data",
+      "T1562": "Impair Defenses",
+      "T1566": "Phishing",
+      "T1570": "Lateral Tool Transfer"
+    }
+  },
+  "recorded_source_audit": {
+    "status": "SOURCE_BINDINGS_VERIFIED_NOT_SEMANTIC_VALIDATION",
+    "raw_html_sha256": "4cc35a3ba98a02adb92e5bc5ed16a22d130552dc3557ebc0dd8cda023fb9a472",
+    "raw_html_matches_retrieval": true,
+    "paragraph_text_sha256": "ed2537191d00b17f2d0339690f7f0a8d0c0361085f22e163bdbdee5f0befd8cc",
+    "evidence_verified": [
+      "P2",
+      "P3",
+      "P4",
+      "P5",
+      "P6",
+      "P7",
+      "P8",
+      "P9",
+      "P10",
+      "P11",
+      "P17",
+      "P33",
+      "P39",
+      "P41",
+      "P42",
+      "P49",
+      "P79",
+      "P87"
+    ]
+  }
+}

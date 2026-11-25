@@ -1,0 +1,499 @@
+{
+  "post_id": 21520,
+  "independently_validated": false,
+  "source": {
+    "url": "https://thedfirreport.com/2023/09/25/from-screenconnect-to-hive-ransomware-in-61-hours/",
+    "title": "From ScreenConnect to Hive Ransomware in 61 hours",
+    "raw_html_sha256": "39b37236a5745a0a9fcefb36f680a6e19901a82028d7751c72a90bc78d52298d",
+    "paragraph_text_sha256": "81d58da53d48421a0809f977f9309f8b13dd34824c664302891d9f63f317a3b1",
+    "retrieved_at_utc": "2026-11-25T06:13:37.909067+00:00",
+    "summary_paragraph_range": [
+      5,
+      12
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "P5",
+      "paragraph_number": 5,
+      "char_start": 1007,
+      "char_end": 1395,
+      "span_sha256": "9b70a62c288c9e4af32d59db7b33ce22cbf728874406f0feed88fe838d3cff29"
+    },
+    {
+      "evidence_id": "P6",
+      "paragraph_number": 6,
+      "char_start": 1396,
+      "char_end": 1926,
+      "span_sha256": "ecd7896df452c503d020cc4b8b2a854efe2c1df9afa51ac066caf024afa89f39"
+    },
+    {
+      "evidence_id": "P7",
+      "paragraph_number": 7,
+      "char_start": 1927,
+      "char_end": 2505,
+      "span_sha256": "365cf935a47bec81bfb8a87e11cbe743b214c32ce0a8740ffa773c5398d2a615"
+    },
+    {
+      "evidence_id": "P8",
+      "paragraph_number": 8,
+      "char_start": 2506,
+      "char_end": 2770,
+      "span_sha256": "5236f2d46a6a3953f8875432564620ef128ffc636e12bb7c664fc95e6228d59f"
+    },
+    {
+      "evidence_id": "P9",
+      "paragraph_number": 9,
+      "char_start": 2771,
+      "char_end": 3150,
+      "span_sha256": "6f98f0fe789ab3207debca3e0572afb5e188950106a9d03dd16aacb1e8ee8f6b"
+    },
+    {
+      "evidence_id": "P10",
+      "paragraph_number": 10,
+      "char_start": 3151,
+      "char_end": 3882,
+      "span_sha256": "93158eeb6e991762d1e6ab0e1ed830303a87f3908ce01f1d4649f67b2cfd2d7d"
+    },
+    {
+      "evidence_id": "P11",
+      "paragraph_number": 11,
+      "char_start": 3883,
+      "char_end": 4424,
+      "span_sha256": "83813534dfb9a98a8cdf8c91f4ee991dd38221a2196ccfa7f117849fb57a56a6"
+    },
+    {
+      "evidence_id": "P12",
+      "paragraph_number": 12,
+      "char_start": 4425,
+      "char_end": 4708,
+      "span_sha256": "61f828ac9812ea1e866c7c86d859961c722592e2b713d255949391ff788d5d6c"
+    },
+    {
+      "evidence_id": "P83",
+      "paragraph_number": 83,
+      "char_start": 20090,
+      "char_end": 20382,
+      "span_sha256": "6204397e0320936921a493dc3940716ab4132ab4b2d41b3ad5da226f2f56ba99"
+    },
+    {
+      "evidence_id": "P95",
+      "paragraph_number": 95,
+      "char_start": 22854,
+      "char_end": 23357,
+      "span_sha256": "7f2f6c9eee763d40910b246c2b1d2374e84fbca1a34c7802d2de3c9971bf4de4"
+    }
+  ],
+  "occurrences": [
+    {
+      "event_id": "initial_execution",
+      "description": "User execution of the initial disguised payload",
+      "mapping": "T1204",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The initial local invocation was the user-dependent execution event.",
+      "evidence_ids": [
+        "P5",
+        "P6"
+      ]
+    },
+    {
+      "event_id": "screenconnect",
+      "description": "Installation of the remote management application",
+      "mapping": "T1219",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The report identifies remote management software used to maintain access and issue commands.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "event_id": "discovery",
+      "description": "Initiation of a discovery batch over the management channel",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "Several discovery purposes are grouped in one summary action. The summary does not order individual commands.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "event_id": "first_bits",
+      "description": "First reported BITS transfer for a beacon",
+      "mapping": "T1197",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The reported hostile operation was a BITS job.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "event_id": "binary_ingress",
+      "description": "Ingress of another binary through the management session",
+      "mapping": "T1105",
+      "outcome": "REPORTED",
+      "mapping_rationale": "A distinct subsequent payload was downloaded to the endpoint.",
+      "evidence_ids": [
+        "P7"
+      ]
+    },
+    {
+      "event_id": "new_channel",
+      "description": "Use of the new remote control channel",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "The summary establishes a new channel but does not resolve the parent protocol technique.",
+      "evidence_ids": [
+        "P7"
+      ]
+    },
+    {
+      "event_id": "server_lateral",
+      "description": "Remote execution on a server",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "Summary-level remote service description does not uniquely bind the protocol and groups several executions.",
+      "evidence_ids": [
+        "P7"
+      ]
+    },
+    {
+      "event_id": "further_wmi",
+      "description": "Further WMI-based remote execution",
+      "mapping": "T1047",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The reported second lateral movement episode explicitly names WMI execution.",
+      "evidence_ids": [
+        "P8"
+      ]
+    },
+    {
+      "event_id": "late_rdp",
+      "description": "Later remote desktop access session",
+      "mapping": "T1021",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The summary names RDP, a remote service.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "event_id": "share_review",
+      "description": "Review of network shares during the remote sessions",
+      "mapping": "T1135",
+      "outcome": "REPORTED",
+      "mapping_rationale": "Share enumeration is the reported discovery purpose.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "event_id": "rclone_drop",
+      "description": "Drop of exfiltration software onto a file server",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "The summary does not identify where the file came from, preventing an ingress or lateral transfer decision.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "event_id": "remote_connection",
+      "description": "Connection to the remote file-transfer endpoint",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "Connection setup is distinguishable from data movement, but lacks a separately justified technique label.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "event_id": "exfil_start",
+      "description": "Start of outbound data transfer over a separate protocol",
+      "mapping": "T1048",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The summary identifies data removal over SFTP and distinguishes that channel from remote control.",
+      "evidence_ids": [
+        "P10",
+        "P11",
+        "P83"
+      ]
+    },
+    {
+      "event_id": "admin_change",
+      "description": "Change to an administrator credential",
+      "mapping": "T1098",
+      "outcome": "REPORTED",
+      "mapping_rationale": "A credential of an existing account was modified.",
+      "evidence_ids": [
+        "P11"
+      ]
+    },
+    {
+      "event_id": "manual_impact",
+      "description": "Manual ransomware execution with confirmed encryption",
+      "mapping": "T1486",
+      "outcome": "SUCCEEDED",
+      "mapping_rationale": "The summary explicitly reports successful manual encryption on key servers.",
+      "evidence_ids": [
+        "P11",
+        "P12"
+      ]
+    },
+    {
+      "event_id": "share_staging",
+      "description": "Staging of the binary on a network share",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "mapping_rationale": "The stated staging destination alone does not establish transfer between compromised hosts.",
+      "evidence_ids": [
+        "P11"
+      ]
+    },
+    {
+      "event_id": "policy_deployment",
+      "description": "Creation of the deployment policy",
+      "mapping": "T1484",
+      "outcome": "REPORTED",
+      "mapping_rationale": "The author reports creation of a domain-wide group policy. Treat the scheduled configuration as part of this summary action.",
+      "evidence_ids": [
+        "P11",
+        "P12"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "B1",
+      "source_event": "initial_execution",
+      "target_event": "screenconnect",
+      "relation": "BEFORE",
+      "ordering_rationale": "Installation resulted from execution.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "relation_id": "B2",
+      "source_event": "initial_execution",
+      "target_event": "discovery",
+      "relation": "BEFORE",
+      "ordering_rationale": "The summary times discovery relative to the execution.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "relation_id": "B3",
+      "source_event": "screenconnect",
+      "target_event": "discovery",
+      "relation": "BEFORE",
+      "ordering_rationale": "Discovery took place through the installed application.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "relation_id": "B4",
+      "source_event": "discovery",
+      "target_event": "first_bits",
+      "relation": "BEFORE",
+      "ordering_rationale": "The transfer was a few minutes after discovery.",
+      "evidence_ids": [
+        "P6"
+      ]
+    },
+    {
+      "relation_id": "B5",
+      "source_event": "first_bits",
+      "target_event": "binary_ingress",
+      "relation": "BEFORE",
+      "ordering_rationale": "The next download followed the stated activity pause.",
+      "evidence_ids": [
+        "P6",
+        "P7"
+      ]
+    },
+    {
+      "relation_id": "B6",
+      "source_event": "binary_ingress",
+      "target_event": "new_channel",
+      "relation": "BEFORE",
+      "ordering_rationale": "The subsequently executed downloaded binary enabled the new channel.",
+      "evidence_ids": [
+        "P7"
+      ]
+    },
+    {
+      "relation_id": "B7",
+      "source_event": "new_channel",
+      "target_event": "server_lateral",
+      "relation": "BEFORE",
+      "ordering_rationale": "Movement followed establishment of the new channel.",
+      "evidence_ids": [
+        "P7"
+      ]
+    },
+    {
+      "relation_id": "B8",
+      "source_event": "server_lateral",
+      "target_event": "further_wmi",
+      "relation": "BEFORE",
+      "ordering_rationale": "Further movement was reported after the preceding movement episode.",
+      "evidence_ids": [
+        "P7",
+        "P8"
+      ]
+    },
+    {
+      "relation_id": "B9",
+      "source_event": "late_rdp",
+      "target_event": "share_review",
+      "relation": "BEFORE",
+      "ordering_rationale": "The review was conducted from the described remote sessions.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "relation_id": "B10",
+      "source_event": "share_review",
+      "target_event": "rclone_drop",
+      "relation": "BEFORE",
+      "ordering_rationale": "The next reported step was dropping the transfer software.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "relation_id": "B11",
+      "source_event": "rclone_drop",
+      "target_event": "remote_connection",
+      "relation": "BEFORE",
+      "ordering_rationale": "The tool drop preceded configuration and connection.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "relation_id": "B12",
+      "source_event": "remote_connection",
+      "target_event": "exfil_start",
+      "relation": "BEFORE",
+      "ordering_rationale": "The source places data movement after connection.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "relation_id": "B13",
+      "source_event": "exfil_start",
+      "target_event": "admin_change",
+      "relation": "BEFORE",
+      "ordering_rationale": "Final activity started after exfiltration began and the credential change was its first reported action.",
+      "evidence_ids": [
+        "P11"
+      ]
+    },
+    {
+      "relation_id": "B14",
+      "source_event": "admin_change",
+      "target_event": "manual_impact",
+      "relation": "BEFORE",
+      "ordering_rationale": "Manual encryption actions followed the credential change.",
+      "evidence_ids": [
+        "P11",
+        "P12"
+      ]
+    },
+    {
+      "relation_id": "B15",
+      "source_event": "manual_impact",
+      "target_event": "share_staging",
+      "relation": "BEFORE",
+      "ordering_rationale": "The later attempt followed manual execution and began with share staging.",
+      "evidence_ids": [
+        "P11"
+      ]
+    },
+    {
+      "relation_id": "B16",
+      "source_event": "share_staging",
+      "target_event": "policy_deployment",
+      "relation": "BEFORE",
+      "ordering_rationale": "The deployment policy was created after staging.",
+      "evidence_ids": [
+        "P11"
+      ]
+    }
+  ],
+  "exclusions": [
+    {
+      "observation": "Initial phishing delivery",
+      "rationale": "The summary attributes the delivery to another source and describes it as likely.",
+      "evidence_ids": [
+        "P5"
+      ]
+    },
+    {
+      "observation": "Additional beacon, credential-access and discovery episodes",
+      "rationale": "The summary describes grouped activity over other hosts or intervals. The most adjacent mentions do not uniquely bind three individual endpoints.",
+      "evidence_ids": [
+        "P7",
+        "P8",
+        "P9",
+        "P10"
+      ]
+    },
+    {
+      "observation": "Scanning during exfiltration",
+      "rationale": "The report describes overlap. It does not establish ordering after the completion of the transfer.",
+      "evidence_ids": [
+        "P10"
+      ]
+    },
+    {
+      "observation": "Domain-wide encryption",
+      "rationale": "Policy creation is observed, but the wider deployment failed. No encryption occurrence is assigned to the failed deployment.",
+      "evidence_ids": [
+        "P11",
+        "P12",
+        "P95"
+      ]
+    }
+  ],
+  "taxonomy": {
+    "version": "Enterprise ATT&CK v12.1",
+    "sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+    "parent_definitions": {
+      "T1021": "Remote Services",
+      "T1047": "Windows Management Instrumentation",
+      "T1048": "Exfiltration Over Alternative Protocol",
+      "T1098": "Account Manipulation",
+      "T1105": "Ingress Tool Transfer",
+      "T1135": "Network Share Discovery",
+      "T1197": "BITS Jobs",
+      "T1204": "User Execution",
+      "T1219": "Remote Access Software",
+      "T1484": "Domain Policy Modification",
+      "T1486": "Data Encrypted for Impact"
+    }
+  },
+  "recorded_source_audit": {
+    "status": "SOURCE_BINDINGS_VERIFIED_NOT_SEMANTIC_VALIDATION",
+    "raw_html_sha256": "39b37236a5745a0a9fcefb36f680a6e19901a82028d7751c72a90bc78d52298d",
+    "raw_html_matches_retrieval": true,
+    "paragraph_text_sha256": "81d58da53d48421a0809f977f9309f8b13dd34824c664302891d9f63f317a3b1",
+    "evidence_verified": [
+      "P5",
+      "P6",
+      "P7",
+      "P8",
+      "P9",
+      "P10",
+      "P11",
+      "P12",
+      "P83",
+      "P95"
+    ]
+  }
+}
