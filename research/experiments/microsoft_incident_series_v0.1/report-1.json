@@ -1,0 +1,206 @@
+{
+  "installment": 1,
+  "independently_validated": false,
+  "source": {
+    "url": "https://download.microsoft.com/download/4/6/5/4650b04f-7db6-4a87-bf82-8ed1ad1c001c/MS%20Security%20Experts%20Cyberattack%20MagicWeb%202023.pdf",
+    "pdf_sha256": "aa8ce9eec31d491b5a6eff0f07fa95cb96e8387918f5d8821d216b1f0acb5b86",
+    "retrieved_on": "2026-11-25",
+    "extractor": "pypdf layout, collapse Unicode whitespace per page",
+    "extractor_version": "6.21.4",
+    "page_count": 6,
+    "pages_reviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "taxonomy": {
+    "release": "Enterprise ATT&CK v12.1",
+    "sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+    "parent_definitions": {
+      "T1556": "Modify Authentication Process"
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "E1",
+      "page": 3,
+      "char_start": 1170,
+      "char_end": 1608,
+      "page_sha256": "1823f8ad0b8aa8ecc4a16074de9b961b9c5b78a0765b15fcf5887d3eea78d5c4",
+      "span_sha256": "35ab501f34f66fc8698646729678c29ba902778beb605fddb9db59e8e105b319",
+      "section_and_role": "How did it begin? Right-hand incident paragraph. The layout extraction interleaves a figure from the left column."
+    },
+    {
+      "evidence_id": "E2",
+      "page": 4,
+      "char_start": 425,
+      "char_end": 688,
+      "page_sha256": "4f2c280bebd334b5f6316d3683ab994bc50d64ded84e64d68c26cc271e885d00",
+      "span_sha256": "0acaf61745eadfa29a89734d010a7ab42f7a506cc1fd0e40b516b17554099db9",
+      "section_and_role": "How did Microsoft respond? Right-hand finding about the implant. The extraction also contains text from the responder column."
+    },
+    {
+      "evidence_id": "E3",
+      "page": 4,
+      "char_start": 1396,
+      "char_end": 1560,
+      "page_sha256": "4f2c280bebd334b5f6316d3683ab994bc50d64ded84e64d68c26cc271e885d00",
+      "span_sha256": "740e552e11856d877d7c15e2a98c6db4b082771496129408427ad7d84b2e4ead",
+      "section_and_role": "How did Microsoft respond? Left-hand description of how investigators obtained presented certificates."
+    },
+    {
+      "evidence_id": "E4",
+      "page": 4,
+      "char_start": 1913,
+      "char_end": 2485,
+      "page_sha256": "4f2c280bebd334b5f6316d3683ab994bc50d64ded84e64d68c26cc271e885d00",
+      "span_sha256": "5e4a90c5aa3883f3a5feff35515572a676b67cf2d75c8eab55fd1427e6489135",
+      "section_and_role": "How did Microsoft respond? Interleaved columns contain observation, technical analysis and responder activity."
+    },
+    {
+      "evidence_id": "E5",
+      "page": 2,
+      "char_start": 157,
+      "char_end": 177,
+      "page_sha256": "f0ae38d1ba6b30b8b444ad2c4eb3ea81cb264b72e2b122b09b936ed97566e6e9",
+      "span_sha256": "1a942a54c0c79ffadecc9819b1421b9124d541e817244d6f7314ff53140428a4",
+      "section_and_role": "Attack-flow diagram heading. The diagram is outside the narrative evidence frame."
+    },
+    {
+      "evidence_id": "E6",
+      "page": 5,
+      "char_start": 242,
+      "char_end": 354,
+      "page_sha256": "31f774a19af5815c4afa33b38add83e1a81eba89b86407426501086b12c0ed0e",
+      "span_sha256": "ed10eaf7cd498be666c2e8a8ea3f964babab88c8f40c243c682b44f889647767",
+      "section_and_role": "Summary panel headings. The attack-flow column is a numbered recap alongside investigation and recommendations."
+    },
+    {
+      "evidence_id": "E7",
+      "page": 4,
+      "char_start": 2713,
+      "char_end": 2800,
+      "page_sha256": "4f2c280bebd334b5f6316d3683ab994bc50d64ded84e64d68c26cc271e885d00",
+      "span_sha256": "94e290843c730418f4978ccaf0eb5fb5ad33c053a7cc91038cec15de7d3c7ce8",
+      "section_and_role": "Detection and response recommendations heading."
+    },
+    {
+      "evidence_id": "E8",
+      "page": 1,
+      "char_start": 455,
+      "char_end": 540,
+      "page_sha256": "95e07f22238cb2029a4e1332c9a0c665c122eae09e9f7b397a6ea6441a737baa",
+      "span_sha256": "1e6627b0024ac448f07e5612571f9bd527f0c325541961d9322210e6353b3464",
+      "section_and_role": "Cover summary of the capability."
+    }
+  ],
+  "occurrences": [
+    {
+      "event_id": "prior_compromise",
+      "description": "Compromise of the customer environment",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "rationale": "The incident paragraph reports a prior compromise. The narrative prose does not identify an initial-access mechanism with enough detail for a label.",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "event_id": "authentication_implant",
+      "description": "Implantation of a backdoor that modifies authentication",
+      "mapping": "T1556",
+      "outcome": "REPORTED",
+      "rationale": "The responders attribute the implant to the actor and describe modification of the authentication process. The narrative does not time separate component changes.",
+      "evidence_ids": [
+        "E1",
+        "E2",
+        "E4"
+      ]
+    },
+    {
+      "event_id": "actor_authentication_request",
+      "description": "Actor-attributed authentication activity represented by captured certificates",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "rationale": "The prose reports unusual requests and discusses a captured actor certificate. It does not give a separate technique label or a successful outcome for each presentation.",
+      "evidence_ids": [
+        "E1",
+        "E3",
+        "E4"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "B1",
+      "source_event": "prior_compromise",
+      "target_event": "authentication_implant",
+      "relation": "BEFORE",
+      "rationale": "The incident paragraph identifies the capability as post-compromise and used in an already compromised customer environment. The investigation identifies the implant in that case.",
+      "evidence_ids": [
+        "E1",
+        "E2"
+      ]
+    }
+  ],
+  "exclusions": [
+    {
+      "observation": "Detailed chronology in the attack-flow diagram and numbered recap",
+      "rationale": "The fixed frame is narrative prose. The diagram and the parallel summary panel are excluded from the primary graph.",
+      "evidence_ids": [
+        "E5",
+        "E6"
+      ]
+    },
+    {
+      "observation": "Authenticated access as a separate completed action",
+      "rationale": "The cover and technical-analysis prose describe a capability. The captured requests do not establish a separately timed successful action in this interpretation.",
+      "evidence_ids": [
+        "E1",
+        "E4",
+        "E8"
+      ]
+    },
+    {
+      "observation": "A fixed order between implantation and the captured requests",
+      "rationale": "The prose describes implant function and evidence collection without an explicit, incident-specific order for the retained request occurrence. This relation is considered in a separate sensitivity profile.",
+      "evidence_ids": [
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ]
+    },
+    {
+      "observation": "Reconstruction and testing by investigators",
+      "rationale": "The reproduced authentication activity was performed by the responders during analysis.",
+      "evidence_ids": [
+        "E4"
+      ]
+    },
+    {
+      "observation": "Detection and response recommendations",
+      "rationale": "Advisory material is outside the observed incident graph.",
+      "evidence_ids": [
+        "E7"
+      ]
+    }
+  ],
+  "alternative_relation": {
+    "relation_id": "B2",
+    "source_event": "authentication_implant",
+    "target_event": "actor_authentication_request",
+    "relation": "BEFORE",
+    "rationale": "This post-review reading assumes the reported actor-attributed requests exercised the installed implant. If that association holds, the implant precedes the requests.",
+    "evidence_ids": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+    ]
+  }
+}

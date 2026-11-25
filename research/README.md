@@ -13,6 +13,7 @@
 | Repeated RDP attempts | Purposive source-bound case with outcome and mapping sensitivities | [Case study](case_studies/dfir_rdp_v0.1/README.md) |
 | RDP and account lifecycle | Same-case extension with four actions and explicit unresolved cleanup mapping | [Sequence sensitivity](case_studies/dfir_rdp_sequence_v0.2/README.md) |
 | Domain-controller sequence | Second intrusion chosen by chronological metadata before content review | [Core and extended queries](case_studies/dfir_html_smuggling_v0.1/README.md) |
+| Microsoft incident reports | First two installments fixed before full-report review | [Prose assessment and coverage](experiments/microsoft_incident_series_v0.1/README.md) |
 
 The finite constructions are synthetic. The source studies are exploratory and have no independent agreement estimate. The two external intrusion cases are not part of the AnnoCTR sampling frame or a held-out evaluation set; the second uses the publisher's chronological metadata after the first.
 

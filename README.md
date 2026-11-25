@@ -41,6 +41,7 @@ The [analyst pilot](research/ANALYST_PILOT_v0.1.md) provides four ready-to-run p
 | [Five-publisher evaluation](research/experiments/external_sequence_evaluation_v0.1/README.md) | Frozen selection, conditional procedures and no-advantage results |
 | [Research manuscript](research/FEASIBILITY_REPORT_v0.1.md) | Formal result, experiments, source interpretations, runtime and limitations |
 | [DFIR holdout](research/experiments/incident_holdout_v0.1/README.md) and [CISA extension](research/experiments/cisa_incident_extension_v0.1/README.md) | Selected incident narratives, source bindings, and query comparisons |
+| [Microsoft series prefix](research/experiments/microsoft_incident_series_v0.1/README.md) | Fixed two-report sample, limits of narrative prose and one publisher link mismatch |
 | [Query-fidelity study](research/QUERY_FIDELITY_STUDY_v0.1.md) | Counterexample, proof, four-way comparison and full confusion matrices |
 | [RDP case study](research/case_studies/dfir_rdp_v0.1/README.md) | Source-bound occurrence interpretation and outcome/mapping sensitivities |
 | [RDP sequence extension](research/case_studies/dfir_rdp_sequence_v0.2/README.md) | Four actions from the same intrusion; conditional sequence results and unresolved mapping coverage |

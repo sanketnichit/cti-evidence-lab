@@ -2,7 +2,7 @@
 
 **Updated: 25 November 2026. Research in progress.**
 
-CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query fidelity under technique-level projection. The evidence comprises controlled experiments, three separate five-report AnnoCTR reviews, four DFIR incident cases and two CISA advisories. The [research manuscript](../research/FEASIBILITY_REPORT_v0.1.md) presents results and limits together.
+CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query fidelity under technique-level projection. The evidence comprises controlled experiments, three separate five-report AnnoCTR reviews, four DFIR incident cases, two CISA advisories and a two-entry Microsoft series sample. The [research manuscript](../research/FEASIBILITY_REPORT_v0.1.md) presents results and limits together.
 
 ## Available evidence
 
@@ -20,6 +20,7 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | Second intrusion | Three-action core query; six-action extension, exact-technique comparison and 13 verified bindings | Ordinary success in the core; extended join error conditional on the archive mapping |
 | Chronological incident holdout | Two DFIR reports; one agreement case, one with three unsupported ordinary returns | Same-publisher conditional interpretations |
 | CISA extension | Two advisories; one unassessed, one with three unresolved loop returns | Purposive search frame |
+| Microsoft series prefix | One report unassessed from the prose and one publisher link pointing to a different installment | One accessible selected report |
 | Runtime and output cost | 16 scaling workloads and 16 repeated-label workloads with exact witness and join counts | Synthetic graphs and single-machine timing |
 | Interpretation sensitivity | 203 evidence-removal scenarios and 40 acyclic input-error edits | Constructed changes to two incident graphs |
 | Investigation prototype | Six offline case records, 5,454 query combinations across five assessable cases, and Chromium and Firefox checks at three viewport widths | WebKit, assistive technology and practical analyst benefit remain untested |
@@ -43,7 +44,7 @@ Protocol v0.5 and RECON extensions remain drafts. RECON v0.1 is a reconstructed 
 ## Open research questions
 
 - How often suitable source narratives support stable occurrence identity, mappings and connected sequence queries remains unmeasured.
-- Source comparisons cover DFIR and CISA. Broader sampling and independent interpretation review remain open.
+- Source comparisons cover DFIR, CISA and Microsoft. Broader sampling and independent interpretation review remain open.
 - Independent annotation reliability, population prevalence, learned extraction performance and superiority over published systems are not established.
 - The contribution requires continued comparison with existing action-based and temporal graph methods; occurrence graphs themselves are established prior art.
 

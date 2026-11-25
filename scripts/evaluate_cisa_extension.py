@@ -27,10 +27,13 @@ def verify_pdf(path, case):
     if __version__ != EXTRACTOR_VERSION:
         raise ValueError(f"Use pypdf {EXTRACTOR_VERSION} for the recorded page offsets")
     if digest(path.read_bytes()) != case["source"]["pdf_sha256"]:
-        raise ValueError("PDF snapshot differs from the recorded advisory")
+        raise ValueError("PDF snapshot differs from the recorded source")
     with path.open("rb") as handle:
         reader = PdfReader(handle)
-        pages = {e["page"]: canonical_page(reader.pages[e["page"] - 1]) for e in case["evidence"]}
+        if len(reader.pages) != case["source"]["page_count"]:
+            raise ValueError("PDF page count differs from the recorded source")
+        pages = {number: canonical_page(reader.pages[number - 1])
+                 for number in {span["page"] for span in case["evidence"]}}
     for span in case["evidence"]:
         page = pages[span["page"]]
         start, end = span["char_start"], span["char_end"]
@@ -40,41 +43,45 @@ def verify_pdf(path, case):
             raise ValueError("Evidence span differs")
 
 
+def summarize_pdf_case(case):
+    if case["independently_validated"] is not False or case["taxonomy"]["sha256"] != TAXONOMY_SHA256:
+        raise ValueError("Unexpected review status or taxonomy revision")
+    if case["source"]["extractor_version"] != EXTRACTOR_VERSION:
+        raise ValueError("Unexpected page extractor revision")
+    evidence = by_id(case["evidence"], "evidence_id")
+    nodes = by_id(case["occurrences"], "event_id")
+    relations = list(by_id(case["relations"], "relation_id").values())
+    for span in evidence.values():
+        if not 1 <= span["page"] <= case["source"]["page_count"] or not 0 <= span["char_start"] < span["char_end"]:
+            raise ValueError("Invalid page evidence span")
+        for field in ("page_sha256", "span_sha256"):
+            if not re.fullmatch("[0-9a-f]{64}", span[field]):
+                raise ValueError("Invalid source hash")
+    for row in [*nodes.values(), *relations, *case["exclusions"]]:
+        if not row["evidence_ids"] or not set(row["evidence_ids"]) <= evidence.keys() or not row["rationale"].strip():
+            raise ValueError("Missing evidence or interpretation rationale")
+    mappings = {}
+    for key, node in nodes.items():
+        label = node["mapping"]
+        if node["outcome"] not in {"REPORTED", "ATTEMPTED"}:
+            raise ValueError("Unexpected action outcome")
+        if label is not None and (not re.fullmatch(r"T[0-9]{4}", label)
+                                  or label not in case["taxonomy"]["parent_definitions"]):
+            raise ValueError("Mapping absent from the recorded parent techniques")
+        mappings[key] = {label} if label else set()
+    return {"evidence_locators": len(evidence), **compare_graph(mappings, relations, explain_unresolved=True)}
+
+
 def run(pdf_directory=None):
     results = []
     for product_id in PRODUCTS:
         case = read_json(DIRECTORY / f"{product_id}.json")
-        if case["product_id"] != product_id or case["independently_validated"] is not False:
-            raise ValueError("Unexpected case identity or review status")
-        if case["taxonomy"]["sha256"] != TAXONOMY_SHA256:
-            raise ValueError("Unexpected taxonomy revision")
-        if case["source"]["extractor_version"] != EXTRACTOR_VERSION:
-            raise ValueError("Unexpected page extractor revision")
-        evidence = by_id(case["evidence"], "evidence_id")
-        nodes = by_id(case["occurrences"], "event_id")
-        relations = list(by_id(case["relations"], "relation_id").values())
-        for span in evidence.values():
-            if span["page"] < 1 or not 0 <= span["char_start"] < span["char_end"]:
-                raise ValueError("Invalid page evidence span")
-            for field in ("page_sha256", "span_sha256"):
-                if not re.fullmatch("[0-9a-f]{64}", span[field]):
-                    raise ValueError("Invalid source hash")
-        for row in [*nodes.values(), *relations, *case["exclusions"]]:
-            if not row["evidence_ids"] or not set(row["evidence_ids"]) <= evidence.keys() or not row["rationale"].strip():
-                raise ValueError("Missing evidence or interpretation rationale")
-        mappings = {}
-        for key, node in nodes.items():
-            label = node["mapping"]
-            if node["outcome"] not in {"REPORTED", "ATTEMPTED"}:
-                raise ValueError("Unexpected action outcome")
-            if label is not None and (not re.fullmatch(r"T[0-9]{4}", label)
-                                      or label not in case["taxonomy"]["parent_definitions"]):
-                raise ValueError("Mapping absent from recorded parent techniques")
-            mappings[key] = {label} if label else set()
+        if case["product_id"] != product_id:
+            raise ValueError("Unexpected case identity")
+        result = summarize_pdf_case(case)
         if pdf_directory is not None:
             verify_pdf(pdf_directory / f"{product_id}.pdf", case)
-        results.append({"product_id": product_id, "evidence_locators": len(evidence),
-                        **compare_graph(mappings, relations, explain_unresolved=True)})
+        results.append({"product_id": product_id, **result})
     return {"selected_reports": len(PRODUCTS), "cases": results}
 
 

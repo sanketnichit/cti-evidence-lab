@@ -35,6 +35,7 @@ from examples.bounded_mapping_checks import run_checks as run_bounded_mapping_ch
 from scripts.investigate_sequence import certificate as investigation_certificate, load_case as load_investigation_case
 from scripts.evaluate_incident_holdout import DIRECTORY as HOLDOUT, run as run_holdout
 from scripts.evaluate_cisa_extension import DIRECTORY as CISA, run as run_cisa
+from scripts.evaluate_microsoft_series import DIRECTORY as MICROSOFT, run as run_microsoft
 
 
 def write_json(path, value):
@@ -167,6 +168,7 @@ def main():
     for filename, recorded, report in (
         ("incident_holdout_results.json", HOLDOUT, run_holdout()),
         ("cisa_extension_results.json", CISA, run_cisa()),
+        ("microsoft_series_results.json", MICROSOFT, run_microsoft()),
     ):
         if json.loads(json.dumps(report)) != json.loads((recorded / "results.json").read_text(encoding="utf-8")):
             raise ValueError(f"Incident comparison differs from published results: {filename}")
@@ -196,7 +198,7 @@ def main():
                        "incident_sequence_results.json", "incident_source_integrity.json",
                        "investigation_checks.json", "sequence_investigator.html", "interpretation_sensitivity.json",
                        "interpretation_input_errors.json",
-                       "incident_holdout_results.json", "cisa_extension_results.json",
+                       "incident_holdout_results.json", "cisa_extension_results.json", "microsoft_series_results.json",
                        "external_sequence_results.json", "external_sequence_source_integrity.json",
                        "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json"]
     if args.pdf:

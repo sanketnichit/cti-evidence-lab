@@ -78,7 +78,7 @@ python -m pip install reportlab
 python scripts/build_report_pdf.py
 ```
 
-`--pdf` on the complete reproduction command includes the rendered manuscript in the archive. `scripts/build_query_figure.py` generates the vector counterexample figure. The archive also includes recomputed `incident_holdout_results.json` and `cisa_extension_results.json`. The main reproduction checks those results against the committed records. To verify paragraph or page hashes against saved publisher copies, use the optional source checks in the [DFIR holdout](../research/experiments/incident_holdout_v0.1/README.md) and [CISA extension](../research/experiments/cisa_incident_extension_v0.1/README.md).
+`--pdf` on the complete reproduction command includes the rendered manuscript in the archive. `scripts/build_query_figure.py` generates the vector counterexample figure. The archive includes recomputed `incident_holdout_results.json`, `cisa_extension_results.json` and `microsoft_series_results.json`. The main reproduction checks those results against the committed records. To verify paragraph or page hashes against saved publisher copies, use the optional source checks for [DFIR](../research/experiments/incident_holdout_v0.1/README.md), [CISA](../research/experiments/cisa_incident_extension_v0.1/README.md) and [Microsoft](../research/experiments/microsoft_incident_series_v0.1/README.md).
 
 ## Continuous integration
 

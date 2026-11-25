@@ -1,0 +1,25 @@
+{
+  "installment": 2,
+  "availability": "PUBLISHER_LINK_POINTS_TO_DIFFERENT_REPORT",
+  "landing_page": "https://www.microsoft.com/en-us/security/blog/2023/04/26/healthy-security-habits-to-fight-credential-breaches-cyberattack-series/",
+  "linked_document_installment": 4,
+  "source": {
+    "url": "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/ms-security-experts-cyberattack-series-part-4-octo-tempest-final.pdf",
+    "pdf_sha256": "a9933f4ac8dff64ed5c98dd487b45df13ccb0c4f4214e935f9378791adcf190f",
+    "retrieved_on": "2026-11-25",
+    "extractor": "pypdf layout, collapse Unicode whitespace per page",
+    "extractor_version": "6.21.4",
+    "page_count": 7
+  },
+  "evidence": [
+    {
+      "evidence_id": "C1",
+      "page": 1,
+      "char_start": 0,
+      "char_end": 92,
+      "page_sha256": "6385dad0cedf9d56dbdb09a4db1c708f98395e56e88eb3434fdc921ddfc964d9",
+      "span_sha256": "1cd959e0116678096a0d2046fbc9583f377dabf7586ce9350d6818c7ba88fc42",
+      "section_and_role": "Cover identifies linked document as installment 4."
+    }
+  ]
+}

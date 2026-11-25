@@ -1,0 +1,70 @@
+{
+  "cases": [
+    {
+      "actions": 3,
+      "availability": "SOURCE_REVIEWED",
+      "evidence_locators": 8,
+      "installment": 1,
+      "post_review_sensitivity": {
+        "actions": 3,
+        "added_relation": "B2",
+        "evidence_locators": 8,
+        "query_assessment": "CONDITIONAL_ON_RECORDED_GRAPH",
+        "query_count": 1,
+        "relations": 2,
+        "representations": {
+          "distinct_endpoint_join": {
+            "missed_supported": 0,
+            "returned": 0,
+            "unresolved": 0,
+            "unsupported": 0
+          },
+          "distinct_pairs": {
+            "missed_supported": 0,
+            "returned": 0,
+            "unresolved": 0,
+            "unsupported": 0
+          },
+          "loop_endpoint_join": {
+            "missed_supported": 0,
+            "returned": 0,
+            "unresolved": 0,
+            "unsupported": 0
+          },
+          "loop_pairs": {
+            "missed_supported": 0,
+            "returned": 0,
+            "unresolved": 0,
+            "unsupported": 0
+          }
+        },
+        "statuses": {
+          "UNRESOLVED_MAPPING": 1
+        },
+        "supported_witnesses": [],
+        "unknown_mappings": 2,
+        "unresolved_projected": [],
+        "unsupported_projected": [],
+        "vocabulary": [
+          "T1556"
+        ]
+      },
+      "query_assessment": "UNASSESSED",
+      "query_errors": null,
+      "relations": 1,
+      "unknown_mappings": 2,
+      "vocabulary": [
+        "T1556"
+      ]
+    },
+    {
+      "availability": "PUBLISHER_LINK_POINTS_TO_DIFFERENT_REPORT",
+      "installment": 2,
+      "linked_document_installment": 4,
+      "query_assessment": "NOT_EVALUATED_SOURCE_UNAVAILABLE",
+      "query_errors": null
+    }
+  ],
+  "reviewed_reports": 1,
+  "selected_reports": 2
+}
