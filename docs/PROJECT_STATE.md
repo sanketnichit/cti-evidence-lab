@@ -23,6 +23,7 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | CISA extension | Two advisories; one unassessed, one with three unresolved loop returns | Purposive search frame |
 | Microsoft series prefix | One report unassessed from the prose and one publisher link pointing to a different installment | One accessible selected report |
 | Runtime and output cost | 16 scaling workloads and 16 repeated-label workloads with exact witness and join counts | Synthetic graphs and single-machine timing |
+| Answer-index storage | Exact known-label encodings compared on 19 synthetic workloads and 12 recorded profiles | Compact JSON sizes for a fixed query |
 | Interpretation sensitivity | 203 evidence-removal scenarios and 40 acyclic input-error edits | Constructed changes to two incident graphs |
 | Investigation prototype | Six offline case records, 5,454 query combinations across five assessable cases, and Chromium, Firefox and WebKit checks at three viewport widths | Safari devices, assistive technology and practical analyst benefit remain untested |
 | Mapping-bound sensitivity | Paired open and constrained CLI answers, 21,952 finite query checks, and a frozen discovery-role comparison across three incident graphs | Depends on declared bounds and case query vocabulary |
@@ -48,5 +49,7 @@ Protocol v0.5 and RECON extensions remain drafts. RECON v0.1 is a reconstructed 
 - Source comparisons cover DFIR, CISA and Microsoft. Broader sampling and independent interpretation review remain open.
 - Independent annotation reliability, population prevalence, learned extraction performance and superiority over published systems are not established.
 - The contribution requires continued comparison with existing action-based and temporal graph methods; occurrence graphs themselves are established prior art.
+
+The methods manuscript and reproducible artifact support a paper scoped to representation fidelity on supplied graphs. Independent source verification and analyst efficacy are the two open data-collection milestones. The final manuscript pass should pin the release artifact, verify citations and incorporate any results available at that point.
 
 [Research artifacts](../research/README.md), [reproduction](REPRODUCIBILITY.md), [research directions](ROADMAP.md), and the versioned method/audit records provide the supporting detail. Earlier status snapshots are historical records; this document summarizes the current study.

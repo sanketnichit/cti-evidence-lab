@@ -1,0 +1,804 @@
+{
+  "recorded_profiles": [
+    {
+      "case": "rdp",
+      "edges": 4,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 51,
+          "records": 1
+        },
+        "materialized_triples": {
+          "json_bytes": 2,
+          "records": 0
+        },
+        "middle_signatures": {
+          "json_bytes": 2,
+          "records": 0
+        },
+        "ordinary_pairs": {
+          "json_bytes": 19,
+          "records": 1
+        }
+      },
+      "occurrences": 4,
+      "profile": "unresolved_cleanup",
+      "unknown_occurrences": 2
+    },
+    {
+      "case": "rdp",
+      "edges": 4,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 213,
+          "records": 4
+        },
+        "materialized_triples": {
+          "json_bytes": 79,
+          "records": 3
+        },
+        "middle_signatures": {
+          "json_bytes": 73,
+          "records": 2
+        },
+        "ordinary_pairs": {
+          "json_bytes": 55,
+          "records": 3
+        }
+      },
+      "occurrences": 4,
+      "profile": "proposed_cleanup_full_edges",
+      "unknown_occurrences": 0
+    },
+    {
+      "case": "rdp",
+      "edges": 3,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 163,
+          "records": 3
+        },
+        "materialized_triples": {
+          "json_bytes": 53,
+          "records": 2
+        },
+        "middle_signatures": {
+          "json_bytes": 65,
+          "records": 2
+        },
+        "ordinary_pairs": {
+          "json_bytes": 37,
+          "records": 2
+        }
+      },
+      "occurrences": 4,
+      "profile": "proposed_cleanup_local_edges",
+      "unknown_occurrences": 0
+    },
+    {
+      "case": "rdp",
+      "edges": 0,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 2,
+          "records": 0
+        },
+        "materialized_triples": {
+          "json_bytes": 2,
+          "records": 0
+        },
+        "middle_signatures": {
+          "json_bytes": 2,
+          "records": 0
+        },
+        "ordinary_pairs": {
+          "json_bytes": 2,
+          "records": 0
+        }
+      },
+      "occurrences": 2,
+      "profile": "reported_completed_actions",
+      "unknown_occurrences": 0
+    },
+    {
+      "case": "domain-controller",
+      "edges": 2,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 99,
+          "records": 2
+        },
+        "materialized_triples": {
+          "json_bytes": 27,
+          "records": 1
+        },
+        "middle_signatures": {
+          "json_bytes": 33,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 37,
+          "records": 2
+        }
+      },
+      "occurrences": 3,
+      "profile": "core_transfer_execution",
+      "unknown_occurrences": 0
+    },
+    {
+      "case": "domain-controller",
+      "edges": 5,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 265,
+          "records": 5
+        },
+        "materialized_triples": {
+          "json_bytes": 105,
+          "records": 4
+        },
+        "middle_signatures": {
+          "json_bytes": 129,
+          "records": 4
+        },
+        "ordinary_pairs": {
+          "json_bytes": 91,
+          "records": 5
+        }
+      },
+      "occurrences": 6,
+      "profile": "extended_script_sequence",
+      "unknown_occurrences": 0
+    },
+    {
+      "case": "domain-controller",
+      "edges": 5,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 297,
+          "records": 5
+        },
+        "materialized_triples": {
+          "json_bytes": 145,
+          "records": 4
+        },
+        "middle_signatures": {
+          "json_bytes": 169,
+          "records": 4
+        },
+        "ordinary_pairs": {
+          "json_bytes": 123,
+          "records": 5
+        }
+      },
+      "occurrences": 6,
+      "profile": "extended_exact_techniques",
+      "unknown_occurrences": 0
+    },
+    {
+      "case": "domain-controller",
+      "edges": 5,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 153,
+          "records": 3
+        },
+        "materialized_triples": {
+          "json_bytes": 53,
+          "records": 2
+        },
+        "middle_signatures": {
+          "json_bytes": 65,
+          "records": 2
+        },
+        "ordinary_pairs": {
+          "json_bytes": 55,
+          "records": 3
+        }
+      },
+      "occurrences": 6,
+      "profile": "archive_mapping_withheld",
+      "unknown_occurrences": 1
+    },
+    {
+      "case": "dfir-hive",
+      "edges": 16,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 243,
+          "records": 5
+        },
+        "materialized_triples": {
+          "json_bytes": 27,
+          "records": 1
+        },
+        "middle_signatures": {
+          "json_bytes": 33,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 91,
+          "records": 5
+        }
+      },
+      "occurrences": 17,
+      "profile": "recorded_parent_profile",
+      "unknown_occurrences": 6
+    },
+    {
+      "case": "dfir-netsupport",
+      "edges": 22,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 622,
+          "records": 13
+        },
+        "materialized_triples": {
+          "json_bytes": 183,
+          "records": 7
+        },
+        "middle_signatures": {
+          "json_bytes": 225,
+          "records": 7
+        },
+        "ordinary_pairs": {
+          "json_bytes": 235,
+          "records": 13
+        }
+      },
+      "occurrences": 27,
+      "profile": "recorded_parent_profile",
+      "unknown_occurrences": 5
+    },
+    {
+      "case": "cisa-former-account",
+      "edges": 1,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 2,
+          "records": 0
+        },
+        "materialized_triples": {
+          "json_bytes": 2,
+          "records": 0
+        },
+        "middle_signatures": {
+          "json_bytes": 2,
+          "records": 0
+        },
+        "ordinary_pairs": {
+          "json_bytes": 2,
+          "records": 0
+        }
+      },
+      "occurrences": 3,
+      "profile": "recorded_parent_profile",
+      "unknown_occurrences": 2
+    },
+    {
+      "case": "cisa-federal-agency",
+      "edges": 11,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 294,
+          "records": 6
+        },
+        "materialized_triples": {
+          "json_bytes": 79,
+          "records": 3
+        },
+        "middle_signatures": {
+          "json_bytes": 97,
+          "records": 3
+        },
+        "ordinary_pairs": {
+          "json_bytes": 109,
+          "records": 6
+        }
+      },
+      "occurrences": 13,
+      "profile": "recorded_parent_profile",
+      "unknown_occurrences": 4
+    }
+  ],
+  "synthetic_workloads": [
+    {
+      "edges": 15,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 511,
+          "records": 15
+        },
+        "materialized_triples": {
+          "json_bytes": 313,
+          "records": 12
+        },
+        "middle_signatures": {
+          "json_bytes": 385,
+          "records": 12
+        },
+        "ordinary_pairs": {
+          "json_bytes": 217,
+          "records": 12
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 16,
+      "shape": "chain",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 15,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 2041,
+          "records": 60
+        },
+        "materialized_triples": {
+          "json_bytes": 2185,
+          "records": 84
+        },
+        "middle_signatures": {
+          "json_bytes": 673,
+          "records": 12
+        },
+        "ordinary_pairs": {
+          "json_bytes": 649,
+          "records": 36
+        }
+      },
+      "labels_per_occurrence": 2,
+      "occurrences": 16,
+      "shape": "chain",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 15,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 511,
+          "records": 15
+        },
+        "materialized_triples": {
+          "json_bytes": 1457,
+          "records": 56
+        },
+        "middle_signatures": {
+          "json_bytes": 137,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 271,
+          "records": 15
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 16,
+      "shape": "hub",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 15,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 2041,
+          "records": 60
+        },
+        "materialized_triples": {
+          "json_bytes": 7489,
+          "records": 288
+        },
+        "middle_signatures": {
+          "json_bytes": 217,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 793,
+          "records": 44
+        }
+      },
+      "labels_per_occurrence": 2,
+      "occurrences": 16,
+      "shape": "hub",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 31,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 1055,
+          "records": 31
+        },
+        "materialized_triples": {
+          "json_bytes": 313,
+          "records": 12
+        },
+        "middle_signatures": {
+          "json_bytes": 385,
+          "records": 12
+        },
+        "ordinary_pairs": {
+          "json_bytes": 217,
+          "records": 12
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 32,
+      "shape": "chain",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 31,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 4217,
+          "records": 124
+        },
+        "materialized_triples": {
+          "json_bytes": 2185,
+          "records": 84
+        },
+        "middle_signatures": {
+          "json_bytes": 673,
+          "records": 12
+        },
+        "ordinary_pairs": {
+          "json_bytes": 649,
+          "records": 36
+        }
+      },
+      "labels_per_occurrence": 2,
+      "occurrences": 32,
+      "shape": "chain",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 31,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 1055,
+          "records": 31
+        },
+        "materialized_triples": {
+          "json_bytes": 3745,
+          "records": 144
+        },
+        "middle_signatures": {
+          "json_bytes": 209,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 415,
+          "records": 23
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 32,
+      "shape": "hub",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 31,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 4217,
+          "records": 124
+        },
+        "materialized_triples": {
+          "json_bytes": 7489,
+          "records": 288
+        },
+        "middle_signatures": {
+          "json_bytes": 217,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 793,
+          "records": 44
+        }
+      },
+      "labels_per_occurrence": 2,
+      "occurrences": 32,
+      "shape": "hub",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 63,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 2143,
+          "records": 63
+        },
+        "materialized_triples": {
+          "json_bytes": 313,
+          "records": 12
+        },
+        "middle_signatures": {
+          "json_bytes": 385,
+          "records": 12
+        },
+        "ordinary_pairs": {
+          "json_bytes": 217,
+          "records": 12
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 64,
+      "shape": "chain",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 63,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 8569,
+          "records": 252
+        },
+        "materialized_triples": {
+          "json_bytes": 2185,
+          "records": 84
+        },
+        "middle_signatures": {
+          "json_bytes": 673,
+          "records": 12
+        },
+        "ordinary_pairs": {
+          "json_bytes": 649,
+          "records": 36
+        }
+      },
+      "labels_per_occurrence": 2,
+      "occurrences": 64,
+      "shape": "chain",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 63,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 2143,
+          "records": 63
+        },
+        "materialized_triples": {
+          "json_bytes": 3745,
+          "records": 144
+        },
+        "middle_signatures": {
+          "json_bytes": 209,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 415,
+          "records": 23
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 64,
+      "shape": "hub",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 63,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 8569,
+          "records": 252
+        },
+        "materialized_triples": {
+          "json_bytes": 7489,
+          "records": 288
+        },
+        "middle_signatures": {
+          "json_bytes": 217,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 793,
+          "records": 44
+        }
+      },
+      "labels_per_occurrence": 2,
+      "occurrences": 64,
+      "shape": "hub",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 127,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 4319,
+          "records": 127
+        },
+        "materialized_triples": {
+          "json_bytes": 313,
+          "records": 12
+        },
+        "middle_signatures": {
+          "json_bytes": 385,
+          "records": 12
+        },
+        "ordinary_pairs": {
+          "json_bytes": 217,
+          "records": 12
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 128,
+      "shape": "chain",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 127,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 17273,
+          "records": 508
+        },
+        "materialized_triples": {
+          "json_bytes": 2185,
+          "records": 84
+        },
+        "middle_signatures": {
+          "json_bytes": 673,
+          "records": 12
+        },
+        "ordinary_pairs": {
+          "json_bytes": 649,
+          "records": 36
+        }
+      },
+      "labels_per_occurrence": 2,
+      "occurrences": 128,
+      "shape": "chain",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 127,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 4319,
+          "records": 127
+        },
+        "materialized_triples": {
+          "json_bytes": 3745,
+          "records": 144
+        },
+        "middle_signatures": {
+          "json_bytes": 209,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 415,
+          "records": 23
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 128,
+      "shape": "hub",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 127,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 17273,
+          "records": 508
+        },
+        "materialized_triples": {
+          "json_bytes": 7489,
+          "records": 288
+        },
+        "middle_signatures": {
+          "json_bytes": 217,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 793,
+          "records": 44
+        }
+      },
+      "labels_per_occurrence": 2,
+      "occurrences": 128,
+      "shape": "hub",
+      "unknown_occurrences": 0
+    },
+    {
+      "edges": 16,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 545,
+          "records": 16
+        },
+        "materialized_triples": {
+          "json_bytes": 1665,
+          "records": 64
+        },
+        "middle_signatures": {
+          "json_bytes": 145,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 289,
+          "records": 16
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 17,
+      "shape": "wide_label_hub",
+      "unknown_occurrences": 0,
+      "width_per_side": 8
+    },
+    {
+      "edges": 64,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 2177,
+          "records": 64
+        },
+        "materialized_triples": {
+          "json_bytes": 26625,
+          "records": 1024
+        },
+        "middle_signatures": {
+          "json_bytes": 529,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 1153,
+          "records": 64
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 65,
+      "shape": "wide_label_hub",
+      "unknown_occurrences": 0,
+      "width_per_side": 32
+    },
+    {
+      "edges": 256,
+      "encodings": {
+        "endpoint_rows": {
+          "json_bytes": 8705,
+          "records": 256
+        },
+        "materialized_triples": {
+          "json_bytes": 425985,
+          "records": 16384
+        },
+        "middle_signatures": {
+          "json_bytes": 2065,
+          "records": 1
+        },
+        "ordinary_pairs": {
+          "json_bytes": 4609,
+          "records": 256
+        }
+      },
+      "labels_per_occurrence": 1,
+      "occurrences": 257,
+      "shape": "wide_label_hub",
+      "unknown_occurrences": 0,
+      "width_per_side": 128
+    }
+  ],
+  "witness_counterexample": {
+    "query": [
+      "A",
+      "B",
+      "C"
+    ],
+    "same_answer_only_encoding": true,
+    "witnesses": [
+      [
+        "u1",
+        "v",
+        "w"
+      ],
+      [
+        "u2",
+        "v",
+        "w"
+      ]
+    ]
+  }
+}

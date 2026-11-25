@@ -66,3 +66,26 @@ At width 4,096, the mapped hub has 8,193 occurrences. Its count-only result repo
 ```sh
 python -m examples.measure_diagnostic_output --output outputs/diagnostic_output.json
 ```
+
+## Exact answers without witness identities
+
+The projection counterexample applies to ordinary pair keys. A query-specific index can still preserve which known label triples have a witness. For each middle occurrence, store the union of known labels on its incoming neighbors, its own known labels, and the union on its outgoing neighbors. Keep each distinct signature once. A triple is supported when one signature admits all three labels in their respective positions. Every admitted incoming and outgoing edge meets at the same occurrence. Acyclicity ensures that its two neighbors are distinct. Conversely, a fully mapped witness contributes its triple to its middle occurrence's signature. Bounded-length labeled-path indexing has prior precedent. GRAPES-DD, for example, indexes labeled paths for subgraph search. This experiment isolates the storage cost for one fixed CTI query. [Licheri et al., 2021](https://doi.org/10.1186/s12859-021-04129-0)
+
+The benchmark compares the existing endpoint-row and ordinary-pair encodings with the signature index and an explicit set of supported triples. It reuses the 16 scaling workloads, adds three hubs with distinct labels on each side, and includes all 12 profiles in the offline artifact. Both exact encodings match the occurrence oracle in every comparison. The main finite benchmark also checks the signature index over its existing singleton and set-valued graph constructions.
+
+| Workload | Ordinary pairs | Endpoint rows | Middle signatures | Materialized triples |
+|---|---:|---:|---:|---:|
+| 128-action chain, one label per action | 217 B | 4,319 B | 385 B | 313 B |
+| 128-action hub, two labels per action | 793 B | 17,273 B | 217 B | 7,489 B |
+| 257-action hub, 128 distinct labels on each side | 4,609 B | 8,705 B | 2,065 B | 425,985 B |
+| NetSupport, recorded graph | 235 B | 622 B | 225 B | 183 B |
+
+Each figure is the size of one sorted, compact UTF-8 JSON payload. The comparison excludes source text, relation metadata, compression, memory layout and indexing time. It uses the endpoint encoding from the earlier benchmark. In the wide hub, one signature represents 16,384 triples. The encoding is useful when a single middle action admits many combinations. In small or sparse graphs, directly storing the supported triples can be smaller.
+
+The included counterexample has the same signatures and supported triples in two graphs, with different occurrence IDs in the supporting path. The answer-only encodings establish known support under the supplied mappings. Inspecting specific witnesses, counting them, tracing relation evidence, or distinguishing unresolved mappings from unsupported queries requires additional information.
+
+```sh
+python -m examples.sequence_index_storage
+```
+
+[Recorded byte counts and counterexample](answer_index_storage.json) are also reproduced in the study archive.

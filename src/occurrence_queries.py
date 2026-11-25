@@ -53,6 +53,26 @@ def compatible_answers(rows):
             for c, w in by_source.get((v, b), []) if len({u, v, w}) == 3}
 
 
+def middle_label_signatures(mappings, before_edges):
+    """Store the known label sets around each viable middle action, without IDs."""
+    edges = set(before_edges)
+    validate(mappings, edges)
+    incoming, outgoing = {}, {}
+    for u, v in edges:
+        incoming.setdefault(v, set()).update(mappings[u])
+        outgoing.setdefault(u, set()).update(mappings[v])
+    return {
+        (tuple(sorted(incoming[node])), tuple(sorted(mappings[node])), tuple(sorted(outgoing[node])))
+        for node in incoming.keys() & outgoing.keys()
+        if incoming[node] and mappings[node] and outgoing[node]
+    }
+
+
+def signature_answers(signatures):
+    """Materialize the exact known triples represented by the label signatures."""
+    return {triple for signature in signatures for triple in product(*signature)}
+
+
 def evaluate(mappings, before_edges):
     edges = set(before_edges)
     validate(mappings, edges)

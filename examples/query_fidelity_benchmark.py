@@ -6,7 +6,7 @@ import json
 from itertools import combinations, product
 from pathlib import Path
 
-from src.occurrence_queries import evaluate
+from src.occurrence_queries import evaluate, middle_label_signatures, signature_answers
 
 VOCABULARY = ("T1059", "T1105", "T1021")
 QUERIES = set(product(VOCABULARY, repeat=3))
@@ -30,6 +30,8 @@ def run_design(vertices, mapping_options):
         for mask in range(2 ** len(possible_edges)):
             edges = [e for i, e in enumerate(possible_edges) if mask & (1 << i)]
             result = evaluate(mappings, edges)
+            if signature_answers(middle_label_signatures(mappings, edges)) != result["truth"]:
+                raise AssertionError("Middle-label signatures disagree with the occurrence oracle")
             graph_count += 1
             for key, value in result["storage"].items():
                 storage[key] = storage.get(key, 0) + value

@@ -33,6 +33,7 @@ from scripts.build_investigation import build as build_investigator
 from scripts.evaluate_external_sequences import DIRECTORY as EXTERNAL, load_records as load_external_records, run_evaluation, audit_sources as audit_external_sources, validate_recorded_source_audit
 from examples.bounded_mapping_checks import run_checks as run_bounded_mapping_checks
 from examples.discovery_bound_sensitivity import RESULTS as DISCOVERY_RESULTS, run as run_discovery_bounds
+from examples.sequence_index_storage import RESULTS as INDEX_RESULTS, run as run_index_storage
 from scripts.investigate_sequence import certificate as investigation_certificate, load_case as load_investigation_case
 from scripts.evaluate_incident_holdout import DIRECTORY as HOLDOUT, run as run_holdout
 from scripts.evaluate_cisa_extension import DIRECTORY as CISA, run as run_cisa
@@ -179,6 +180,10 @@ def main():
     if discovery != json.loads(DISCOVERY_RESULTS.read_text(encoding="utf-8")):
         raise ValueError("Discovery mapping sensitivity differs from the published results")
     write_json(destination / "discovery_mapping_sensitivity.json", discovery)
+    index_storage = run_index_storage()
+    if index_storage != json.loads(INDEX_RESULTS.read_text(encoding="utf-8")):
+        raise ValueError("Answer-index storage differs from the published results")
+    write_json(destination / "answer_index_storage.json", index_storage)
     bounds = json.loads((ROOT / "research/experiments/bounded_mapping_v0.1/archive_bound_assumption.json").read_text(encoding="utf-8"))
     write_json(destination / "bounded_mapping_assumption_example.json", investigation_certificate(
         "domain-controller", load_investigation_case("domain-controller"), "archive_mapping_withheld",
@@ -206,7 +211,7 @@ def main():
                        "incident_holdout_results.json", "cisa_extension_results.json", "microsoft_series_results.json",
                        "external_sequence_results.json", "external_sequence_source_integrity.json",
                        "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json",
-                       "discovery_mapping_sensitivity.json"]
+                       "discovery_mapping_sensitivity.json", "answer_index_storage.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf")
