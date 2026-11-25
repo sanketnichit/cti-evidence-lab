@@ -66,20 +66,31 @@ def summarize(case, post):
         raise ValueError("Recorded source audit did not cover every locator")
 
     mappings = {key: {node["mapping"]} if node["mapping"] else set() for key, node in nodes.items()}
+    return {"post_id": post["id"], "evidence_locators": len(evidence),
+            **compare_graph(mappings, relations)}
+
+
+def compare_graph(mappings, relations, *, explain_unresolved=False):
+    """Compare label triples on one retained incident graph."""
     edges = {(row["source_event"], row["target_event"]) for row in relations}
     if any(row["relation"] != "BEFORE" for row in relations):
         raise ValueError("Holdout comparisons require explicit BEFORE edges")
     validate(mappings, edges)
     vocabulary = sorted(set().union(*mappings.values()))
     # An unknown-only path has no case-derived query vocabulary.
-    if not vocabulary or not any(left["target_event"] == right["source_event"]
-                                  for left in relations for right in relations):
-        return {"post_id": post["id"], "query_assessment": "UNASSESSED", "query_errors": None}
+    coverage = {
+        "actions": len(mappings), "relations": len(relations),
+        "unknown_mappings": sum(not labels for labels in mappings.values()),
+        "vocabulary": vocabulary,
+    }
+    if not vocabulary or not {u for u, _ in edges} & {v for _, v in edges}:
+        return {**coverage, "query_assessment": "UNASSESSED", "query_errors": None}
     statuses = Counter()
     counts = {view: Counter({"returned": 0, "unsupported": 0, "unresolved": 0, "missed_supported": 0})
               for view in ("distinct_pairs", "loop_pairs", "distinct_endpoint_join", "loop_endpoint_join")}
     supported_witnesses = []
     unsupported_projected = []
+    unresolved_projected = []
     for query in product(vocabulary, repeat=3):
         answer = investigate(mappings, relations, query)
         status = answer["status"]
@@ -97,13 +108,17 @@ def summarize(case, post):
                 if returned and status == "NOT_SUPPORTED":
                     unsupported_projected.append({"query": query, "view": view,
                                                   "joins": comparison["incompatible_joins"]})
+                if explain_unresolved and returned and status == "UNRESOLVED_MAPPING":
+                    unresolved_projected.append({
+                        "query": query, "view": view, "joins": comparison["incompatible_joins"],
+                        "unresolved_witnesses": answer["unresolved_witnesses"],
+                    })
     return {
-        "post_id": post["id"], "query_assessment": "CONDITIONAL_ON_RECORDED_GRAPH",
-        "actions": len(nodes), "relations": len(relations), "evidence_locators": len(evidence),
-        "unknown_mappings": sum(not labels for labels in mappings.values()),
-        "vocabulary": vocabulary, "query_count": len(vocabulary) ** 3,
+        **coverage, "query_assessment": "CONDITIONAL_ON_RECORDED_GRAPH",
+        "query_count": len(vocabulary) ** 3,
         "statuses": dict(sorted(statuses.items())), "representations": counts,
         "supported_witnesses": supported_witnesses, "unsupported_projected": unsupported_projected,
+        **({"unresolved_projected": unresolved_projected} if explain_unresolved else {}),
     }
 
 

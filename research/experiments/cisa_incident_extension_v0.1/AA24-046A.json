@@ -1,0 +1,147 @@
+{
+  "product_id": "AA24-046A",
+  "independently_validated": false,
+  "source": {
+    "url": "https://www.cisa.gov/sites/default/files/2024-02/aa24-046a-threat-actor-leverages-compromised%20account-of%20former-employee.pdf",
+    "pdf_sha256": "55534abb402001e831734b065f78d5c8ba6dcaec599fd458c5b3745304261649",
+    "extractor": "pypdf layout, collapse Unicode whitespace per page",
+    "extractor_version": "6.21.4",
+    "page_count": 10
+  },
+  "taxonomy": {
+    "release": "Enterprise ATT&CK v12.1",
+    "sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+    "parent_definitions": {
+      "T1078": "Valid Accounts"
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "E1",
+      "page": 2,
+      "char_start": 528,
+      "char_end": 1246,
+      "page_sha256": "6ee0b96cfb1fda0d0aecfc78675221b2e20be35fa16630d4b1d3711ce7c02ba4",
+      "span_sha256": "3d042051e43d519ff62969b478613c12263536bd8b79c3d577aca80ec61dbec3"
+    },
+    {
+      "evidence_id": "E2",
+      "page": 2,
+      "char_start": 2250,
+      "char_end": 2620,
+      "page_sha256": "6ee0b96cfb1fda0d0aecfc78675221b2e20be35fa16630d4b1d3711ce7c02ba4",
+      "span_sha256": "bcb846f630cc46982e4af1e7101cb955a1ef60b7546a71b921dfd3517953cce5"
+    },
+    {
+      "evidence_id": "E3",
+      "page": 2,
+      "char_start": 2665,
+      "char_end": 2844,
+      "page_sha256": "6ee0b96cfb1fda0d0aecfc78675221b2e20be35fa16630d4b1d3711ce7c02ba4",
+      "span_sha256": "5bf09064475b2f29d28240c6bbc92fc43d07aac49db6708da67c56020e98f3dc"
+    },
+    {
+      "evidence_id": "E4",
+      "page": 3,
+      "char_start": 166,
+      "char_end": 872,
+      "page_sha256": "34b9c4d8f78585ba50069d2da9942ef5be0992f16b617be270a80a9c42b85e3c",
+      "span_sha256": "837f15aa9ab34300f9ca0afa85faddbfac77ee2cb3460cad91f26001728ac614"
+    },
+    {
+      "evidence_id": "E5",
+      "page": 3,
+      "char_start": 1672,
+      "char_end": 2276,
+      "page_sha256": "34b9c4d8f78585ba50069d2da9942ef5be0992f16b617be270a80a9c42b85e3c",
+      "span_sha256": "385bbd6ca378635640721913e6f68acb217a63e1e465f69dc9999c2997bb5c8a"
+    },
+    {
+      "evidence_id": "E6",
+      "page": 4,
+      "char_start": 765,
+      "char_end": 1577,
+      "page_sha256": "5e5a049278a05d3f78fd3244e57033c8657c6f2e6b1eefdd811da2f6b527b240",
+      "span_sha256": "1cb4e8e34bd269b2cd6ca760891de8196455fc2d384748d336bd8778305f6480"
+    }
+  ],
+  "occurrences": [
+    {
+      "event_id": "former_account_access",
+      "description": "Initial access using the former employee account",
+      "mapping": "T1078",
+      "outcome": "REPORTED",
+      "rationale": "The former employee account was valid and used for initial access.",
+      "evidence_ids": [
+        "E2",
+        "E3"
+      ]
+    },
+    {
+      "event_id": "directory_queries",
+      "description": "Directory discovery activity from the reported VM",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "rationale": "The prose groups user, host and trust queries. It does not give order among the individual actions.",
+      "evidence_ids": [
+        "E5"
+      ]
+    },
+    {
+      "event_id": "service_auth",
+      "description": "Service authentication activity under two accounts",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "rationale": "The account and endpoint groups are reported without dates or a split into ordered per-endpoint actions.",
+      "evidence_ids": [
+        "E6"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "B1",
+      "source_event": "former_account_access",
+      "target_event": "directory_queries",
+      "relation": "BEFORE",
+      "rationale": "The initial account access is described as enabling discovery. The LDAP evidence identifies the reported VM connection.",
+      "evidence_ids": [
+        "E2",
+        "E3",
+        "E5"
+      ]
+    }
+  ],
+  "exclusions": [
+    {
+      "observation": "Separate VPN action",
+      "rationale": "The VPN route to the VM is an assessment. The initial connection facts do not justify two separately ordered attacker actions.",
+      "evidence_ids": [
+        "E2"
+      ]
+    },
+    {
+      "observation": "Credential acquisition",
+      "rationale": "The source describes both account acquisition paths as likely. No separate observed step was retained.",
+      "evidence_ids": [
+        "E4"
+      ]
+    },
+    {
+      "observation": "Publication inferred from discovery output",
+      "rationale": "Posting appeared in the investigation, but the provenance of the queried data and the actor's transfer and publication chain are assessed.",
+      "evidence_ids": [
+        "E1",
+        "E5"
+      ]
+    },
+    {
+      "observation": "Authentication relative to directory discovery",
+      "rationale": "The service authentications are observed, but their order relative to the LDAP group is unstated.",
+      "evidence_ids": [
+        "E5",
+        "E6"
+      ]
+    }
+  ]
+}

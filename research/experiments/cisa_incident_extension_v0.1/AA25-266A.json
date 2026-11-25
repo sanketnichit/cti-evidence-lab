@@ -1,0 +1,392 @@
+{
+  "product_id": "AA25-266A",
+  "independently_validated": false,
+  "source": {
+    "url": "https://www.cisa.gov/sites/default/files/2025-09/AA25-266A_advisory_cisa_shares_lessons_learned_from_ir_engagement.pdf",
+    "pdf_sha256": "875f3fb88b6dcbf196130fc2695b8f6a7aa36b163d8b7b52d7461d8b701d0971",
+    "extractor": "pypdf layout, collapse Unicode whitespace per page",
+    "extractor_version": "6.21.4",
+    "page_count": 19
+  },
+  "taxonomy": {
+    "release": "Enterprise ATT&CK v12.1",
+    "sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+    "parent_definitions": {
+      "T1018": "Remote System Discovery",
+      "T1046": "Network Service Discovery",
+      "T1090": "Proxy",
+      "T1105": "Ingress Tool Transfer",
+      "T1110": "Brute Force",
+      "T1190": "Exploit Public-Facing Application"
+    }
+  },
+  "evidence": [
+    {
+      "evidence_id": "E1",
+      "page": 5,
+      "char_start": 462,
+      "char_end": 1818,
+      "page_sha256": "5e92203d7681fefd327ca9635d9cbde03dbf45f92e50020ce02b5cdec9dfaf35",
+      "span_sha256": "3243ef5d018f2503cdace40162351c4615231d7a70ef830666fa50ef87dbfcd7"
+    },
+    {
+      "evidence_id": "E2",
+      "page": 6,
+      "char_start": 30,
+      "char_end": 537,
+      "page_sha256": "e9c3768d5984b342e2361b5528a0fcb0f3858a8548f558b8a3e1c5a42a211fb0",
+      "span_sha256": "91ae7a78b9265fda926fa014360d75bb7df326d4a91c981145e8e9f1177eb6b5"
+    },
+    {
+      "evidence_id": "E3",
+      "page": 6,
+      "char_start": 858,
+      "char_end": 1475,
+      "page_sha256": "e9c3768d5984b342e2361b5528a0fcb0f3858a8548f558b8a3e1c5a42a211fb0",
+      "span_sha256": "d007e143ce2939afea9ed0370e47b84ca6763833b131f1bc54ffeb0b3d3e1232"
+    },
+    {
+      "evidence_id": "E4",
+      "page": 7,
+      "char_start": 1071,
+      "char_end": 1760,
+      "page_sha256": "13b4729c190b45bcddbeb735a5a6fe59fbc9d0ad29e7302f53397f77e854098c",
+      "span_sha256": "e56576b0cd4e5a8317effe8b3cf566d686f4a457653f9ce962b22e846e163c8e"
+    },
+    {
+      "evidence_id": "E5",
+      "page": 8,
+      "char_start": 15,
+      "char_end": 519,
+      "page_sha256": "e82aa80e3151361d9dbf7304ba4cd29ef7ecce7d2142ddb5f91e6add3fd4bd8a",
+      "span_sha256": "027ef939784aac1e61b7a68ba66cab50aaff12bfcc29f56d96348799e9bd6115"
+    },
+    {
+      "evidence_id": "E6",
+      "page": 8,
+      "char_start": 1322,
+      "char_end": 1505,
+      "page_sha256": "e82aa80e3151361d9dbf7304ba4cd29ef7ecce7d2142ddb5f91e6add3fd4bd8a",
+      "span_sha256": "8265e9daff296912eb116b2704f3c2187237492b3095823af05483fb4bbf9cc4"
+    },
+    {
+      "evidence_id": "E7",
+      "page": 9,
+      "char_start": 32,
+      "char_end": 173,
+      "page_sha256": "875c43c013d8bcf54aec188225f991d3912d0a0a71b57e4fb4140a9645d0dd2e",
+      "span_sha256": "7347c3c3bac5caf5038b8f2e057b62f4ed5a9dc3c1931e33831893b4b7c9703f"
+    },
+    {
+      "evidence_id": "E8",
+      "page": 9,
+      "char_start": 299,
+      "char_end": 649,
+      "page_sha256": "875c43c013d8bcf54aec188225f991d3912d0a0a71b57e4fb4140a9645d0dd2e",
+      "span_sha256": "8c6281b22e4a9de77117d44a1be9be8628690f5d18b9db33000205507d45674d"
+    },
+    {
+      "evidence_id": "E9",
+      "page": 9,
+      "char_start": 650,
+      "char_end": 1109,
+      "page_sha256": "875c43c013d8bcf54aec188225f991d3912d0a0a71b57e4fb4140a9645d0dd2e",
+      "span_sha256": "6ba00a4b7fb9752f2db30f9b2cd6879097c424180a035dd738edbb15917564a1"
+    },
+    {
+      "evidence_id": "E10",
+      "page": 9,
+      "char_start": 1110,
+      "char_end": 1416,
+      "page_sha256": "875c43c013d8bcf54aec188225f991d3912d0a0a71b57e4fb4140a9645d0dd2e",
+      "span_sha256": "9730a119ba80a608e7f41103f7791ff44bfad008ed694037f2dd743a3d182a2d"
+    }
+  ],
+  "occurrences": [
+    {
+      "event_id": "access_first",
+      "description": "Initial access to the first server",
+      "mapping": "T1190",
+      "outcome": "REPORTED",
+      "rationale": "The report identifies exploitation of a public-facing application as the access action.",
+      "evidence_ids": [
+        "E1",
+        "E3"
+      ]
+    },
+    {
+      "event_id": "access_second",
+      "description": "Separate initial access to the second server",
+      "mapping": "T1190",
+      "outcome": "REPORTED",
+      "rationale": "The second server is a distinct occurrence under the same parent label.",
+      "evidence_ids": [
+        "E1",
+        "E3"
+      ]
+    },
+    {
+      "event_id": "discovery_first",
+      "description": "Discovery activity on the first server",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "rationale": "The prose groups host discovery commands and does not give order among them.",
+      "evidence_ids": [
+        "E4"
+      ]
+    },
+    {
+      "event_id": "ingress_first",
+      "description": "Download of additional files to the first server",
+      "mapping": "T1105",
+      "outcome": "REPORTED",
+      "rationale": "The source describes retrieval of additional files on the compromised endpoint.",
+      "evidence_ids": [
+        "E4"
+      ]
+    },
+    {
+      "event_id": "service_scan",
+      "description": "Enumeration of internal services from the first server",
+      "mapping": "T1046",
+      "outcome": "REPORTED",
+      "rationale": "The actor identified network services from a compromised host.",
+      "evidence_ids": [
+        "E5"
+      ]
+    },
+    {
+      "event_id": "password_attempts",
+      "description": "Attempted credential guessing after service enumeration",
+      "mapping": "T1110",
+      "outcome": "ATTEMPTED",
+      "rationale": "The report describes brute-force login attempts following enumeration.",
+      "evidence_ids": [
+        "E5"
+      ]
+    },
+    {
+      "event_id": "move_web",
+      "description": "Lateral movement to a web server",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "rationale": "The overview establishes the destination and order without a uniquely mapped mechanism.",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "event_id": "move_sql",
+      "description": "Lateral movement to a database server",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "rationale": "The detailed wording leaves the exact host relationship and mechanism open.",
+      "evidence_ids": [
+        "E1",
+        "E7"
+      ]
+    },
+    {
+      "event_id": "proxy_stage",
+      "description": "Writing proxy software on the web server",
+      "mapping": null,
+      "outcome": "REPORTED",
+      "rationale": "A local write is reported. The source does not uniquely identify an external or internal transfer.",
+      "evidence_ids": [
+        "E8"
+      ]
+    },
+    {
+      "event_id": "proxy_run",
+      "description": "Initial execution of the proxy in a reported activity cluster",
+      "mapping": "T1090",
+      "outcome": "REPORTED",
+      "rationale": "The actor used the proxy to forward remote connections.",
+      "evidence_ids": [
+        "E8",
+        "E9"
+      ]
+    },
+    {
+      "event_id": "access_check",
+      "description": "Network host discovery to check access",
+      "mapping": "T1018",
+      "outcome": "REPORTED",
+      "rationale": "The actor tested reachability across hosts.",
+      "evidence_ids": [
+        "E9"
+      ]
+    },
+    {
+      "event_id": "proxy_update",
+      "description": "Download of a modified proxy binary",
+      "mapping": "T1105",
+      "outcome": "REPORTED",
+      "rationale": "The source reports downloading another binary onto the endpoint.",
+      "evidence_ids": [
+        "E9"
+      ]
+    },
+    {
+      "event_id": "proxy_connect",
+      "description": "Connection attributed to the modified proxy",
+      "mapping": "T1090",
+      "outcome": "REPORTED",
+      "rationale": "The source reports an outbound control connection through the downloaded proxy.",
+      "evidence_ids": [
+        "E8",
+        "E9"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "B1",
+      "source_event": "access_first",
+      "target_event": "access_second",
+      "relation": "BEFORE",
+      "rationale": "The report gives distinct dates and explicitly orders the two initial accesses. No action dependency is inferred.",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "relation_id": "B2",
+      "source_event": "access_first",
+      "target_event": "discovery_first",
+      "relation": "BEFORE",
+      "rationale": "The first-server narrative describes discovery after access through the same incident entry point.",
+      "evidence_ids": [
+        "E1",
+        "E4"
+      ]
+    },
+    {
+      "relation_id": "B3",
+      "source_event": "discovery_first",
+      "target_event": "ingress_first",
+      "relation": "BEFORE",
+      "rationale": "The report places the file download after the discussion of discovery on the first server.",
+      "evidence_ids": [
+        "E4"
+      ]
+    },
+    {
+      "relation_id": "B4",
+      "source_event": "ingress_first",
+      "target_event": "service_scan",
+      "relation": "BEFORE",
+      "rationale": "The following passage explicitly says network service enumeration occurred subsequently.",
+      "evidence_ids": [
+        "E4",
+        "E5"
+      ]
+    },
+    {
+      "relation_id": "B5",
+      "source_event": "service_scan",
+      "target_event": "password_attempts",
+      "relation": "BEFORE",
+      "rationale": "Credential guessing follows the reported service enumeration.",
+      "evidence_ids": [
+        "E5"
+      ]
+    },
+    {
+      "relation_id": "B6",
+      "source_event": "access_first",
+      "target_event": "move_web",
+      "relation": "BEFORE",
+      "rationale": "The incident overview describes the movement as originating from the compromised first server.",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "relation_id": "B7",
+      "source_event": "move_web",
+      "target_event": "move_sql",
+      "relation": "BEFORE",
+      "rationale": "The overview orders the two destinations. This records reported order without treating the implementation wording as a verified topology.",
+      "evidence_ids": [
+        "E1",
+        "E7"
+      ]
+    },
+    {
+      "relation_id": "B8",
+      "source_event": "proxy_stage",
+      "target_event": "proxy_run",
+      "relation": "BEFORE",
+      "rationale": "The report explicitly places the first proxy execution after writing the binary.",
+      "evidence_ids": [
+        "E8",
+        "E9"
+      ]
+    },
+    {
+      "relation_id": "B9",
+      "source_event": "proxy_run",
+      "target_event": "access_check",
+      "relation": "BEFORE",
+      "rationale": "The host checks follow the new access in the same activity passage.",
+      "evidence_ids": [
+        "E9"
+      ]
+    },
+    {
+      "relation_id": "B10",
+      "source_event": "access_check",
+      "target_event": "proxy_update",
+      "relation": "BEFORE",
+      "rationale": "The author places the modified proxy download next.",
+      "evidence_ids": [
+        "E9"
+      ]
+    },
+    {
+      "relation_id": "B11",
+      "source_event": "proxy_update",
+      "target_event": "proxy_connect",
+      "relation": "BEFORE",
+      "rationale": "The report attributes the established connection to the modified software retrieval and subsequent use.",
+      "evidence_ids": [
+        "E9"
+      ]
+    }
+  ],
+  "exclusions": [
+    {
+      "observation": "Reconnaissance before first access",
+      "rationale": "The report links scanning and a later exploitation attempt but does not uniquely identify the first-server access as that attempt in the scanning passage.",
+      "evidence_ids": [
+        "E1",
+        "E2"
+      ]
+    },
+    {
+      "observation": "Second-server discovery",
+      "rationale": "The text describes discovery artifacts but does not tie a separately ordered action to the retained dated access.",
+      "evidence_ids": [
+        "E3",
+        "E6"
+      ]
+    },
+    {
+      "observation": "Dated proxy execution",
+      "rationale": "The dated passage may overlap the earlier proxy activity. Retaining another distinct proxy run would risk double-counting.",
+      "evidence_ids": [
+        "E9",
+        "E10"
+      ]
+    },
+    {
+      "observation": "Exact lateral movement mechanism",
+      "rationale": "The detailed wording uses host roles that are difficult to align with the overview. The graph carries only the reported ordering there.",
+      "evidence_ids": [
+        "E1",
+        "E7"
+      ]
+    }
+  ]
+}

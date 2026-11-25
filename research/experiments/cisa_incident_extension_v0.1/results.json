@@ -1,0 +1,376 @@
+{
+  "cases": [
+    {
+      "actions": 3,
+      "evidence_locators": 6,
+      "product_id": "AA24-046A",
+      "query_assessment": "UNASSESSED",
+      "query_errors": null,
+      "relations": 1,
+      "unknown_mappings": 2,
+      "vocabulary": [
+        "T1078"
+      ]
+    },
+    {
+      "actions": 13,
+      "evidence_locators": 10,
+      "product_id": "AA25-266A",
+      "query_assessment": "CONDITIONAL_ON_RECORDED_GRAPH",
+      "query_count": 216,
+      "relations": 11,
+      "representations": {
+        "distinct_endpoint_join": {
+          "missed_supported": 0,
+          "returned": 3,
+          "unresolved": 0,
+          "unsupported": 0
+        },
+        "distinct_pairs": {
+          "missed_supported": 0,
+          "returned": 5,
+          "unresolved": 2,
+          "unsupported": 0
+        },
+        "loop_endpoint_join": {
+          "missed_supported": 0,
+          "returned": 3,
+          "unresolved": 0,
+          "unsupported": 0
+        },
+        "loop_pairs": {
+          "missed_supported": 0,
+          "returned": 6,
+          "unresolved": 3,
+          "unsupported": 0
+        }
+      },
+      "statuses": {
+        "NOT_SUPPORTED": 167,
+        "SUPPORTED": 3,
+        "UNRESOLVED_MAPPING": 46
+      },
+      "supported_witnesses": [
+        {
+          "query": [
+            "T1018",
+            "T1105",
+            "T1090"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "access_check",
+                "proxy_update",
+                "proxy_connect"
+              ],
+              "relation_ids": [
+                "B10",
+                "B11"
+              ]
+            }
+          ]
+        },
+        {
+          "query": [
+            "T1090",
+            "T1018",
+            "T1105"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "proxy_run",
+                "access_check",
+                "proxy_update"
+              ],
+              "relation_ids": [
+                "B10",
+                "B9"
+              ]
+            }
+          ]
+        },
+        {
+          "query": [
+            "T1105",
+            "T1046",
+            "T1110"
+          ],
+          "witnesses": [
+            {
+              "occurrence_ids": [
+                "ingress_first",
+                "service_scan",
+                "password_attempts"
+              ],
+              "relation_ids": [
+                "B4",
+                "B5"
+              ]
+            }
+          ]
+        }
+      ],
+      "unknown_mappings": 4,
+      "unresolved_projected": [
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "access_check",
+                "proxy_update"
+              ],
+              "left_relation_ids": [
+                "B10"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "ingress_first",
+                "service_scan"
+              ],
+              "right_relation_ids": [
+                "B4"
+              ]
+            }
+          ],
+          "query": [
+            "T1018",
+            "T1105",
+            "T1046"
+          ],
+          "unresolved_witnesses": [
+            {
+              "occurrence_ids": [
+                "discovery_first",
+                "ingress_first",
+                "service_scan"
+              ],
+              "relation_ids": [
+                "B3",
+                "B4"
+              ],
+              "required_mappings": [
+                {
+                  "occurrence_id": "discovery_first",
+                  "required_technique": "T1018"
+                }
+              ]
+            }
+          ],
+          "view": "distinct_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "access_check",
+                "proxy_update"
+              ],
+              "left_relation_ids": [
+                "B10"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "ingress_first",
+                "service_scan"
+              ],
+              "right_relation_ids": [
+                "B4"
+              ]
+            }
+          ],
+          "query": [
+            "T1018",
+            "T1105",
+            "T1046"
+          ],
+          "unresolved_witnesses": [
+            {
+              "occurrence_ids": [
+                "discovery_first",
+                "ingress_first",
+                "service_scan"
+              ],
+              "relation_ids": [
+                "B3",
+                "B4"
+              ],
+              "required_mappings": [
+                {
+                  "occurrence_id": "discovery_first",
+                  "required_technique": "T1018"
+                }
+              ]
+            }
+          ],
+          "view": "loop_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "proxy_update",
+                "proxy_connect"
+              ],
+              "left_relation_ids": [
+                "B11"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "proxy_run",
+                "access_check"
+              ],
+              "right_relation_ids": [
+                "B9"
+              ]
+            }
+          ],
+          "query": [
+            "T1105",
+            "T1090",
+            "T1018"
+          ],
+          "unresolved_witnesses": [
+            {
+              "occurrence_ids": [
+                "proxy_stage",
+                "proxy_run",
+                "access_check"
+              ],
+              "relation_ids": [
+                "B8",
+                "B9"
+              ],
+              "required_mappings": [
+                {
+                  "occurrence_id": "proxy_stage",
+                  "required_technique": "T1105"
+                }
+              ]
+            }
+          ],
+          "view": "distinct_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "proxy_update",
+                "proxy_connect"
+              ],
+              "left_relation_ids": [
+                "B11"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH"
+              ],
+              "right_occurrences": [
+                "proxy_run",
+                "access_check"
+              ],
+              "right_relation_ids": [
+                "B9"
+              ]
+            }
+          ],
+          "query": [
+            "T1105",
+            "T1090",
+            "T1018"
+          ],
+          "unresolved_witnesses": [
+            {
+              "occurrence_ids": [
+                "proxy_stage",
+                "proxy_run",
+                "access_check"
+              ],
+              "relation_ids": [
+                "B8",
+                "B9"
+              ],
+              "required_mappings": [
+                {
+                  "occurrence_id": "proxy_stage",
+                  "required_technique": "T1105"
+                }
+              ]
+            }
+          ],
+          "view": "loop_pairs"
+        },
+        {
+          "joins": [
+            {
+              "left_occurrences": [
+                "access_first",
+                "access_second"
+              ],
+              "left_relation_ids": [
+                "B1"
+              ],
+              "reasons": [
+                "MIDDLE_OCCURRENCE_MISMATCH",
+                "REUSED_EDGE_IMAGE",
+                "FEWER_THAN_THREE_OCCURRENCES"
+              ],
+              "right_occurrences": [
+                "access_first",
+                "access_second"
+              ],
+              "right_relation_ids": [
+                "B1"
+              ]
+            }
+          ],
+          "query": [
+            "T1190",
+            "T1190",
+            "T1190"
+          ],
+          "unresolved_witnesses": [
+            {
+              "occurrence_ids": [
+                "access_first",
+                "move_web",
+                "move_sql"
+              ],
+              "relation_ids": [
+                "B6",
+                "B7"
+              ],
+              "required_mappings": [
+                {
+                  "occurrence_id": "move_web",
+                  "required_technique": "T1190"
+                },
+                {
+                  "occurrence_id": "move_sql",
+                  "required_technique": "T1190"
+                }
+              ]
+            }
+          ],
+          "view": "loop_pairs"
+        }
+      ],
+      "unsupported_projected": [],
+      "vocabulary": [
+        "T1018",
+        "T1046",
+        "T1090",
+        "T1105",
+        "T1110",
+        "T1190"
+      ]
+    }
+  ],
+  "selected_reports": 2
+}

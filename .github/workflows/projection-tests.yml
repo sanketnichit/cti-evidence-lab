@@ -56,6 +56,8 @@ jobs:
         run: python scripts/evaluate_external_sequences.py
       - name: Reproduce the chronological incident holdout
         run: python scripts/evaluate_incident_holdout.py
+      - name: Reproduce the CISA incident extension
+        run: python scripts/evaluate_cisa_extension.py
       - name: Verify reconstructed schema package checksums
         working-directory: research/schema_reconstruction/CTI_Annotation_Schema_RECON_v0.1
         run: sha256sum --check SHA256SUMS.txt
