@@ -1,0 +1,218 @@
+{
+  "rdp": {
+    "profile": "proposed_cleanup_full_edges",
+    "vocabulary": [
+      "T1021",
+      "T1070"
+    ],
+    "query_count": 8,
+    "baseline_supported": [
+      [
+        "T1021",
+        "T1021",
+        "T1070"
+      ],
+      [
+        "T1021",
+        "T1070",
+        "T1021"
+      ],
+      [
+        "T1070",
+        "T1021",
+        "T1070"
+      ]
+    ],
+    "baseline_projected_only": [
+      [
+        "T1021",
+        "T1021",
+        "T1021"
+      ],
+      [
+        "T1070",
+        "T1021",
+        "T1021"
+      ]
+    ],
+    "by_intervention_family": {
+      "exclude_occurrence": {
+        "scenarios": 4,
+        "scenarios_losing_supported_query": 4,
+        "support_loss_to_NOT_SUPPORTED": 9,
+        "baseline_projected_only_NOT_SUPPORTED": 3,
+        "baseline_projected_only_NO_RETURN": 5
+      },
+      "omit_relation": {
+        "scenarios": 4,
+        "scenarios_losing_supported_query": 4,
+        "support_loss_to_NOT_SUPPORTED": 6,
+        "baseline_projected_only_NO_RETURN": 3,
+        "baseline_projected_only_NOT_SUPPORTED": 5
+      },
+      "withhold_mapping": {
+        "scenarios": 4,
+        "scenarios_losing_supported_query": 4,
+        "support_loss_to_UNRESOLVED_MAPPING": 9,
+        "baseline_projected_only_UNRESOLVED_MAPPING": 3,
+        "baseline_projected_only_NO_RETURN": 5
+      },
+      "exclude_occurrence + exclude_occurrence": {
+        "scenarios": 6,
+        "scenarios_losing_supported_query": 6,
+        "support_loss_to_NOT_SUPPORTED": 18,
+        "baseline_projected_only_NOT_SUPPORTED": 1,
+        "baseline_projected_only_NO_RETURN": 11
+      },
+      "exclude_occurrence + omit_relation": {
+        "scenarios": 8,
+        "scenarios_losing_supported_query": 8,
+        "support_loss_to_NOT_SUPPORTED": 23,
+        "baseline_projected_only_NO_RETURN": 12,
+        "baseline_projected_only_NOT_SUPPORTED": 4
+      },
+      "exclude_occurrence + withhold_mapping": {
+        "scenarios": 12,
+        "scenarios_losing_supported_query": 12,
+        "support_loss_to_UNRESOLVED_MAPPING": 11,
+        "support_loss_to_NOT_SUPPORTED": 25,
+        "baseline_projected_only_UNRESOLVED_MAPPING": 2,
+        "baseline_projected_only_NO_RETURN": 22
+      },
+      "omit_relation + omit_relation": {
+        "scenarios": 6,
+        "scenarios_losing_supported_query": 6,
+        "support_loss_to_NOT_SUPPORTED": 15,
+        "baseline_projected_only_NO_RETURN": 8,
+        "baseline_projected_only_NOT_SUPPORTED": 4
+      },
+      "omit_relation + withhold_mapping": {
+        "scenarios": 16,
+        "scenarios_losing_supported_query": 16,
+        "support_loss_to_UNRESOLVED_MAPPING": 20,
+        "baseline_projected_only_NO_RETURN": 24,
+        "support_loss_to_NOT_SUPPORTED": 22,
+        "baseline_projected_only_NOT_SUPPORTED": 4,
+        "baseline_projected_only_UNRESOLVED_MAPPING": 4
+      },
+      "withhold_mapping + withhold_mapping": {
+        "scenarios": 6,
+        "scenarios_losing_supported_query": 6,
+        "support_loss_to_UNRESOLVED_MAPPING": 18,
+        "baseline_projected_only_UNRESOLVED_MAPPING": 1,
+        "baseline_projected_only_NO_RETURN": 11
+      }
+    }
+  },
+  "domain-controller": {
+    "profile": "extended_script_sequence",
+    "vocabulary": [
+      "T1021",
+      "T1059",
+      "T1218",
+      "T1560",
+      "T1570"
+    ],
+    "query_count": 125,
+    "baseline_supported": [
+      [
+        "T1021",
+        "T1570",
+        "T1218"
+      ],
+      [
+        "T1059",
+        "T1560",
+        "T1059"
+      ],
+      [
+        "T1218",
+        "T1059",
+        "T1560"
+      ],
+      [
+        "T1570",
+        "T1218",
+        "T1059"
+      ]
+    ],
+    "baseline_projected_only": [
+      [
+        "T1560",
+        "T1059",
+        "T1560"
+      ]
+    ],
+    "by_intervention_family": {
+      "exclude_occurrence": {
+        "scenarios": 6,
+        "scenarios_losing_supported_query": 6,
+        "support_loss_to_NOT_SUPPORTED": 12,
+        "baseline_projected_only_NO_RETURN": 3,
+        "baseline_projected_only_NOT_SUPPORTED": 3
+      },
+      "omit_relation": {
+        "scenarios": 5,
+        "scenarios_losing_supported_query": 5,
+        "support_loss_to_NOT_SUPPORTED": 8,
+        "baseline_projected_only_NOT_SUPPORTED": 3,
+        "baseline_projected_only_NO_RETURN": 2
+      },
+      "withhold_mapping": {
+        "scenarios": 6,
+        "scenarios_losing_supported_query": 6,
+        "support_loss_to_UNRESOLVED_MAPPING": 12,
+        "baseline_projected_only_NO_RETURN": 3,
+        "baseline_projected_only_UNRESOLVED_MAPPING": 1,
+        "baseline_projected_only_NOT_SUPPORTED": 2
+      },
+      "exclude_occurrence + exclude_occurrence": {
+        "scenarios": 15,
+        "scenarios_losing_supported_query": 15,
+        "support_loss_to_NOT_SUPPORTED": 48,
+        "baseline_projected_only_NO_RETURN": 12,
+        "baseline_projected_only_NOT_SUPPORTED": 3
+      },
+      "exclude_occurrence + omit_relation": {
+        "scenarios": 20,
+        "scenarios_losing_supported_query": 20,
+        "support_loss_to_NOT_SUPPORTED": 62,
+        "baseline_projected_only_NO_RETURN": 16,
+        "baseline_projected_only_NOT_SUPPORTED": 4
+      },
+      "exclude_occurrence + withhold_mapping": {
+        "scenarios": 30,
+        "scenarios_losing_supported_query": 30,
+        "support_loss_to_UNRESOLVED_MAPPING": 36,
+        "support_loss_to_NOT_SUPPORTED": 60,
+        "baseline_projected_only_NO_RETURN": 24,
+        "baseline_projected_only_NOT_SUPPORTED": 4,
+        "baseline_projected_only_UNRESOLVED_MAPPING": 2
+      },
+      "omit_relation + omit_relation": {
+        "scenarios": 10,
+        "scenarios_losing_supported_query": 10,
+        "support_loss_to_NOT_SUPPORTED": 28,
+        "baseline_projected_only_NOT_SUPPORTED": 3,
+        "baseline_projected_only_NO_RETURN": 7
+      },
+      "omit_relation + withhold_mapping": {
+        "scenarios": 30,
+        "scenarios_losing_supported_query": 30,
+        "support_loss_to_NOT_SUPPORTED": 48,
+        "support_loss_to_UNRESOLVED_MAPPING": 36,
+        "baseline_projected_only_NO_RETURN": 21,
+        "baseline_projected_only_UNRESOLVED_MAPPING": 2,
+        "baseline_projected_only_NOT_SUPPORTED": 7
+      },
+      "withhold_mapping + withhold_mapping": {
+        "scenarios": 15,
+        "scenarios_losing_supported_query": 15,
+        "support_loss_to_UNRESOLVED_MAPPING": 48,
+        "baseline_projected_only_NO_RETURN": 12,
+        "baseline_projected_only_UNRESOLVED_MAPPING": 2,
+        "baseline_projected_only_NOT_SUPPORTED": 1
+      }
+    }
+  }
+}

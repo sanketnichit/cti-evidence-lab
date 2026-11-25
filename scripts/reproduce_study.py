@@ -27,6 +27,7 @@ from scripts.analyze_sequence_case import CASE as SEQUENCE_CASE, analyze as anal
 from scripts.audit_rank_two_review import DIRECTORY as RANK_TWO, audit as audit_rank_two, summarize as summarize_rank_two, validate_recorded_audit
 from scripts.analyze_incident_sequences import CASE as INCIDENT_CASE, analyze as analyze_incident_case
 from examples.investigation_benchmark import run_checks as run_investigation_checks
+from examples.interpretation_sensitivity import run as run_interpretation_sensitivity, summarize as summarize_sensitivity
 from scripts.build_investigation import build as build_investigator
 from scripts.evaluate_external_sequences import DIRECTORY as EXTERNAL, load_records as load_external_records, run_evaluation, audit_sources as audit_external_sources, validate_recorded_source_audit
 from examples.bounded_mapping_checks import run_checks as run_bounded_mapping_checks
@@ -150,6 +151,11 @@ def main():
         result["incident_source_audit_mode"] = "LOCAL_HTML_RECHECKED"
     write_json(destination / "incident_source_integrity.json", incident_audit)
     write_json(destination / "investigation_checks.json", run_investigation_checks())
+    sensitivity = run_interpretation_sensitivity()
+    expected_sensitivity = ROOT / "research/experiments/interpretation_sensitivity_v0.1/results.json"
+    if json.loads(json.dumps(summarize_sensitivity(sensitivity))) != json.loads(expected_sensitivity.read_text(encoding="utf-8")):
+        raise ValueError("Interpretation sensitivity summary differs from the published results")
+    write_json(destination / "interpretation_sensitivity.json", sensitivity)
     write_json(destination / "bounded_mapping_checks.json", run_bounded_mapping_checks())
     bounds = json.loads((ROOT / "research/experiments/bounded_mapping_v0.1/archive_bound_assumption.json").read_text(encoding="utf-8"))
     write_json(destination / "bounded_mapping_assumption_example.json", investigation_certificate(
@@ -173,7 +179,7 @@ def main():
                        "sequence_case_results.json", "sequence_source_integrity.json",
                        "rank_two_review.json", "rank_two_source_integrity.json",
                        "incident_sequence_results.json", "incident_source_integrity.json",
-                       "investigation_checks.json", "sequence_investigator.html",
+                       "investigation_checks.json", "sequence_investigator.html", "interpretation_sensitivity.json",
                        "external_sequence_results.json", "external_sequence_source_integrity.json",
                        "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json"]
     if args.pdf:
