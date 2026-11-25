@@ -1,0 +1,91 @@
+{
+  "taxonomy": {
+    "release": "Enterprise ATT&CK v12.1",
+    "sha256": "e84679af4bc46bba2ba92f60182101f146d5b966898e47924de7321e6bffeaa1",
+    "parent_techniques": {
+      "discovery": [
+        "T1007",
+        "T1010",
+        "T1012",
+        "T1016",
+        "T1018",
+        "T1033",
+        "T1040",
+        "T1046",
+        "T1049",
+        "T1057",
+        "T1069",
+        "T1082",
+        "T1083",
+        "T1087",
+        "T1120",
+        "T1124",
+        "T1135",
+        "T1201",
+        "T1217",
+        "T1482",
+        "T1497",
+        "T1518",
+        "T1526",
+        "T1538",
+        "T1580",
+        "T1613",
+        "T1614",
+        "T1615",
+        "T1619",
+        "T1622"
+      ],
+      "execution": [
+        "T1047",
+        "T1053",
+        "T1059",
+        "T1072",
+        "T1106",
+        "T1129",
+        "T1203",
+        "T1204",
+        "T1559",
+        "T1569",
+        "T1609",
+        "T1610",
+        "T1648"
+      ]
+    }
+  },
+  "cases": {
+    "dfir-hive": [
+      {
+        "occurrence_id": "discovery",
+        "evidence_ids": [
+          "P6"
+        ],
+        "rationale": "The summary explicitly groups system and network discovery under one reported activity."
+      }
+    ],
+    "dfir-netsupport": [
+      {
+        "occurrence_id": "discovery",
+        "evidence_ids": [
+          "P3"
+        ],
+        "rationale": "The summary groups preliminary reconnaissance involving identity and system information."
+      },
+      {
+        "occurrence_id": "dc_discovery",
+        "evidence_ids": [
+          "P5"
+        ],
+        "rationale": "The summary groups discovery of privileged groups and joined computers."
+      }
+    ],
+    "cisa-federal-agency": [
+      {
+        "occurrence_id": "discovery_first",
+        "evidence_ids": [
+          "E4"
+        ],
+        "rationale": "The narrative groups user, service, filesystem and network discovery activity."
+      }
+    ]
+  }
+}
