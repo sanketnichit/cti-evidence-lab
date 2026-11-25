@@ -112,7 +112,59 @@
             "NOT_SUPPORTED": 2475,
             "SUPPORTED": 7,
             "UNRESOLVED_MAPPING": 893
-          }
+          },
+          "unsupported_loop_queries": [
+            [
+              "T1003",
+              "T1059",
+              "T1219"
+            ],
+            [
+              "T1105",
+              "T1059",
+              "T1560"
+            ]
+          ]
+        },
+        "omit_B12_B21": {
+          "representations": {
+            "distinct_endpoint_join": {
+              "missed_supported": 0,
+              "returned": 6,
+              "unresolved": 0,
+              "unsupported": 0
+            },
+            "distinct_pairs": {
+              "missed_supported": 0,
+              "returned": 8,
+              "unresolved": 1,
+              "unsupported": 1
+            },
+            "loop_endpoint_join": {
+              "missed_supported": 0,
+              "returned": 6,
+              "unresolved": 0,
+              "unsupported": 0
+            },
+            "loop_pairs": {
+              "missed_supported": 0,
+              "returned": 8,
+              "unresolved": 1,
+              "unsupported": 1
+            }
+          },
+          "statuses": {
+            "NOT_SUPPORTED": 2490,
+            "SUPPORTED": 6,
+            "UNRESOLVED_MAPPING": 879
+          },
+          "unsupported_loop_queries": [
+            [
+              "T1105",
+              "T1059",
+              "T1560"
+            ]
+          ]
         },
         "omit_B21": {
           "representations": {
@@ -145,7 +197,19 @@
             "NOT_SUPPORTED": 2476,
             "SUPPORTED": 6,
             "UNRESOLVED_MAPPING": 893
-          }
+          },
+          "unsupported_loop_queries": [
+            [
+              "T1105",
+              "T1059",
+              "T1560"
+            ],
+            [
+              "T1562",
+              "T1047",
+              "T1053"
+            ]
+          ]
         }
       },
       "query_assessment": "CONDITIONAL_ON_RECORDED_GRAPH",

@@ -135,11 +135,14 @@ def run(source_directory=None):
         result = summarize(case, post)
         if post["id"] == 22587:
             alternatives = {}
-            for edge in ("B12", "B21"):
-                retained = [row for row in case["relations"] if row["relation_id"] != edge]
+            for omitted in (("B12",), ("B21",), ("B12", "B21")):
+                retained = [row for row in case["relations"] if row["relation_id"] not in omitted]
                 alternative = summarize({**case, "relations": retained}, post)
-                alternatives[f"omit_{edge}"] = {
+                alternatives[f"omit_{'_'.join(omitted)}"] = {
                     "statuses": alternative["statuses"], "representations": alternative["representations"],
+                    "unsupported_loop_queries": [
+                        row["query"] for row in alternative["unsupported_projected"] if row["view"] == "loop_pairs"
+                    ],
                 }
             result["post_review_edge_sensitivity"] = alternatives
         if source_directory is not None:
