@@ -18,7 +18,7 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | RDP case | Two provisional attempt-level occurrences, one BEFORE edge, three verified passages | Purposive selection; outside AnnoCTR; only one edge |
 | RDP sequence extension | Same intrusion; four actions, four ordering links and seven verified passage bindings | Cleanup mapping unresolved; query comparison conditional on that mapping |
 | Second intrusion | Three-action core query; six-action extension, exact-technique comparison and 13 verified bindings | Ordinary success in the core; extended join error conditional on the archive mapping |
-| Investigation prototype | Offline query inspection; 1,728 completion-oracle checks and 532 case/profile/query states | Practical analyst benefit and visual browser QA not established |
+| Investigation prototype | Offline query inspection, 532 case/profile/query states, and Chromium checks at three viewport widths | Cross-browser behavior and practical analyst benefit remain open |
 | Mapping-bound sensitivity | Optional CLI bounds, paired open/constrained answers and 21,952 finite query checks | Bounds remain declared assumptions; no field accuracy improvement established |
 | Software verification | 372 passing tests across five suites; 31 immutable base-package checksums | Code and artifact integrity |
 
