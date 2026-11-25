@@ -12,7 +12,7 @@ Ask whether three techniques form one connected occurrence sequence. Inspect the
 python scripts/build_investigation.py
 ```
 
-Open `outputs/investigation/index.html` in a browser. The artifact runs offline with the two original intrusion cases. Optional local source loading reveals passages after a snapshot-hash match. [Workflow and evaluation](research/INVESTIGATION_WORKFLOW_v0.1.md)
+Open `outputs/investigation/index.html` in a browser. The artifact covers four DFIR reports and two CISA advisories. Five cases offer three-technique queries and verifiable JSON exports. The unassessed advisory shows the retained evidence and exclusions. Matching publisher HTML can be opened locally for DFIR passages. CISA evidence uses PDF page locators. [Workflow and evaluation](research/INVESTIGATION_WORKFLOW_v0.1.md)
 
 For unresolved mappings, the CLI can also [compare explicit candidate bounds](research/experiments/bounded_mapping_v0.1/README.md). Exports preserve the unrestricted answer and show which assumptions exclude a possible path.
 

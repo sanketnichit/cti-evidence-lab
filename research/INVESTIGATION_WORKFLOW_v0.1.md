@@ -1,6 +1,6 @@
 # Evidence-backed sequence investigation
 
-**Updated 20 November 2026. Working prototype and evaluation contract.**
+**Updated 25 November 2026.**
 
 ## Decision supported
 
@@ -47,9 +47,13 @@ The CLI now accepts explicit allowed-label bounds for unknown occurrences. A bou
 
 The finite completion oracle checks **1,728** graph-query inputs: three ordered vertices, two labels, singleton-or-unknown mappings and all forward-edge subsets. It independently enumerates assignments to unknown labels and agrees with the three-way query classification. This is a bounded implementation check, not a universal theorem or field evaluation.
 
-All **532** case/profile/query combinations in the two cases and eight profiles are generated from their candidate-label vocabularies. Tests check witness references and source-locator completeness. A DOM harness exercises all query states and both case snapshots. A separate Chromium test opens the offline file at 320, 390 and 1280 px, checks the three answer states for viewport overflow, verifies keyboard navigation and accessible selector names, and downloads an answer for CLI verification. A local Chromium run also checked publisher snapshot matching and verified that a rejected snapshot with an external image reference generates no web request. Desktop and narrow screenshots were inspected. This covers one browser engine and selected accessibility checks.
+The original benchmark covers **532** case/profile/query combinations across two cases and eight profiles. The DOM harness exercises that matrix as well as selected supported and unsupported queries from the two additional DFIR reports. It can also check source matching for both original reports using their saved HTML snapshots.
 
-The case queries produce 16 supported, 15 mapping-unresolved and 501 not-supported answers. These totals are constructed coverage counts over overlapping profiles, not 532 independent observations, accuracy scores or prevalence estimates. [Machine-readable results](experiments/investigation_v0.1/results.json) retain the denominators and per-profile breakdown.
+The benchmark produced 16 supported, 15 mapping-unresolved and 501 not-supported answers. These are constructed coverage counts over overlapping profiles. [Machine-readable results](experiments/investigation_v0.1/results.json) retain the denominators and per-profile breakdown.
+
+The offline bundle adds the two [holdout DFIR reports](experiments/incident_holdout_v0.1/README.md) and both [CISA advisories](experiments/cisa_incident_extension_v0.1/README.md). The four cases contribute one recorded interpretation each. Across the bundle, five assessable cases provide 5,454 query combinations, including combinations with repeated labels. AA24-046A displays its retained actions, ordering evidence and exclusions with query and export disabled. The PDF locators identify the page and character range in the recorded extraction. The CISA source audit verifies the PDF separately.
+
+Chromium checks cover widths of 320, 390 and 1280 px, keyboard traversal, selector names, offline operation and the unassessed state. The test exports an original answer and an unresolved CISA answer for CLI recomputation. It also rejects an unrelated HTML snapshot containing an external image reference and checks that no web request is made. These checks cover one browser engine.
 
 ## Fixed external comparison
 

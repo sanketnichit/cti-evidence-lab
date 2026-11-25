@@ -8,24 +8,31 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.investigate_sequence import CASES, certificate, load_case
+from scripts.investigate_sequence import AVAILABLE_CASES, certificate, load_case, profile_graph, record_context
 
 
 def build(destination):
     cases = []
-    for key in CASES:
+    for key in AVAILABLE_CASES:
         case = load_case(key)
         profiles = []
         for p in case["profiles"]:
             level = p.get("taxonomy_level", "parent")
-            vocabulary = sorted({n["candidate_" + level + "_mapping"] for n in case["occurrences"]})
+            vocabulary = sorted({label for n in case["occurrences"]
+                                 if (label := n["candidate_" + level + "_mapping"])})
             answers = {}
-            common = None
-            for query in product(vocabulary, repeat=3):
-                value = certificate(key, case, p["name"], query)
-                answers["|".join(query)] = {"answer": value.pop("answer"), "certificate_sha256": value.pop("certificate_sha256")}
-                common = value
-            profiles.append({"name": p["name"], "level": level, "vocabulary": vocabulary, "common": common, "answers": answers})
+            if case.get("query_assessment") == "UNASSESSED":
+                vocabulary = []
+                common = record_context(key, case, *profile_graph(case, p["name"]))
+            else:
+                common = None
+                for query in product(vocabulary, repeat=3):
+                    value = certificate(key, case, p["name"], query)
+                    answers["|".join(query)] = {"answer": value.pop("answer"), "certificate_sha256": value.pop("certificate_sha256")}
+                    common = value
+            profiles.append({"name": p["name"], "level": level, "vocabulary": vocabulary,
+                             "common": common, "answers": answers,
+                             "exclusions": case.get("exclusions", [])})
         cases.append({"key": key, "title": case["source"]["title"], "profiles": profiles})
     payload = {"cases": cases, "repository_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
                "working_tree_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT).strip())}

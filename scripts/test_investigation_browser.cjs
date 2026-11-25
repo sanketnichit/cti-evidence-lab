@@ -87,6 +87,34 @@ async function checkWidth(browser, width) {
             assert.equal(record.answer.status, 'NOT_SUPPORTED');
             assert.deepEqual(record.answer.query, ['T1560', 'T1059', 'T1560']);
         }
+        await page.locator('#case').selectOption('cisa-former-account');
+        assert.equal(await verdict.textContent(), 'Sequence comparison unassessed');
+        for (const id of ['q0', 'q1', 'q2', 'download']) {
+            assert.ok(await page.locator('#' + id).isDisabled());
+        }
+        assert.match(await page.locator('#witnesses').textContent(), /PDF page \d+/);
+        assert.match(await page.locator('#caveats').textContent(), /Excluded interpretations/);
+        assert.ok(await page.locator('#local-source').isHidden());
+        await assertLayout(page);
+
+        await page.locator('#case').selectOption('cisa-federal-agency');
+        for (const id of ['q0', 'q1', 'q2']) await page.locator('#' + id).selectOption('T1190');
+        assert.match(await verdict.textContent(), /Unresolved mapping/);
+        assert.match(await page.locator('#witnesses').textContent(), /Would require:/);
+        assert.match(await page.locator('#witnesses').textContent(), /PDF page \d+/);
+        await assertLayout(page);
+        if (width === 1280) {
+            const [download] = await Promise.all([
+                page.waitForEvent('download'),
+                page.locator('#download').click(),
+            ]);
+            const file = path.join(output, 'browser-cisa-export.json');
+            await download.saveAs(file);
+            const record = JSON.parse(await fs.readFile(file, 'utf8'));
+            assert.equal(record.case_key, 'cisa-federal-agency');
+            assert.equal(record.answer.status, 'UNRESOLVED_MAPPING');
+            assert.deepEqual(record.answer.query, ['T1190', 'T1190', 'T1190']);
+        }
         assert.deepEqual(requests, []);
         assert.deepEqual(errors, []);
     } finally {

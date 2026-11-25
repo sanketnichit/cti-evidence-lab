@@ -12,14 +12,59 @@ sys.path.insert(0, str(ROOT))
 from scripts.analyze_sequence_case import CASE as RDP_CASE, analyze as analyze_rdp
 from scripts.analyze_incident_sequences import CASE as DC_CASE, analyze as analyze_dc
 from scripts.audit_rdp_case import digest
+from scripts.evaluate_incident_holdout import DIRECTORY as HOLDOUT, run as check_holdout
+from scripts.evaluate_cisa_extension import DIRECTORY as CISA, run as check_cisa
 from src.sequence_investigation import investigate
 
 CASES = {"rdp": RDP_CASE, "domain-controller": DC_CASE}
+EXTENSION_CASES = {
+    "dfir-hive": HOLDOUT / "21520.json",
+    "dfir-netsupport": HOLDOUT / "22587.json",
+    "cisa-former-account": CISA / "AA24-046A.json",
+    "cisa-federal-agency": CISA / "AA25-266A.json",
+}
+AVAILABLE_CASES = {**CASES, **EXTENSION_CASES}
+
+
+def extension_case(case):
+    is_pdf = "product_id" in case
+    identifier = case.get("product_id", case.get("post_id"))
+    results = (check_cisa() if is_pdf else check_holdout())["cases"]
+    result = next(row for row in results if row.get("product_id" if is_pdf else "post_id") == identifier)
+    source = {**case["source"]}
+    if is_pdf:
+        source["title"] = {
+            "AA24-046A": "CISA AA24-046A · Former employee account",
+            "AA25-266A": "CISA AA25-266A · Incident response engagement",
+        }[identifier]
+    nodes = [{
+        **record,
+        "candidate_parent_mapping": record["mapping"],
+        "mapping_rationale": record.get("mapping_rationale", record.get("rationale")),
+        "mapping_status": "PROPOSED_SOURCE_BEHAVIOR" if record["mapping"] else "WITHHELD",
+    } for record in case["occurrences"]]
+    return {
+        **case,
+        "source": source,
+        "case_id": str(identifier),
+        "status": "EXPLORATORY_SOURCE_INTERPRETATION",
+        "query_assessment": result["query_assessment"],
+        "occurrences": nodes,
+        "profiles": [{
+            "name": "recorded_parent_profile",
+            "taxonomy_level": "parent",
+            "occurrence_ids": [node["event_id"] for node in nodes],
+            "relation_ids": [row["relation_id"] for row in case["relations"]],
+            "withheld_mapping_ids": [node["event_id"] for node in nodes if not node["mapping"]],
+        }],
+    }
 
 
 def load_case(key):
-    path = CASES[key]
+    path = AVAILABLE_CASES[key]
     case = json.loads(path.read_text(encoding="utf-8"))
+    if key in EXTENSION_CASES:
+        return extension_case(case)
     if key == "rdp":
         analyze_rdp(case)
     else:
@@ -71,17 +116,24 @@ def constraint_domains(record, nodes, mappings, evidence, level):
     return domains
 
 
-def certificate(key, case, profile_name, query, *, mapping_constraints=None):
-    profile, nodes, mappings, relations = profile_graph(case, profile_name)
-    domains = None if mapping_constraints is None else constraint_domains(mapping_constraints, nodes, mappings, case["evidence"], profile.get("taxonomy_level", "parent"))
-    answer = investigate(mappings, relations, query, mapping_domains=domains)
-    body = {"certificate_version": "1.0", "case_key": key, "case_id": case["case_id"],
+def record_context(key, case, profile, nodes, mappings, relations):
+    return {"certificate_version": "1.0", "case_key": key, "case_id": case["case_id"],
             "case_record_sha256": digest(json.dumps(case, sort_keys=True, separators=(",", ":"))),
             "profile": profile, "source": case["source"], "interpretation_status": case["status"],
-            "independently_validated": case["independently_validated"], "answer": answer,
+            "independently_validated": case["independently_validated"],
             "occurrences": [{**node, "active_mappings": sorted(mappings[nid])} for nid, node in nodes.items()],
             "relations": relations, "evidence": case["evidence"],
             "verification_scope": "Recomputation checks agreement with repository case records; source bytes require the separate source audit. No semantic validation or digital signature is implied."}
+
+
+def certificate(key, case, profile_name, query, *, mapping_constraints=None):
+    if case.get("query_assessment") == "UNASSESSED":
+        raise ValueError("This case has no assessable three-action sequence")
+    profile, nodes, mappings, relations = profile_graph(case, profile_name)
+    domains = None if mapping_constraints is None else constraint_domains(mapping_constraints, nodes, mappings, case["evidence"], profile.get("taxonomy_level", "parent"))
+    answer = investigate(mappings, relations, query, mapping_domains=domains)
+    body = record_context(key, case, profile, nodes, mappings, relations)
+    body["answer"] = answer
     if domains is not None:
         body.update({"certificate_version": "2.0", "mapping_constraints": mapping_constraints,
                      "unrestricted_answer": investigate(mappings, relations, query),
@@ -101,8 +153,8 @@ def verify_certificate(value):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--case", choices=sorted(CASES), default="domain-controller")
-    parser.add_argument("--profile", default="extended_script_sequence")
+    parser.add_argument("--case", choices=sorted(AVAILABLE_CASES), default="domain-controller")
+    parser.add_argument("--profile")
     parser.add_argument("--query", nargs=3)
     parser.add_argument("--verify", type=Path)
     parser.add_argument("--output", type=Path)
@@ -126,7 +178,12 @@ def main():
                 value[key] = item
             return value
         constraints = json.loads(args.mapping_constraints.read_text(encoding="utf-8"), object_pairs_hook=unique_keys)
-    result = certificate(args.case, load_case(args.case), args.profile, args.query, mapping_constraints=constraints)
+    case = load_case(args.case)
+    if case.get("query_assessment") == "UNASSESSED":
+        parser.error("This case has no assessable three-action sequence")
+    profile_name = args.profile or ("extended_script_sequence" if args.case == "domain-controller"
+                                    else case["profiles"][0]["name"])
+    result = certificate(args.case, case, profile_name, args.query, mapping_constraints=constraints)
     text = json.dumps(result, indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

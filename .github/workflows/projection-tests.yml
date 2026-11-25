@@ -89,7 +89,7 @@ jobs:
         run: python scripts/build_investigation.py
       - name: Install pinned interface test dependencies
         run: npm install --prefix "$RUNNER_TEMP/cti-ui-tests" --ignore-scripts --no-audit --no-fund jsdom@26.1.0 playwright@1.58.2
-      - name: Check all investigator query states and export
+      - name: Check the original query matrix and DFIR extension cases
         run: node scripts/test_investigation_ui.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/jsdom"
       - name: Verify the exported answer against source records
         run: python scripts/investigate_sequence.py --verify outputs/investigation/ui-export.json
@@ -99,6 +99,7 @@ jobs:
         run: |
           node scripts/test_investigation_browser.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright"
           python scripts/investigate_sequence.py --verify outputs/investigation/browser-export.json
+          python scripts/investigate_sequence.py --verify outputs/investigation/browser-cisa-export.json
       - name: Reproduce the full study from the clean checkout
         run: python scripts/reproduce_study.py --output-dir outputs/ci-reproduction
       - name: Upload the offline investigator

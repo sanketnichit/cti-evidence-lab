@@ -34,7 +34,7 @@ async function sourceFile(raw) {
     assert.match(d.getElementById('projection').textContent,/run_nslookup_batch/);
     assert.match(d.getElementById('projection').textContent,/run_adfind_batch/);
     let queryStates=0;
-    for(const c of data.cases){select('case',c.key); for(const p of c.profiles){select('profile',p.name); for(const item of Object.values(p.answers)){
+    for(const c of data.cases.filter(c=>['rdp','domain-controller'].includes(c.key))){select('case',c.key); for(const p of c.profiles){select('profile',p.name); for(const item of Object.values(p.answers)){
         query(item.answer.query);
         const heading=d.getElementById('verdict').querySelector('h2').textContent;
         const expected={SUPPORTED:'Supported in this interpretation',UNRESOLVED_MAPPING:'Unresolved mapping could change the answer',NOT_SUPPORTED:'No supporting sequence in the retained graph'}[item.answer.status];
@@ -43,6 +43,15 @@ async function sourceFile(raw) {
         queryStates++;
     }}}
     assert.equal(queryStates,532);
+    assert.equal(data.cases.length,6);
+    select('case','dfir-hive');
+    query(['T1048','T1098','T1486']);
+    assert.match(d.getElementById('verdict').textContent,/Supported in this interpretation/);
+    assert.match(d.getElementById('witnesses').textContent,/paragraph \d+/);
+    select('case','dfir-netsupport');
+    query(['T1105','T1059','T1560']);
+    assert.match(d.getElementById('verdict').textContent,/No supporting sequence/);
+    assert.match(d.getElementById('projection').textContent,/middle occurrences/);
     click('core'); assert.match(d.getElementById('verdict').textContent,/Supported in this interpretation/);
     assert.match(d.getElementById('witnesses').textContent,/rdp_dc/);
     assert.equal(d.getElementById('profile').value,'archive_mapping_withheld');
