@@ -21,4 +21,25 @@ Compact UTF-8 JSON sizes cover sorted pair keys and sorted endpoint rows. They e
 
 The endpoint encoding uses about 10–27 times the compact pair bytes at 128 actions in these workloads. The endpoint join agrees with the source oracle in all 16 graphs. The ordinary projection returns 40 additional answers in the 128-action two-label hub and none in the 128-action single-label chain. The cost depends on both the mapping width and the concentration of edges around shared endpoints.
 
-The small endpoint-query times and much larger diagnostic times measure different operations. The investigator sorts all ordered occurrence triples before filtering for edges and calls the cubic source oracle through its projection comparison. It also materializes incompatible joins, whose output size can grow with the product of two matching edge sets. An adjacency-based path scan and query-specific projection comparisons are the next performance targets. A future benchmark should include larger graphs, sparse and incomplete mappings, peak memory, and multiple runs on different machines. Current timings describe these synthetic workloads and this implementation.
+The small endpoint-query times and much larger diagnostic times measure different operations. The original investigator sorted all ordered occurrence triples before filtering for edges and called the cubic source oracle through its projection comparison. It also materialized incompatible joins, whose output size can grow with the product of two matching edge sets. Current timings describe these synthetic workloads and this implementation.
+
+## Investigator optimization
+
+The optimized implementation walks sorted adjacency lists and computes the projected answer for the requested labels. The known witnesses give the endpoint-join answer whenever the projection retains both label pairs. The all-query representation benchmark still runs the independent oracle. Witness order and relation IDs remain part of the exported record.
+
+A paired rerun used the same 16 graphs and the same supported query per graph, defined as the first supported label triple in lexicographic order. Both versions ran in one Python process, with the starting version alternating by workload. Each version ran once to warm up and seven times for measurement. The baseline is pinned to `95ad3a8`. The [remeasurement](investigator_remeasurement.json) contains raw samples. The earlier table reports its original run, where the baseline was slower. Use the paired measurements for the speed comparison.
+
+| 128-action workload | Baseline median | Optimized median |
+|---|---:|---:|
+| Chain, one label | 351.360 ms | 0.255 ms |
+| Chain, two labels | 354.608 ms | 0.471 ms |
+| Hub, one label | 363.882 ms | 0.187 ms |
+| Hub, two labels | 362.759 ms | 0.249 ms |
+
+Full answer records matched on all 532 bundled case queries, 600 deterministic synthetic comparisons with and without mapping bounds, and all 16 timed workloads. The synthetic comparison used seed 835 and included shuffled relation order, multiple relation IDs per edge, unknown mappings and multiple known labels. The paired run loads the pinned baseline from Git history.
+
+```sh
+python -m examples.compare_investigator_runtime --output outputs/investigator_remeasurement.json
+```
+
+The adjacency scan avoids all-triples enumeration. Sorting costs scale with the edge count, and connected-path work scales with the paths visited. Listing incompatible projected joins still examines the cross-product of the two matching edge sets. Highly repetitive labels or graphs with many witnesses can therefore increase both latency and response size. Measurements cover engine execution on synthetic graphs up to 128 actions.

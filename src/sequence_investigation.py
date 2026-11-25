@@ -3,9 +3,9 @@
 Empty mapping sets mean unknown labels, not confirmed absence of a technique.
 All conclusions are relative to retained occurrences and explicit BEFORE edges.
 """
-from itertools import permutations
+from collections import defaultdict
 
-from src.occurrence_queries import evaluate, validate
+from src.occurrence_queries import validate
 
 
 def investigate(mappings, relations, query, *, mapping_domains=None):
@@ -34,13 +34,22 @@ def investigate(mappings, relations, query, *, mapping_domains=None):
             if len(labels) != len(set(labels)):
                 raise ValueError("Duplicate domain label")
             domains[node] = set(labels)
+    ordered_edges = sorted(edges)
+    successors = defaultdict(list)
+    for u, v in ordered_edges:
+        successors[u].append(v)
+    # Validation guarantees a DAG, so a connected two-edge path has three
+    # distinct endpoints. Sorted traversal preserves witness order in exports.
+    possible_nodes = [
+        {node for node, labels in mappings.items() if not labels or technique in labels}
+        for technique in query
+    ]
+    first, middle, last = possible_nodes
+    paths = ((u, v, w) for u, v in ordered_edges if u in first and v in middle
+             for w in successors.get(v, ()) if w in last)
     witnesses, unresolved, excluded = [], [], []
-    for path in sorted(permutations(mappings, 3)):
+    for path in paths:
         u, v, w = path
-        if (u, v) not in edges or (v, w) not in edges:
-            continue
-        if any(mappings[node] and label not in mappings[node] for node, label in zip(path, query)):
-            continue
         missing = [{"occurrence_id": n, "required_technique": t} for n, t in zip(path, query) if not mappings[n]]
         item = {"occurrence_ids": list(path), "relation_ids": sorted(by_edge[(u, v)] + by_edge[(v, w)])}
         blocked = [{"occurrence_id": n, "required_technique": t, "allowed_techniques": sorted(domains[n])}
@@ -52,32 +61,30 @@ def investigate(mappings, relations, query, *, mapping_domains=None):
             unresolved.append({**item, "required_mappings": missing})
         else:
             witnesses.append(item)
-    result = evaluate(mappings, edges)
+    left = [(u, v) for u, v in ordered_edges if query[0] in mappings[u] and query[1] in mappings[v]]
+    right = [(u, v) for u, v in ordered_edges if query[1] in mappings[u] and query[2] in mappings[v]]
+    joins = []
+    for a in left:
+        for b in right:
+            if a[1] == b[0]:
+                continue  # A shared middle in a DAG gives a valid three-action witness.
+            reasons = ["MIDDLE_OCCURRENCE_MISMATCH"]
+            if a == b:
+                reasons.append("REUSED_EDGE_IMAGE")
+            if len(set(a + b)) < 3:
+                reasons.append("FEWER_THAN_THREE_OCCURRENCES")
+            joins.append({"left_occurrences": list(a), "right_occurrences": list(b),
+                          "left_relation_ids": sorted(by_edge[a]), "right_relation_ids": sorted(by_edge[b]),
+                          "reasons": reasons})
     comparisons = {}
+    has_diagonal = query[0] == query[1] or query[1] == query[2]
     for name, retain_loops in (("distinct_pairs", False), ("loop_pairs", True)):
-        joins = []
-        if retain_loops or (query[0] != query[1] and query[1] != query[2]):
-            left = sorted((u, v) for u, v in edges if query[0] in mappings[u] and query[1] in mappings[v])
-            right = sorted((u, v) for u, v in edges if query[1] in mappings[u] and query[2] in mappings[v])
-            for a in left:
-                for b in right:
-                    if a[1] == b[0] and len({a[0], a[1], b[1]}) == 3:
-                        continue
-                    reasons = []
-                    if a[1] != b[0]:
-                        reasons.append("MIDDLE_OCCURRENCE_MISMATCH")
-                    if a == b:
-                        reasons.append("REUSED_EDGE_IMAGE")
-                    if len(set(a + b)) < 3:
-                        reasons.append("FEWER_THAN_THREE_OCCURRENCES")
-                    joins.append({"left_occurrences": list(a), "right_occurrences": list(b),
-                                  "left_relation_ids": sorted(by_edge[a]), "right_relation_ids": sorted(by_edge[b]),
-                                  "reasons": reasons})
-        returned = query in result["answers"][name]
+        allowed = retain_loops or not has_diagonal
+        returned = allowed and bool(left and right)
         comparisons[name] = {
             "returned": returned,
-            "endpoint_join_returned": query in result["answers"][name + "_with_endpoint_join"],
-            "incompatible_joins": joins,
+            "endpoint_join_returned": allowed and bool(witnesses),
+            "incompatible_joins": joins if allowed else [],
             "diagonal_suppression": bool(witnesses) and not returned and not retain_loops,
             "unsupported_positive": returned and not witnesses and not unresolved,
         }

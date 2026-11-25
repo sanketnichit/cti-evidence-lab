@@ -5,6 +5,7 @@ from pathlib import Path
 
 from examples.investigation_benchmark import run_checks
 from scripts.investigate_sequence import certificate, load_case, verify_certificate
+from src.occurrence_queries import evaluate
 from src.sequence_investigation import investigate
 
 
@@ -13,6 +14,24 @@ def edge(key, u, v):
 
 
 class InvestigationTests(unittest.TestCase):
+    def test_query_specific_projection_matches_full_reference(self):
+        from itertools import product
+
+        mappings = {"d": {"A"}, "b": {"B", "A"}, "c": {"B"}, "a": {"A"}, "e": set()}
+        relations = [edge("bc2", "b", "c"), edge("de", "d", "e"),
+                     edge("ab", "a", "b"), edge("bc1", "b", "c"), edge("cd", "c", "d")]
+        edges = {(r["source_event"], r["target_event"]) for r in relations}
+        reference = evaluate(mappings, edges)
+        for query in product("AB", repeat=3):
+            result = investigate(mappings, relations, query)
+            for view, comparison in result["projection_comparisons"].items():
+                self.assertEqual(comparison["returned"], query in reference["answers"][view])
+                self.assertEqual(comparison["endpoint_join_returned"],
+                                 query in reference["answers"][view + "_with_endpoint_join"])
+        answer = investigate(mappings, relations, ["A", "B", "B"])
+        self.assertEqual(answer["known_witnesses"][0],
+                         {"occurrence_ids": ["a", "b", "c"], "relation_ids": ["ab", "bc1", "bc2"]})
+
     def test_disconnected_join_identifies_both_distinct_middle_occurrences(self):
         r = investigate({"u": {"A"}, "v": {"B"}, "w": {"B"}, "x": {"C"}}, [edge("uv", "u", "v"), edge("wx", "w", "x")], ["A", "B", "C"])
         self.assertEqual(r["status"], "NOT_SUPPORTED")
