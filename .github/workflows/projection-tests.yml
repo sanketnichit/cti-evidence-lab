@@ -102,14 +102,14 @@ jobs:
           node scripts/test_investigation_browser.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright"
           python scripts/investigate_sequence.py --verify outputs/investigation/browser-export.json
           python scripts/investigate_sequence.py --verify outputs/investigation/browser-cisa-export.json
-      - name: Check offline investigator in Firefox
-        env:
-          CTI_BROWSER_ENGINE: firefox
+      - name: Check offline investigator in Firefox and WebKit
         run: |
-          node "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright/cli.js" install --with-deps firefox
-          node scripts/test_investigation_browser.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright"
-          python scripts/investigate_sequence.py --verify outputs/investigation/browser-firefox-export.json
-          python scripts/investigate_sequence.py --verify outputs/investigation/browser-firefox-cisa-export.json
+          node "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright/cli.js" install --with-deps firefox webkit
+          for engine in firefox webkit; do
+            CTI_BROWSER_ENGINE="$engine" node scripts/test_investigation_browser.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright"
+            python scripts/investigate_sequence.py --verify "outputs/investigation/browser-${engine}-export.json"
+            python scripts/investigate_sequence.py --verify "outputs/investigation/browser-${engine}-cisa-export.json"
+          done
       - name: Reproduce the full study from the clean checkout
         run: python scripts/reproduce_study.py --output-dir outputs/ci-reproduction
       - name: Upload the offline investigator

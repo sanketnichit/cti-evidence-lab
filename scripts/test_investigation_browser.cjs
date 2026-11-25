@@ -1,17 +1,18 @@
-/* Run against the generated offline file in Chromium or Firefox.
+/* Run against the generated offline file in Chromium, Firefox or WebKit.
  * node scripts/test_investigation_browser.cjs /path/to/playwright [publisher.html]
- * Set CTI_BROWSER_ENGINE=firefox for Firefox. CTI_BROWSER_EXECUTABLE can
+ * Set CTI_BROWSER_ENGINE to firefox or webkit. CTI_BROWSER_EXECUTABLE can
  * override the executable for a local run.
  */
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const {pathToFileURL} = require('node:url');
-const {chromium, firefox} = require(process.argv[2] ? path.resolve(process.argv[2]) : 'playwright');
+const {chromium, firefox, webkit} = require(process.argv[2] ? path.resolve(process.argv[2]) : 'playwright');
 const engine = process.env.CTI_BROWSER_ENGINE || 'chromium';
-const browserType = {chromium, firefox}[engine];
-if (!browserType) throw Error('CTI_BROWSER_ENGINE must be chromium or firefox');
-const prefix = engine === 'chromium' ? 'browser' : 'browser-firefox';
+const engines = {chromium, firefox, webkit};
+if (!Object.hasOwn(engines, engine)) throw Error('CTI_BROWSER_ENGINE must be chromium, firefox or webkit');
+const browserType = engines[engine];
+const prefix = engine === 'chromium' ? 'browser' : `browser-${engine}`;
 
 const output = path.resolve(__dirname, '../outputs/investigation');
 const artifact = pathToFileURL(path.join(output, 'index.html')).href;
@@ -32,7 +33,9 @@ async function assertLayout(page) {
 }
 
 async function checkWidth(browser, width) {
-    const context = await browser.newContext({viewport: {width, height: 900}, offline: true});
+    // WebKit's offline emulation blocks file navigation. The route below
+    // blocks HTTP and HTTPS in every engine while leaving local files readable.
+    const context = await browser.newContext({viewport: {width, height: 900}, offline: engine !== 'webkit'});
     const requests = [];
     await context.route(/^https?:/, async route => {
         requests.push(route.request().url());
