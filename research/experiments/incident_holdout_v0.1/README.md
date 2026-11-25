@@ -42,6 +42,22 @@ python scripts/incident_source_review.py --validate /path/to/extracted-return
 
 Keep the first submissions and a record of which source version each reviewer used. Paragraph locations refer to the opening prose under Case Summary. Resolve version differences against the recorded source hashes before comparing judgments. Structural validation checks form completeness, references and cycles in retained ordering. Semantic decisions require checking the source.
 
-After receiving the independent records, align candidate actions based on evidence, event scope and granularity before comparing technique or relation decisions. Record one-to-one matches, splits, merges and unmatched actions. Keep disagreements over action identity visible. Only compare mapping and temporal labels on aligned candidates. Freeze the alignment and candidate pair denominator before calculating agreement. The union of proposed relations is a candidate set with selection effects. An unlisted pair counts as an unrecorded decision unless the reviewer explicitly rejected it. Keep raw disagreements and adjudicated decisions separate, including any disagreements that remain unresolved after discussion.
+### Comparing two returns
 
-Report the number of complete, partial and inaccessible readings, prior exposure, matched actions and assessable pair decisions. If enough matched decisions exist, report agreement with denominators and the decision table. For two reports, descriptive counts and worked disagreements are more informative than a general estimate of reliability. No independent source-review results have been collected.
+Generate a blank alignment from two validated return directories. Keep those directories, the alignment and the output private.
+
+```sh
+python scripts/compare_incident_reviews.py outputs/returned/R01 outputs/returned/R02 --output outputs/review-comparison/alignment.json
+```
+
+For each report, set `source_basis` to `MATCHING`, `DIFFERENT` or `UNVERIFIED` and document the basis in `source_note`. Use `MATCHING` when the same saved snapshot was supplied or the Case Summary versions were confirmed to match. The tool records the coordinator's judgment. It compares decisions when both reviews are complete and the basis is matching. Leave `groups` empty for other reports.
+
+Align actions using source evidence, incident scope and granularity before consulting the technique IDs or relation decisions. In `groups`, account for each submitted action once. Each group specifies `left` and `right` arrays of action IDs and a short `reason`. One ID on each side is a one-to-one match. Multiple IDs record a split, merge or many-to-many alignment. For an unmatched action, use one ID and an empty array on the other side. Preserve the completed alignment before scoring.
+
+```sh
+python scripts/compare_incident_reviews.py outputs/returned/R01 outputs/returned/R02 --alignment outputs/review-comparison/alignment.json --output outputs/review-comparison/descriptive-results.json
+```
+
+The result binds the exact returns and alignment by SHA-256 and preserves completion and prior exposure. Eligibility uses one-to-one matches. Outcomes and mappings use the one-to-one actions retained by both reviewers. Split, merged and unmatched actions contribute to alignment coverage. The candidate relation set is the union of directed pairs that either reviewer recorded between mutually retained one-to-one actions. Opposite directions stay separate. Each missing decision is `UNRECORDED`. Only pairs with a decision on both sides enter the exact-match numerator and denominator. The result preserves the candidate rows and the counts left outside the comparable set. Keep raw disagreements and subsequent adjudication in separate records.
+
+The selected pair set is shaped by both reviewers' submissions. For two reports, report descriptive counts and worked disagreements with their denominators. Prior exposure should accompany any interpretation. No independent source-review results have been collected.

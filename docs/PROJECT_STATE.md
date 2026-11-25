@@ -19,6 +19,7 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | RDP sequence extension | Same intrusion; four actions, four ordering links and seven verified passage bindings | Cleanup mapping unresolved; query comparison conditional on that mapping |
 | Second intrusion | Three-action core query; six-action extension, exact-technique comparison and 13 verified bindings | Ordinary success in the core; extended join error conditional on the archive mapping |
 | Chronological incident holdout | Two DFIR reports; one agreement case, one with three unsupported ordinary returns | Same-publisher conditional interpretations |
+| Independent source review | Answer-free packets and alignment-based descriptive comparison for two returns | Participant returns pending |
 | CISA extension | Two advisories; one unassessed, one with three unresolved loop returns | Purposive search frame |
 | Microsoft series prefix | One report unassessed from the prose and one publisher link pointing to a different installment | One accessible selected report |
 | Runtime and output cost | 16 scaling workloads and 16 repeated-label workloads with exact witness and join counts | Synthetic graphs and single-machine timing |

@@ -75,7 +75,7 @@ def check_evidence(row, paragraph_limits):
         raise ValueError("Evidence paragraph is outside the recorded Case Summary")
 
 
-def validate(directory):
+def load_return(directory):
     identity = read_json(directory / "packet.json")
     if identity != manifest(identity["reviewer_id"]):
         raise ValueError("Unexpected packet identity or version")
@@ -107,7 +107,7 @@ def validate(directory):
             raise ValueError("Use a parent technique identifier or leave the mapping empty")
         check_evidence(row, paragraph_limits)
         actions[key] = row
-    links = set()
+    links = {}
     before = {post: set() for post in POSTS}
     for row in rows(directory, "relations.csv"):
         post, source, target = row["post_id"], row["from_action"], row["to_action"]
@@ -122,10 +122,16 @@ def validate(directory):
         check_evidence(row, paragraph_limits)
         if row["decision"] == "BEFORE":
             before[post].add((source, target))
-        links.add(key)
+        links[key] = row
     for post in POSTS:
         validate_ordering({action: set() for case, action in actions if case == post}, before[post])
-    return {"reviewer_id": identity["reviewer_id"], "reports": completion,
+    return identity, reviews, actions, links
+
+
+def validate(directory):
+    identity, reviews, actions, links = load_return(directory)
+    return {"reviewer_id": identity["reviewer_id"],
+            "reports": {row["post_id"]: row["completion"] for row in reviews},
             "action_rows": len(actions), "relation_rows": len(links),
             "status": "STRUCTURE_CHECKED"}
 
