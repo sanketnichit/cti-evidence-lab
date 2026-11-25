@@ -16,6 +16,8 @@ Outcome eligibility, occurrence grouping, incident scope, mapping alternatives a
 
 Further comparison concerns occurrence identity, relation semantics, provenance and supported queries in published CTI representations. The deterministic projection is not a run of ChronoCTI's learned pipeline; Attack Flow dependencies are not substituted for observed temporal relations.
 
+The [closest-system comparison](../research/RELATED_WORK_MATRIX.md#closest-system-comparison) records the relation and evaluation contracts. The [scaling benchmark](../research/experiments/sequence_scaling_v0.1/README.md) measures compact storage and runtime, and identifies traversal of all occurrence triples as a diagnostic bottleneck.
+
 ## Research release criteria
 
 A research release requires a bounded contribution, explicit case selection, traceable evidence, reproducible reported results and an audit of material interpretation errors. Independent review and population estimates may only be reported when supported by actual study procedures and data. Artifact packaging and software tests do not by themselves establish scientific validity.
