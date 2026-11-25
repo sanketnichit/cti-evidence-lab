@@ -43,3 +43,26 @@ python -m examples.compare_investigator_runtime --output outputs/investigator_re
 ```
 
 The adjacency scan avoids all-triples enumeration. Sorting costs scale with the edge count, and connected-path work scales with the paths visited. Listing incompatible projected joins still examines the cross-product of the two matching edge sets. Highly repetitive labels or graphs with many witnesses can therefore increase both latency and response size. Measurements cover engine execution on synthetic graphs up to 128 actions.
+
+## Cost of expanding query evidence
+
+The investigator also exposes a count-only mode through `investigate(..., summary_only=True)`. It preserves the answer status, the projection flags and the exact number of entries in each evidence list. Counts use distinct occurrence edges even if several source relations document the same edge. The offline artifact and existing certificate exports continue to include individual witnesses and relation IDs.
+
+For each eligible middle occurrence, multiply the number of eligible incoming edges by the number of eligible outgoing edges and sum over middle occurrences. The DAG constraint ensures that every counted path has three distinct actions. Counting only known labels gives the supported witness count. Comparing it with the count that admits unknown labels under the supplied bounds gives the unresolved count. Comparing the bounded and open counts gives the number excluded by the bounds. For projected known-label edges, subtract the supported witness count from the product of the two matching edge-set sizes. The difference is the number of joins with incompatible middle IDs. The distinct-pair view still suppresses same-technique edges.
+
+The [output benchmark](diagnostic_output.json) fixes the query to `A → A → A`. At each width *w*, it uses *w* disconnected edges or a hub with *w* incoming and *w* outgoing edges. The hub is mapped to A, withheld with no bounds, or withheld with B as its only allowed label. All other actions are mapped to A. The disconnected graph has *w*² combinations, all incompatible. The mapped hub has *w*² connected witnesses and 3*w*² incompatible combinations. In the other two hub settings, *w*² paths are unresolved or excluded, respectively. These closed-form counts are checked at every size. The code also checks every expanded record against its count-only counterpart at widths 16, 64 and 128.
+
+The timings include query validation, answer construction and compact UTF-8 JSON encoding. Each operation has one warm-up and seven measured repetitions on a Windows x86-64 machine with Python 3.12.14. They exclude source metadata, browser rendering and network transfer.
+
+| Workload at width 128 | Dominant evidence entries | Expanded JSON | Count-only JSON | Median expanded / count-only |
+|---|---:|---:|---:|---:|
+| Disconnected edges | 16,384 incompatible joins | 2.94 MB | 727 B | 102.54 / 0.80 ms |
+| Mapped hub | 16,384 witnesses and 49,152 incompatible joins | 9.80 MB | 726 B | 519.43 / 1.27 ms |
+| Unmapped hub | 16,384 unresolved witnesses | 2.40 MB | 734 B | 129.77 / 0.91 ms |
+| Bounded hub | 16,384 excluded witnesses | 2.90 MB | 911 B | 143.20 / 1.08 ms |
+
+At width 4,096, the mapped hub has 8,193 occurrences. Its count-only result reports 16,777,216 witnesses and 50,331,648 incompatible joins in 732 bytes, with a median of 69.05 ms. Only count-only results are measured at that width. Once the graph is validated, path counting requires a fixed number of vertex and edge passes for this three-label query. The counts are exact for the supplied graph. The expanded record is required to inspect individual occurrences, relation evidence or mismatch reasons. These workloads isolate output size using deliberately repetitive labels. They do not measure production traffic or analyst performance.
+
+```sh
+python -m examples.measure_diagnostic_output --output outputs/diagnostic_output.json
+```

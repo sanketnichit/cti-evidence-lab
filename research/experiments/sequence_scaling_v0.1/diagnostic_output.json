@@ -1,0 +1,610 @@
+{
+  "python": "3.12.14",
+  "system": "Windows",
+  "machine": "AMD64",
+  "logical_cpus": 12,
+  "query": [
+    "A",
+    "A",
+    "A"
+  ],
+  "repeats": 7,
+  "workloads": [
+    {
+      "mode": "disjoint_edges",
+      "width": 16,
+      "occurrences": 32,
+      "edges": 16,
+      "status": "NOT_SUPPORTED",
+      "known": 0,
+      "unresolved": 0,
+      "excluded": 0,
+      "incompatible_loop_joins": 256,
+      "expanded": {
+        "json_bytes": 47028,
+        "query_and_json_ms": {
+          "median": 1.6031,
+          "samples": [
+            1.3513,
+            2.7203,
+            1.8914,
+            1.5088,
+            1.6031,
+            1.1745,
+            3.6427
+          ]
+        }
+      },
+      "counts": {
+        "json_bytes": 725,
+        "query_and_json_ms": {
+          "median": 0.1378,
+          "samples": [
+            0.1431,
+            0.1378,
+            0.1323,
+            0.1322,
+            0.1324,
+            0.1408,
+            0.2349
+          ]
+        }
+      }
+    },
+    {
+      "mode": "mapped_hub",
+      "width": 16,
+      "occurrences": 33,
+      "edges": 32,
+      "status": "SUPPORTED",
+      "known": 256,
+      "unresolved": 0,
+      "excluded": 0,
+      "incompatible_loop_joins": 768,
+      "counts": {
+        "json_bytes": 722,
+        "query_and_json_ms": {
+          "median": 0.1855,
+          "samples": [
+            0.1881,
+            0.1801,
+            0.2615,
+            0.2016,
+            0.1855,
+            0.1836,
+            0.1697
+          ]
+        }
+      },
+      "expanded": {
+        "json_bytes": 153502,
+        "query_and_json_ms": {
+          "median": 4.6799,
+          "samples": [
+            4.4696,
+            5.1891,
+            7.2881,
+            4.1369,
+            4.2783,
+            5.4042,
+            4.6799
+          ]
+        }
+      }
+    },
+    {
+      "mode": "unmapped_hub",
+      "width": 16,
+      "occurrences": 33,
+      "edges": 32,
+      "status": "UNRESOLVED_MAPPING",
+      "known": 0,
+      "unresolved": 256,
+      "excluded": 0,
+      "incompatible_loop_joins": 0,
+      "expanded": {
+        "json_bytes": 37675,
+        "query_and_json_ms": {
+          "median": 1.5565,
+          "samples": [
+            1.5171,
+            1.4625,
+            1.4141,
+            1.6863,
+            1.6345,
+            1.5565,
+            2.5321
+          ]
+        }
+      },
+      "counts": {
+        "json_bytes": 732,
+        "query_and_json_ms": {
+          "median": 0.16,
+          "samples": [
+            0.1612,
+            0.16,
+            0.1568,
+            0.1731,
+            0.1486,
+            0.1637,
+            0.1443
+          ]
+        }
+      }
+    },
+    {
+      "mode": "bounded_hub",
+      "width": 16,
+      "occurrences": 33,
+      "edges": 32,
+      "status": "NOT_SUPPORTED",
+      "known": 0,
+      "unresolved": 0,
+      "excluded": 256,
+      "incompatible_loop_joins": 0,
+      "counts": {
+        "json_bytes": 909,
+        "query_and_json_ms": {
+          "median": 0.1991,
+          "samples": [
+            0.1991,
+            0.202,
+            0.1979,
+            0.3235,
+            0.2424,
+            0.1988,
+            0.1977
+          ]
+        }
+      },
+      "expanded": {
+        "json_bytes": 45785,
+        "query_and_json_ms": {
+          "median": 1.5778,
+          "samples": [
+            2.0293,
+            1.7887,
+            1.5378,
+            1.5778,
+            3.8842,
+            1.5152,
+            1.3626
+          ]
+        }
+      }
+    },
+    {
+      "mode": "disjoint_edges",
+      "width": 64,
+      "occurrences": 128,
+      "edges": 64,
+      "status": "NOT_SUPPORTED",
+      "known": 0,
+      "unresolved": 0,
+      "excluded": 0,
+      "incompatible_loop_joins": 4096,
+      "counts": {
+        "json_bytes": 726,
+        "query_and_json_ms": {
+          "median": 0.2725,
+          "samples": [
+            0.3953,
+            0.3349,
+            0.2503,
+            0.2505,
+            0.2697,
+            0.2725,
+            0.4622
+          ]
+        }
+      },
+      "expanded": {
+        "json_bytes": 735876,
+        "query_and_json_ms": {
+          "median": 24.2384,
+          "samples": [
+            26.547,
+            25.6868,
+            21.1089,
+            22.321,
+            24.2384,
+            19.8406,
+            25.03
+          ]
+        }
+      }
+    },
+    {
+      "mode": "mapped_hub",
+      "width": 64,
+      "occurrences": 129,
+      "edges": 128,
+      "status": "SUPPORTED",
+      "known": 4096,
+      "unresolved": 0,
+      "excluded": 0,
+      "incompatible_loop_joins": 12288,
+      "expanded": {
+        "json_bytes": 2440766,
+        "query_and_json_ms": {
+          "median": 95.0354,
+          "samples": [
+            95.0354,
+            90.7591,
+            108.0924,
+            117.9518,
+            127.0059,
+            88.4815,
+            91.0891
+          ]
+        }
+      },
+      "counts": {
+        "json_bytes": 725,
+        "query_and_json_ms": {
+          "median": 0.4782,
+          "samples": [
+            0.5008,
+            0.4749,
+            0.5749,
+            0.4874,
+            0.4577,
+            0.4782,
+            0.4543
+          ]
+        }
+      }
+    },
+    {
+      "mode": "unmapped_hub",
+      "width": 64,
+      "occurrences": 129,
+      "edges": 128,
+      "status": "UNRESOLVED_MAPPING",
+      "known": 0,
+      "unresolved": 4096,
+      "excluded": 0,
+      "incompatible_loop_joins": 0,
+      "counts": {
+        "json_bytes": 733,
+        "query_and_json_ms": {
+          "median": 0.4412,
+          "samples": [
+            0.6321,
+            0.5051,
+            0.4694,
+            0.4412,
+            0.4221,
+            0.4187,
+            0.4233
+          ]
+        }
+      },
+      "expanded": {
+        "json_bytes": 595787,
+        "query_and_json_ms": {
+          "median": 28.6455,
+          "samples": [
+            30.6178,
+            25.0521,
+            29.7834,
+            25.9291,
+            31.5083,
+            26.8932,
+            28.6455
+          ]
+        }
+      }
+    },
+    {
+      "mode": "bounded_hub",
+      "width": 64,
+      "occurrences": 129,
+      "edges": 128,
+      "status": "NOT_SUPPORTED",
+      "known": 0,
+      "unresolved": 0,
+      "excluded": 4096,
+      "incompatible_loop_joins": 0,
+      "expanded": {
+        "json_bytes": 722937,
+        "query_and_json_ms": {
+          "median": 31.6795,
+          "samples": [
+            35.5787,
+            30.2,
+            30.278,
+            32.1212,
+            36.3363,
+            31.6795,
+            28.9535
+          ]
+        }
+      },
+      "counts": {
+        "json_bytes": 910,
+        "query_and_json_ms": {
+          "median": 0.4426,
+          "samples": [
+            0.5595,
+            0.498,
+            0.4521,
+            0.4426,
+            0.3961,
+            0.3746,
+            0.4261
+          ]
+        }
+      }
+    },
+    {
+      "mode": "disjoint_edges",
+      "width": 128,
+      "occurrences": 256,
+      "edges": 128,
+      "status": "NOT_SUPPORTED",
+      "known": 0,
+      "unresolved": 0,
+      "excluded": 0,
+      "incompatible_loop_joins": 16384,
+      "counts": {
+        "json_bytes": 727,
+        "query_and_json_ms": {
+          "median": 0.8017,
+          "samples": [
+            1.0118,
+            0.8594,
+            0.804,
+            0.7694,
+            0.8017,
+            0.7098,
+            0.7773
+          ]
+        }
+      },
+      "expanded": {
+        "json_bytes": 2944580,
+        "query_and_json_ms": {
+          "median": 102.5427,
+          "samples": [
+            88.2111,
+            95.486,
+            98.6669,
+            103.8186,
+            102.5427,
+            119.5198,
+            104.4015
+          ]
+        }
+      }
+    },
+    {
+      "mode": "mapped_hub",
+      "width": 128,
+      "occurrences": 257,
+      "edges": 256,
+      "status": "SUPPORTED",
+      "known": 16384,
+      "unresolved": 0,
+      "excluded": 0,
+      "incompatible_loop_joins": 49152,
+      "expanded": {
+        "json_bytes": 9804222,
+        "query_and_json_ms": {
+          "median": 519.4263,
+          "samples": [
+            536.9483,
+            487.7526,
+            519.4263,
+            537.417,
+            463.7149,
+            534.6645,
+            494.5261
+          ]
+        }
+      },
+      "counts": {
+        "json_bytes": 726,
+        "query_and_json_ms": {
+          "median": 1.267,
+          "samples": [
+            1.267,
+            1.6345,
+            2.7585,
+            1.2972,
+            1.1771,
+            1.1608,
+            1.1153
+          ]
+        }
+      }
+    },
+    {
+      "mode": "unmapped_hub",
+      "width": 128,
+      "occurrences": 257,
+      "edges": 256,
+      "status": "UNRESOLVED_MAPPING",
+      "known": 0,
+      "unresolved": 16384,
+      "excluded": 0,
+      "incompatible_loop_joins": 0,
+      "counts": {
+        "json_bytes": 734,
+        "query_and_json_ms": {
+          "median": 0.9145,
+          "samples": [
+            1.026,
+            0.9145,
+            0.7907,
+            0.7721,
+            0.7442,
+            1.2076,
+            1.1357
+          ]
+        }
+      },
+      "expanded": {
+        "json_bytes": 2395083,
+        "query_and_json_ms": {
+          "median": 129.7665,
+          "samples": [
+            140.1507,
+            150.3928,
+            129.9539,
+            113.2102,
+            120.4119,
+            122.1262,
+            129.7665
+          ]
+        }
+      }
+    },
+    {
+      "mode": "bounded_hub",
+      "width": 128,
+      "occurrences": 257,
+      "edges": 256,
+      "status": "NOT_SUPPORTED",
+      "known": 0,
+      "unresolved": 0,
+      "excluded": 16384,
+      "incompatible_loop_joins": 0,
+      "expanded": {
+        "json_bytes": 2903161,
+        "query_and_json_ms": {
+          "median": 143.1987,
+          "samples": [
+            145.038,
+            140.6925,
+            133.8672,
+            133.5234,
+            181.4135,
+            160.5507,
+            143.1987
+          ]
+        }
+      },
+      "counts": {
+        "json_bytes": 911,
+        "query_and_json_ms": {
+          "median": 1.0781,
+          "samples": [
+            1.0781,
+            1.6243,
+            1.2477,
+            1.1313,
+            1.0691,
+            1.0691,
+            1.0186
+          ]
+        }
+      }
+    },
+    {
+      "mode": "disjoint_edges",
+      "width": 4096,
+      "occurrences": 8192,
+      "edges": 4096,
+      "status": "NOT_SUPPORTED",
+      "known": 0,
+      "unresolved": 0,
+      "excluded": 0,
+      "incompatible_loop_joins": 16777216,
+      "counts": {
+        "json_bytes": 730,
+        "query_and_json_ms": {
+          "median": 44.4433,
+          "samples": [
+            40.0787,
+            53.3654,
+            43.0397,
+            40.1255,
+            44.4433,
+            46.0294,
+            58.7534
+          ]
+        }
+      }
+    },
+    {
+      "mode": "mapped_hub",
+      "width": 4096,
+      "occurrences": 8193,
+      "edges": 8192,
+      "status": "SUPPORTED",
+      "known": 16777216,
+      "unresolved": 0,
+      "excluded": 0,
+      "incompatible_loop_joins": 50331648,
+      "counts": {
+        "json_bytes": 732,
+        "query_and_json_ms": {
+          "median": 69.0496,
+          "samples": [
+            63.0465,
+            85.9733,
+            69.0496,
+            74.7066,
+            87.1863,
+            68.4942,
+            61.0602
+          ]
+        }
+      }
+    },
+    {
+      "mode": "unmapped_hub",
+      "width": 4096,
+      "occurrences": 8193,
+      "edges": 8192,
+      "status": "UNRESOLVED_MAPPING",
+      "known": 0,
+      "unresolved": 16777216,
+      "excluded": 0,
+      "incompatible_loop_joins": 0,
+      "counts": {
+        "json_bytes": 737,
+        "query_and_json_ms": {
+          "median": 59.456,
+          "samples": [
+            53.0917,
+            51.255,
+            59.456,
+            56.2711,
+            62.2373,
+            60.6832,
+            65.5418
+          ]
+        }
+      }
+    },
+    {
+      "mode": "bounded_hub",
+      "width": 4096,
+      "occurrences": 8193,
+      "edges": 8192,
+      "status": "NOT_SUPPORTED",
+      "known": 0,
+      "unresolved": 0,
+      "excluded": 16777216,
+      "incompatible_loop_joins": 0,
+      "counts": {
+        "json_bytes": 914,
+        "query_and_json_ms": {
+          "median": 71.2464,
+          "samples": [
+            61.6945,
+            64.367,
+            73.9029,
+            71.2464,
+            82.0055,
+            76.0303,
+            70.8779
+          ]
+        }
+      }
+    }
+  ]
+}

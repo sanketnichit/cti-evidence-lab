@@ -40,6 +40,25 @@ class InvestigationTests(unittest.TestCase):
         self.assertEqual(p["incompatible_joins"][0]["left_occurrences"], ["u", "v"])
         self.assertEqual(p["incompatible_joins"][0]["right_occurrences"], ["w", "x"])
 
+    def test_count_only_matches_full_records_with_bounds_and_duplicate_edge_evidence(self):
+        from itertools import product
+
+        mappings = {"u": {"A", "B"}, "v": {"A", "B"}, "x": set(), "w": {"A", "B"}}
+        relations = [edge("uv1", "u", "v"), edge("uv2", "u", "v"), edge("vw", "v", "w"),
+                     edge("ux", "u", "x"), edge("xw", "x", "w"), edge("uw", "u", "w")]
+        for query, domains in product(product("AB", repeat=3), (None, {"x": {"B"}})):
+            with self.subTest(query=query, domains=domains):
+                full = investigate(mappings, relations, query, mapping_domains=domains)
+                for source, target in (("known_witnesses", "known_witness_count"),
+                                       ("unresolved_witnesses", "unresolved_witness_count"),
+                                       ("domain_excluded_witnesses", "domain_excluded_witness_count")):
+                    if source in full:
+                        full[target] = len(full.pop(source))
+                for projection in full["projection_comparisons"].values():
+                    projection["incompatible_join_count"] = len(projection.pop("incompatible_joins"))
+                self.assertEqual(investigate(mappings, relations, query, mapping_domains=domains,
+                                             summary_only=True), full)
+
     def test_unknown_mapping_is_query_specific(self):
         m = {"u": {"A"}, "v": set(), "w": {"C"}}
         e = [edge("uv", "u", "v"), edge("vw", "v", "w")]
