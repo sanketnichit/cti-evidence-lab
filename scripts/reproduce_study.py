@@ -32,6 +32,8 @@ from scripts.build_investigation import build as build_investigator
 from scripts.evaluate_external_sequences import DIRECTORY as EXTERNAL, load_records as load_external_records, run_evaluation, audit_sources as audit_external_sources, validate_recorded_source_audit
 from examples.bounded_mapping_checks import run_checks as run_bounded_mapping_checks
 from scripts.investigate_sequence import certificate as investigation_certificate, load_case as load_investigation_case
+from scripts.evaluate_incident_holdout import DIRECTORY as HOLDOUT, run as run_holdout
+from scripts.evaluate_cisa_extension import DIRECTORY as CISA, run as run_cisa
 
 
 def write_json(path, value):
@@ -156,6 +158,13 @@ def main():
     if json.loads(json.dumps(summarize_sensitivity(sensitivity))) != json.loads(expected_sensitivity.read_text(encoding="utf-8")):
         raise ValueError("Interpretation sensitivity summary differs from the published results")
     write_json(destination / "interpretation_sensitivity.json", sensitivity)
+    for filename, recorded, report in (
+        ("incident_holdout_results.json", HOLDOUT, run_holdout()),
+        ("cisa_extension_results.json", CISA, run_cisa()),
+    ):
+        if json.loads(json.dumps(report)) != json.loads((recorded / "results.json").read_text(encoding="utf-8")):
+            raise ValueError(f"Incident comparison differs from published results: {filename}")
+        write_json(destination / filename, report)
     write_json(destination / "bounded_mapping_checks.json", run_bounded_mapping_checks())
     bounds = json.loads((ROOT / "research/experiments/bounded_mapping_v0.1/archive_bound_assumption.json").read_text(encoding="utf-8"))
     write_json(destination / "bounded_mapping_assumption_example.json", investigation_certificate(
@@ -180,6 +189,7 @@ def main():
                        "rank_two_review.json", "rank_two_source_integrity.json",
                        "incident_sequence_results.json", "incident_source_integrity.json",
                        "investigation_checks.json", "sequence_investigator.html", "interpretation_sensitivity.json",
+                       "incident_holdout_results.json", "cisa_extension_results.json",
                        "external_sequence_results.json", "external_sequence_source_integrity.json",
                        "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json"]
     if args.pdf:

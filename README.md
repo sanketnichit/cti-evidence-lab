@@ -12,7 +12,7 @@ Ask whether three techniques form one connected occurrence sequence. Inspect the
 python scripts/build_investigation.py
 ```
 
-Open `outputs/investigation/index.html` in a browser. The artifact runs offline and includes both recorded intrusion cases. Optional local source loading reveals passages only after a snapshot-hash match. [Workflow, comparison with prior work and evaluation](research/INVESTIGATION_WORKFLOW_v0.1.md) define what the answers establish and what remains untested.
+Open `outputs/investigation/index.html` in a browser. The artifact runs offline with the two original intrusion cases. Optional local source loading reveals passages after a snapshot-hash match. [Workflow and evaluation](research/INVESTIGATION_WORKFLOW_v0.1.md)
 
 For unresolved mappings, the CLI can also [compare explicit candidate bounds](research/experiments/bounded_mapping_v0.1/README.md). Exports preserve the unrestricted answer and show which assumptions exclude a possible path.
 
@@ -30,7 +30,7 @@ Two occurrence graphs can have identical technique projections while supporting 
 - **Sequence ambiguity:** retaining self-loops does not recover occurrence identity. Endpoint-compatible joins and diagonal retention address different query failures.
 - **Source sensitivity:** the exploratory RDP case separates attempted actions, confirmed successes and withheld mappings, producing different eligible graphs.
 
-The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 set-valued-mapping graphs for connected-sequence queries. Their rates describe the constructed inputs, not incident prevalence or extraction accuracy. The original five-report AnnoCTR review, two separately fixed five-report extensions and two external intrusion cases remain exploratory; independent annotation agreement and population-level conclusions are not established.
+The controlled experiments enumerate 5,184 singleton-mapping graphs and 4,096 set-valued-mapping graphs. Four DFIR cases and two CISA advisories show agreement, unsupported joins and unresolved projected answers under the recorded interpretations. The fifteen AnnoCTR readings assess source suitability in three separate groups. The [manuscript](research/FEASIBILITY_REPORT_v0.1.md) distinguishes these results from independent annotation and prevalence claims.
 
 ## Research artifacts
 
@@ -39,7 +39,8 @@ The [analyst pilot](research/ANALYST_PILOT_v0.1.md) provides four ready-to-run p
 | Artifact | Contents |
 |---|---|
 | [Five-publisher evaluation](research/experiments/external_sequence_evaluation_v0.1/README.md) | Frozen selection, conditional procedures and no-advantage results |
-| [Research report](research/FEASIBILITY_REPORT_v0.1.md) | Question, source feasibility, representation experiments and limitations |
+| [Research manuscript](research/FEASIBILITY_REPORT_v0.1.md) | Formal result, experiments, source interpretations, runtime and limitations |
+| [DFIR holdout](research/experiments/incident_holdout_v0.1/README.md) and [CISA extension](research/experiments/cisa_incident_extension_v0.1/README.md) | Selected incident narratives, source bindings, and query comparisons |
 | [Query-fidelity study](research/QUERY_FIDELITY_STUDY_v0.1.md) | Counterexample, proof, four-way comparison and full confusion matrices |
 | [RDP case study](research/case_studies/dfir_rdp_v0.1/README.md) | Source-bound occurrence interpretation and outcome/mapping sensitivities |
 | [RDP sequence extension](research/case_studies/dfir_rdp_sequence_v0.2/README.md) | Four actions from the same intrusion; conditional sequence results and unresolved mapping coverage |

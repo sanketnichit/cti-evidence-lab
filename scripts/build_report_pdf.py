@@ -5,6 +5,7 @@ import argparse
 import re
 from html import escape
 from pathlib import Path
+from posixpath import normpath
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -14,7 +15,9 @@ def inline(text):
     def link(match):
         label, target = match.groups()
         if not target.startswith("https://"):
-            target = "https://github.com/sanketnichit/cti-evidence-lab/blob/main/research/" + target
+            location, separator, anchor = target.partition("#")
+            target = "https://github.com/sanketnichit/cti-evidence-lab/blob/main/" + normpath("research/" + location)
+            target += separator + anchor
         return f'<link href="{target}" color="#156276">{label}</link>'
     text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", link, text)
     text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
@@ -27,7 +30,7 @@ def build(destination):
     from reportlab.lib.enums import TA_LEFT
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.pagesizes import A4
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Preformatted, KeepTogether, CondPageBreak
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Preformatted, KeepTogether
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     styles = getSampleStyleSheet()
@@ -64,6 +67,8 @@ def build(destination):
                     rows.append([Paragraph(inline(c), styles["Cell"]) for c in cells])
                 i += 1
             widths = [100, 180, 215] if len(rows[0]) == 3 else [495 / len(rows[0])] * len(rows[0])
+            if len(rows[0]) == 2 and rows[0][0].getPlainText() == "Source group":
+                widths = [165, 330]
             if len(rows[0]) == 3 and rows[0][0].getPlainText() == "Representation":
                 widths = [235, 130, 130]
             table = Table(rows, colWidths=widths, repeatRows=1, hAlign="LEFT")
@@ -87,8 +92,6 @@ def build(destination):
         elif line.startswith("# "):
             story.append(Paragraph(inline(line[2:]), styles["ReportTitle"]))
         elif line.startswith(("## ", "### ")):
-            if line.startswith("## 7."):
-                story.append(CondPageBreak(250))
             story.append(Paragraph(inline(line.lstrip("# ")), styles["ReportHeading"]))
         else:
             story.append(Paragraph(inline(line), styles["ReportBody"]))
@@ -99,11 +102,11 @@ def build(destination):
         canvas.line(50, 43, A4[0] - 50, 43)
         canvas.setFont("Helvetica", 8)
         canvas.setFillColor(colors.HexColor("#50616b"))
-        canvas.drawString(50, 30, "CTI Evidence Lab | Exploratory feasibility study | November 2026")
+        canvas.drawString(50, 30, "CTI Evidence Lab | Research manuscript draft | November 2026")
         canvas.drawRightString(A4[0] - 50, 30, str(doc.page))
         canvas.restoreState()
     doc = SimpleDocTemplate(str(destination), pagesize=A4, rightMargin=50, leftMargin=50,
-                            topMargin=47, bottomMargin=58, title="Occurrence identity in technique-level CTI graphs",
+                            topMargin=47, bottomMargin=58, title="When technique graphs lose incident sequence evidence",
                             author="Sanket Nichit")
     doc.build(story, onFirstPage=footer, onLaterPages=footer)
     return destination
