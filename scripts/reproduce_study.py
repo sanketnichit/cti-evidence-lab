@@ -84,6 +84,10 @@ def main():
     parser.add_argument("--corpus-root", type=Path)
     parser.add_argument("--rdp-source-html", type=Path, help="Optional saved publisher HTML for the separate RDP case")
     parser.add_argument("--incident-source-html", type=Path, help="Optional saved publisher HTML for the next chronological incident case")
+    parser.add_argument("--holdout-source-directory", type=Path, help="Saved HTML for both DFIR holdout reports")
+    parser.add_argument("--cisa-pdf-directory", type=Path, help="Saved PDFs for both CISA advisories")
+    parser.add_argument("--microsoft-pdf-directory", type=Path, help="Saved Microsoft incident PDF and mislinked PDF")
+    parser.add_argument("--attack-taxonomy", type=Path, help="Pinned ATT&CK STIX file for checking the discovery tactic lists")
     parser.add_argument("--recover-crlf", action="store_true")
     parser.add_argument("--allow-dirty", action="store_true", help="Development only; manifest records uncommitted inputs")
     parser.add_argument("--pdf", action="store_true", help="Render the report; requires reportlab")
@@ -167,19 +171,27 @@ def main():
     if json.loads(json.dumps(summarize_input_errors(input_errors))) != json.loads(expected_errors.read_text(encoding="utf-8")):
         raise ValueError("Input error summary differs from the published results")
     write_json(destination / "interpretation_input_errors.json", input_errors)
-    for filename, recorded, report in (
-        ("incident_holdout_results.json", HOLDOUT, run_holdout()),
-        ("cisa_extension_results.json", CISA, run_cisa()),
-        ("microsoft_series_results.json", MICROSOFT, run_microsoft()),
+    for filename, recorded, runner, local_source, mode_key, local_mode in (
+        ("incident_holdout_results.json", HOLDOUT, run_holdout, args.holdout_source_directory,
+         "holdout_source_audit_mode", "LOCAL_HTML_RECHECKED"),
+        ("cisa_extension_results.json", CISA, run_cisa, args.cisa_pdf_directory,
+         "cisa_source_audit_mode", "LOCAL_PDFS_RECHECKED"),
+        ("microsoft_series_results.json", MICROSOFT, run_microsoft, args.microsoft_pdf_directory,
+         "microsoft_source_audit_mode", "LOCAL_INCIDENT_AND_MISLINKED_PDFS_RECHECKED"),
     ):
+        report = runner(local_source)
         if json.loads(json.dumps(report)) != json.loads((recorded / "results.json").read_text(encoding="utf-8")):
             raise ValueError(f"Incident comparison differs from published results: {filename}")
         write_json(destination / filename, report)
+        result[mode_key] = local_mode if local_source is not None else "RECORDED_AUDIT_ONLY"
     write_json(destination / "bounded_mapping_checks.json", run_bounded_mapping_checks())
-    discovery = run_discovery_bounds()
+    discovery = run_discovery_bounds(args.attack_taxonomy)
     if discovery != json.loads(DISCOVERY_RESULTS.read_text(encoding="utf-8")):
         raise ValueError("Discovery mapping sensitivity differs from the published results")
     write_json(destination / "discovery_mapping_sensitivity.json", discovery)
+    result["discovery_taxonomy_verification_mode"] = (
+        "LOCAL_PINNED_STIX_RECHECKED" if args.attack_taxonomy is not None else "RECORDED_TACTIC_LISTS_ONLY"
+    )
     index_storage = run_index_storage()
     if index_storage != json.loads(INDEX_RESULTS.read_text(encoding="utf-8")):
         raise ValueError("Answer-index storage differs from the published results")
@@ -237,7 +249,9 @@ def main():
         if archive.testzip() is not None:
             raise ValueError("Submission archive integrity failure")
     print("PASS: five test suites, package checksums, representation controls and submission archive.")
-    print("Source verification mode:", result["source_audit_mode"])
+    rechecked = [name for name, mode in result.items()
+                 if (name.endswith("_audit_mode") or name.endswith("_verification_mode")) and mode.startswith("LOCAL_")]
+    print("Local verification:", ", ".join(rechecked) if rechecked else "recorded evidence only")
     print(package.relative_to(ROOT).as_posix())
 
 

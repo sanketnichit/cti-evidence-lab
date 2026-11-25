@@ -43,6 +43,26 @@ The fixed rank-two extension adds five source readings and 22 passage bindings. 
 
 The second external intrusion has a separate publisher snapshot and 13 passage bindings. Supply it with `--incident-source-html /path/to/saved/source.html`; this option is distinct from `--rdp-source-html`, which verifies the original intrusion and its same-case extension.
 
+### Recheck all available inputs in one run
+
+Use the `all/` directory from the pinned Bosch Research AnnoCTR revision. The audit checks individual report text against the frozen frame hashes. Publisher URLs and snapshot identities are documented in the case records. [Pinned AnnoCTR revision](https://github.com/boschresearch/anno-ctr-lrec-coling-2024/tree/d510b6949e1938d47c93a43eedd562dc538439dc), [DFIR holdout](../research/experiments/incident_holdout_v0.1/README.md), [CISA advisories](../research/experiments/cisa_incident_extension_v0.1/README.md), [Microsoft reports](../research/experiments/microsoft_incident_series_v0.1/README.md)
+
+```sh
+python -m pip install pypdf==6.21.4
+python scripts/reproduce_study.py \
+  --corpus-root /path/to/AnnoCTR/all --recover-crlf \
+  --rdp-source-html /path/to/rdp.html \
+  --incident-source-html /path/to/domain-controller.html \
+  --holdout-source-directory /path/to/dfir-holdout \
+  --cisa-pdf-directory /path/to/cisa \
+  --microsoft-pdf-directory /path/to/microsoft \
+  --attack-taxonomy /path/to/enterprise-attack-12.1.json
+```
+
+The DFIR holdout directory uses `21520.html` and `22587.html`. The CISA directory uses `AA24-046A.pdf` and `AA25-266A.pdf`. The Microsoft directory uses `report-1.pdf` and `excluded-report-4.pdf`, whose cover documents the link mismatch for installment 2. The taxonomy argument rechecks the discovery and execution parent lists against the pinned STIX file.
+
+Each source argument is optional. The archive's `validation.json` records the verification mode for each input group. If a provided file fails its integrity check, the run fails. The archive records source locators and audit results without including the downloaded files.
+
 ## Individual analyses
 
 ```sh
