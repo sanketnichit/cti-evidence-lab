@@ -29,3 +29,19 @@ python scripts/evaluate_incident_holdout.py --source-directory outputs/incident_
 ```
 
 The first command recomputes [results.json](results.json) from the two case records. The second also checks the canonical text and 28 paragraph bindings against the locally saved publisher HTML files named `21520.html` and `22587.html`. Compare the source hash first if retrieving the pages again. CI reproduces the result from the recorded case evidence. The taxonomy definitions were checked against the pinned Enterprise ATT&CK v12.1 release, whose hash is recorded with each case. No publisher HTML is included in the repository.
+
+## Independent source review
+
+The [review guide](REVIEW_GUIDE.md) and packet generator provide source links and blank forms for an independent reading. They contain no proposed actions, labels or answers. Generate one packet per reviewer and provide only the ZIP.
+
+```sh
+python scripts/incident_source_review.py --build outputs/holdout-review --reviewer R01
+python scripts/incident_source_review.py --build outputs/holdout-review --reviewer R02
+python scripts/incident_source_review.py --validate /path/to/extracted-return
+```
+
+Keep the first submissions and a record of which source version each reviewer used. Paragraph locations refer to the opening prose under Case Summary. Resolve version differences against the recorded source hashes before comparing judgments. Structural validation checks form completeness, references and cycles in retained ordering. Semantic decisions require checking the source.
+
+After receiving the independent records, align candidate actions based on evidence, event scope and granularity before comparing technique or relation decisions. Record one-to-one matches, splits, merges and unmatched actions. Keep disagreements over action identity visible. Only compare mapping and temporal labels on aligned candidates. Freeze the alignment and candidate pair denominator before calculating agreement. The union of proposed relations is a candidate set with selection effects. An unlisted pair counts as an unrecorded decision unless the reviewer explicitly rejected it. Keep raw disagreements and adjudicated decisions separate, including any disagreements that remain unresolved after discussion.
+
+Report the number of complete, partial and inaccessible readings, prior exposure, matched actions and assessable pair decisions. If enough matched decisions exist, report agreement with denominators and the decision table. For two reports, descriptive counts and worked disagreements are more informative than a general estimate of reliability. No independent source-review results have been collected.
