@@ -25,7 +25,7 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | Runtime and output cost | 16 scaling workloads and 16 repeated-label workloads with exact witness and join counts | Synthetic graphs and single-machine timing |
 | Interpretation sensitivity | 203 evidence-removal scenarios and 40 acyclic input-error edits | Constructed changes to two incident graphs |
 | Investigation prototype | Six offline case records, 5,454 query combinations across five assessable cases, and Chromium, Firefox and WebKit checks at three viewport widths | Safari devices, assistive technology and practical analyst benefit remain untested |
-| Mapping-bound sensitivity | Optional CLI bounds, paired open/constrained answers and 21,952 finite query checks | Bounds remain declared assumptions; no field accuracy improvement established |
+| Mapping-bound sensitivity | Paired open and constrained CLI answers, 21,952 finite query checks, and a frozen discovery-role comparison across three incident graphs | Depends on declared bounds and case query vocabulary |
 | Software verification | Five test suites, full reproduction in CI and 31 immutable base-package checksums | Code and artifact integrity |
 
 ## Interpretation and sampling

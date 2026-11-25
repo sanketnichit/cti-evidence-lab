@@ -1,0 +1,258 @@
+{
+  "allowed_parent_labels": {
+    "discovery_only": 30,
+    "discovery_or_execution": 43
+  },
+  "cases": {
+    "cisa-federal-agency": {
+      "allowed_labels_in_query_vocabulary": {
+        "discovery_only": [
+          "T1018",
+          "T1046"
+        ],
+        "discovery_or_execution": [
+          "T1018",
+          "T1046"
+        ]
+      },
+      "bounded_occurrences": [
+        "discovery_first"
+      ],
+      "open_unresolved_becoming_unsupported": {
+        "discovery_only": 3,
+        "discovery_or_execution": 3
+      },
+      "originally_projected_unresolved": [
+        {
+          "query": [
+            "T1018",
+            "T1105",
+            "T1046"
+          ],
+          "statuses": {
+            "discovery_only": "UNRESOLVED_MAPPING",
+            "discovery_or_execution": "UNRESOLVED_MAPPING",
+            "open": "UNRESOLVED_MAPPING"
+          },
+          "views": [
+            "distinct_pairs",
+            "loop_pairs"
+          ]
+        },
+        {
+          "query": [
+            "T1105",
+            "T1090",
+            "T1018"
+          ],
+          "statuses": {
+            "discovery_only": "UNRESOLVED_MAPPING",
+            "discovery_or_execution": "UNRESOLVED_MAPPING",
+            "open": "UNRESOLVED_MAPPING"
+          },
+          "views": [
+            "distinct_pairs",
+            "loop_pairs"
+          ]
+        },
+        {
+          "query": [
+            "T1190",
+            "T1190",
+            "T1190"
+          ],
+          "statuses": {
+            "discovery_only": "UNRESOLVED_MAPPING",
+            "discovery_or_execution": "UNRESOLVED_MAPPING",
+            "open": "UNRESOLVED_MAPPING"
+          },
+          "views": [
+            "loop_pairs"
+          ]
+        }
+      ],
+      "query_count": 216,
+      "source_case_sha256": "b76fa5985dd29893e931d908bbcc59286b28db7e9eed39be4ea1389c2a8ccfd4",
+      "statuses": {
+        "discovery_only": {
+          "NOT_SUPPORTED": 170,
+          "SUPPORTED": 3,
+          "UNRESOLVED_MAPPING": 43
+        },
+        "discovery_or_execution": {
+          "NOT_SUPPORTED": 170,
+          "SUPPORTED": 3,
+          "UNRESOLVED_MAPPING": 43
+        },
+        "open": {
+          "NOT_SUPPORTED": 167,
+          "SUPPORTED": 3,
+          "UNRESOLVED_MAPPING": 46
+        }
+      },
+      "unresolved_restored_when_one_discovery_bound_removed": {
+        "discovery_first": 3
+      },
+      "vocabulary": [
+        "T1018",
+        "T1046",
+        "T1090",
+        "T1105",
+        "T1110",
+        "T1190"
+      ],
+      "withheld_occurrences": 4
+    },
+    "dfir-hive": {
+      "allowed_labels_in_query_vocabulary": {
+        "discovery_only": [
+          "T1135"
+        ],
+        "discovery_or_execution": [
+          "T1047",
+          "T1135",
+          "T1204"
+        ]
+      },
+      "bounded_occurrences": [
+        "discovery"
+      ],
+      "open_unresolved_becoming_unsupported": {
+        "discovery_only": 36,
+        "discovery_or_execution": 29
+      },
+      "originally_projected_unresolved": [],
+      "query_count": 1331,
+      "source_case_sha256": "0960c6d1a73fbb9f85f5532a92a8528086d597203c1fd388de46fca747b381b5",
+      "statuses": {
+        "discovery_only": {
+          "NOT_SUPPORTED": 840,
+          "SUPPORTED": 1,
+          "UNRESOLVED_MAPPING": 490
+        },
+        "discovery_or_execution": {
+          "NOT_SUPPORTED": 833,
+          "SUPPORTED": 1,
+          "UNRESOLVED_MAPPING": 497
+        },
+        "open": {
+          "NOT_SUPPORTED": 804,
+          "SUPPORTED": 1,
+          "UNRESOLVED_MAPPING": 526
+        }
+      },
+      "unresolved_restored_when_one_discovery_bound_removed": {
+        "discovery": 36
+      },
+      "vocabulary": [
+        "T1021",
+        "T1047",
+        "T1048",
+        "T1098",
+        "T1105",
+        "T1135",
+        "T1197",
+        "T1204",
+        "T1219",
+        "T1484",
+        "T1486"
+      ],
+      "withheld_occurrences": 6
+    },
+    "dfir-netsupport": {
+      "allowed_labels_in_query_vocabulary": {
+        "discovery_only": [],
+        "discovery_or_execution": [
+          "T1047",
+          "T1053",
+          "T1059",
+          "T1204"
+        ]
+      },
+      "bounded_occurrences": [
+        "dc_discovery",
+        "discovery"
+      ],
+      "open_unresolved_becoming_unsupported": {
+        "discovery_only": 639,
+        "discovery_or_execution": 452
+      },
+      "originally_projected_unresolved": [
+        {
+          "query": [
+            "T1059",
+            "T1219",
+            "T1003"
+          ],
+          "statuses": {
+            "discovery_only": "NOT_SUPPORTED",
+            "discovery_or_execution": "NOT_SUPPORTED",
+            "open": "UNRESOLVED_MAPPING"
+          },
+          "views": [
+            "distinct_pairs",
+            "loop_pairs"
+          ]
+        },
+        {
+          "query": [
+            "T1219",
+            "T1003",
+            "T1059"
+          ],
+          "statuses": {
+            "discovery_only": "UNRESOLVED_MAPPING",
+            "discovery_or_execution": "UNRESOLVED_MAPPING",
+            "open": "UNRESOLVED_MAPPING"
+          },
+          "views": [
+            "distinct_pairs",
+            "loop_pairs"
+          ]
+        }
+      ],
+      "query_count": 3375,
+      "source_case_sha256": "a32abbf0c7e4cff2c06b57db5a3bb418d103d265d18c5354ce94f7ff9924dba1",
+      "statuses": {
+        "discovery_only": {
+          "NOT_SUPPORTED": 3100,
+          "SUPPORTED": 7,
+          "UNRESOLVED_MAPPING": 268
+        },
+        "discovery_or_execution": {
+          "NOT_SUPPORTED": 2913,
+          "SUPPORTED": 7,
+          "UNRESOLVED_MAPPING": 455
+        },
+        "open": {
+          "NOT_SUPPORTED": 2461,
+          "SUPPORTED": 7,
+          "UNRESOLVED_MAPPING": 907
+        }
+      },
+      "unresolved_restored_when_one_discovery_bound_removed": {
+        "dc_discovery": 419,
+        "discovery": 250
+      },
+      "vocabulary": [
+        "T1003",
+        "T1021",
+        "T1047",
+        "T1053",
+        "T1059",
+        "T1090",
+        "T1098",
+        "T1105",
+        "T1136",
+        "T1204",
+        "T1219",
+        "T1560",
+        "T1562",
+        "T1566",
+        "T1570"
+      ],
+      "withheld_occurrences": 5
+    }
+  },
+  "design_sha256": "629df21cb45cd597033dc1f70d488ab8f181c9d8bcdd67b523ffb59bda65ad70"
+}

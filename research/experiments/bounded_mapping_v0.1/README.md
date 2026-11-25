@@ -45,3 +45,26 @@ python scripts/reproduce_study.py
 ```
 
 The complete reproduction includes `bounded_mapping_checks.json` and `bounded_mapping_assumption_example.json`. Regression checks cover CLI export and verification, missing references, invalid domains, multiple paths, singleton uncertainty, unchanged unrestricted results and the finite completion enumeration.
+
+## Discovery-role sensitivity across three cases
+
+The [design](DISCOVERY_PROTOCOL.md) was [published before scoring](https://github.com/sanketnichit/cti-evidence-lab/commit/225ad1312218b146c4a7bcccdd9dd62b098918e8). It bounds four explicitly grouped discovery occurrences and leaves eleven other unknown mappings open. The conditions use 30 active Discovery parents or 43 active Discovery and Execution parents from the pinned release. Every condition uses the same query vocabulary for a given case.
+
+| Case | Queries | Known support in every condition | Unresolved, open | Unresolved, Discovery or Execution | Unresolved, Discovery only |
+|---|---:|---:|---:|---:|---:|
+| Hive | 1,331 | 1 | 526 | 497 | 490 |
+| NetSupport | 3,375 | 7 | 907 | 455 | 268 |
+| CISA AA25-266A | 216 | 3 | 46 | 43 | 43 |
+
+All other queries are unsupported in the corresponding retained graph. In NetSupport, removing only the narrower bound on domain-controller discovery restores 419 unresolved answers. Removing only the bound on the earlier discovery group restores 250. These are separate counterfactuals with overlapping query sets. Both bounds leave known support unchanged.
+
+Both candidate sets change one of the two originally unresolved projected NetSupport answers to unsupported under the assumptions. Neither changes the three originally unresolved projected answers in the CISA graph. In the affected NetSupport query, the possible occurrence path depended on assigning credential dumping, T1003, to a reported discovery group. The known projected pairs remain in place.
+
+NetSupport's fixed query vocabulary contains no Discovery labels. The narrower condition therefore excludes every witness through either bounded occurrence for that matrix. The choice of query vocabulary partly explains the large decrease. As an illustration outside the frozen matrix, T1219 → T1082 → T1098 remains unresolved under the narrower bound because T1082 is allowed for the earlier discovery group. This exercise measures sensitivity to the candidate sets and query scope. It supplies no independently validated correction rate. [Recorded results](discovery_results.json)
+
+```sh
+python -m examples.discovery_bound_sensitivity
+python -m examples.discovery_bound_sensitivity --taxonomy /path/to/enterprise-attack-12.1.json
+```
+
+The optional taxonomy argument checks the release hash and regenerates both tactic lists. The recorded design and case hashes use sorted, compact JSON so checkout line endings do not affect them. The complete reproduction recomputes the comparison and includes `discovery_mapping_sensitivity.json`.
