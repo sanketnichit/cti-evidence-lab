@@ -1,12 +1,17 @@
-/* Run against the generated offline file in a real Chromium browser.
+/* Run against the generated offline file in Chromium or Firefox.
  * node scripts/test_investigation_browser.cjs /path/to/playwright [publisher.html]
- * Set CTI_BROWSER_EXECUTABLE to use an installed Chrome binary locally.
+ * Set CTI_BROWSER_ENGINE=firefox for Firefox. CTI_BROWSER_EXECUTABLE can
+ * override the executable for a local run.
  */
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const {pathToFileURL} = require('node:url');
-const {chromium} = require(process.argv[2] ? path.resolve(process.argv[2]) : 'playwright');
+const {chromium, firefox} = require(process.argv[2] ? path.resolve(process.argv[2]) : 'playwright');
+const engine = process.env.CTI_BROWSER_ENGINE || 'chromium';
+const browserType = {chromium, firefox}[engine];
+if (!browserType) throw Error('CTI_BROWSER_ENGINE must be chromium or firefox');
+const prefix = engine === 'chromium' ? 'browser' : 'browser-firefox';
 
 const output = path.resolve(__dirname, '../outputs/investigation');
 const artifact = pathToFileURL(path.join(output, 'index.html')).href;
@@ -52,7 +57,7 @@ async function checkWidth(browser, width) {
         await page.keyboard.press('Enter');
         assert.match(await verdict.textContent(), /Supported in this interpretation/);
         await assertLayout(page);
-        await page.screenshot({path: path.join(output, `browser-${width}.png`), fullPage: true});
+        await page.screenshot({path: path.join(output, `${prefix}-${width}.png`), fullPage: true});
 
         for (const [i, technique] of ['T1218', 'T1059', 'T1560'].entries()) {
             await page.locator(`#q${i}`).selectOption(technique);
@@ -81,7 +86,7 @@ async function checkWidth(browser, width) {
                 page.waitForEvent('download'),
                 page.getByRole('button', {name: 'Download answer record'}).click(),
             ]);
-            const file = path.join(output, 'browser-export.json');
+            const file = path.join(output, `${prefix}-export.json`);
             await download.saveAs(file);
             const record = JSON.parse(await fs.readFile(file, 'utf8'));
             assert.equal(record.answer.status, 'NOT_SUPPORTED');
@@ -108,7 +113,7 @@ async function checkWidth(browser, width) {
                 page.waitForEvent('download'),
                 page.locator('#download').click(),
             ]);
-            const file = path.join(output, 'browser-cisa-export.json');
+            const file = path.join(output, `${prefix}-cisa-export.json`);
             await download.saveAs(file);
             const record = JSON.parse(await fs.readFile(file, 'utf8'));
             assert.equal(record.case_key, 'cisa-federal-agency');
@@ -123,12 +128,12 @@ async function checkWidth(browser, width) {
 }
 
 (async () => {
-    const browser = await chromium.launch({
+    const browser = await browserType.launch({
         headless: true, executablePath: process.env.CTI_BROWSER_EXECUTABLE || undefined,
     });
     try {
         for (const width of [320, 390, 1280]) await checkWidth(browser, width);
-        console.log(JSON.stringify({browser: browser.version(), widths: [320, 390, 1280],
+        console.log(JSON.stringify({engine, browser: browser.version(), widths: [320, 390, 1280],
             keyboard: 'pass', sourceRejected: true, matchingSourceChecked: Boolean(process.argv[3]),
             offlineExport: 'pass'}));
     } finally {

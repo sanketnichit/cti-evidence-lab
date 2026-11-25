@@ -21,7 +21,7 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | Chronological incident holdout | Two DFIR reports; one agreement case, one with three unsupported ordinary returns | Same-publisher conditional interpretations |
 | CISA extension | Two advisories; one unassessed, one with three unresolved loop returns | Purposive search frame |
 | Runtime and interpretation sensitivity | 16 scaling workloads and 203 evidence-removal scenarios | Constructed variations; one timing environment |
-| Investigation prototype | Six offline case records, 5,454 query combinations across five assessable cases, and Chromium checks at three viewport widths | Cross-browser behavior and practical analyst benefit remain open |
+| Investigation prototype | Six offline case records, 5,454 query combinations across five assessable cases, and Chromium and Firefox checks at three viewport widths | WebKit, assistive technology and practical analyst benefit remain untested |
 | Mapping-bound sensitivity | Optional CLI bounds, paired open/constrained answers and 21,952 finite query checks | Bounds remain declared assumptions; no field accuracy improvement established |
 | Software verification | Five test suites, full reproduction in CI and 31 immutable base-package checksums | Code and artifact integrity |
 

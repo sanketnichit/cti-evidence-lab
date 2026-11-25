@@ -53,7 +53,7 @@ The benchmark produced 16 supported, 15 mapping-unresolved and 501 not-supported
 
 The offline bundle adds the two [holdout DFIR reports](experiments/incident_holdout_v0.1/README.md) and both [CISA advisories](experiments/cisa_incident_extension_v0.1/README.md). The four cases contribute one recorded interpretation each. Across the bundle, five assessable cases provide 5,454 query combinations, including combinations with repeated labels. AA24-046A displays its retained actions, ordering evidence and exclusions with query and export disabled. The PDF locators identify the page and character range in the recorded extraction. The CISA source audit verifies the PDF separately.
 
-Chromium checks cover widths of 320, 390 and 1280 px, keyboard traversal, selector names, offline operation and the unassessed state. The test exports an original answer and an unresolved CISA answer for CLI recomputation. It also rejects an unrelated HTML snapshot containing an external image reference and checks that no web request is made. These checks cover one browser engine.
+Chromium and Firefox checks cover widths of 320, 390 and 1280 px, keyboard traversal, selector names, offline operation and the unassessed state. Each engine exports an original answer and an unresolved CISA answer for CLI recomputation, rejects unrelated HTML containing an external image reference, and checks that no web request is made. Local runs also verify a matching publisher snapshot. WebKit and assistive-technology behavior remain untested.
 
 ## Fixed external comparison
 
