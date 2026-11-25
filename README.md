@@ -4,7 +4,7 @@
 
 CTI Evidence Lab studies how replacing individual attack occurrences with ATT&CK technique nodes changes temporal relations and sequence-query answers. It combines controlled graph experiments, source-bound exploratory cases, and evidence-validation software.
 
-[Preprint candidate 0.1 RC1](https://github.com/sanketnichit/cti-evidence-lab/blob/preprint-v0.1-rc.1/research/FEASIBILITY_REPORT_v0.1.md) · [Reproduction and data access](docs/REPRODUCIBILITY.md#preprint-candidate-01-rc1)
+[Methods preprint v0.1](https://github.com/sanketnichit/cti-evidence-lab/releases/tag/preprint-v0.1) · [Reproduction and data access](docs/REPRODUCIBILITY.md#methods-preprint-v01)
 
 ## Sequence investigator
 

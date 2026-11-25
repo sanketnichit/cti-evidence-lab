@@ -2,7 +2,7 @@
 
 **Sanket Nichit · CTI Evidence Lab · 25 November 2026**
 
-Preprint candidate · Version 0.1 RC1
+Methods preprint · Version 0.1
 
 ## Abstract
 
@@ -70,7 +70,7 @@ The 4,096 set-valued mapping graphs reproduce the same distinction for queries w
 | [Microsoft series prefix](experiments/microsoft_incident_series_v0.1/README.md) | One PDF is unassessed in the narrative prose. A stronger ordering interpretation yields one mapping-unresolved query. The other PDF is unavailable through its recorded publisher link. |
 | [AnnoCTR rank-three procedures](experiments/external_sequence_evaluation_v0.1/README.md) | No qualifying incident chain established in the five reports. Four conditional procedure graphs give two supported and four unresolved queries among 70 constructed questions. All views agree on the decidable queries. |
 
-These results show agreement and disagreement under specific graph interpretations. In the NetSupport graph, the two source edges behind one unsupported answer involve different script actions from separate episodes. The mismatch survives either of two separately considered post-review edge omissions. In the CISA graph, a loop answer reuses an edge between two dated access events. A different occurrence path remains possible only if two unmapped actions receive the queried label. That open-rule possibility warrants the unresolved classification. It does not provide a witness for the projected join.
+These results show agreement and disagreement under specific graph interpretations. In NetSupport, one unsupported answer joins an early script execution to later log collection. It remains unsupported after both disputed links are omitted together. In the CISA graph, a loop answer reuses an edge between two dated access events. A different occurrence path remains possible if two unmapped actions receive the queried label, leaving the answer unresolved under the open rule.
 
 ## 6. Sensitivity, runtime and artifact
 
@@ -105,7 +105,7 @@ python scripts/evaluate_cisa_extension.py
 python scripts/evaluate_microsoft_series.py
 ```
 
-The archive includes code, source locators, generated results and a SHA-256 manifest that identifies the checked-out commit. Get publisher snapshots separately to verify source bytes. Use `--pdf` with ReportLab to include this manuscript in the archive. The versioned candidate and the source recheck commands are documented with the artifact. [Reproduction and data access](../docs/REPRODUCIBILITY.md)
+The archive includes code, source locators, generated results and a SHA-256 manifest that identifies the checked-out commit. Get publisher snapshots separately to verify source bytes. Use `--pdf` with ReportLab to include this manuscript in the archive. The release and source recheck commands are documented with the artifact. [Reproduction and data access](../docs/REPRODUCIBILITY.md)
 
 ## References
 

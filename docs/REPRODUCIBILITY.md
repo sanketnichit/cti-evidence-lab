@@ -2,17 +2,17 @@
 
 The experiments require Python 3.11 or later and Git. Analysis and validation use the Python standard library. PDF rendering optionally requires ReportLab.
 
-## Preprint candidate 0.1 RC1
+## Methods preprint v0.1
 
-The manuscript and its analysis snapshot are pinned by the [candidate tag](https://github.com/sanketnichit/cti-evidence-lab/tree/preprint-v0.1-rc.1). From a clone with the tag available, run:
+The [preprint release](https://github.com/sanketnichit/cti-evidence-lab/releases/tag/preprint-v0.1) distributes the paper and artifact from the tagged source revision. From a clone with the tag available, run:
 
 ```sh
-git switch --detach preprint-v0.1-rc.1
+git switch --detach preprint-v0.1
 python -m pip install reportlab==4.4.9
-python scripts/reproduce_study.py --pdf --output-dir outputs/preprint-v0.1-rc.1
+python scripts/reproduce_study.py --pdf --output-dir outputs/preprint-v0.1
 ```
 
-The PDF footer identifies the source commit. Repository links inside the PDF use that commit. The output archive includes the manuscript, results, offline investigator, and a SHA-256 manifest. The separate source checks described below distinguish publisher snapshot integrity from the interpretation of the evidence. Independent source-review and analyst-pilot outcomes are pending.
+The PDF footer identifies the source commit. Repository links inside the PDF use that commit. The output archive includes the manuscript, results, offline investigator, and a SHA-256 manifest. The release records the available source rechecks described below. The preprint addresses representation fidelity, with source interpretation and analyst efficacy left as separate empirical questions.
 
 ## Complete reproduction
 

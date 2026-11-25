@@ -108,7 +108,7 @@ def build(destination, *, revision="main"):
         canvas.line(50, 43, A4[0] - 50, 43)
         canvas.setFont("Helvetica", 8)
         canvas.setFillColor(colors.HexColor("#50616b"))
-        label = "CTI Evidence Lab | Preprint candidate 0.1 RC1"
+        label = "CTI Evidence Lab | Methods preprint v0.1"
         if revision != "main":
             label += f" | Artifact {revision[:12]}"
         canvas.drawString(50, 30, label)
