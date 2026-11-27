@@ -94,3 +94,14 @@ python -m examples.profile_conflicts
 ```
 
 Full reproduction checks and includes `profile_conflicts.json`.
+
+## Compare and verify one query
+
+The comparison export includes the per-profile answers, mappings, relation evidence, and all pooled candidates. Each candidate names its supporting profiles or records a minimum conflict. The possible-witness list includes fully known witnesses. Conflict fact indices are one-based within the fact list, and profile numbers refer to `answer.profile_order`.
+
+```sh
+python scripts/compare_sequence_profiles.py --group netsupport-identity --query T1562 T1047 T1053 --output outputs/profile-comparison.json
+python scripts/compare_sequence_profiles.py --verify outputs/profile-comparison.json
+```
+
+The other groups are `rdp` and `domain-controller`, both at the parent level. The NetSupport export exposes the identity assumption behind the WMI witness. Full reproduction includes the verified example. [v0.2 manuscript draft](../../PROFILE_COHERENCE_REPORT_v0.2.md)

@@ -7,7 +7,7 @@
 | Occurrence identity in technique-level CTI graphs | Exploratory feasibility and controlled representation study | [Report](FEASIBILITY_REPORT_v0.1.md) |
 | Connected-sequence query fidelity | Two exhaustive finite constructions; four representations | [Methods](QUERY_FIDELITY_STUDY_v0.1.md), [results](experiments/query_fidelity_v0.1/README.md) |
 | Evidence-backed investigation | Query witnesses, incompatible joins, mapping-specific uncertainty and export verification | [Workflow and evaluation](INVESTIGATION_WORKFLOW_v0.1.md) |
-| Interpretation coherence | Explicit support across alternative profiles, tested against independent witness enumeration | [v0.2 experiment](experiments/profile_coherence_v0.2/README.md) |
+| Interpretation coherence | Explicit support across alternative profiles, tested against independent witness enumeration | [v0.2 manuscript](PROFILE_COHERENCE_REPORT_v0.2.md), [experiment and export](experiments/profile_coherence_v0.2/README.md) |
 | Representation controls | Seven specified graph comparisons and a 4,096-case oracle check | [Controls](experiments/representation_controls_v0.1/README.md), [finite check](experiments/representation_controls_v0.1/finite_checks.json) |
 | AnnoCTR feasibility | Five fixed donor-stratified candidates; exposed exploratory review | [Review](feasibility/exploratory_review_v0.1/README.md), [critical assessment](feasibility/exploratory_review_v0.1/CRITICAL_REVIEW.md) |
 | Fixed source extension | All five rank-two donor reports; selection committed before this text review | [Review and coverage](feasibility/rank_two_extension_v0.1/README.md), [protocol](feasibility/rank_two_extension_v0.1/PROTOCOL.md) |

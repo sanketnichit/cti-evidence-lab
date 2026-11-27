@@ -15,7 +15,7 @@ QUERIES = {
 }
 
 
-def run(source_html=None):
+def identity_profiles(source_html=None):
     key = "dfir-netsupport"
     if source_html is not None:
         record = json.loads(AVAILABLE_CASES[key].read_bytes())
@@ -30,7 +30,7 @@ def run(source_html=None):
     conservative = [row for row in relations if row["relation_id"] != "B12"]
     assert all("remote_execution" not in (r["source_event"], r["target_event"]) for r in conservative)
     co_referent = {node: labels for node, labels in mappings.items() if node != "remote_execution"}
-    alternatives = {
+    return {
         "recorded": (mappings, relations),
         "omit_summary_edge": (mappings, conservative),
         "co_referent_execution": (
@@ -38,6 +38,10 @@ def run(source_html=None):
             [*conservative, {**summary_edge, "relation_id": "B12-aligned", "target_event": "payload_run"}],
         ),
     }
+
+
+def run(source_html=None):
+    alternatives = identity_profiles(source_html)
     profiles = {}
     for name, (labels, edges) in alternatives.items():
         profiles[name] = {}
@@ -49,7 +53,7 @@ def run(source_html=None):
                 "endpoint_join_returned": row["endpoint_join_returned"],
                 "known_witnesses": answer["known_witnesses"],
             }
-    vocabulary = sorted(set().union(*mappings.values()))
+    vocabulary = sorted(set().union(*alternatives["recorded"][0].values()))
     graphs = [(labels, {(r["source_event"], r["target_event"]) for r in edges})
               for labels, edges in alternatives.values()]
     return {"profiles": profiles, "pooling_comparison": compare(graphs, vocabulary)}
