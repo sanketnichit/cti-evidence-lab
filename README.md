@@ -1,10 +1,12 @@
 # CTI Evidence Lab
 
+[![DOI: 10.5281/zenodo.24533052](https://zenodo.org/badge/DOI/10.5281/zenodo.24533052.svg)](https://doi.org/10.5281/zenodo.24533052)
+
 **Occurrence identity and temporal information loss in cyber threat intelligence graphs.**
 
 CTI Evidence Lab studies how replacing individual attack occurrences with ATT&CK technique nodes changes temporal relations and sequence-query answers. It combines controlled graph experiments, source-bound exploratory cases, and evidence-validation software.
 
-[Methods preprint v0.1](https://github.com/sanketnichit/cti-evidence-lab/releases/tag/preprint-v0.1) · [Reproduction and data access](docs/REPRODUCIBILITY.md#methods-preprint-v01)
+[Methods preprint v0.1](https://doi.org/10.5281/zenodo.24533052) · [GitHub release](https://github.com/sanketnichit/cti-evidence-lab/releases/tag/preprint-v0.1) · [Reproduction and data access](docs/REPRODUCIBILITY.md#methods-preprint-v01)
 
 ## Sequence investigator
 
@@ -78,6 +80,8 @@ docs/       methodology, architecture, status and reproducibility
 
 ## Citation and license
 
-Sanket Nichit (2026). *CTI Evidence Lab*. Cite the software and the versioned manuscript using [CITATION.cff](CITATION.cff) and [CITATION.bib](CITATION.bib).
+Nichit, S. (2026). *When technique graphs lose incident sequence evidence* (v0.1). Zenodo. [Version DOI 10.5281/zenodo.24533052](https://doi.org/10.5281/zenodo.24533052)
+
+Use the version DOI when citing v0.1. The concept DOI identifies the preprint across versions. Citation files cover both the paper and the software. [All versions](https://doi.org/10.5281/zenodo.24533051) · [CITATION.cff](CITATION.cff) · [CITATION.bib](CITATION.bib)
 
 Original project software and documentation are [MIT licensed](LICENSE). Source reports retain their own rights. Adapted AnnoCTR material retains CC BY-SA 4.0 attribution and terms; raw reports are not distributed in this repository.

@@ -1,9 +1,25 @@
 cff-version: 1.2.0
-message: "Cite this software artifact using the metadata below. CITATION.bib also identifies the methods preprint."
+message: "Cite the methods preprint using preferred-citation. The top-level metadata identifies the software."
 title: "CTI Evidence Lab"
 authors:
   - family-names: Nichit
     given-names: Sanket
+    orcid: "https://orcid.org/0009-0000-6993-7561"
 version: 0.1.0
 date-released: 2026-11-01
 license: MIT
+repository-code: "https://github.com/sanketnichit/cti-evidence-lab"
+preferred-citation:
+  type: report
+  title: "When technique graphs lose incident sequence evidence"
+  authors:
+    - family-names: Nichit
+      given-names: Sanket
+      orcid: "https://orcid.org/0009-0000-6993-7561"
+  year: 2026
+  date-released: 2026-11-25
+  version: "0.1"
+  doi: "10.5281/zenodo.24533052"
+  url: "https://zenodo.org/records/24533052"
+  publisher:
+    name: Zenodo

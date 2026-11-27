@@ -34,6 +34,7 @@ from scripts.evaluate_external_sequences import DIRECTORY as EXTERNAL, load_reco
 from examples.bounded_mapping_checks import run_checks as run_bounded_mapping_checks
 from examples.discovery_bound_sensitivity import RESULTS as DISCOVERY_RESULTS, run as run_discovery_bounds
 from examples.sequence_index_storage import RESULTS as INDEX_RESULTS, run as run_index_storage
+from examples.profile_coherence import RESULTS as COHERENCE_RESULTS, run as run_profile_coherence
 from scripts.investigate_sequence import certificate as investigation_certificate, load_case as load_investigation_case
 from scripts.evaluate_incident_holdout import DIRECTORY as HOLDOUT, run as run_holdout
 from scripts.evaluate_cisa_extension import DIRECTORY as CISA, run as run_cisa
@@ -196,6 +197,10 @@ def main():
     if index_storage != json.loads(INDEX_RESULTS.read_text(encoding="utf-8")):
         raise ValueError("Answer-index storage differs from the published results")
     write_json(destination / "answer_index_storage.json", index_storage)
+    coherence = run_profile_coherence()
+    if coherence != json.loads(COHERENCE_RESULTS.read_text(encoding="utf-8")):
+        raise ValueError("Profile coherence differs from the published results")
+    write_json(destination / "profile_coherence.json", coherence)
     bounds = json.loads((ROOT / "research/experiments/bounded_mapping_v0.1/archive_bound_assumption.json").read_text(encoding="utf-8"))
     write_json(destination / "bounded_mapping_assumption_example.json", investigation_certificate(
         "domain-controller", load_investigation_case("domain-controller"), "archive_mapping_withheld",
@@ -223,7 +228,7 @@ def main():
                        "incident_holdout_results.json", "cisa_extension_results.json", "microsoft_series_results.json",
                        "external_sequence_results.json", "external_sequence_source_integrity.json",
                        "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json",
-                       "discovery_mapping_sensitivity.json", "answer_index_storage.json"]
+                       "discovery_mapping_sensitivity.json", "answer_index_storage.json", "profile_coherence.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf",

@@ -14,6 +14,8 @@ python scripts/reproduce_study.py --pdf --output-dir outputs/preprint-v0.1
 
 The PDF footer identifies the source commit. Repository links inside the PDF use that commit. The output archive includes the manuscript, results, offline investigator, and a SHA-256 manifest. The release records the available source rechecks described below. The preprint addresses representation fidelity, with source interpretation and analyst efficacy left as separate empirical questions.
 
+Use the version DOI to cite this exact paper and archive. The concept DOI points to the preprint's version series. The PDF, reproduction ZIP and checksum file on Zenodo match the corresponding files on the tagged GitHub release by SHA-256. [Zenodo record](https://zenodo.org/records/24533052) · [Version DOI](https://doi.org/10.5281/zenodo.24533052) · [Concept DOI](https://doi.org/10.5281/zenodo.24533051)
+
 ## Complete reproduction
 
 From a clean checkout:

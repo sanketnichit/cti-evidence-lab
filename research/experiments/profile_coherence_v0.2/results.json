@@ -1,0 +1,89 @@
+{
+  "finite": {
+    "pairs_with_union_only_queries": 2040,
+    "pooled_witness_instances_in_no_profile": 3640,
+    "profile_pairs": 5886,
+    "union_only_query_instances": 3640
+  },
+  "recorded_profiles": {
+    "domain-controller/parent": {
+      "pooled_supported_queries": 4,
+      "pooled_witnesses": 4,
+      "profiles": [
+        "core_transfer_execution",
+        "extended_script_sequence",
+        "archive_mapping_withheld"
+      ],
+      "queries_with_one_witness_in_every_profile": 1,
+      "supported_in_every_profile": 1,
+      "supported_in_some_profile": 4,
+      "union_only_queries": [],
+      "witnesses_in_no_profile": 0
+    },
+    "rdp/parent": {
+      "pooled_supported_queries": 3,
+      "pooled_witnesses": 3,
+      "profiles": [
+        "unresolved_cleanup",
+        "proposed_cleanup_full_edges",
+        "proposed_cleanup_local_edges",
+        "reported_completed_actions"
+      ],
+      "queries_with_one_witness_in_every_profile": 0,
+      "supported_in_every_profile": 0,
+      "supported_in_some_profile": 3,
+      "union_only_queries": [],
+      "witnesses_in_no_profile": 0
+    }
+  },
+  "synthetic_controls": {
+    "different_witnesses": {
+      "pooled_supported_queries": 1,
+      "pooled_witnesses": 2,
+      "queries_with_one_witness_in_every_profile": 0,
+      "supported_in_every_profile": 1,
+      "supported_in_some_profile": 1,
+      "union_only_queries": [],
+      "witnesses_in_no_profile": 0
+    },
+    "missing_middle_mapping": {
+      "pooled_supported_queries": 1,
+      "pooled_witnesses": 1,
+      "queries_with_one_witness_in_every_profile": 0,
+      "supported_in_every_profile": 0,
+      "supported_in_some_profile": 0,
+      "union_only_queries": [
+        [
+          "A",
+          "B",
+          "C"
+        ]
+      ],
+      "witnesses_in_no_profile": 1
+    },
+    "pooled_cycle": {
+      "pooled_supported_queries": 0,
+      "pooled_witnesses": 0,
+      "queries_with_one_witness_in_every_profile": 0,
+      "supported_in_every_profile": 0,
+      "supported_in_some_profile": 0,
+      "union_only_queries": [],
+      "witnesses_in_no_profile": 0
+    },
+    "separate_edges": {
+      "pooled_supported_queries": 1,
+      "pooled_witnesses": 1,
+      "queries_with_one_witness_in_every_profile": 0,
+      "supported_in_every_profile": 0,
+      "supported_in_some_profile": 0,
+      "union_only_queries": [
+        [
+          "A",
+          "B",
+          "C"
+        ]
+      ],
+      "witnesses_in_no_profile": 1
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Study status
 
-**Updated: 25 November 2026. Research in progress.**
+**Updated: 27 November 2026. Research in progress.**
 
 CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query fidelity under technique-level projection. The evidence comprises controlled experiments, three separate five-report AnnoCTR reviews, four DFIR incident cases, two CISA advisories and a two-entry Microsoft series sample. The [research manuscript](../research/FEASIBILITY_REPORT_v0.1.md) presents results and limits together.
 
@@ -24,6 +24,7 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | Microsoft series prefix | One report unassessed from the prose and one publisher link pointing to a different installment | One accessible selected report |
 | Runtime and output cost | 16 scaling workloads and 16 repeated-label workloads with exact witness and join counts | Synthetic graphs and single-machine timing |
 | Answer-index storage | Exact known-label encodings compared on 19 synthetic workloads and 12 recorded profiles | Compact JSON sizes for a fixed query |
+| Interpretation coherence | Finite witness oracle over 5,886 profile pairs and a replay of two recorded profile groups | Pooling errors in constructed controls, with none in the recorded groups |
 | Interpretation sensitivity | 203 evidence-removal scenarios and 40 acyclic input-error edits | Constructed changes to two incident graphs |
 | Investigation prototype | Six offline case records, 5,454 query combinations across five assessable cases, and Chromium, Firefox and WebKit checks at three viewport widths | Safari devices, assistive technology and practical analyst benefit remain untested |
 | Mapping-bound sensitivity | Paired open and constrained CLI answers, 21,952 finite query checks, and a frozen discovery-role comparison across three incident graphs | Depends on declared bounds and case query vocabulary |
@@ -50,6 +51,8 @@ Protocol v0.5 and RECON extensions remain drafts. RECON v0.1 is a reconstructed 
 - Independent annotation reliability, population prevalence, learned extraction performance and superiority over published systems are not established.
 - The contribution requires continued comparison with existing action-based and temporal graph methods; occurrence graphs themselves are established prior art.
 
-The [methods preprint](https://github.com/sanketnichit/cti-evidence-lab/releases/tag/preprint-v0.1) presents representation fidelity on supplied graphs. Independent agreement and analyst efficacy remain open empirical questions.
+The [methods preprint v0.1](https://doi.org/10.5281/zenodo.24533052) presents representation fidelity on supplied graphs. Independent agreement and analyst efficacy remain open empirical questions.
+
+The first v0.2 experiment separates support in some or every interpretation from support created by pooling their facts. [Profile coherence results](../research/experiments/profile_coherence_v0.2/README.md)
 
 [Research artifacts](../research/README.md), [reproduction](REPRODUCIBILITY.md), [research directions](ROADMAP.md), and the versioned method/audit records provide the supporting detail. Earlier status snapshots are historical records; this document summarizes the current study.
