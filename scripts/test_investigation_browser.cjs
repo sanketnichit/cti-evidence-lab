@@ -1,5 +1,5 @@
 /* Run against the generated offline file in Chromium, Firefox or WebKit.
- * node scripts/test_investigation_browser.cjs /path/to/playwright [publisher.html]
+ * node scripts/test_investigation_browser.cjs /path/to/playwright [domain-controller.html [netsupport.html]]
  * Set CTI_BROWSER_ENGINE to firefox or webkit. CTI_BROWSER_EXECUTABLE can
  * override the executable for a local run.
  */
@@ -95,6 +95,41 @@ async function checkWidth(browser, width) {
             assert.equal(record.answer.status, 'NOT_SUPPORTED');
             assert.deepEqual(record.answer.query, ['T1560', 'T1059', 'T1560']);
         }
+        await page.locator('#case').selectOption('dfir-netsupport');
+        const identity = page.getByRole('button', {name: 'Show the WMI identity example'});
+        await identity.focus();
+        await page.keyboard.press('Enter');
+        assert.match(await verdict.textContent(), /No supporting sequence/);
+        const comparison = page.getByRole('region', {name: 'Compare interpretations'});
+        const conditional = comparison.getByRole('row', {name: /Same execution/});
+        assert.match(await conditional.textContent(), /Supported.*1 \/ 0/);
+        assert.match(await comparison.locator('#profile-comparison h3').last().textContent(), /firewall_change.*payload_run.*persistence_task/);
+        if (width === 1280 && process.argv[4]) {
+            await page.getByLabel('Matching publisher HTML').setInputFiles(path.resolve(process.argv[4]));
+            await page.getByText(/Matching source loaded/).waitFor();
+        }
+        await comparison.getByText('Actions and source evidence', {exact: true}).click();
+        await comparison.getByText(/Evidence locators/).click();
+        assert.match(await comparison.locator('#profile-comparison').textContent(), /B12-aligned.*B14/);
+        if (width === 1280 && process.argv[4]) {
+            assert.notEqual(await comparison.locator('blockquote').textContent(), '');
+        }
+        await comparison.getByText('How pooling can create an unsupported witness', {exact: true}).click();
+        await comparison.getByText('Show minimum conflicts', {exact: true}).click();
+        assert.match(await comparison.locator('#control-comparison ul').textContent(), /u before v — First edge only.*v before w — Second edge only/);
+        await assertLayout(page);
+        await comparison.screenshot({path: path.join(output, `${prefix}-comparison-${width}.png`)});
+        if (width === 1280) {
+            const [download] = await Promise.all([
+                page.waitForEvent('download'), comparison.getByRole('button', {name: 'Download comparison record'}).click(),
+            ]);
+            const file = path.join(output, `${prefix}-comparison.json`);
+            await download.saveAs(file);
+            const record = JSON.parse(await fs.readFile(file, 'utf8'));
+            assert.equal(record.detail, 'summary');
+            assert.deepEqual(record.answer.query, ['T1562', 'T1047', 'T1053']);
+            assert.deepEqual(record.answer.pooled_witnesses.known[0].supporting_profiles, ['co_referent_execution']);
+        }
         await page.locator('#case').selectOption('cisa-former-account');
         assert.equal(await verdict.textContent(), 'Sequence comparison unassessed');
         for (const id of ['q0', 'q1', 'q2', 'download']) {
@@ -103,6 +138,7 @@ async function checkWidth(browser, width) {
         assert.match(await page.locator('#witnesses').textContent(), /PDF page \d+/);
         assert.match(await page.locator('#caveats').textContent(), /Excluded interpretations/);
         assert.ok(await page.locator('#local-source').isHidden());
+        assert.ok(await page.locator('#comparison-download').isHidden());
         await assertLayout(page);
 
         await page.locator('#case').selectOption('cisa-federal-agency');

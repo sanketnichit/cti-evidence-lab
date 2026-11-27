@@ -110,6 +110,8 @@ The other groups are `rdp` and `domain-controller`, both at the parent level. Th
 
 Add `--summary-only` for a compact export. Per-profile witnesses and incompatible joins are counted. The pooled witnesses, minimum conflicts and source records are still included. Verify either export with the same `--verify` command.
 
+The offline investigator displays the same parent-level comparisons. Build it with `python scripts/build_investigation.py` and open `outputs/investigation/index.html`. Choose NetSupport and **Show the WMI identity example** to see which reading connects the firewall change and task creation through the same execution. Expand **Actions and source evidence** for the two ordering relations and their passage locators. The constructed pooling example identifies the split edges and the profiles that provide them. **Download comparison record** saves the compact format used by the verifier above.
+
 ## Runtime and storage design
 
 Each synthetic profile contains disjoint three-action paths. One path in four splits its edges between alternating profiles, and the middle mapping is withheld in one path in eight. The query fixes one label at each position. The design varies actions per profile (24, 96, 192 at two profiles), profile count (2, 8, 16 at 96 actions), and label density (one or four known labels at 96 actions and two profiles). Query paths, ordering facts and action IDs are fixed when varying label density. Each workload checks the focused result against filtering the exhaustive masks and checks the exported support against those masks.

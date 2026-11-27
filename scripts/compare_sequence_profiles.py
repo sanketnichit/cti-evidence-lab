@@ -49,11 +49,12 @@ def compare_query(profiles, query, *, summary_only=False):
     }
 
 
-def export(group, query, *, summary_only=False):
+def comparison_context(group, case=None):
     if group not in GROUPS:
         raise ValueError("Unknown profile group")
     key = "dfir-netsupport" if group == "netsupport-identity" else group
-    case = load_case(key)
+    if case is None:
+        case = load_case(key)
     if group == "netsupport-identity":
         profiles = identity_profiles()
     else:
@@ -62,7 +63,6 @@ def export(group, query, *, summary_only=False):
             if row.get("taxonomy_level", "parent") == "parent":
                 _, _, mappings, relations = profile_graph(case, row["name"])
                 profiles[row["name"]] = (mappings, relations)
-    answer = compare_query(profiles, query, summary_only=summary_only)
     record = {
         "record_version": "1.0", "profile_group": group, "case_key": key,
         "case_sha256": digest(json.dumps(case, sort_keys=True, separators=(",", ":"))),
@@ -72,9 +72,15 @@ def export(group, query, *, summary_only=False):
             for name, (mappings, _) in profiles.items()
         }, "relations": {
             name: relations for name, (_, relations) in profiles.items()
-        }, "taxonomy_level": "parent", "answer": answer,
+        }, "taxonomy_level": "parent",
         "verification_scope": "Exact recomputation against recorded profiles and declared sensitivity alternatives.",
     }
+    return record, profiles
+
+
+def export(group, query, *, summary_only=False):
+    record, profiles = comparison_context(group)
+    record["answer"] = compare_query(profiles, query, summary_only=summary_only)
     if summary_only:
         record["detail"] = "summary"
     return record

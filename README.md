@@ -18,6 +18,8 @@ python scripts/build_investigation.py
 
 Open `outputs/investigation/index.html` in a browser. The artifact covers four DFIR reports and two CISA advisories. Five cases offer three-technique queries and verifiable JSON exports. The unassessed advisory shows the retained evidence and exclusions. Matching publisher HTML can be opened locally for DFIR passages. CISA evidence uses PDF page locators. [Workflow and evaluation](research/INVESTIGATION_WORKFLOW_v0.1.md)
 
+For NetSupport, select **Show the WMI identity example** under **Compare interpretations**. The comparison shows which reading supports the sequence, links to its evidence locators and exports a compact record for verification. RDP and the domain-controller case also support parent-level comparisons. [Profile comparison and verification](research/experiments/profile_coherence_v0.2/README.md#compare-and-verify-one-query)
+
 For unresolved mappings, the CLI can also [compare explicit candidate bounds](research/experiments/bounded_mapping_v0.1/README.md). Exports preserve the unrestricted answer and show which assumptions exclude a possible path.
 
 ## Research question

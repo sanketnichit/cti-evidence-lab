@@ -94,7 +94,9 @@ jobs:
       - name: Check the original query matrix and DFIR extension cases
         run: node scripts/test_investigation_ui.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/jsdom"
       - name: Verify the exported answer against source records
-        run: python scripts/investigate_sequence.py --verify outputs/investigation/ui-export.json
+        run: |
+          python scripts/investigate_sequence.py --verify outputs/investigation/ui-export.json
+          python scripts/compare_sequence_profiles.py --verify outputs/investigation/ui-comparison-negative.json
       - name: Install Chromium test browser
         run: node "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright/cli.js" install --with-deps --only-shell chromium
       - name: Check offline investigator in Chromium
@@ -102,6 +104,7 @@ jobs:
           node scripts/test_investigation_browser.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright"
           python scripts/investigate_sequence.py --verify outputs/investigation/browser-export.json
           python scripts/investigate_sequence.py --verify outputs/investigation/browser-cisa-export.json
+          python scripts/compare_sequence_profiles.py --verify outputs/investigation/browser-comparison.json
       - name: Check offline investigator in Firefox and WebKit
         run: |
           node "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright/cli.js" install --with-deps firefox webkit
@@ -109,6 +112,7 @@ jobs:
             CTI_BROWSER_ENGINE="$engine" node scripts/test_investigation_browser.cjs "$RUNNER_TEMP/cti-ui-tests/node_modules/playwright"
             python scripts/investigate_sequence.py --verify "outputs/investigation/browser-${engine}-export.json"
             python scripts/investigate_sequence.py --verify "outputs/investigation/browser-${engine}-cisa-export.json"
+            python scripts/compare_sequence_profiles.py --verify "outputs/investigation/browser-${engine}-comparison.json"
           done
       - name: Reproduce the full study from the clean checkout
         run: python scripts/reproduce_study.py --output-dir outputs/ci-reproduction

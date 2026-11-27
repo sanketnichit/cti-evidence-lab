@@ -9,6 +9,41 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.investigate_sequence import AVAILABLE_CASES, certificate, load_case, profile_graph, record_context
+from scripts.compare_sequence_profiles import GROUPS, compare_query, comparison_context
+
+
+def browser_comparison(group, case, vocabulary):
+    """Share blank answers and invariant fields across the offline query index."""
+    context, profiles = comparison_context(group, case)
+    context["detail"] = "summary"
+    blank = compare_query(profiles, ("__absent__",) * 3, summary_only=True)
+    del blank["query"]
+    for row in blank["profile_answers"].values():
+        del row["query"]
+    answers = {}
+    for query in product(vocabulary, repeat=3):
+        answer = compare_query(profiles, query, summary_only=True)
+        changes = {field: answer[field] for field in ("best_profile_status", "pooled_status", "pooled_witnesses")
+                   if answer[field] != blank[field]}
+        profile_changes = {}
+        for name, row in answer["profile_answers"].items():
+            changed = {field: value for field, value in row.items()
+                       if field != "query" and value != blank["profile_answers"][name][field]}
+            if changed:
+                profile_changes[name] = changed
+        if profile_changes:
+            changes["profile_answers"] = profile_changes
+        if changes:
+            answers["|".join(query)] = changes
+    return {"context": context, "blank": blank, "answers": answers}
+
+
+def pooling_control():
+    labels = {"u": {"A"}, "v": {"B"}, "w": {"C"}}
+    left = {"relation_id": "L", "relation": "BEFORE", "source_event": "u", "target_event": "v"}
+    right = {"relation_id": "R", "relation": "BEFORE", "source_event": "v", "target_event": "w"}
+    return compare_query({"left_only": (labels, [left]), "right_only": (labels, [right])},
+                         ("A", "B", "C"), summary_only=True)
 
 
 def build(destination):
@@ -33,8 +68,14 @@ def build(destination):
             profiles.append({"name": p["name"], "level": level, "vocabulary": vocabulary,
                              "common": common, "answers": answers,
                              "exclusions": case.get("exclusions", [])})
-        cases.append({"key": key, "title": case["source"]["title"], "profiles": profiles})
-    payload = {"cases": cases, "repository_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        entry = {"key": key, "title": case["source"]["title"], "profiles": profiles}
+        group = "netsupport-identity" if key == "dfir-netsupport" else key
+        if group in GROUPS:
+            vocabulary = next(p["vocabulary"] for p in profiles if p["level"] == "parent")
+            entry["comparison"] = browser_comparison(group, case, vocabulary)
+        cases.append(entry)
+    payload = {"cases": cases, "pooling_control": pooling_control(),
+               "repository_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
                "working_tree_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT).strip())}
     # JSON remains inert even if a future source title contains an HTML closing tag.
     serialized = json.dumps(payload, separators=(",", ":"), ensure_ascii=True).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
