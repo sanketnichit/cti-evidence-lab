@@ -35,3 +35,27 @@ python -m examples.profile_coherence
 ```
 
 The complete study command verifies and includes `profile_coherence.json`.
+
+## Open mapping uncertainty
+
+Apply the existing open completion rule separately within each profile. An unknown occurrence can take any label in the fixed query vocabulary. Known labels and BEFORE edges stay fixed in that profile. A coherent answer is **supported** if a known witness exists in at least one profile, **unresolved** if only a witness requiring completion exists in at least one, and **unsupported** if neither exists. This is an existential answer over the recorded interpretations.
+
+For the pooling comparison, union the known facts and union the possible facts separately. If a label is withheld in one profile and known in another, the pooled possible facts still include the open possibilities contributed by the first. Pooling edges and eligible labels can then increase the apparent support of a query. The test checks each coherent answer against direct execution of the existing query engine by profile, and checks the pooled possibilities against distinct-path enumeration.
+
+Across the same 5,886 constructed pairs and all eight queries per pair, pooling increases an answer's status in 2,935 pairs. The 47,088 graph-pair/query instances contain these increases.
+
+| Coherent status | Pooled status | Query instances |
+|---|---|---:|
+| Unsupported | Unresolved | 9,216 |
+| Unsupported | Supported | 2,560 |
+| Unresolved | Supported | 1,080 |
+
+The first control splits the required edges across profiles and withholds the middle label. Pooling makes the chain appear possible even though neither profile has a complete path. The second control puts the full path in a profile with a withheld middle label, and the known label in a profile missing one edge. Pooling upgrades that query to supported. The two forms of error affect different decisions.
+
+In the two recorded parent-level profile groups, pooling and coherent evaluation agree on all 133 queries. The RDP group has three supported and two unresolved queries. The domain-controller group has four supported and eight unresolved queries. These matrices enumerate the labels known somewhere in each group. They describe sensitivity to the supplied alternatives and vocabulary. [Detailed uncertainty results](uncertainty_results.json)
+
+```sh
+python -m examples.profile_uncertainty
+```
+
+Full reproduction includes `profile_uncertainty.json`.

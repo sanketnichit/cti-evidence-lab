@@ -24,7 +24,7 @@ CTI Evidence Lab evaluates temporal-edge retention and connected-sequence query 
 | Microsoft series prefix | One report unassessed from the prose and one publisher link pointing to a different installment | One accessible selected report |
 | Runtime and output cost | 16 scaling workloads and 16 repeated-label workloads with exact witness and join counts | Synthetic graphs and single-machine timing |
 | Answer-index storage | Exact known-label encodings compared on 19 synthetic workloads and 12 recorded profiles | Compact JSON sizes for a fixed query |
-| Interpretation coherence | Finite witness oracle over 5,886 profile pairs and a replay of two recorded profile groups | Pooling errors in constructed controls, with none in the recorded groups |
+| Interpretation coherence | Exact known and unresolved answer checks on 5,886 constructed profile pairs and two recorded groups | Pooling inflates some constructed answers. All 133 recorded query statuses agree |
 | Interpretation sensitivity | 203 evidence-removal scenarios and 40 acyclic input-error edits | Constructed changes to two incident graphs |
 | Investigation prototype | Six offline case records, 5,454 query combinations across five assessable cases, and Chromium, Firefox and WebKit checks at three viewport widths | Safari devices, assistive technology and practical analyst benefit remain untested |
 | Mapping-bound sensitivity | Paired open and constrained CLI answers, 21,952 finite query checks, and a frozen discovery-role comparison across three incident graphs | Depends on declared bounds and case query vocabulary |

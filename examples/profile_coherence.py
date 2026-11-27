@@ -13,8 +13,8 @@ from src.occurrence_queries import validate
 RESULTS = ROOT / "research/experiments/profile_coherence_v0.2/results.json"
 
 
-def witness_masks(profiles):
-    """Index pooled witnesses by the profiles that contain all their facts."""
+def witness_masks(profiles, *, completion_vocabulary=()):
+    """Index pooled witnesses by profile, optionally completing unknown labels."""
     labels = defaultdict(set)
     label_profiles = defaultdict(int)
     edge_profiles = defaultdict(int)
@@ -23,7 +23,7 @@ def witness_masks(profiles):
         validate(mappings, edges)
         bit = 1 << index
         for node, techniques in mappings.items():
-            for technique in techniques:
+            for technique in techniques or completion_vocabulary:
                 labels[node].add(technique)
                 label_profiles[node, technique] |= bit
         for first, second in edges:
@@ -87,14 +87,18 @@ def compare(profiles):
     }
 
 
-def finite_check():
+def finite_profiles():
     nodes = ("u", "v", "w")
     possible_edges = (("u", "v"), ("v", "w"))
-    profiles = [
+    return [
         (dict(zip(nodes, labels)), {edge for edge, retained in zip(possible_edges, flags) if retained})
         for labels in product((set(), {"A"}, {"B"}), repeat=3)
         for flags in product((False, True), repeat=2)
     ]
+
+
+def finite_check():
+    profiles = finite_profiles()
     counts = defaultdict(int)
     for first, second in combinations_with_replacement(profiles, 2):
         result = compare((first, second))
@@ -121,8 +125,7 @@ def controls():
     }
 
 
-def run():
-    recorded = {}
+def recorded_profile_groups():
     for key in AVAILABLE_CASES:
         case = load_case(key)
         by_taxonomy = defaultdict(list)
@@ -133,7 +136,12 @@ def run():
         for taxonomy, profiles in by_taxonomy.items():
             if len(profiles) >= 2:
                 names, graphs = zip(*profiles)
-                recorded[f"{key}/{taxonomy}"] = {"profiles": list(names), **compare(graphs)}
+                yield f"{key}/{taxonomy}", list(names), graphs
+
+
+def run():
+    recorded = {key: {"profiles": names, **compare(graphs)}
+                for key, names, graphs in recorded_profile_groups()}
     return {"finite": finite_check(), "synthetic_controls": controls(), "recorded_profiles": recorded}
 
 

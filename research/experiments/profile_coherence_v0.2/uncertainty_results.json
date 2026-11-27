@@ -1,0 +1,112 @@
+{
+  "controls": {
+    "known_label_in_profile_missing_an_edge": {
+      "coherent": {
+        "NOT_SUPPORTED": 24,
+        "SUPPORTED": 0,
+        "UNRESOLVED_MAPPING": 3
+      },
+      "pooled": {
+        "NOT_SUPPORTED": 24,
+        "SUPPORTED": 1,
+        "UNRESOLVED_MAPPING": 2
+      },
+      "promotions": {
+        "UNRESOLVED_MAPPING -> SUPPORTED": {
+          "count": 1,
+          "example_query": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      },
+      "query_count": 27
+    },
+    "separate_edges_with_unknown_middle": {
+      "coherent": {
+        "NOT_SUPPORTED": 27,
+        "SUPPORTED": 0,
+        "UNRESOLVED_MAPPING": 0
+      },
+      "pooled": {
+        "NOT_SUPPORTED": 24,
+        "SUPPORTED": 0,
+        "UNRESOLVED_MAPPING": 3
+      },
+      "promotions": {
+        "NOT_SUPPORTED -> UNRESOLVED_MAPPING": {
+          "count": 3,
+          "example_query": [
+            "A",
+            "A",
+            "C"
+          ]
+        }
+      },
+      "query_count": 27
+    }
+  },
+  "finite": {
+    "pairs_with_promotions": 2935,
+    "profile_pairs": 5886,
+    "promotions": {
+      "NOT_SUPPORTED -> SUPPORTED": 2560,
+      "NOT_SUPPORTED -> UNRESOLVED_MAPPING": 9216,
+      "UNRESOLVED_MAPPING -> SUPPORTED": 1080
+    },
+    "query_instances": 47088
+  },
+  "recorded_profiles": {
+    "domain-controller/parent": {
+      "coherent": {
+        "NOT_SUPPORTED": 113,
+        "SUPPORTED": 4,
+        "UNRESOLVED_MAPPING": 8
+      },
+      "pooled": {
+        "NOT_SUPPORTED": 113,
+        "SUPPORTED": 4,
+        "UNRESOLVED_MAPPING": 8
+      },
+      "profiles": [
+        "core_transfer_execution",
+        "extended_script_sequence",
+        "archive_mapping_withheld"
+      ],
+      "promotions": {},
+      "query_count": 125,
+      "vocabulary": [
+        "T1021",
+        "T1059",
+        "T1218",
+        "T1560",
+        "T1570"
+      ]
+    },
+    "rdp/parent": {
+      "coherent": {
+        "NOT_SUPPORTED": 3,
+        "SUPPORTED": 3,
+        "UNRESOLVED_MAPPING": 2
+      },
+      "pooled": {
+        "NOT_SUPPORTED": 3,
+        "SUPPORTED": 3,
+        "UNRESOLVED_MAPPING": 2
+      },
+      "profiles": [
+        "unresolved_cleanup",
+        "proposed_cleanup_full_edges",
+        "proposed_cleanup_local_edges",
+        "reported_completed_actions"
+      ],
+      "promotions": {},
+      "query_count": 8,
+      "vocabulary": [
+        "T1021",
+        "T1070"
+      ]
+    }
+  }
+}
