@@ -21,7 +21,67 @@
           ]
         }
       },
-      "query_count": 27
+      "query_count": 27,
+      "witness_counts": {
+        "known": {
+          "pooled": 1,
+          "pooled_only": 1
+        },
+        "possible": {
+          "pooled": 3,
+          "pooled_only": 0
+        }
+      }
+    },
+    "same_status_different_witnesses": {
+      "aligned_edges": {
+        "coherent": {
+          "NOT_SUPPORTED": 26,
+          "SUPPORTED": 1,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "pooled": {
+          "NOT_SUPPORTED": 26,
+          "SUPPORTED": 1,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "promotions": {},
+        "query_count": 27,
+        "witness_counts": {
+          "known": {
+            "pooled": 2,
+            "pooled_only": 0
+          },
+          "possible": {
+            "pooled": 2,
+            "pooled_only": 0
+          }
+        }
+      },
+      "split_edges": {
+        "coherent": {
+          "NOT_SUPPORTED": 26,
+          "SUPPORTED": 1,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "pooled": {
+          "NOT_SUPPORTED": 26,
+          "SUPPORTED": 1,
+          "UNRESOLVED_MAPPING": 0
+        },
+        "promotions": {},
+        "query_count": 27,
+        "witness_counts": {
+          "known": {
+            "pooled": 2,
+            "pooled_only": 1
+          },
+          "possible": {
+            "pooled": 2,
+            "pooled_only": 1
+          }
+        }
+      }
     },
     "separate_edges_with_unknown_middle": {
       "coherent": {
@@ -44,7 +104,17 @@
           ]
         }
       },
-      "query_count": 27
+      "query_count": 27,
+      "witness_counts": {
+        "known": {
+          "pooled": 0,
+          "pooled_only": 0
+        },
+        "possible": {
+          "pooled": 3,
+          "pooled_only": 3
+        }
+      }
     }
   },
   "finite": {
@@ -82,7 +152,17 @@
         "T1218",
         "T1560",
         "T1570"
-      ]
+      ],
+      "witness_counts": {
+        "known": {
+          "pooled": 4,
+          "pooled_only": 0
+        },
+        "possible": {
+          "pooled": 12,
+          "pooled_only": 0
+        }
+      }
     },
     "rdp/parent": {
       "coherent": {
@@ -106,7 +186,17 @@
       "vocabulary": [
         "T1021",
         "T1070"
-      ]
+      ],
+      "witness_counts": {
+        "known": {
+          "pooled": 3,
+          "pooled_only": 0
+        },
+        "possible": {
+          "pooled": 8,
+          "pooled_only": 0
+        }
+      }
     }
   }
 }

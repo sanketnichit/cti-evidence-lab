@@ -24,6 +24,21 @@ An end-to-end head-to-head comparison would need shared reports, a common ATT&CK
 
 Written narrative is one evidence channel. The [MM-AttacKG preprint](https://arxiv.org/abs/2506.16968) motivates testing whether images add missing details. A source review should record text-only coverage and require a separate interpretation profile for evidence recovered from images.
 
+### Interpretation coherence
+
+The v0.2 comparison targets witness fidelity when alternative readings of one incident share some facts. This targeted update follows the existing temporal CTI comparison, the foundations of incomplete-data query semantics, and recent work on claim provenance and evidence-grounded investigation. It compares published data and answer contracts.
+
+| Closest work | Contract and implication for v0.2 |
+|---|---|
+| [Conditional tables, §5](https://www.inf.unibz.it/~nutt/Teaching/FDBs1718/FDBsPapers/imielinskiLipski-JACM-84.pdf) and [Provenance Semirings, §3](https://www.cs.ucdavis.edu/~green/papers/pods07.pdf) | Conditional tuple membership and set-valued annotations provide established ways to keep alternatives through a join. Event-table semirings already use set intersection and union. Profile masks specialize those operations to a finite supplied set of CTI readings. |
+| [Explainable Certain Answers, §§2–3](https://ijcai.org/proceedings/2018/233) | An explanation can certify a certain answer over database completions. The v0.2 diagnostic identifies the smallest set of facts that rules out one witness across specified profiles. Other witnesses can keep the query supported. |
+| [ChronoCTI, §§4.5–4.6](https://link.springer.com/article/10.1007/s10115-025-02491-6) | The temporal prediction task aggregates event evidence at technique-pair level. It supplies the closest projection contract. The v0.2 control holds action identities fixed and varies only whether facts coexist within a profile. |
+| [Attack Flow v4.0, Attack Condition and Attack Operator](https://center-for-threat-informed-defense.github.io/attack-flow/language/) | Conditions and Boolean operators can express alternative continuations within a flow. An adapter for our query would have to preserve the joint membership of edges and mappings in a declared reading and specify which effects satisfy the BEFORE rule. An OR node alone leaves those decisions unspecified. |
+| [TRACE-CTI preprint, §4.2](https://arxiv.org/html/2607.24563) | Evidence units, extraction configurations and validation grounds support auditable individual ATT&CK claims. A sequence comparison would also require occurrence IDs and interpretation-scoped ordering edges. Agreement about individual mappings does not determine whether the two edge facts coexist. |
+| [LODESTONE preprint, §§III–IV](https://arxiv.org/html/2611.29932v1) | Links provenance-graph events from telemetry to CTI descriptions and evaluates investigation report quality and evidence retrieval. The v0.2 task starts from supplied incident readings and tests whether a reported sequence has a consistent witness. LODESTONE's results measure a complementary telemetry-grounding task. |
+
+The supported contribution is a controlled CTI-specific representation comparison with a reproducible witness audit and a source-backed sensitivity analysis. The three recorded groups showed no pooled-only witnesses. Establishing real-world frequency or analyst impact requires additional evidence. [v0.2 manuscript](PROFILE_COHERENCE_REPORT_v0.2.md)
+
 ## Historical breadth and discovery notes
 
 “Potential gap” is an interpretation to test, not proof of novelty.

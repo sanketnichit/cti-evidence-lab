@@ -97,6 +97,8 @@ Full reproduction checks and includes `profile_conflicts.json`.
 
 ## Compare and verify one query
 
+Query status can agree even when a pooled explanation includes an unsupported sequence. In the matched control `same_status_different_witnesses`, two profile pairs have identical fact counts and each contains a shared valid path. Only the pair that splits the other path's edges across profiles has a pooled-only witness. Witness-level enumeration found none in the recorded RDP, domain-controller, or NetSupport groups. The `possible` count includes known witnesses. [Control and original group counts](uncertainty_results.json) · [NetSupport counts](netsupport_identity_results.json)
+
 The comparison export includes the per-profile answers, mappings, relation evidence, and all pooled candidates. Each candidate names its supporting profiles or records a minimum conflict. The possible-witness list includes fully known witnesses. Conflict fact indices are one-based within the fact list, and profile numbers refer to `answer.profile_order`.
 
 ```sh

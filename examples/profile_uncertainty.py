@@ -39,13 +39,21 @@ def reference_ranks(profile, queries):
 
 def compare(profiles, vocabulary, reference=None):
     queries = tuple(product(vocabulary, repeat=3))
-    known_coherent, known_pool = supported_queries(witness_masks(profiles))
-    possible_coherent, possible_pool = supported_queries(witness_masks(profiles, completion_vocabulary=vocabulary))
+    known_witnesses = witness_masks(profiles)
+    possible_witnesses = witness_masks(profiles, completion_vocabulary=vocabulary)
+    known_coherent, known_pool = supported_queries(known_witnesses)
+    possible_coherent, possible_pool = supported_queries(possible_witnesses)
     coherent = classify(queries, known_coherent, possible_coherent)
     pooled = classify(queries, known_pool, possible_pool)
 
     if reference is None:
         reference = [reference_ranks(profile, queries) for profile in profiles]
+        for masks, completion in ((known_witnesses, ()), (possible_witnesses, vocabulary)):
+            direct = {(path, query) for mappings, edges in profiles
+                      for path, query in enumerate_witnesses(
+                          {node: labels or completion for node, labels in mappings.items()}, edges)}
+            if direct != {witness for witness, mask in masks.items() if mask}:
+                raise AssertionError("Coherent witnesses differ from direct per-profile enumeration")
     if coherent != {query: max(row[query] for row in reference) for query in queries}:
         raise AssertionError("Coherent answers differ from direct per-profile investigation")
     possible_facts = defaultdict(set)
@@ -54,7 +62,7 @@ def compare(profiles, vocabulary, reference=None):
         for node, labels in mappings.items():
             possible_facts[node].update(labels or vocabulary)
         pooled_edges.update(edges)
-    if possible_pool != {query for _, query in enumerate_witnesses(possible_facts, pooled_edges)}:
+    if possible_witnesses.keys() != enumerate_witnesses(possible_facts, pooled_edges):
         raise AssertionError("Pooled possibilities differ from explicit distinct-path enumeration")
 
     coherent_counts = Counter(dict.fromkeys(STATUSES, 0))
@@ -72,6 +80,10 @@ def compare(profiles, vocabulary, reference=None):
         "query_count": len(queries),
         "coherent": dict(coherent_counts),
         "pooled": dict(pooled_counts),
+        "witness_counts": {
+            kind: {"pooled": len(masks), "pooled_only": sum(not mask for mask in masks.values())}
+            for kind, masks in (("known", known_witnesses), ("possible", possible_witnesses))
+        },
         "promotions": {key: {"count": len(items), "example_query": items[0]}
                        for key, items in sorted(promotions.items())},
     }
@@ -96,7 +108,21 @@ def finite_check():
 def controls():
     mappings = {"u": {"A"}, "v": set(), "w": {"C"}}
     both_edges = {("u", "v"), ("v", "w")}
+    # Each pair has the same pooled facts and per-fact profile counts.
+    fixed = {**mappings, "v": {"B"}}
+    shared = {**fixed, "x": {"B"}}
+    shared_edges = {("u", "x"), ("x", "w")}
+    aligned = ((shared, shared_edges | both_edges), (shared, shared_edges))
+    split = ((shared, shared_edges | {("u", "v")}), (shared, shared_edges | {("v", "w")}))
+    aligned_result = compare(aligned, ("A", "B", "C"))
+    split_result = compare(split, ("A", "B", "C"))
+    if aligned_result["coherent"] != split_result["coherent"] or split_result["promotions"]:
+        raise AssertionError("The shared witness should preserve query status")
+    if (aligned_result["witness_counts"]["known"] != {"pooled": 2, "pooled_only": 0}
+            or split_result["witness_counts"]["known"] != {"pooled": 2, "pooled_only": 1}):
+        raise AssertionError("Only the split interpretation pair should create a false witness")
     return {
+        "same_status_different_witnesses": {"aligned_edges": aligned_result, "split_edges": split_result},
         "separate_edges_with_unknown_middle": compare(
             ((mappings, {("u", "v")}), (mappings, {("v", "w")})), ("A", "B", "C")
         ),

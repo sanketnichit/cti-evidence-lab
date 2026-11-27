@@ -11,7 +11,17 @@
       "UNRESOLVED_MAPPING": 907
     },
     "promotions": {},
-    "query_count": 3375
+    "query_count": 3375,
+    "witness_counts": {
+      "known": {
+        "pooled": 8,
+        "pooled_only": 0
+      },
+      "possible": {
+        "pooled": 1013,
+        "pooled_only": 0
+      }
+    }
   },
   "profiles": {
     "co_referent_execution": {
