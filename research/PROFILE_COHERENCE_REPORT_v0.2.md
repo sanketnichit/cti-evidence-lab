@@ -50,6 +50,8 @@ The full comparison lists incompatible joins between left and right projected ed
 
 The comparison command records individual profile answers, supporting profiles for each pooled candidate, conflicts, citations to the case evidence, and a case hash. Its verifier recomputes the export. The paper's conclusions depend on retained edges, aligned identities and stated completion assumptions. The examined source alternatives do not demonstrate a pooling failure in the wild. Independent reviewers would need to record coherent interpretations and align action identities before comparing their graphs. The study has no independent reviewer or analyst outcomes.
 
+The chronological holdout has an answer-free review instrument and a predefined analysis for two matching, completed returns. The witness audit restricts the comparison to actions both reviewers retained and aligned one to one, with each reviewer's edges and mappings kept separate. It reports how much of the submitted evidence falls outside that shared universe. This design measures witness agreement conditional on alignment. Reviewer choices about action boundaries remain visible through the split, merge and unmatched counts. [Independent review and analysis](experiments/incident_holdout_v0.1/README.md#independent-source-review)
+
 ```sh
 python scripts/reproduce_study.py
 python scripts/compare_sequence_profiles.py --group netsupport-identity --query T1562 T1047 T1053 --output outputs/profile-comparison.json

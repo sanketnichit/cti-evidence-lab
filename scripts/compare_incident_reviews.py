@@ -10,6 +10,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from examples.profile_coherence import witness_masks
+from examples.profile_conflicts import explain
+from examples.profile_uncertainty import compare
 from scripts.incident_source_review import FORMS, POSTS, load_return
 
 METHOD = "incident-holdout-comparison-v0.1"
@@ -82,6 +85,36 @@ def counts(pairs):
     return [{"left": left, "right": right, "count": count} for (left, right), count in sorted(table.items())]
 
 
+def profile_audit(retained, actions, paired_relations):
+    """Use a shared action universe without reconciling either reviewer's facts."""
+    graphs = []
+    action_keys = ({action: action for action in retained}, retained)
+    for entries, keys, decisions in zip(actions, action_keys, paired_relations):
+        mappings = {}
+        for action, key in keys.items():
+            technique = entries[key]["technique_id"]
+            mappings[action] = {technique} if technique else set()
+        edges = {pair for pair, decision in decisions.items() if decision == "BEFORE"}
+        graphs.append((mappings, edges))
+    vocabulary = sorted({label for mappings, _ in graphs for labels in mappings.values() for label in labels})
+    if not vocabulary:
+        return {"status": "UNASSESSED", "reason": "NO_MAPPED_SHARED_ACTIONS"}
+
+    result = compare(graphs, vocabulary)
+    examples = {}
+    for kind, completion in (("known", ()), ("possible", vocabulary)):
+        if not result["witness_counts"][kind]["pooled_only"]:
+            continue
+        masks = witness_masks(graphs, completion_vocabulary=completion)
+        path, query = min(witness for witness, mask in masks.items() if not mask)
+        completed = [({node: labels or completion for node, labels in mappings.items()}, edges)
+                     for mappings, edges in graphs]
+        examples[kind] = {"query": list(query), "aligned_actions": [{"left": a, "right": retained[a]} for a in path],
+                          "conflict": explain(completed, path, query)}
+    return {"status": "ASSESSED", "profile_order": ["left", "right"], "vocabulary": vocabulary,
+            "before_edges": [len(edges) for _, edges in graphs], **result, "pooled_only_examples": examples}
+
+
 def report_comparison(post, group, submissions):
     reports, actions, relations = [], [], []
     for reviews, all_actions, all_relations in submissions:
@@ -103,7 +136,8 @@ def report_comparison(post, group, submissions):
     if not complete or source != "MATCHING":
         if group["groups"]:
             raise ValueError("Leave groups empty if either review is incomplete or the source basis is not matching")
-        return {**result, "comparison_status": "UNASSESSED"}
+        return {**result, "comparison_status": "UNASSESSED",
+                "profile_audit": {"status": "UNASSESSED", "reason": "SOURCE_BASIS_OR_COMPLETION"}}
 
     left, right = actions
     matched, coverage = align(group["groups"], left, right)
@@ -138,6 +172,7 @@ def report_comparison(post, group, submissions):
         "relations_outside_aligned_retained_pairs": [len(relations[0]) - len(left_pairs), len(relations[1]) - len(right_pairs)],
         "both_recorded_decisions": len(observed),
         "matching_recorded_decisions": sum(a == b for a, b in observed),
+        "profile_audit": profile_audit(retained, actions, (left_pairs, right_pairs)),
     }
 
 

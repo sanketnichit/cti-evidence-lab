@@ -60,6 +60,8 @@ class IncidentReviewComparisonTests(unittest.TestCase):
             self.assertIn({"left": "WITHHELD", "right": "T1000", "count": 1}, report["parent_mappings"])
             self.assertEqual(result[POSTS[1]]["comparison_status"], "UNASSESSED")
             self.assertNotIn("candidate_pairs", result[POSTS[1]])
+            self.assertEqual(result[POSTS[1]]["profile_audit"]["status"], "UNASSESSED")
+            self.assertEqual(report["profile_audit"]["witness_counts"]["possible"]["pooled"], 0)
 
             original = alignment.read_bytes()
             omitted = groups.pop()
@@ -72,3 +74,30 @@ class IncidentReviewComparisonTests(unittest.TestCase):
                 handle.write("\n")
             with self.assertRaisesRegex(ValueError, "exact reviewer returns"):
                 summarize(left, right, alignment)
+
+    def test_profile_audit_does_not_promote_uncertain_edges_within_either_review(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            left, right = root / "left", root / "right"
+            fixture_return(left, "R01", [("a", "T1000"), ("b", ""), ("c", "T1002")],
+                           [("a", "b", "BEFORE"), ("b", "c", "UNCERTAIN")])
+            fixture_return(right, "R02", [("x", "T1000"), ("y", "T1001"), ("z", "T1002")],
+                           [("x", "y", "EXCLUDE"), ("y", "z", "BEFORE")])
+            data = prepare(left, right)
+            data["reports"][POSTS[0]].update(
+                source_basis="MATCHING", source_note="Synthetic matching source.",
+                groups=[{"left": [a], "right": [b], "reason": "Synthetic match."} for a, b in zip("abc", "xyz")],
+            )
+            data["reports"][POSTS[1]].update(source_basis="UNVERIFIED", source_note="Synthetic unavailable source.")
+            alignment = root / "alignment.json"
+            alignment.write_text(json.dumps(data), encoding="utf-8")
+            audit = summarize(left, right, alignment)["reports"][POSTS[0]]["profile_audit"]
+            self.assertEqual(audit["before_edges"], [1, 1])
+            self.assertEqual(audit["coherent"]["NOT_SUPPORTED"], 27)
+            self.assertEqual(audit["witness_counts"], {
+                "known": {"pooled": 1, "pooled_only": 1}, "possible": {"pooled": 3, "pooled_only": 3},
+            })
+            example = audit["pooled_only_examples"]["known"]
+            self.assertEqual(example["query"], ["T1000", "T1001", "T1002"])
+            self.assertEqual(example["aligned_actions"], [{"left": a, "right": b} for a, b in zip("abc", "xyz")])
+            self.assertIn([1, 2], example["conflict"]["minimum_conflicts"])
