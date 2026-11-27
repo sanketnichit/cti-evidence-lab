@@ -1,0 +1,102 @@
+{
+  "pooling_comparison": {
+    "coherent": {
+      "NOT_SUPPORTED": 2460,
+      "SUPPORTED": 8,
+      "UNRESOLVED_MAPPING": 907
+    },
+    "pooled": {
+      "NOT_SUPPORTED": 2460,
+      "SUPPORTED": 8,
+      "UNRESOLVED_MAPPING": 907
+    },
+    "promotions": {},
+    "query_count": 3375
+  },
+  "profiles": {
+    "co_referent_execution": {
+      "separate_script_actions": {
+        "endpoint_join_returned": false,
+        "known_witnesses": [],
+        "ordinary_returned": true,
+        "query": [
+          "T1105",
+          "T1059",
+          "T1560"
+        ],
+        "status": "NOT_SUPPORTED"
+      },
+      "wmi_identity": {
+        "endpoint_join_returned": true,
+        "known_witnesses": [
+          {
+            "occurrence_ids": [
+              "firewall_change",
+              "payload_run",
+              "persistence_task"
+            ],
+            "relation_ids": [
+              "B12-aligned",
+              "B14"
+            ]
+          }
+        ],
+        "ordinary_returned": true,
+        "query": [
+          "T1562",
+          "T1047",
+          "T1053"
+        ],
+        "status": "SUPPORTED"
+      }
+    },
+    "omit_summary_edge": {
+      "separate_script_actions": {
+        "endpoint_join_returned": false,
+        "known_witnesses": [],
+        "ordinary_returned": true,
+        "query": [
+          "T1105",
+          "T1059",
+          "T1560"
+        ],
+        "status": "NOT_SUPPORTED"
+      },
+      "wmi_identity": {
+        "endpoint_join_returned": false,
+        "known_witnesses": [],
+        "ordinary_returned": false,
+        "query": [
+          "T1562",
+          "T1047",
+          "T1053"
+        ],
+        "status": "NOT_SUPPORTED"
+      }
+    },
+    "recorded": {
+      "separate_script_actions": {
+        "endpoint_join_returned": false,
+        "known_witnesses": [],
+        "ordinary_returned": true,
+        "query": [
+          "T1105",
+          "T1059",
+          "T1560"
+        ],
+        "status": "NOT_SUPPORTED"
+      },
+      "wmi_identity": {
+        "endpoint_join_returned": false,
+        "known_witnesses": [],
+        "ordinary_returned": true,
+        "query": [
+          "T1562",
+          "T1047",
+          "T1053"
+        ],
+        "status": "NOT_SUPPORTED"
+      }
+    }
+  }
+}

@@ -59,3 +59,24 @@ python -m examples.profile_uncertainty
 ```
 
 Full reproduction includes `profile_uncertainty.json`.
+
+## NetSupport action identity sensitivity
+
+The recorded NetSupport graph assigns two T1047 actions to paragraph P6. One represents the broad description of further remote execution. The other represents the specific payload run. The paragraph places a change to firewall settings before the broad activity and task creation after the specific run. Whether the opening description refers to that same payload run determines whether those ordering links share a middle action. [Recorded holdout interpretation](../incident_holdout_v0.1/README.md)
+
+The comparison keeps the recorded graph as one profile. A conservative profile omits B12, the link to the broad execution description. A third profile treats the description as a reference to the specific run, removes the duplicate action and directs the link to that run as B12-aligned. This last reading assumes that the opening time relation applies to the specific run. The paragraph also permits reading the opening as a summary of several actions, so this assumption remains open to review.
+
+| Reading of P6 | T1562 → T1047 → T1053 in the occurrence graph | Ordinary pair traversal |
+|---|---|---|
+| Separate actions | Unsupported | Returns the query |
+| Omit the broad ordering link | Unsupported | No return |
+| Same execution | Supported by B12-aligned and B14 | Returns the query |
+
+The separate script-action mismatch (T1105 → T1059 → T1560) remains unsupported in the occurrence graph in all three profiles. The ordinary projection returns it in each. Across the full 3,375-query parent vocabulary, pooled and profile-coherent statuses agree. The WMI change arises within one coherent interpretation. These post-review alternatives identify which finding depends on action identity. They provide no independent adjudication. [Results and witnesses](netsupport_identity_results.json)
+
+```sh
+python -m examples.netsupport_identity_sensitivity
+python -m examples.netsupport_identity_sensitivity --source-html /path/to/22587.html
+```
+
+The second command also verifies the saved HTML and paragraph locators. Full reproduction checks and includes `netsupport_identity_sensitivity.json`.

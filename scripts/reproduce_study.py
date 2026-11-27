@@ -36,6 +36,7 @@ from examples.discovery_bound_sensitivity import RESULTS as DISCOVERY_RESULTS, r
 from examples.sequence_index_storage import RESULTS as INDEX_RESULTS, run as run_index_storage
 from examples.profile_coherence import RESULTS as COHERENCE_RESULTS, run as run_profile_coherence
 from examples.profile_uncertainty import RESULTS as PROFILE_UNCERTAINTY_RESULTS, run as run_profile_uncertainty
+from examples.netsupport_identity_sensitivity import RESULTS as IDENTITY_RESULTS, run as run_netsupport_identity
 from scripts.investigate_sequence import certificate as investigation_certificate, load_case as load_investigation_case
 from scripts.evaluate_incident_holdout import DIRECTORY as HOLDOUT, run as run_holdout
 from scripts.evaluate_cisa_extension import DIRECTORY as CISA, run as run_cisa
@@ -206,6 +207,10 @@ def main():
     if profile_uncertainty != json.loads(PROFILE_UNCERTAINTY_RESULTS.read_text(encoding="utf-8")):
         raise ValueError("Profile uncertainty differs from the published results")
     write_json(destination / "profile_uncertainty.json", profile_uncertainty)
+    identity = run_netsupport_identity()
+    if identity != json.loads(IDENTITY_RESULTS.read_bytes()):
+        raise ValueError("NetSupport identity sensitivity differs from the recorded results")
+    write_json(destination / "netsupport_identity_sensitivity.json", identity)
     bounds = json.loads((ROOT / "research/experiments/bounded_mapping_v0.1/archive_bound_assumption.json").read_text(encoding="utf-8"))
     write_json(destination / "bounded_mapping_assumption_example.json", investigation_certificate(
         "domain-controller", load_investigation_case("domain-controller"), "archive_mapping_withheld",
@@ -234,7 +239,7 @@ def main():
                        "external_sequence_results.json", "external_sequence_source_integrity.json",
                        "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json",
                        "discovery_mapping_sensitivity.json", "answer_index_storage.json", "profile_coherence.json",
-                       "profile_uncertainty.json"]
+                       "profile_uncertainty.json", "netsupport_identity_sensitivity.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf",
