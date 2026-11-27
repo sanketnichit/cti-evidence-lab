@@ -80,3 +80,17 @@ python -m examples.netsupport_identity_sensitivity --source-html /path/to/22587.
 ```
 
 The second command also verifies the saved HTML and paragraph locators. Full reproduction checks and includes `netsupport_identity_sensitivity.json`.
+
+## Explaining a pooled-only witness
+
+A pooled witness has five facts, comprising two ordering links and three occurrence-label assignments. Each fact occurs in at least one profile. A **minimum conflict** is a smallest subset of those facts that occurs together in no profile. Listing the profiles for each fact makes the conflict inspectable. The explanation reports every smallest subset when several tie. It applies to a single pooled witness. A query can still have a different, coherent witness.
+
+The search tests subsets in increasing size. A conflict needs at most five facts because the full witness is already incompatible. It also needs at most as many facts as there are profiles. Pick one missing fact per profile and take their union. Every profile then lacks at least one selected fact. With two profiles, every incompatible pooled witness therefore has a two-fact conflict.
+
+Direct pair enumeration confirms all conflict explanations for the 3,640 incompatible witnesses in the existing finite two-profile design. New controls reach the bound with three, four and five profiles. In each control, each profile omits a different required fact. In the three-profile control, every pair of facts has a common profile, yet the full witness has none. A test that only checks pairs would miss this case. The examples use known labels and fixed edges under constructed alternatives. They establish a diagnostic and its boundary. [Conflict results](conflict_results.json)
+
+```sh
+python -m examples.profile_conflicts
+```
+
+Full reproduction checks and includes `profile_conflicts.json`.

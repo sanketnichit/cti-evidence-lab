@@ -1,0 +1,229 @@
+{
+  "finite_minimum_size_counts": {
+    "2": 3640
+  },
+  "omit_one_controls": {
+    "3": {
+      "facts": [
+        {
+          "arguments": [
+            "u",
+            "v"
+          ],
+          "kind": "before",
+          "profiles": [
+            2,
+            3
+          ]
+        },
+        {
+          "arguments": [
+            "v",
+            "w"
+          ],
+          "kind": "before",
+          "profiles": [
+            1,
+            3
+          ]
+        },
+        {
+          "arguments": [
+            "u",
+            "A"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2
+          ]
+        },
+        {
+          "arguments": [
+            "v",
+            "B"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "arguments": [
+            "w",
+            "C"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "minimum_conflicts": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "minimum_size": 3
+    },
+    "4": {
+      "facts": [
+        {
+          "arguments": [
+            "u",
+            "v"
+          ],
+          "kind": "before",
+          "profiles": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "arguments": [
+            "v",
+            "w"
+          ],
+          "kind": "before",
+          "profiles": [
+            1,
+            3,
+            4
+          ]
+        },
+        {
+          "arguments": [
+            "u",
+            "A"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "arguments": [
+            "v",
+            "B"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "arguments": [
+            "w",
+            "C"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "minimum_conflicts": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "minimum_size": 4
+    },
+    "5": {
+      "facts": [
+        {
+          "arguments": [
+            "u",
+            "v"
+          ],
+          "kind": "before",
+          "profiles": [
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "arguments": [
+            "v",
+            "w"
+          ],
+          "kind": "before",
+          "profiles": [
+            1,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "arguments": [
+            "u",
+            "A"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2,
+            4,
+            5
+          ]
+        },
+        {
+          "arguments": [
+            "v",
+            "B"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2,
+            3,
+            5
+          ]
+        },
+        {
+          "arguments": [
+            "w",
+            "C"
+          ],
+          "kind": "label",
+          "profiles": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "minimum_conflicts": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "minimum_size": 5
+    }
+  }
+}
