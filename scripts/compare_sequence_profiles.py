@@ -19,11 +19,11 @@ from src.sequence_investigation import investigate
 GROUPS = ("domain-controller", "rdp", "netsupport-identity")
 
 
-def compare_query(profiles, query):
+def compare_query(profiles, query, *, summary_only=False):
     query = tuple(query)
     graphs = [(mappings, {(row["source_event"], row["target_event"]) for row in relations})
               for mappings, relations in profiles.values()]
-    results = {name: investigate(mappings, relations, query)
+    results = {name: investigate(mappings, relations, query, summary_only=summary_only)
                for name, (mappings, relations) in profiles.items()}
     vocabulary = set(query)
     completed = [({node: labels or vocabulary for node, labels in mappings.items()}, edges)
@@ -31,9 +31,7 @@ def compare_query(profiles, query):
     pooled = {}
     for kind, inputs in (("known", graphs), ("possible", completed)):
         candidates = []
-        for (path, labels), mask in sorted(witness_masks(inputs).items()):
-            if labels != query:
-                continue
+        for (path, _), mask in sorted(witness_masks(inputs, query=query).items()):
             item = {"occurrence_ids": list(path), "supporting_profiles": [
                 name for i, name in enumerate(profiles) if mask & (1 << i)
             ]}
@@ -51,7 +49,7 @@ def compare_query(profiles, query):
     }
 
 
-def export(group, query):
+def export(group, query, *, summary_only=False):
     if group not in GROUPS:
         raise ValueError("Unknown profile group")
     key = "dfir-netsupport" if group == "netsupport-identity" else group
@@ -64,8 +62,8 @@ def export(group, query):
             if row.get("taxonomy_level", "parent") == "parent":
                 _, _, mappings, relations = profile_graph(case, row["name"])
                 profiles[row["name"]] = (mappings, relations)
-    answer = compare_query(profiles, query)
-    return {
+    answer = compare_query(profiles, query, summary_only=summary_only)
+    record = {
         "record_version": "1.0", "profile_group": group, "case_key": key,
         "case_sha256": digest(json.dumps(case, sort_keys=True, separators=(",", ":"))),
         "source": case["source"], "evidence": case["evidence"], "occurrences": case["occurrences"],
@@ -77,10 +75,14 @@ def export(group, query):
         }, "taxonomy_level": "parent", "answer": answer,
         "verification_scope": "Exact recomputation against recorded profiles and declared sensitivity alternatives.",
     }
+    if summary_only:
+        record["detail"] = "summary"
+    return record
 
 
 def verify(value):
-    if value != export(value["profile_group"], value["answer"]["query"]):
+    if value != export(value["profile_group"], value["answer"]["query"],
+                       summary_only=value.get("detail") == "summary"):
         raise ValueError("Comparison differs from recomputation")
 
 
@@ -91,16 +93,17 @@ def main():
     mode.add_argument("--verify", type=Path)
     parser.add_argument("--group", choices=GROUPS)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--summary-only", action="store_true", help="Count per-profile details without listing them")
     args = parser.parse_args()
     if args.verify:
-        if args.group or args.output:
+        if args.group or args.output or args.summary_only:
             parser.error("--verify uses only the exported record")
         verify(json.loads(args.verify.read_bytes()))
         print("Verified the profile comparison.")
         return
     if not args.group:
         parser.error("--query requires --group")
-    output = json.dumps(export(args.group, args.query), indent=2, sort_keys=True) + "\n"
+    output = json.dumps(export(args.group, args.query, summary_only=args.summary_only), indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(output, encoding="utf-8", newline="\n")

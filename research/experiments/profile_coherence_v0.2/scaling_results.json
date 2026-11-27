@@ -1,0 +1,497 @@
+{
+  "netsupport_export_storage": {
+    "compact": {
+      "gzip_bytes": 5530,
+      "json_bytes": 43056
+    },
+    "full": {
+      "gzip_bytes": 5655,
+      "json_bytes": 44385
+    }
+  },
+  "runtime": {
+    "architecture": "AMD64",
+    "implementation": "CPython",
+    "logical_cpus": 12,
+    "os": "Windows",
+    "os_release": "11",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "python": "3.12.14"
+  },
+  "synthetic_query": [
+    "A0",
+    "B0",
+    "C0"
+  ],
+  "timed_trials_per_operation": 7,
+  "workloads": [
+    {
+      "actions_per_profile": 24,
+      "exhaustive_witness_entries": 944,
+      "focused_witness_entries": 15,
+      "labels_per_mapped_action": 4,
+      "listed_incompatible_joins": 60,
+      "measurements": {
+        "compact_comparison": {
+          "median_ns": 738400,
+          "peak_python_bytes": 46400,
+          "samples_ns": [
+            775900,
+            781800,
+            738400,
+            710600,
+            773300,
+            716200,
+            670000
+          ]
+        },
+        "exhaustive_masks": {
+          "median_ns": 1026200,
+          "peak_python_bytes": 176344,
+          "samples_ns": [
+            1122300,
+            1057200,
+            1075900,
+            909300,
+            1026200,
+            873300,
+            801900
+          ]
+        },
+        "focused_masks": {
+          "median_ns": 370800,
+          "peak_python_bytes": 30528,
+          "samples_ns": [
+            404500,
+            393300,
+            370700,
+            301200,
+            370800,
+            374100,
+            302200
+          ]
+        },
+        "full_comparison": {
+          "median_ns": 766600,
+          "peak_python_bytes": 84272,
+          "samples_ns": [
+            863900,
+            705700,
+            873300,
+            767400,
+            757200,
+            766600,
+            752100
+          ]
+        }
+      },
+      "pooled_only_known": 2,
+      "profiles": 2,
+      "storage": {
+        "inputs": {
+          "gzip_bytes": 440,
+          "json_bytes": 8073
+        },
+        "inputs_and_compact_answer": {
+          "gzip_bytes": 1283,
+          "json_bytes": 20498
+        },
+        "inputs_and_full_answer": {
+          "gzip_bytes": 2683,
+          "json_bytes": 86450
+        }
+      },
+      "total_relations": 28
+    },
+    {
+      "actions_per_profile": 96,
+      "exhaustive_witness_entries": 3776,
+      "focused_witness_entries": 60,
+      "labels_per_mapped_action": 4,
+      "listed_incompatible_joins": 1080,
+      "measurements": {
+        "compact_comparison": {
+          "median_ns": 3276300,
+          "peak_python_bytes": 169792,
+          "samples_ns": [
+            1473200,
+            3556500,
+            3276300,
+            2558900,
+            3746500,
+            4268600,
+            1459200
+          ]
+        },
+        "exhaustive_masks": {
+          "median_ns": 4506200,
+          "peak_python_bytes": 699856,
+          "samples_ns": [
+            4129100,
+            4337500,
+            4663400,
+            4506200,
+            3038600,
+            9224800,
+            5780700
+          ]
+        },
+        "focused_masks": {
+          "median_ns": 1454400,
+          "peak_python_bytes": 117896,
+          "samples_ns": [
+            1454400,
+            1758900,
+            1369500,
+            1452600,
+            980500,
+            1533400,
+            2399100
+          ]
+        },
+        "full_comparison": {
+          "median_ns": 4193600,
+          "peak_python_bytes": 777552,
+          "samples_ns": [
+            4193600,
+            5989800,
+            8142100,
+            3170200,
+            3530100,
+            6170400,
+            2758400
+          ]
+        }
+      },
+      "pooled_only_known": 8,
+      "profiles": 2,
+      "storage": {
+        "inputs": {
+          "gzip_bytes": 1188,
+          "json_bytes": 31857
+        },
+        "inputs_and_compact_answer": {
+          "gzip_bytes": 2758,
+          "json_bytes": 74087
+        },
+        "inputs_and_full_answer": {
+          "gzip_bytes": 15570,
+          "json_bytes": 1216385
+        }
+      },
+      "total_relations": 112
+    },
+    {
+      "actions_per_profile": 192,
+      "exhaustive_witness_entries": 7552,
+      "focused_witness_entries": 120,
+      "labels_per_mapped_action": 4,
+      "listed_incompatible_joins": 4400,
+      "measurements": {
+        "compact_comparison": {
+          "median_ns": 4985300,
+          "peak_python_bytes": 342584,
+          "samples_ns": [
+            4985300,
+            5180100,
+            4885100,
+            5345700,
+            5585800,
+            4855300,
+            3861900
+          ]
+        },
+        "exhaustive_masks": {
+          "median_ns": 9070300,
+          "peak_python_bytes": 1398048,
+          "samples_ns": [
+            17052600,
+            9254100,
+            9070300,
+            6775900,
+            8400100,
+            8244700,
+            18383400
+          ]
+        },
+        "focused_masks": {
+          "median_ns": 2778100,
+          "peak_python_bytes": 234800,
+          "samples_ns": [
+            2787500,
+            2413800,
+            2809400,
+            2710700,
+            2778100,
+            2965200,
+            1435500
+          ]
+        },
+        "full_comparison": {
+          "median_ns": 11548900,
+          "peak_python_bytes": 2775752,
+          "samples_ns": [
+            12139400,
+            11548900,
+            21522600,
+            9394500,
+            20870500,
+            11030700,
+            9176000
+          ]
+        }
+      },
+      "pooled_only_known": 16,
+      "profiles": 2,
+      "storage": {
+        "inputs": {
+          "gzip_bytes": 2171,
+          "json_bytes": 63569
+        },
+        "inputs_and_compact_answer": {
+          "gzip_bytes": 6239,
+          "json_bytes": 145535
+        },
+        "inputs_and_full_answer": {
+          "gzip_bytes": 51912,
+          "json_bytes": 4773125
+        }
+      },
+      "total_relations": 224
+    },
+    {
+      "actions_per_profile": 96,
+      "exhaustive_witness_entries": 3776,
+      "focused_witness_entries": 60,
+      "labels_per_mapped_action": 4,
+      "listed_incompatible_joins": 4320,
+      "measurements": {
+        "compact_comparison": {
+          "median_ns": 6012300,
+          "peak_python_bytes": 231784,
+          "samples_ns": [
+            7828200,
+            4014300,
+            3904500,
+            4831400,
+            6012300,
+            10055900,
+            7352900
+          ]
+        },
+        "exhaustive_masks": {
+          "median_ns": 7775300,
+          "peak_python_bytes": 699856,
+          "samples_ns": [
+            7914500,
+            4482700,
+            7775300,
+            3880100,
+            4029600,
+            8990500,
+            8664800
+          ]
+        },
+        "focused_masks": {
+          "median_ns": 3600200,
+          "peak_python_bytes": 120184,
+          "samples_ns": [
+            4785600,
+            3600200,
+            4385400,
+            2364000,
+            2444100,
+            2689700,
+            4666300
+          ]
+        },
+        "full_comparison": {
+          "median_ns": 14847800,
+          "peak_python_bytes": 2662824,
+          "samples_ns": [
+            26968700,
+            9068800,
+            10382000,
+            14847800,
+            11645700,
+            17053300,
+            17487700
+          ]
+        }
+      },
+      "pooled_only_known": 8,
+      "profiles": 8,
+      "storage": {
+        "inputs": {
+          "gzip_bytes": 2229,
+          "json_bytes": 127419
+        },
+        "inputs_and_compact_answer": {
+          "gzip_bytes": 4600,
+          "json_bytes": 201839
+        },
+        "inputs_and_full_answer": {
+          "gzip_bytes": 55149,
+          "json_bytes": 4771031
+        }
+      },
+      "total_relations": 448
+    },
+    {
+      "actions_per_profile": 96,
+      "exhaustive_witness_entries": 3776,
+      "focused_witness_entries": 60,
+      "labels_per_mapped_action": 4,
+      "listed_incompatible_joins": 8640,
+      "measurements": {
+        "compact_comparison": {
+          "median_ns": 13552000,
+          "peak_python_bytes": 327976,
+          "samples_ns": [
+            7865900,
+            15490400,
+            16126800,
+            13552000,
+            8065900,
+            15379000,
+            13119500
+          ]
+        },
+        "exhaustive_masks": {
+          "median_ns": 11751600,
+          "peak_python_bytes": 802160,
+          "samples_ns": [
+            12917800,
+            13209500,
+            11751600,
+            10760900,
+            11064900,
+            12783700,
+            8425400
+          ]
+        },
+        "focused_masks": {
+          "median_ns": 7761100,
+          "peak_python_bytes": 135064,
+          "samples_ns": [
+            9326900,
+            4813500,
+            9430100,
+            7687000,
+            9480400,
+            7761100,
+            5374900
+          ]
+        },
+        "full_comparison": {
+          "median_ns": 32887400,
+          "peak_python_bytes": 5190056,
+          "samples_ns": [
+            33779000,
+            29174000,
+            44941600,
+            28620900,
+            32887400,
+            43556800,
+            29389200
+          ]
+        }
+      },
+      "pooled_only_known": 8,
+      "profiles": 16,
+      "storage": {
+        "inputs": {
+          "gzip_bytes": 3526,
+          "json_bytes": 254835
+        },
+        "inputs_and_compact_answer": {
+          "gzip_bytes": 7254,
+          "json_bytes": 372623
+        },
+        "inputs_and_full_answer": {
+          "gzip_bytes": 107851,
+          "json_bytes": 9511007
+        }
+      },
+      "total_relations": 896
+    },
+    {
+      "actions_per_profile": 96,
+      "exhaustive_witness_entries": 68,
+      "focused_witness_entries": 60,
+      "labels_per_mapped_action": 1,
+      "listed_incompatible_joins": 1080,
+      "measurements": {
+        "compact_comparison": {
+          "median_ns": 1918900,
+          "peak_python_bytes": 140512,
+          "samples_ns": [
+            1924200,
+            1982700,
+            1951300,
+            1816300,
+            1918900,
+            1915500,
+            1902300
+          ]
+        },
+        "exhaustive_masks": {
+          "median_ns": 892600,
+          "peak_python_bytes": 90792,
+          "samples_ns": [
+            916700,
+            884500,
+            929900,
+            630000,
+            807100,
+            892600,
+            909000
+          ]
+        },
+        "focused_masks": {
+          "median_ns": 825500,
+          "peak_python_bytes": 88616,
+          "samples_ns": [
+            871500,
+            891300,
+            856800,
+            447300,
+            780900,
+            825500,
+            757500
+          ]
+        },
+        "full_comparison": {
+          "median_ns": 3570000,
+          "peak_python_bytes": 748272,
+          "samples_ns": [
+            3575200,
+            3570000,
+            3460900,
+            2305200,
+            3989900,
+            3866000,
+            3351600
+          ]
+        }
+      },
+      "pooled_only_known": 8,
+      "profiles": 2,
+      "storage": {
+        "inputs": {
+          "gzip_bytes": 1100,
+          "json_bytes": 24129
+        },
+        "inputs_and_compact_answer": {
+          "gzip_bytes": 2688,
+          "json_bytes": 65255
+        },
+        "inputs_and_full_answer": {
+          "gzip_bytes": 15448,
+          "json_bytes": 1207553
+        }
+      },
+      "total_relations": 112
+    }
+  ]
+}

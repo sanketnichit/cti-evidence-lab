@@ -79,6 +79,8 @@ python scripts/audit_rank_two_review.py
 
 The original conditional RDP illustration remains a historical method-development example. The source-bound case is analyzed by `analyze_rdp_case.py`.
 
+Run `python -m examples.profile_scaling --output outputs/profile-scaling.json` to repeat the profile scaling benchmark. The script checks focused masks and compact answers against the detailed comparison. The repository records one machine's timing and memory snapshot. A rerun measures the local environment. [Benchmark design](../research/experiments/profile_coherence_v0.2/README.md#runtime-and-storage-design)
+
 ## Generated artifacts
 
 | Artifact | Contents |

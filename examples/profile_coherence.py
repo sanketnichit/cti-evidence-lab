@@ -13,8 +13,12 @@ from src.occurrence_queries import validate
 RESULTS = ROOT / "research/experiments/profile_coherence_v0.2/results.json"
 
 
-def witness_masks(profiles, *, completion_vocabulary=()):
+def witness_masks(profiles, *, completion_vocabulary=(), query=None):
     """Index pooled witnesses by profile, optionally completing unknown labels."""
+    if query is not None:
+        query = tuple(query)
+        if len(query) != 3:
+            raise ValueError("A query requires three technique identifiers")
     labels = defaultdict(set)
     label_profiles = defaultdict(int)
     edge_profiles = defaultdict(int)
@@ -37,11 +41,17 @@ def witness_masks(profiles, *, completion_vocabulary=()):
                 continue  # A union can contain a cycle even if its profiles are DAGs.
             path = (first, middle, last)
             edge_mask = edge_profiles[first, middle] & edge_profiles[middle, last]
-            for query in product(*(labels[node] for node in path)):
+            if query is None:
+                candidates = product(*(labels[node] for node in path))
+            elif all(technique in labels[node] for node, technique in zip(path, query)):
+                candidates = (query,)
+            else:
+                continue
+            for candidate in candidates:
                 mask = edge_mask
-                for fact in zip(path, query):
+                for fact in zip(path, candidate):
                     mask &= label_profiles[fact]
-                witnesses[path, query] = mask
+                witnesses[path, candidate] = mask
     return witnesses
 
 

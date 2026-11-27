@@ -107,3 +107,15 @@ python scripts/compare_sequence_profiles.py --verify outputs/profile-comparison.
 ```
 
 The other groups are `rdp` and `domain-controller`, both at the parent level. The NetSupport export exposes the identity assumption behind the WMI witness. Full reproduction includes the verified example. [v0.2 manuscript draft](../../PROFILE_COHERENCE_REPORT_v0.2.md)
+
+Add `--summary-only` for a compact export. Per-profile witnesses and incompatible joins are counted. The pooled witnesses, minimum conflicts and source records are still included. Verify either export with the same `--verify` command.
+
+## Runtime and storage design
+
+Each synthetic profile contains disjoint three-action paths. One path in four splits its edges between alternating profiles, and the middle mapping is withheld in one path in eight. The query fixes one label at each position. The design varies actions per profile (24, 96, 192 at two profiles), profile count (2, 8, 16 at 96 actions), and label density (one or four known labels at 96 actions and two profiles). Query paths, ordering facts and action IDs are fixed when varying label density. Each workload checks the focused result against filtering the exhaustive masks and checks the exported support against those masks.
+
+The benchmark times exhaustive masks, focused masks, and the full and compact comparisons separately. It warms each operation once, rotates their order over seven timed calls, and reports median wall-clock time. Input construction, serialization and file I/O are outside those timings. One separate `tracemalloc` call measures peak Python allocations for each operation, excluding the prebuilt inputs. Bytes are measured for pretty-printed UTF-8 JSON and gzip for the synthetic inputs alone and with either answer. Verified NetSupport exports supply sizes for a real artifact with evidence and spans included.
+
+```sh
+python -m examples.profile_scaling --output outputs/profile-scaling.json
+```
