@@ -8,6 +8,8 @@ CTI Evidence Lab studies how replacing individual attack occurrences with ATT&CK
 
 [Methods preprint v0.1](https://doi.org/10.5281/zenodo.24533052) · [GitHub release](https://github.com/sanketnichit/cti-evidence-lab/releases/tag/preprint-v0.1) · [Reproduction and data access](docs/REPRODUCIBILITY.md#methods-preprint-v01)
 
+The v0.2 manuscript draft examines when pooling across interpretations introduces unsupported witnesses and how shared citations affect the apparent stability of a sequence. [Manuscript and checked results table](research/PROFILE_COHERENCE_REPORT_v0.2.md)
+
 ## Sequence investigator
 
 Ask whether three techniques form one connected occurrence sequence. Inspect the supporting actions, locate incompatible joins in a technique graph, compare interpretation profiles and export a recomputable answer record.

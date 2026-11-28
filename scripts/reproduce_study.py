@@ -42,6 +42,7 @@ from examples.ordering_evidence_sensitivity import RESULTS as ORDERING_RESULTS, 
 from examples.domain_controller_citation_roles import run as run_citation_roles
 from examples.profile_omission import RESULTS as OMISSION_RESULTS, run as run_profile_omission
 from examples.shared_source_sensitivity import RESULTS as SHARED_SOURCE_RESULTS, run as run_shared_source
+from examples.profile_coherence_summary import verify_table as verify_profile_table
 from scripts.compare_sequence_profiles import export as profile_export, verify as verify_profile_export
 from scripts.investigate_sequence import certificate as investigation_certificate, load_case as load_investigation_case
 from scripts.evaluate_incident_holdout import DIRECTORY as HOLDOUT, run as run_holdout
@@ -234,6 +235,7 @@ def main():
     if shared_source != json.loads(SHARED_SOURCE_RESULTS.read_bytes()):
         raise ValueError("Shared-source sensitivity differs from the recorded results")
     write_json(destination / "shared_source_sensitivity.json", shared_source)
+    verify_profile_table(profile_uncertainty, identity, shared_source)
     profile_example = profile_export("netsupport-identity", ["T1562", "T1047", "T1053"])
     verify_profile_export(profile_example)
     write_json(destination / "profile_comparison_example.json", profile_example)

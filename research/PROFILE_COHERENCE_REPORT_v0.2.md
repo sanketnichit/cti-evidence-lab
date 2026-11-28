@@ -4,7 +4,7 @@ Sanket Nichit · CTI Evidence Lab · v0.2 manuscript draft
 
 ## Abstract
 
-Cyber threat intelligence reports can support several readings of action identity, ordering and technique mappings. Pooling facts from those readings can produce a three-action sequence that no single reading supports, even when the pooled graph retains occurrence identities. We compare pooled and per-profile answers for known and unresolved mappings, and identify the smallest incompatible subset of facts for a pooled witness. Across 5,886 constructed profile pairs, pooling raises at least one query's status in 2,935 pairs. The evaluated recorded profiles show no such status change. A source-backed NetSupport sensitivity isolates a separate issue. One apparent projection error depends on how two execution descriptions are aligned, while another survives all three readings. The results characterize representation fidelity and uncertainty on supplied interpretations.
+Cyber threat intelligence reports can support several readings of action identity, ordering and technique mappings. Pooling facts from those readings can produce an unsupported three-action witness even when the pooled graph retains occurrence identities. We evaluate both query status and the action sequence offered as evidence, and identify the smallest incompatible set of facts for an unsupported pooled witness. Pooling raises a query's status in 2,935 of 5,886 constructed profile pairs. In three recorded incident groups, pooling adds zero unsupported witnesses across 3,508 queries. All eight queries supported by every recorded interpretation reuse the same actions and ordering citations across profiles. These results characterize representation fidelity on supplied interpretations and show why agreement across profiles can depend on the same source evidence.
 
 ## Model
 
@@ -28,25 +28,37 @@ For an incompatible pooled witness, find the smallest subset of facts with empty
 
 ## Verification and results
 
+### Study design
+
+The finite experiment enumerates profile pairs from a three-occurrence graph with two candidate ordering edges and three mapping states per occurrence. The source comparison uses the existing RDP and domain-controller parent profiles and the recorded NetSupport reading with two declared identity alternatives. These three groups form a case series of available interpretations. The separate ordering-evidence sweep uses the six cases bundled in the investigator, retaining one unassessed profile. It varies the recorded ordering rows and citations while holding the actions and mappings fixed. The passage-level domain-controller audit was selected after observing sensitivity to the citation rules. [Experiment specifications](experiments/profile_coherence_v0.2/README.md)
+
+### Pooling and witness fidelity
+
 Direct enumeration verifies support masks across 5,886 constructed profile pairs. For mapping uncertainty, direct per-profile query execution provides a separate answer reference. Across 47,088 pair/query instances, pooling promotes 9,216 unsupported answers to unresolved, 2,560 unsupported answers to supported, and 1,080 unresolved answers to supported. Independent pair enumeration verifies the minimum conflicts of all 3,640 incompatible known witnesses from the two-profile construction. These are finite design counts.
 
-The control with a second path preserves the supported answer and adds exactly one unsupported pooled witness in the split arrangement. Direct per-profile enumeration also checks witness fidelity on the recorded groups. Pooling adds no unsupported witnesses across 3,508 group/query instances. The possible-witness counts include known witnesses.
+The control with a second path preserves the supported answer and adds exactly one unsupported pooled witness in the split arrangement. Direct per-profile enumeration also checks witness fidelity on the recorded groups. The table counts parent-level queries once per group. Each possible-witness count includes known witnesses.
 
-| Profile group | Parent-label queries | Pooled known witnesses | Pooled possible witnesses | Pooled-only witnesses |
-|---|---:|---:|---:|---:|
-| RDP | 8 | 3 | 8 | 0 |
-| Domain controller | 125 | 4 | 12 | 0 |
-| NetSupport | 3,375 | 8 | 1,013 | 0 |
+<!-- profile-results:start -->
+| Profile group | Queries | Supported | Unresolved | Pooled-only known witnesses | Pooled-only possible witnesses | Supported in every profile |
+|---|---:|---:|---:|---:|---:|---:|
+| Domain controller | 125 | 4 | 8 | 0 | 0 | 1 |
+| RDP | 8 | 3 | 2 | 0 | 0 | 0 |
+| NetSupport | 3,375 | 8 | 907 | 0 | 0 | 7 |
+<!-- profile-results:end -->
 
 In NetSupport, the co-referent reading connects a firewall change and task creation through the same reported WMI execution. The conventional technique-pair projection continues to return the separate script-action query in all three readings without a coherent witness. This latter finding concerns pooling across occurrences within a reading, while the table concerns pooling across readings. [Experiment records and source rationale](experiments/profile_coherence_v0.2/README.md)
 
-An ordering-evidence sensitivity sweep covers all six investigator cases and all 11 recorded parent profiles. One profile remained unassessed. Every one of the 23 supported profile/query instances depended on at least one individual ordering row. Grouping withdrawals by citation unit changed the results for unresolved queries. In NetSupport, removing the most consequential single row eliminated 387 of 907 unresolved answers. Withdrawing the most consequential paragraph eliminated 611 under a conservative rule that drops every row citing that paragraph. The result measures dependence on recorded evidential bindings while holding the actions and mappings fixed. [Design, scope and results](experiments/profile_coherence_v0.2/README.md#ordering-evidence-sensitivity-design)
+### Dependence on ordering evidence
+
+Across 11 recorded parent profiles, every one of the 23 supported profile/query instances depended on at least one individual ordering row. Grouping withdrawals by citation unit changed the results for unresolved queries. In NetSupport, removing the most consequential single row eliminated 387 of 907 unresolved answers. Withdrawing the most consequential paragraph eliminated 611 under a conservative rule that drops every row citing that paragraph. [Design, scope and results](experiments/profile_coherence_v0.2/README.md#ordering-evidence-sensitivity-design)
 
 Allowing a row to survive while any cited unit remains reduces the maximum NetSupport loss to 596. In CISA AA25-266A this alternative reduces the maximum from 34 to 28, equal to the largest single-row loss. Exhaustive search finds that six domain-controller profile/query instances require at least two citation units to be withdrawn under the last citation rule. Each loses all known witnesses after one unit under the first citation rule. These are bounds under stated citation-retention assumptions. They do not adjudicate the individual citations. [Exact cuts and intervention results](experiments/profile_coherence_v0.2/ordering_evidence_results.json)
 
 Reading the cited passages resolves the six rule-sensitive instances conditionally on the recorded action identities. Three instances of the same session–transfer–execution query require withdrawing paragraphs 9 and 54 together. In the other three instances, the discovery sequence depends on a temporal reference crossing paragraphs 9 and 10. Withdrawal of either removes support. This post hoc reading is available for independent review. [Passage-level rationale and reproducible cuts](experiments/profile_coherence_v0.2/README.md#reading-the-citations-behind-the-six-rule-sensitive-instances)
 
-Across 26 leave-out scenarios in the three profile groups, four of 15 initially supported profile-group/query instances lose support when one profile is omitted. Three become unresolved, and the NetSupport WMI sequence becomes unsupported when the co-referent profile is omitted. Three further instances require two omissions. The remaining eight stay supported under every nonempty subset. These are counts over the recorded interpretations, which can reuse the same underlying evidence. [Omission design and results](experiments/profile_coherence_v0.2/README.md#sensitivity-to-omitting-interpretations)
+### Dependence on interpretation profiles
+
+Across 26 leave-out scenarios in the three profile groups, four of 15 initially supported profile-group/query instances lose support when one profile is omitted. Three become unresolved, and the NetSupport WMI sequence becomes unsupported when the co-referent profile is omitted. Three further instances require two omissions. The remaining eight stay supported under every nonempty subset. [Omission design and results](experiments/profile_coherence_v0.2/README.md#sensitivity-to-omitting-interpretations)
 
 Among the eight instances supported in every interpretation, seven lose support in every profile after withdrawal of one shared paragraph, even when rows survive on remaining citations. All seven come from NetSupport. The domain-controller instance survives each single withdrawal under that rule and loses support under the first citation rule. This analysis holds action identities and mappings fixed and measures how stability across readings can coexist with dependence on one source passage. [Shared-source analysis](experiments/profile_coherence_v0.2/README.md#shared-source-dependence-across-profiles)
 
