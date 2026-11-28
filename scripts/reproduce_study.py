@@ -39,6 +39,7 @@ from examples.profile_uncertainty import RESULTS as PROFILE_UNCERTAINTY_RESULTS,
 from examples.netsupport_identity_sensitivity import RESULTS as IDENTITY_RESULTS, run as run_netsupport_identity
 from examples.profile_conflicts import RESULTS as CONFLICT_RESULTS, run as run_profile_conflicts
 from examples.ordering_evidence_sensitivity import RESULTS as ORDERING_RESULTS, run as run_ordering_sensitivity
+from examples.domain_controller_citation_roles import run as run_citation_roles
 from scripts.compare_sequence_profiles import export as profile_export, verify as verify_profile_export
 from scripts.investigate_sequence import certificate as investigation_certificate, load_case as load_investigation_case
 from scripts.evaluate_incident_holdout import DIRECTORY as HOLDOUT, run as run_holdout
@@ -222,6 +223,7 @@ def main():
     if ordering_sensitivity != json.loads(ORDERING_RESULTS.read_bytes()):
         raise ValueError("Ordering-evidence sensitivity differs from the recorded results")
     write_json(destination / "ordering_evidence_sensitivity.json", ordering_sensitivity)
+    write_json(destination / "domain_controller_citation_roles.json", run_citation_roles())
     profile_example = profile_export("netsupport-identity", ["T1562", "T1047", "T1053"])
     verify_profile_export(profile_example)
     write_json(destination / "profile_comparison_example.json", profile_example)
@@ -254,7 +256,8 @@ def main():
                        "bounded_mapping_checks.json", "bounded_mapping_assumption_example.json",
                        "discovery_mapping_sensitivity.json", "answer_index_storage.json", "profile_coherence.json",
                        "profile_uncertainty.json", "netsupport_identity_sensitivity.json", "profile_conflicts.json",
-                       "profile_comparison_example.json", "ordering_evidence_sensitivity.json"]
+                       "profile_comparison_example.json", "ordering_evidence_sensitivity.json",
+                       "domain_controller_citation_roles.json"]
     if args.pdf:
         from scripts.build_report_pdf import build
         build(destination / "CTI_Evidence_Lab_Report.pdf",

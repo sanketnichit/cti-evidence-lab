@@ -28,6 +28,20 @@ python -m examples.ordering_evidence_sensitivity
 
 Full reproduction checks and includes `ordering_evidence_sensitivity.json`.
 
+### Reading the citations behind the six rule-sensitive instances
+
+All six instances came from the domain-controller report. We examined every ordering row in that report, conditional on the supplied occurrence identities. A passage counts as sufficient when it gives the relative order of those actions. A temporal reference to the preceding paragraph also needs the paragraph identifying its antecedent. The original HTML and all 13 recorded span hashes matched the saved snapshot. This follow-up was selected after observing the difference between the two rules. [Case record and passage locators](../../case_studies/dfir_html_smuggling_v0.1/case.json)
+
+| Row | Sufficient paragraphs under this reading | Basis |
+|---|---|---|
+| B1 | 9 or 54 | Paragraph 9 describes transfer through the established session. Paragraph 54 places the transfer during that session, assuming the recorded session identity. |
+| B2 | 9, 25 or 66 individually | Each places execution of the transferred file after the transfer to the domain controller. |
+| B3 | 9 and 10 together | Paragraph 10 orders discovery after a preceding action. Paragraph 9 identifies that antecedent as execution on the domain controller. |
+| B4 | 10 or 63 | Both place archiving after discovery completed, given the recorded identity of the discovery run. |
+| B5 | 10 | This paragraph explicitly orders the second batch run after archiving. |
+
+Re-executing the queries over paragraph withdrawals gives two distinct outcomes among the six. The session–transfer–execution sequence occurs in three profiles. In each, its only smallest withdrawal set is paragraphs 9 and 54 together. The other three instances depend on B3. Removing either paragraph 9 or paragraph 10 alone breaks their known witness. These counts describe repeated queries in one incident. Independent assessment of the antecedent and occurrence identities remains open. Run `python -m examples.domain_controller_citation_roles` for every minimum set, including the seventh supported instance where the original bounds already agreed.
+
 ## Query and reference
 
 An interpretation profile supplies an acyclic BEFORE graph and sets of known labels. Within an incident and taxonomy level, occurrence IDs must denote the same actions across profiles. Evaluate the same three-label query under four conditions.
