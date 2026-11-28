@@ -87,6 +87,24 @@ python -m examples.profile_coherence
 
 The complete study command verifies and includes `profile_coherence.json`.
 
+## Sensitivity to omitting interpretations
+
+For each of the three recorded groups, keep the full group's parent-technique vocabulary and evaluate every nonempty subset of profiles. Each query keeps the best status reached in one retained profile. The analysis holds the open mapping rule fixed and checks each retained subset against direct queries on its constituent profiles. It counts how many omissions are needed for the first status drop and records the affected supported queries.
+
+| Group | Initially supported | Lose support after one omission | Need two omissions to lose support | Supported in every nonempty subset |
+|---|---:|---:|---:|---:|
+| Domain controller | 4 | 2 | 1 | 1 |
+| RDP | 3 | 1 | 2 | 0 |
+| NetSupport | 8 | 1 | 0 | 7 |
+
+Omitting the co-referent NetSupport interpretation makes the WMI sequence unsupported within the remaining readings. The other three single-omission losses shift from supported to unresolved. For queries initially classified as unresolved, eight domain-controller queries and two RDP queries become unsupported under a single omission. In NetSupport, 14 require two omissions and 893 remain unresolved in every nonempty subset. These counts describe sensitivity to the supplied readings. Several profiles reuse the same evidence, so categorical stability does not establish independent corroboration. [Recorded results](profile_omission_results.json)
+
+```sh
+python -m examples.profile_omission
+```
+
+Full reproduction checks and includes `profile_omission.json`.
+
 ## Open mapping uncertainty
 
 Apply the existing open completion rule separately within each profile. An unknown occurrence can take any label in the fixed query vocabulary. Known labels and BEFORE edges stay fixed in that profile. A coherent answer is **supported** if a known witness exists in at least one profile, **unresolved** if only a witness requiring completion exists in at least one, and **unsupported** if neither exists. This is an existential answer over the recorded interpretations.

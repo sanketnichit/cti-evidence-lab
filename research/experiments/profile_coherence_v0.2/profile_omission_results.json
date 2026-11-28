@@ -1,0 +1,504 @@
+{
+  "domain-controller": {
+    "minimum_omissions_for_status_loss": {
+      "SUPPORTED": {
+        "1": 2,
+        "2": 1,
+        "never": 1
+      },
+      "UNRESOLVED_MAPPING": {
+        "1": 8
+      }
+    },
+    "profiles": [
+      "core_transfer_execution",
+      "extended_script_sequence",
+      "archive_mapping_withheld"
+    ],
+    "query_count": 125,
+    "scenarios": [
+      {
+        "omitted": [
+          "core_transfer_execution"
+        ],
+        "status_losses": {},
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "extended_script_sequence"
+        ],
+        "status_losses": {
+          "SUPPORTED -> UNRESOLVED_MAPPING": 2
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1059",
+              "T1560",
+              "T1059"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          },
+          {
+            "query": [
+              "T1218",
+              "T1059",
+              "T1560"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "archive_mapping_withheld"
+        ],
+        "status_losses": {
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 8
+        },
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "core_transfer_execution",
+          "extended_script_sequence"
+        ],
+        "status_losses": {
+          "SUPPORTED -> UNRESOLVED_MAPPING": 2
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1059",
+              "T1560",
+              "T1059"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          },
+          {
+            "query": [
+              "T1218",
+              "T1059",
+              "T1560"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "core_transfer_execution",
+          "archive_mapping_withheld"
+        ],
+        "status_losses": {
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 8
+        },
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "extended_script_sequence",
+          "archive_mapping_withheld"
+        ],
+        "status_losses": {
+          "SUPPORTED -> NOT_SUPPORTED": 3,
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 8
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1059",
+              "T1560",
+              "T1059"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          },
+          {
+            "query": [
+              "T1218",
+              "T1059",
+              "T1560"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          },
+          {
+            "query": [
+              "T1570",
+              "T1218",
+              "T1059"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          }
+        ]
+      }
+    ]
+  },
+  "netsupport-identity": {
+    "minimum_omissions_for_status_loss": {
+      "SUPPORTED": {
+        "1": 1,
+        "never": 7
+      },
+      "UNRESOLVED_MAPPING": {
+        "2": 14,
+        "never": 893
+      }
+    },
+    "profiles": [
+      "recorded",
+      "omit_summary_edge",
+      "co_referent_execution"
+    ],
+    "query_count": 3375,
+    "scenarios": [
+      {
+        "omitted": [
+          "recorded"
+        ],
+        "status_losses": {},
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "omit_summary_edge"
+        ],
+        "status_losses": {},
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "co_referent_execution"
+        ],
+        "status_losses": {
+          "SUPPORTED -> NOT_SUPPORTED": 1
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1562",
+              "T1047",
+              "T1053"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "recorded",
+          "omit_summary_edge"
+        ],
+        "status_losses": {},
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "recorded",
+          "co_referent_execution"
+        ],
+        "status_losses": {
+          "SUPPORTED -> NOT_SUPPORTED": 1,
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 14
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1562",
+              "T1047",
+              "T1053"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "omit_summary_edge",
+          "co_referent_execution"
+        ],
+        "status_losses": {
+          "SUPPORTED -> NOT_SUPPORTED": 1
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1562",
+              "T1047",
+              "T1053"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          }
+        ]
+      }
+    ]
+  },
+  "rdp": {
+    "minimum_omissions_for_status_loss": {
+      "SUPPORTED": {
+        "1": 1,
+        "2": 2
+      },
+      "UNRESOLVED_MAPPING": {
+        "1": 2
+      }
+    },
+    "profiles": [
+      "unresolved_cleanup",
+      "proposed_cleanup_full_edges",
+      "proposed_cleanup_local_edges",
+      "reported_completed_actions"
+    ],
+    "query_count": 8,
+    "scenarios": [
+      {
+        "omitted": [
+          "unresolved_cleanup"
+        ],
+        "status_losses": {
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 2
+        },
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "proposed_cleanup_full_edges"
+        ],
+        "status_losses": {
+          "SUPPORTED -> UNRESOLVED_MAPPING": 1
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "proposed_cleanup_local_edges"
+        ],
+        "status_losses": {},
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "reported_completed_actions"
+        ],
+        "status_losses": {},
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "unresolved_cleanup",
+          "proposed_cleanup_full_edges"
+        ],
+        "status_losses": {
+          "SUPPORTED -> NOT_SUPPORTED": 1,
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 2
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "unresolved_cleanup",
+          "proposed_cleanup_local_edges"
+        ],
+        "status_losses": {
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 2
+        },
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "unresolved_cleanup",
+          "reported_completed_actions"
+        ],
+        "status_losses": {
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 2
+        },
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "proposed_cleanup_full_edges",
+          "proposed_cleanup_local_edges"
+        ],
+        "status_losses": {
+          "SUPPORTED -> UNRESOLVED_MAPPING": 3
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          },
+          {
+            "query": [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          },
+          {
+            "query": [
+              "T1070",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "proposed_cleanup_full_edges",
+          "reported_completed_actions"
+        ],
+        "status_losses": {
+          "SUPPORTED -> UNRESOLVED_MAPPING": 1
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "proposed_cleanup_local_edges",
+          "reported_completed_actions"
+        ],
+        "status_losses": {},
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "unresolved_cleanup",
+          "proposed_cleanup_full_edges",
+          "proposed_cleanup_local_edges"
+        ],
+        "status_losses": {
+          "SUPPORTED -> NOT_SUPPORTED": 3,
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 2
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          },
+          {
+            "query": [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          },
+          {
+            "query": [
+              "T1070",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "unresolved_cleanup",
+          "proposed_cleanup_full_edges",
+          "reported_completed_actions"
+        ],
+        "status_losses": {
+          "SUPPORTED -> NOT_SUPPORTED": 1,
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 2
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "NOT_SUPPORTED"
+          }
+        ]
+      },
+      {
+        "omitted": [
+          "unresolved_cleanup",
+          "proposed_cleanup_local_edges",
+          "reported_completed_actions"
+        ],
+        "status_losses": {
+          "UNRESOLVED_MAPPING -> NOT_SUPPORTED": 2
+        },
+        "supported_losses": []
+      },
+      {
+        "omitted": [
+          "proposed_cleanup_full_edges",
+          "proposed_cleanup_local_edges",
+          "reported_completed_actions"
+        ],
+        "status_losses": {
+          "SUPPORTED -> UNRESOLVED_MAPPING": 3
+        },
+        "supported_losses": [
+          {
+            "query": [
+              "T1021",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          },
+          {
+            "query": [
+              "T1021",
+              "T1070",
+              "T1021"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          },
+          {
+            "query": [
+              "T1070",
+              "T1021",
+              "T1070"
+            ],
+            "remaining_status": "UNRESOLVED_MAPPING"
+          }
+        ]
+      }
+    ]
+  }
+}
