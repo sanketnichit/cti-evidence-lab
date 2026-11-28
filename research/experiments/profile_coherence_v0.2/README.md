@@ -105,6 +105,18 @@ python -m examples.profile_omission
 
 Full reproduction checks and includes `profile_omission.json`.
 
+### Shared source dependence across profiles
+
+Take all eight query instances supported in every recorded interpretation. Withdraw each cited ordering paragraph in turn from every profile of its incident. Keep mappings and action identities fixed. Recompute each profile's status using both citation rules. Count an instance as losing support across the group when none of its profiles still supports it. RDP contributes no instances to this question because none of its queries is supported by all four profiles.
+
+Under the first citation rule, all eight instances lose support across their group after at least one shared paragraph withdrawal. Under the last citation rule, seven do, all from NetSupport. Six of the seven become unsupported and one becomes unresolved. Paragraph 2 alone accounts for three of the seven losses. The domain-controller instance survives every single withdrawal under the last citation rule, consistent with the passage-level reading that found a two-paragraph minimum for that query. These results concern ordering citations and the declared interpretations of the same source. [Per-profile results after withdrawal](shared_source_results.json)
+
+```sh
+python -m examples.shared_source_sensitivity
+```
+
+Full reproduction checks and includes `shared_source_sensitivity.json`.
+
 ## Open mapping uncertainty
 
 Apply the existing open completion rule separately within each profile. An unknown occurrence can take any label in the fixed query vocabulary. Known labels and BEFORE edges stay fixed in that profile. A coherent answer is **supported** if a known witness exists in at least one profile, **unresolved** if only a witness requiring completion exists in at least one, and **unsupported** if neither exists. This is an existential answer over the recorded interpretations.

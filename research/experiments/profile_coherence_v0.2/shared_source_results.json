@@ -1,0 +1,352 @@
+{
+  "domain-controller": {
+    "losses": {
+      "first_citation": [
+        {
+          "paragraph": 9,
+          "query": [
+            "T1021",
+            "T1570",
+            "T1218"
+          ],
+          "remaining_statuses": {
+            "archive_mapping_withheld": "NOT_SUPPORTED",
+            "core_transfer_execution": "NOT_SUPPORTED",
+            "extended_script_sequence": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 25,
+          "query": [
+            "T1021",
+            "T1570",
+            "T1218"
+          ],
+          "remaining_statuses": {
+            "archive_mapping_withheld": "NOT_SUPPORTED",
+            "core_transfer_execution": "NOT_SUPPORTED",
+            "extended_script_sequence": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 54,
+          "query": [
+            "T1021",
+            "T1570",
+            "T1218"
+          ],
+          "remaining_statuses": {
+            "archive_mapping_withheld": "NOT_SUPPORTED",
+            "core_transfer_execution": "NOT_SUPPORTED",
+            "extended_script_sequence": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 66,
+          "query": [
+            "T1021",
+            "T1570",
+            "T1218"
+          ],
+          "remaining_statuses": {
+            "archive_mapping_withheld": "NOT_SUPPORTED",
+            "core_transfer_execution": "NOT_SUPPORTED",
+            "extended_script_sequence": "NOT_SUPPORTED"
+          }
+        }
+      ],
+      "last_citation": []
+    },
+    "paragraphs": [
+      9,
+      10,
+      25,
+      54,
+      63,
+      66
+    ],
+    "stable_queries": [
+      [
+        "T1021",
+        "T1570",
+        "T1218"
+      ]
+    ]
+  },
+  "netsupport-identity": {
+    "losses": {
+      "first_citation": [
+        {
+          "paragraph": 2,
+          "query": [
+            "T1105",
+            "T1059",
+            "T1219"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 2,
+          "query": [
+            "T1204",
+            "T1105",
+            "T1059"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 2,
+          "query": [
+            "T1566",
+            "T1204",
+            "T1105"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 6,
+          "query": [
+            "T1570",
+            "T1047",
+            "T1053"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 7,
+          "query": [
+            "T1219",
+            "T1003",
+            "T1560"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 8,
+          "query": [
+            "T1136",
+            "T1098",
+            "T1021"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "UNRESOLVED_MAPPING",
+            "omit_summary_edge": "UNRESOLVED_MAPPING",
+            "recorded": "UNRESOLVED_MAPPING"
+          }
+        },
+        {
+          "paragraph": 9,
+          "query": [
+            "T1003",
+            "T1059",
+            "T1560"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 10,
+          "query": [
+            "T1003",
+            "T1059",
+            "T1560"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 33,
+          "query": [
+            "T1136",
+            "T1098",
+            "T1021"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "UNRESOLVED_MAPPING",
+            "omit_summary_edge": "UNRESOLVED_MAPPING",
+            "recorded": "UNRESOLVED_MAPPING"
+          }
+        }
+      ],
+      "last_citation": [
+        {
+          "paragraph": 2,
+          "query": [
+            "T1105",
+            "T1059",
+            "T1219"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 2,
+          "query": [
+            "T1204",
+            "T1105",
+            "T1059"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 2,
+          "query": [
+            "T1566",
+            "T1204",
+            "T1105"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 6,
+          "query": [
+            "T1570",
+            "T1047",
+            "T1053"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 7,
+          "query": [
+            "T1219",
+            "T1003",
+            "T1560"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        },
+        {
+          "paragraph": 8,
+          "query": [
+            "T1136",
+            "T1098",
+            "T1021"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "UNRESOLVED_MAPPING",
+            "omit_summary_edge": "UNRESOLVED_MAPPING",
+            "recorded": "UNRESOLVED_MAPPING"
+          }
+        },
+        {
+          "paragraph": 10,
+          "query": [
+            "T1003",
+            "T1059",
+            "T1560"
+          ],
+          "remaining_statuses": {
+            "co_referent_execution": "NOT_SUPPORTED",
+            "omit_summary_edge": "NOT_SUPPORTED",
+            "recorded": "NOT_SUPPORTED"
+          }
+        }
+      ]
+    },
+    "paragraphs": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      33,
+      41
+    ],
+    "stable_queries": [
+      [
+        "T1003",
+        "T1059",
+        "T1560"
+      ],
+      [
+        "T1105",
+        "T1059",
+        "T1219"
+      ],
+      [
+        "T1136",
+        "T1098",
+        "T1021"
+      ],
+      [
+        "T1204",
+        "T1105",
+        "T1059"
+      ],
+      [
+        "T1219",
+        "T1003",
+        "T1560"
+      ],
+      [
+        "T1566",
+        "T1204",
+        "T1105"
+      ],
+      [
+        "T1570",
+        "T1047",
+        "T1053"
+      ]
+    ]
+  },
+  "rdp": {
+    "losses": {
+      "first_citation": [],
+      "last_citation": []
+    },
+    "paragraphs": [
+      5
+    ],
+    "stable_queries": []
+  }
+}
