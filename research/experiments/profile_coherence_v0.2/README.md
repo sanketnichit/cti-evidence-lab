@@ -2,6 +2,30 @@
 
 The [v0.1 preprint](https://doi.org/10.5281/zenodo.24533052) studies whether technique-pair projection loses sequence witnesses within a supplied graph. This experiment studies a different failure. An apparent witness can retain all three occurrence identities while combining edges or labels that are never present together in one recorded interpretation.
 
+## Ordering-evidence sensitivity design
+
+Use all six cases already included in the offline investigator and every recorded parent-level profile. Keep unassessed cases visible. This is a fixed artifact cohort of four DFIR reports and two CISA advisories. The case records and their prior review status determine the cohort.
+
+Compare deletion of one ordering row with withdrawal of one source unit at a time. For HTML, a unit is a cited paragraph. For PDFs, it is a cited page. Withdrawing a unit removes every ordering row that cites it, including rows with citations to other units. This conservative rule models loss of jointly cited evidence. It does not decide whether another citation suffices. Occurrences and mappings stay fixed. The vocabulary is the active profile's known parent labels before deletion. The possible-witness calculation admits each of those labels at withheld mappings.
+
+For each intervention report the number of rows removed, witness counts lost and query status changes. A query can retain its status after losing a witness. Report how many distinct supported queries lose support somewhere in each intervention family. Retain evidence IDs and affected row IDs to allow inspection. Compare deletions within each profile. These interventions measure sensitivity to the recorded evidence bindings, with different unit granularity for DFIR and CISA.
+
+The six cases yielded 11 parent profiles, one of which remained unassessed. All 23 supported profile/query instances lost support under at least one single-row deletion. The grouped interventions therefore identified no additional fragile fully supported queries in this cohort. In the constructed control, two alternative witnesses survive every single-row deletion but both disappear when their shared citation page is withdrawn.
+
+| Case and recorded profile | Initially unresolved | Most lost after one row deletion | Most lost after one source unit withdrawal |
+|---|---:|---:|---:|
+| ScreenConnect to Hive | 526 | 203 | 223 (paragraph 10) |
+| NetSupport | 907 | 387 | 611 (paragraph 5) |
+| CISA AA25-266A | 46 | 28 | 34 (pages 5 and 9 tie) |
+
+NetSupport paragraph 5 affects three recorded ordering rows. One of those rows also cites paragraph 6 and is removed under the stated conservative rule. The unresolved counts depend on the open mapping assumptions. They count conditional queries within a profile and do not estimate incident prevalence. [Detailed results and citations](ordering_evidence_results.json)
+
+```sh
+python -m examples.ordering_evidence_sensitivity
+```
+
+Full reproduction checks and includes `ordering_evidence_sensitivity.json`.
+
 ## Query and reference
 
 An interpretation profile supplies an acyclic BEFORE graph and sets of known labels. Within an incident and taxonomy level, occurrence IDs must denote the same actions across profiles. Evaluate the same three-label query under four conditions.
