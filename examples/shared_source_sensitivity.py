@@ -28,6 +28,32 @@ def evaluate(record, profiles):
         for name, (_, relations) in profiles.items()
     }
     units = sorted({unit for profile in cited.values() for row_units in profile for unit in row_units})
+    citations_by_edge = {}
+    for name, (_, relations) in profiles.items():
+        by_edge = {}
+        for row, row_units in zip(relations, cited[name]):
+            edge = (row["source_event"], row["target_event"])
+            by_edge.setdefault(edge, set()).add(tuple(sorted(row_units)))
+        citations_by_edge[name] = by_edge
+
+    provenance = []
+    for query in stable_queries:
+        profiles_by_witness = {}
+        for name, (mappings, relations) in profiles.items():
+            answer = investigate(mappings, relations, query)
+            for witness in answer["known_witnesses"]:
+                path = tuple(witness["occurrence_ids"])
+                # Keep the two hops and any parallel relation rows distinct.
+                signature = tuple(tuple(sorted(citations_by_edge[name][edge])) for edge in zip(path, path[1:]))
+                profiles_by_witness.setdefault((path, signature), []).append(name)
+        provenance.append({
+            "query": list(query),
+            "witnesses": [{
+                "occurrences": list(path),
+                "ordering_row_paragraphs_by_hop": [[list(row) for row in hop] for hop in signature],
+                "profiles": names,
+            } for (path, signature), names in sorted(profiles_by_witness.items())],
+        })
     losses = {}
     joint = {}
     for rule in ("first_citation", "last_citation"):
@@ -71,6 +97,7 @@ def evaluate(record, profiles):
         }
     return {
         "stable_queries": [list(query) for query in stable_queries], "paragraphs": units, "losses": losses,
+        "stable_query_provenance": provenance,
         "supported_queries": len(supported_queries),
         "joint_scenarios_per_rule": len(profiles) * len(units) * len(supported_queries),
         "joint": joint,

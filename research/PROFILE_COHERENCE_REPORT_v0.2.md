@@ -52,6 +52,8 @@ Among the eight instances supported in every interpretation, seven lose support 
 
 Crossing one profile omission with one paragraph withdrawal exposed zero additional support losses among combinations that survived both changes separately. There were 250 such combinations under the first citation rule and 288 under the last citation rule. A withdrawal that removed support from one profile removed it from all profiles that previously supported that query. A constructed control with different paragraph support across profiles exhibited the joint failure. [Combined omission analysis](experiments/profile_coherence_v0.2/README.md#combined-profile-and-paragraph-omissions)
 
+The eight queries supported by every interpretation each have one known action triple in each profile. Their action triples and ordering paragraph patterns repeat across the profiles. Five NetSupport instances use the same single paragraph for both ordering hops. This provenance trace shows how repeated support arises from the same actions and citations in this cohort. [Witness and citation overlap](experiments/profile_coherence_v0.2/README.md#witness-and-citation-overlap)
+
 ## Computational cost and storage
 
 For a single query, the focused evaluator tests the three requested labels on each candidate path and avoids enumerating every label combination. Across five workloads with four labels per mapped action, it matched the exhaustive mask results and was 1.5–3.3 times as fast, with 17–18% of the peak Python allocations. At one label per mapped action, the speed difference was small. These figures are from one Windows machine with CPython 3.12.14 and exclude input construction, file I/O and serialization.

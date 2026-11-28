@@ -117,6 +117,12 @@ python -m examples.shared_source_sensitivity
 
 Full reproduction checks and includes `shared_source_sensitivity.json`.
 
+### Witness and citation overlap
+
+For each query supported by every profile, the result lists each distinct ordered triple of actions together with the sets of cited paragraphs on each hop. It records the profiles that contain that same action triple and paragraph pattern. This preserves the two hops and the citation groupings of parallel ordering rows. The unit of comparison is the recorded paragraph, so spans from one paragraph count together.
+
+Each of the eight queries had exactly one known occurrence witness per profile. In every case, the action triple and its ordering paragraph pattern were identical across the profiles. For five NetSupport instances, both hops cite the same single paragraph. Three of those use paragraph 2, one uses paragraph 6, and one uses paragraph 7. The other two NetSupport instances each have one hop with a single cited paragraph and one hop with two cited paragraphs. The domain-controller witness cites multiple paragraphs on both hops. These traces explain the overlap in the evaluated readings. They concern ordering evidence and do not address independent support for the action identities or technique mappings. [Witness traces and withdrawal results](shared_source_results.json)
+
 ### Combined profile and paragraph omissions
 
 For each of the 15 initially supported instances, cross every single-profile omission with every single-paragraph withdrawal in its incident. A joint-only loss occurs when each change on its own leaves at least one supporting profile, and applying both removes all support. This comparison holds action identities and label assignments fixed alongside the earlier withdrawal analysis.

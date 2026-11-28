@@ -16,6 +16,14 @@ class SharedSourceSensitivityTests(unittest.TestCase):
         record = {"evidence": [{"evidence_id": "p1", "paragraph_number": 1},
                                {"evidence_id": "p2", "paragraph_number": 2}]}
         result = evaluate(record, profiles)
+        witness_trace, = result["stable_query_provenance"]
+        self.assertEqual(witness_trace["query"], ["A", "B", "C"])
+        self.assertEqual(witness_trace["witnesses"], [
+            {"occurrences": ["u", "v", "w"], "ordering_row_paragraphs_by_hop": [[[1]], [[1]]],
+             "profiles": ["first"]},
+            {"occurrences": ["u", "v", "w"], "ordering_row_paragraphs_by_hop": [[[2]], [[2]]],
+             "profiles": ["second"]},
+        ])
         for value in result["joint"].values():
             self.assertEqual(value["survive_both_separate_interventions"], 4)
             self.assertEqual(
