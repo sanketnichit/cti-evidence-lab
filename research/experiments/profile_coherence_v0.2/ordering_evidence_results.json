@@ -2,6 +2,123 @@
   "cisa-federal-agency": {
     "recorded_parent_profile": {
       "known_witnesses": 3,
+      "last_citation_overrides": {
+        "page 5": {
+          "evidence_ids": [
+            "E1"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 36,
+          "removed_rows": [
+            "B1",
+            "B6"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 28
+        },
+        "page 7": {
+          "evidence_ids": [
+            "E4"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 12,
+          "removed_rows": [
+            "B3"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 5
+        },
+        "page 8": {
+          "evidence_ids": [
+            "E5"
+          ],
+          "known_witnesses_lost": 1,
+          "possible_witnesses_lost": 1,
+          "removed_rows": [
+            "B5"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [
+            [
+              "T1105",
+              "T1046",
+              "T1110"
+            ]
+          ],
+          "unresolved_to_unsupported": 0
+        },
+        "page 9": {
+          "evidence_ids": [
+            "E8",
+            "E9"
+          ],
+          "known_witnesses_lost": 2,
+          "possible_witnesses_lost": 8,
+          "removed_rows": [
+            "B10",
+            "B11",
+            "B8",
+            "B9"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [
+            [
+              "T1018",
+              "T1105",
+              "T1090"
+            ],
+            [
+              "T1090",
+              "T1018",
+              "T1105"
+            ]
+          ],
+          "unresolved_to_unsupported": 5
+        }
+      },
+      "minimum_source_unit_cuts": [
+        {
+          "first_citation": [
+            "page 9"
+          ],
+          "last_citation": [
+            "page 9"
+          ],
+          "query": [
+            "T1018",
+            "T1105",
+            "T1090"
+          ]
+        },
+        {
+          "first_citation": [
+            "page 9"
+          ],
+          "last_citation": [
+            "page 9"
+          ],
+          "query": [
+            "T1090",
+            "T1018",
+            "T1105"
+          ]
+        },
+        {
+          "first_citation": [
+            "page 7"
+          ],
+          "last_citation": [
+            "page 8"
+          ],
+          "query": [
+            "T1105",
+            "T1046",
+            "T1110"
+          ]
+        }
+      ],
       "ordering_rows": 11,
       "possible_witnesses": 57,
       "query_count": 216,
@@ -344,6 +461,92 @@
   "dfir-hive": {
     "recorded_parent_profile": {
       "known_witnesses": 1,
+      "last_citation_overrides": {
+        "paragraph 11": {
+          "evidence_ids": [
+            "P11"
+          ],
+          "known_witnesses_lost": 1,
+          "possible_witnesses_lost": 34,
+          "removed_rows": [
+            "B13",
+            "B15",
+            "B16"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [
+            [
+              "T1048",
+              "T1098",
+              "T1486"
+            ]
+          ],
+          "unresolved_to_unsupported": 29
+        },
+        "paragraph 12": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 6": {
+          "evidence_ids": [
+            "P6"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 44,
+          "removed_rows": [
+            "B1",
+            "B2",
+            "B3",
+            "B4"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 39
+        },
+        "paragraph 7": {
+          "evidence_ids": [
+            "P7"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 253,
+          "removed_rows": [
+            "B6",
+            "B7"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 213
+        },
+        "paragraph 8": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        }
+      },
+      "minimum_source_unit_cuts": [
+        {
+          "first_citation": [
+            "paragraph 11"
+          ],
+          "last_citation": [
+            "paragraph 11"
+          ],
+          "query": [
+            "T1048",
+            "T1098",
+            "T1486"
+          ]
+        }
+      ],
       "ordering_rows": 16,
       "possible_witnesses": 584,
       "query_count": 1331,
@@ -722,6 +925,232 @@
   "dfir-netsupport": {
     "recorded_parent_profile": {
       "known_witnesses": 7,
+      "last_citation_overrides": {
+        "paragraph 10": {
+          "evidence_ids": [
+            "P10"
+          ],
+          "known_witnesses_lost": 1,
+          "possible_witnesses_lost": 1,
+          "removed_rows": [
+            "B22"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [
+            [
+              "T1003",
+              "T1059",
+              "T1560"
+            ]
+          ],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 3": {
+          "evidence_ids": [
+            "P3"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 255,
+          "removed_rows": [
+            "B5",
+            "B6"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 220
+        },
+        "paragraph 33": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 4": {
+          "evidence_ids": [
+            "P4"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 240,
+          "removed_rows": [
+            "B8"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 207
+        },
+        "paragraph 41": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 5": {
+          "evidence_ids": [
+            "P5"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 675,
+          "removed_rows": [
+            "B10",
+            "B9"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 596
+        },
+        "paragraph 6": {
+          "evidence_ids": [
+            "P6"
+          ],
+          "known_witnesses_lost": 1,
+          "possible_witnesses_lost": 16,
+          "removed_rows": [
+            "B12",
+            "B13",
+            "B14"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [
+            [
+              "T1570",
+              "T1047",
+              "T1053"
+            ]
+          ],
+          "unresolved_to_unsupported": 14
+        },
+        "paragraph 8": {
+          "evidence_ids": [
+            "P8"
+          ],
+          "known_witnesses_lost": 1,
+          "possible_witnesses_lost": 1,
+          "removed_rows": [
+            "B18"
+          ],
+          "supported_to_unresolved": [
+            [
+              "T1136",
+              "T1098",
+              "T1021"
+            ]
+          ],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 9": {
+          "evidence_ids": [
+            "P9"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 30,
+          "removed_rows": [
+            "B20"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 27
+        }
+      },
+      "minimum_source_unit_cuts": [
+        {
+          "first_citation": [
+            "paragraph 10"
+          ],
+          "last_citation": [
+            "paragraph 10"
+          ],
+          "query": [
+            "T1003",
+            "T1059",
+            "T1560"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 2"
+          ],
+          "last_citation": [
+            "paragraph 2"
+          ],
+          "query": [
+            "T1105",
+            "T1059",
+            "T1219"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 33"
+          ],
+          "last_citation": [
+            "paragraph 8"
+          ],
+          "query": [
+            "T1136",
+            "T1098",
+            "T1021"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 2"
+          ],
+          "last_citation": [
+            "paragraph 2"
+          ],
+          "query": [
+            "T1204",
+            "T1105",
+            "T1059"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 7"
+          ],
+          "last_citation": [
+            "paragraph 7"
+          ],
+          "query": [
+            "T1219",
+            "T1003",
+            "T1560"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 2"
+          ],
+          "last_citation": [
+            "paragraph 2"
+          ],
+          "query": [
+            "T1566",
+            "T1204",
+            "T1105"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 6"
+          ],
+          "last_citation": [
+            "paragraph 6"
+          ],
+          "query": [
+            "T1570",
+            "T1047",
+            "T1053"
+          ]
+        }
+      ],
       "ordering_rows": 22,
       "possible_witnesses": 997,
       "query_count": 3375,
@@ -1426,6 +1855,96 @@
   "domain-controller": {
     "archive_mapping_withheld": {
       "known_witnesses": 2,
+      "last_citation_overrides": {
+        "paragraph 10": {
+          "evidence_ids": [
+            "E3"
+          ],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 4,
+          "removed_rows": [
+            "B5"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 4
+        },
+        "paragraph 25": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 54": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 63": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 66": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 9": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        }
+      },
+      "minimum_source_unit_cuts": [
+        {
+          "first_citation": [
+            "paragraph 25"
+          ],
+          "last_citation": [
+            "paragraph 54",
+            "paragraph 9"
+          ],
+          "query": [
+            "T1021",
+            "T1570",
+            "T1218"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 10"
+          ],
+          "last_citation": [
+            "paragraph 10",
+            "paragraph 9"
+          ],
+          "query": [
+            "T1570",
+            "T1218",
+            "T1059"
+          ]
+        }
+      ],
       "ordering_rows": 5,
       "possible_witnesses": 10,
       "query_count": 64,
@@ -1705,6 +2224,60 @@
     },
     "core_transfer_execution": {
       "known_witnesses": 1,
+      "last_citation_overrides": {
+        "paragraph 25": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 54": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 66": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 9": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        }
+      },
+      "minimum_source_unit_cuts": [
+        {
+          "first_citation": [
+            "paragraph 25"
+          ],
+          "last_citation": [
+            "paragraph 54",
+            "paragraph 9"
+          ],
+          "query": [
+            "T1021",
+            "T1570",
+            "T1218"
+          ]
+        }
+      ],
       "ordering_rows": 2,
       "possible_witnesses": 1,
       "query_count": 27,
@@ -1867,6 +2440,129 @@
     },
     "extended_script_sequence": {
       "known_witnesses": 4,
+      "last_citation_overrides": {
+        "paragraph 10": {
+          "evidence_ids": [
+            "E3"
+          ],
+          "known_witnesses_lost": 1,
+          "possible_witnesses_lost": 1,
+          "removed_rows": [
+            "B5"
+          ],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [
+            [
+              "T1059",
+              "T1560",
+              "T1059"
+            ]
+          ],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 25": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 54": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 63": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 66": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        },
+        "paragraph 9": {
+          "evidence_ids": [],
+          "known_witnesses_lost": 0,
+          "possible_witnesses_lost": 0,
+          "removed_rows": [],
+          "supported_to_unresolved": [],
+          "supported_to_unsupported": [],
+          "unresolved_to_unsupported": 0
+        }
+      },
+      "minimum_source_unit_cuts": [
+        {
+          "first_citation": [
+            "paragraph 25"
+          ],
+          "last_citation": [
+            "paragraph 54",
+            "paragraph 9"
+          ],
+          "query": [
+            "T1021",
+            "T1570",
+            "T1218"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 10"
+          ],
+          "last_citation": [
+            "paragraph 10"
+          ],
+          "query": [
+            "T1059",
+            "T1560",
+            "T1059"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 10"
+          ],
+          "last_citation": [
+            "paragraph 10",
+            "paragraph 63"
+          ],
+          "query": [
+            "T1218",
+            "T1059",
+            "T1560"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 10"
+          ],
+          "last_citation": [
+            "paragraph 10",
+            "paragraph 9"
+          ],
+          "query": [
+            "T1570",
+            "T1218",
+            "T1059"
+          ]
+        }
+      ],
       "ordering_rows": 5,
       "possible_witnesses": 4,
       "query_count": 125,
@@ -2217,6 +2913,48 @@
   "rdp": {
     "proposed_cleanup_full_edges": {
       "known_witnesses": 3,
+      "last_citation_overrides": {},
+      "minimum_source_unit_cuts": [
+        {
+          "first_citation": [
+            "paragraph 5"
+          ],
+          "last_citation": [
+            "paragraph 5"
+          ],
+          "query": [
+            "T1021",
+            "T1021",
+            "T1070"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 5"
+          ],
+          "last_citation": [
+            "paragraph 5"
+          ],
+          "query": [
+            "T1021",
+            "T1070",
+            "T1021"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 5"
+          ],
+          "last_citation": [
+            "paragraph 5"
+          ],
+          "query": [
+            "T1070",
+            "T1021",
+            "T1070"
+          ]
+        }
+      ],
       "ordering_rows": 4,
       "possible_witnesses": 3,
       "query_count": 8,
@@ -2393,6 +3131,35 @@
     },
     "proposed_cleanup_local_edges": {
       "known_witnesses": 2,
+      "last_citation_overrides": {},
+      "minimum_source_unit_cuts": [
+        {
+          "first_citation": [
+            "paragraph 5"
+          ],
+          "last_citation": [
+            "paragraph 5"
+          ],
+          "query": [
+            "T1021",
+            "T1070",
+            "T1021"
+          ]
+        },
+        {
+          "first_citation": [
+            "paragraph 5"
+          ],
+          "last_citation": [
+            "paragraph 5"
+          ],
+          "query": [
+            "T1070",
+            "T1021",
+            "T1070"
+          ]
+        }
+      ],
       "ordering_rows": 3,
       "possible_witnesses": 2,
       "query_count": 8,
@@ -2528,6 +3295,8 @@
     },
     "reported_completed_actions": {
       "known_witnesses": 0,
+      "last_citation_overrides": {},
+      "minimum_source_unit_cuts": [],
       "ordering_rows": 0,
       "possible_witnesses": 0,
       "query_count": 1,
@@ -2548,6 +3317,8 @@
     },
     "unresolved_cleanup": {
       "known_witnesses": 0,
+      "last_citation_overrides": {},
+      "minimum_source_unit_cuts": [],
       "ordering_rows": 4,
       "possible_witnesses": 3,
       "query_count": 1,

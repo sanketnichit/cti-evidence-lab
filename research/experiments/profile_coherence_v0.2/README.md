@@ -12,13 +12,15 @@ For each intervention report the number of rows removed, witness counts lost and
 
 The six cases yielded 11 parent profiles, one of which remained unassessed. All 23 supported profile/query instances lost support under at least one single-row deletion. The grouped interventions therefore identified no additional fragile fully supported queries in this cohort. In the constructed control, two alternative witnesses survive every single-row deletion but both disappear when their shared citation page is withdrawn.
 
-| Case and recorded profile | Initially unresolved | Most lost after one row deletion | Most lost after one source unit withdrawal |
-|---|---:|---:|---:|
-| ScreenConnect to Hive | 526 | 203 | 223 (paragraph 10) |
-| NetSupport | 907 | 387 | 611 (paragraph 5) |
-| CISA AA25-266A | 46 | 28 | 34 (pages 5 and 9 tie) |
+| Case and recorded profile | Initially unresolved | Most lost after one row deletion | Most lost after one unit, first citation rule | Most lost after one unit, last citation rule |
+|---|---:|---:|---:|---:|
+| ScreenConnect to Hive | 526 | 203 | 223 | 223 |
+| NetSupport | 907 | 387 | 611 | 596 |
+| CISA AA25-266A | 46 | 28 | 34 | 28 |
 
-NetSupport paragraph 5 affects three recorded ordering rows. One of those rows also cites paragraph 6 and is removed under the stated conservative rule. The unresolved counts depend on the open mapping assumptions. They count conditional queries within a profile and do not estimate incident prevalence. [Detailed results and citations](ordering_evidence_results.json)
+The first citation rule drops a row when any cited unit is withdrawn. The last citation rule retains it while at least one cited unit remains. Multiple spans on one page still count as one unit. These rules bound witness losses and the number of unresolved queries that become unsupported for policies that retain every intact row and remove every row that loses all its citations. They do not determine whether the surviving passages support a particular edge. In NetSupport, paragraph 5 yields the largest loss under both rules. One of its three ordering rows also cites paragraph 6 and survives under the last citation rule. Across the CISA profile, the largest grouped loss exceeds the individual-row loss only under the first citation rule. The unresolved counts depend on the open mapping assumptions and count conditional queries within a profile. [Detailed results and citations](ordering_evidence_results.json)
+
+For each fully supported query, the analysis searches unit subsets in increasing size and records one smallest set that removes every known witness. The first citation rule gives a one-unit cut for all 23 supported instances. Under the last citation rule, 17 still have a one-unit cut and six domain-controller instances require two units. These six come from three profiles of one incident. The JSON stores the first rule's interventions under `source_unit`. The `last_citation_overrides` entries replace only the units whose affected rows differ. The `minimum_source_unit_cuts` rows list one exact minimum under each rule.
 
 ```sh
 python -m examples.ordering_evidence_sensitivity

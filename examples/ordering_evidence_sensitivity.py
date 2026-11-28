@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import defaultdict
+from itertools import combinations
 from pathlib import Path
 
 from examples.profile_coherence import enumerate_witnesses, witness_masks
@@ -19,12 +20,21 @@ def evaluate(mappings, relations, evidence):
     citations = {row["evidence_id"]: (f"page {row['page']}" if 'page' in row else
                                      f"paragraph {row['paragraph_number']}") for row in evidence}
     rows_by_unit = defaultdict(set)
+    sole_unit_rows = defaultdict(set)
+    units_by_row = {}
     for relation in relations:
-        for citation in relation["evidence_ids"]:
-            rows_by_unit[citations[citation]].add(relation["relation_id"])
+        units = {citations[citation] for citation in relation["evidence_ids"]}
+        units_by_row[relation["relation_id"]] = units
+        for unit in units:
+            rows_by_unit[unit].add(relation["relation_id"])
+            if len(units) == 1:
+                sole_unit_rows[unit].add(relation["relation_id"])
+
+    def remaining_edges(removed):
+        return {edge for identifier, edge in edge_by_id.items() if identifier not in removed}
 
     def witnesses(removed):
-        edges = {edge for identifier, edge in edge_by_id.items() if identifier not in removed}
+        edges = remaining_edges(removed)
         known = enumerate_witnesses(mappings, edges)
         possible = enumerate_witnesses(completion, edges)
         if (known != set(witness_masks([(mappings, edges)])) or
@@ -35,6 +45,27 @@ def evaluate(mappings, relations, evidence):
     known, possible = witnesses(set())
     baseline_known = {query for _, query in known}
     baseline_possible = {query for _, query in possible}
+    paths_by_query = defaultdict(list)
+    for path, query in known:
+        paths_by_query[query].append(set(zip(path, path[1:])))
+
+    def minimum_cuts(last_citation):
+        units = sorted(rows_by_unit)
+        pending = set(baseline_known)
+        cuts = dict.fromkeys(pending)
+        for size in range(1, len(units) + 1):
+            for withdrawal in combinations(units, size):
+                removed_units = set(withdrawal)
+                removed = {row for row, cited in units_by_row.items() if cited and
+                           (cited <= removed_units if last_citation else bool(cited & removed_units))}
+                edges = remaining_edges(removed)
+                lost = {q for q in pending if all(not path <= edges for path in paths_by_query[q])}
+                for query in lost:
+                    cuts[query] = withdrawal
+                pending.difference_update(lost)
+                if not pending:
+                    return cuts
+        return cuts
 
     def sweep(interventions):
         fragile = set()
@@ -57,12 +88,20 @@ def evaluate(mappings, relations, evidence):
             }
         return {"fragile_supported_queries": sorted(fragile), "interventions": records}
 
+    first_cuts = minimum_cuts(last_citation=False)
+    last_cuts = minimum_cuts(last_citation=True)
     return {
         "status": "ASSESSED", "query_count": len(vocabulary) ** 3, "vocabulary": vocabulary,
         "ordering_rows": len(relations), "known_witnesses": len(known), "possible_witnesses": len(possible),
         "supported_queries": len(baseline_known), "unresolved_queries": len(baseline_possible - baseline_known),
         "single_row": sweep({identifier: {identifier} for identifier in edge_by_id}),
         "source_unit": sweep(rows_by_unit),
+        "last_citation_overrides": sweep({unit: sole_unit_rows[unit] for unit, rows in rows_by_unit.items()
+                                          if rows != sole_unit_rows[unit]})["interventions"],
+        "minimum_source_unit_cuts": [
+            {"query": query, "first_citation": first_cuts[query], "last_citation": last_cuts[query]}
+            for query in sorted(baseline_known)
+        ],
     }
 
 
