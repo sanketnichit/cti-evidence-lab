@@ -15,11 +15,13 @@ RESULTS = ROOT / "research/experiments/profile_coherence_v0.2/shared_source_resu
 def evaluate(record, profiles):
     vocabulary = sorted({label for mappings, _ in profiles.values() for labels in mappings.values() for label in labels})
     queries = tuple(product(vocabulary, repeat=3))
-    per_profile = [
-        reference_ranks((mappings, {(row["source_event"], row["target_event"]) for row in relations}), queries)
-        for mappings, relations in profiles.values()
-    ]
-    stable_queries = [query for query in queries if all(ranks[query] == 2 for ranks in per_profile)]
+    per_profile = {
+        name: reference_ranks((mappings, {(row["source_event"], row["target_event"]) for row in relations}), queries)
+        for name, (mappings, relations) in profiles.items()
+    }
+    baseline = {query: {name for name, ranks in per_profile.items() if ranks[query] == 2} for query in queries}
+    supported_queries = [query for query, names in baseline.items() if names]
+    stable_queries = [query for query in supported_queries if len(baseline[query]) == len(profiles)]
     paragraphs = {row["evidence_id"]: row["paragraph_number"] for row in record["evidence"]}
     cited = {
         name: [{paragraphs[e] for e in row["evidence_ids"]} for row in relations]
@@ -27,8 +29,12 @@ def evaluate(record, profiles):
     }
     units = sorted({unit for profile in cited.values() for row_units in profile for unit in row_units})
     losses = {}
+    joint = {}
     for rule in ("first_citation", "last_citation"):
         losses[rule] = []
+        eligible = 0
+        joint_only = []
+        partial_losses = 0
         for unit in units:
             remaining = {}
             for name, (mappings, relations) in profiles.items():
@@ -38,12 +44,37 @@ def evaluate(record, profiles):
                     if not removed:
                         rows.append(row)
                 remaining[name] = (mappings, rows)
-            for query in stable_queries:
+            for query in supported_queries:
                 statuses = {name: investigate(mappings, relations, query, summary_only=True)["status"]
                             for name, (mappings, relations) in remaining.items()}
-                if any(status != "SUPPORTED" for status in statuses.values()):
+                after = {name for name, status in statuses.items() if status == "SUPPORTED"}
+                if query in stable_queries and len(after) < len(profiles):
                     losses[rule].append({"paragraph": unit, "query": list(query), "remaining_statuses": statuses})
-    return {"stable_queries": [list(query) for query in stable_queries], "paragraphs": units, "losses": losses}
+                if not after:
+                    continue
+                if after < baseline[query]:
+                    partial_losses += 1
+                for omitted in profiles:
+                    if not baseline[query] - {omitted}:
+                        continue
+                    eligible += 1
+                    if after == {omitted}:
+                        joint_only.append({
+                            "paragraph": unit, "omitted_profile": omitted, "query": list(query),
+                            "baseline_supporters": sorted(baseline[query]),
+                            "remaining_statuses": {name: status for name, status in statuses.items() if name != omitted},
+                        })
+        joint[rule] = {
+            "survive_both_separate_interventions": eligible,
+            "paragraph_query_pairs_with_partial_support_loss": partial_losses,
+            "joint_only_losses": joint_only,
+        }
+    return {
+        "stable_queries": [list(query) for query in stable_queries], "paragraphs": units, "losses": losses,
+        "supported_queries": len(supported_queries),
+        "joint_scenarios_per_rule": len(profiles) * len(units) * len(supported_queries),
+        "joint": joint,
+    }
 
 
 def run():

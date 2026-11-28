@@ -117,6 +117,12 @@ python -m examples.shared_source_sensitivity
 
 Full reproduction checks and includes `shared_source_sensitivity.json`.
 
+### Combined profile and paragraph omissions
+
+For each of the 15 initially supported instances, cross every single-profile omission with every single-paragraph withdrawal in its incident. A joint-only loss occurs when each change on its own leaves at least one supporting profile, and applying both removes all support. This comparison holds action identities and label assignments fixed alongside the earlier withdrawal analysis.
+
+Of 348 combinations per citation rule, 250 under the first citation rule and 288 under the last citation rule retained support after both separate changes. None of those combinations lost support when the changes were applied together. Every paragraph withdrawal that affected support removed it from all previously supporting profiles for that query. A constructed control with one supporting paragraph per profile produces two joint-only losses, confirming that this pattern is detectable by the procedure. The zero count applies to these recorded profiles and one omission of each type. [Recorded results](shared_source_results.json)
+
 ## Open mapping uncertainty
 
 Apply the existing open completion rule separately within each profile. An unknown occurrence can take any label in the fixed query vocabulary. Known labels and BEFORE edges stay fixed in that profile. A coherent answer is **supported** if a known witness exists in at least one profile, **unresolved** if only a witness requiring completion exists in at least one, and **unsupported** if neither exists. This is an existential answer over the recorded interpretations.

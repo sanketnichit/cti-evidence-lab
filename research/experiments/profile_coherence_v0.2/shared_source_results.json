@@ -1,5 +1,18 @@
 {
   "domain-controller": {
+    "joint": {
+      "first_citation": {
+        "joint_only_losses": [],
+        "paragraph_query_pairs_with_partial_support_loss": 0,
+        "survive_both_separate_interventions": 26
+      },
+      "last_citation": {
+        "joint_only_losses": [],
+        "paragraph_query_pairs_with_partial_support_loss": 0,
+        "survive_both_separate_interventions": 58
+      }
+    },
+    "joint_scenarios_per_rule": 72,
     "losses": {
       "first_citation": [
         {
@@ -71,9 +84,23 @@
         "T1570",
         "T1218"
       ]
-    ]
+    ],
+    "supported_queries": 4
   },
   "netsupport-identity": {
+    "joint": {
+      "first_citation": {
+        "joint_only_losses": [],
+        "paragraph_query_pairs_with_partial_support_loss": 0,
+        "survive_both_separate_interventions": 224
+      },
+      "last_citation": {
+        "joint_only_losses": [],
+        "paragraph_query_pairs_with_partial_support_loss": 0,
+        "survive_both_separate_interventions": 230
+      }
+    },
+    "joint_scenarios_per_rule": 264,
     "losses": {
       "first_citation": [
         {
@@ -337,9 +364,23 @@
         "T1047",
         "T1053"
       ]
-    ]
+    ],
+    "supported_queries": 8
   },
   "rdp": {
+    "joint": {
+      "first_citation": {
+        "joint_only_losses": [],
+        "paragraph_query_pairs_with_partial_support_loss": 0,
+        "survive_both_separate_interventions": 0
+      },
+      "last_citation": {
+        "joint_only_losses": [],
+        "paragraph_query_pairs_with_partial_support_loss": 0,
+        "survive_both_separate_interventions": 0
+      }
+    },
+    "joint_scenarios_per_rule": 12,
     "losses": {
       "first_citation": [],
       "last_citation": []
@@ -347,6 +388,7 @@
     "paragraphs": [
       5
     ],
-    "stable_queries": []
+    "stable_queries": [],
+    "supported_queries": 3
   }
 }
