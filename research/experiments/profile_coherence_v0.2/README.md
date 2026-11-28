@@ -42,6 +42,17 @@ All six instances came from the domain-controller report. We examined every orde
 
 Re-executing the queries over paragraph withdrawals gives two distinct outcomes among the six. The session–transfer–execution sequence occurs in three profiles. In each, its only smallest withdrawal set is paragraphs 9 and 54 together. The other three instances depend on B3. Removing either paragraph 9 or paragraph 10 alone breaks their known witness. These counts describe repeated queries in one incident. Independent assessment of the antecedent and occurrence identities remains open. Run `python -m examples.domain_controller_citation_roles` for every minimum set, including the seventh supported instance where the original bounds already agreed.
 
+### Independent review of the citation reading
+
+The review packet gives the publisher link, five proposed action orderings and their candidate passage locators. Provide the ZIP alone to each reviewer. The form asks which passage sets establish the ordering and records uncertainty about the action identities. Generate one packet per reviewer.
+
+```sh
+python scripts/review_domain_controller_citations.py --reviewer R01 --output outputs/citation-review-R01.zip
+python scripts/review_domain_controller_citations.py --return-form outputs/returned/R01/review.json --output outputs/returned/R01/analysis.json
+```
+
+Use `--source-html` when the reviewer supplies their snapshot. The result records the snapshot check, declared exposure, input hash and rows whose sets match the project reading. A complete return recomputes the seven original supported profile/query instances. An empty withdrawal set means the returned judgments already leave the query without a known witness. A partial return records the undecided rows and leaves the cut analysis pending. Report the judgments descriptively for this incident, conditional on the given action pairs and candidate passages. Keep individual returns and analyses private.
+
 ## Query and reference
 
 An interpretation profile supplies an acyclic BEFORE graph and sets of known labels. Within an incident and taxonomy level, occurrence IDs must denote the same actions across profiles. Evaluate the same three-label query under four conditions.

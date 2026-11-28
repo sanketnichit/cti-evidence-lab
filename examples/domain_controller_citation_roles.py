@@ -17,11 +17,14 @@ SUPPORT = {
 }
 
 
-def run():
+def run(support=None):
     case = load_case("domain-controller")
     paragraphs = {row["evidence_id"]: row["paragraph_number"] for row in case["evidence"]}
-    for edge in case["relations"]:
-        assert set(edge["evidence_ids"]) == set().union(*SUPPORT[edge["relation_id"]])
+    reference = support is None
+    if reference:
+        support = SUPPORT
+        for edge in case["relations"]:
+            assert set(edge["evidence_ids"]) == set().union(*SUPPORT[edge["relation_id"]])
     results = json.loads(RESULTS.read_bytes())["domain-controller"]
     rows = []
     for profile, result in results.items():
@@ -33,12 +36,13 @@ def run():
                 cuts = []
                 for withdrawn in combinations(units, size):
                     retained = [row for row in relations if any(
-                        all(paragraphs[e] not in withdrawn for e in group) for group in SUPPORT[row["relation_id"]]
+                        all(paragraphs[e] not in withdrawn for e in group) for group in support[row["relation_id"]]
                     )]
                     if investigate(mappings, retained, query, summary_only=True)["status"] != "SUPPORTED":
                         cuts.append(withdrawn)
                 if cuts:
-                    assert len(cut["first_citation"]) <= size <= len(cut["last_citation"])
+                    if reference:
+                        assert len(cut["first_citation"]) <= size <= len(cut["last_citation"])
                     rows.append({"profile": profile, "query": query, "minimum_withdrawals": cuts})
                     break
     return rows
